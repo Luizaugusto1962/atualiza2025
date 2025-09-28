@@ -272,21 +272,6 @@ _mostrar_progresso_backup() {
     fi
 }
 
-
-# Indicador de atividade rotativo
-# Parâmetros: $1=PID_processo
-_indicador_atividade() {
-    local pid="$1"
-    local chars=('|' '/' '-' '\')
-    local i=0
-    
-    while kill -0 "$pid" 2>/dev/null; do
-        printf "\r${YELLOW}Processando... %s${NORM}" "${chars[$((i++ % 4))]}"
-        sleep 0.2
-    done
-    printf "\r"
-}
-
 #---------- FUNÇÕES DE LOG ----------#
 
 # Registra mensagem no log com timestamp
@@ -440,11 +425,11 @@ _limpar_arquivos_antigos() {
         return 1
     fi
     
-    count=$(find "$diretorio" -name "$padrao" -type f -mtime +$dias -print | wc -l)
+    count=$(find "$diretorio" -name "$padrao" -type f -mtime +"$dias" -print | wc -l)
     
     if (( count > 0 )); then
         _log "Removendo $count arquivos antigos de $diretorio"
-        find "$diretorio" -name "$padrao" -type f -mtime +$dias -delete
+        find "$diretorio" -name "$padrao" -type f -mtime +"$dias" -delete
         return 0
     else
         _log "Nenhum arquivo antigo encontrado em $diretorio"
