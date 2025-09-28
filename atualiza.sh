@@ -10,8 +10,8 @@
 export LC_ALL=C
 
 # Diretório do script
-readonly SCRIPT_DIR
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly LIB_DIR="${SCRIPT_DIR}/lib"
 readonly LIB_CFG="${SCRIPT_DIR}/cfg"
 
