@@ -7,6 +7,7 @@ sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou 
 base="${base:-}"
 base=2"${base2:-}"
 base=3"${base3:-}"
+
 #---------- MENU PRINCIPAL ----------#
 # Menu principal do sistema
 _principal() {
