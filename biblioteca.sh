@@ -3,7 +3,12 @@
 # biblioteca.sh - Módulo de Gestão de Biblioteca
 # Responsável pela atualização das bibliotecas do sistema (Transpc, Savatu)
 #
-
+destino="${destino:-}"
+sistema="${sistema:-}"
+acessossh="${acessossh:-}"
+cmd_zip="${cmd_zip:-}"
+cmd_unzip="${cmd_unzip:-}"
+cmd_find="${cmd_find:-}"
 #---------- FUNÇÕES PRINCIPAIS DE ATUALIZAÇÃO ----------#
 
 # Atualização do Transpc
@@ -280,7 +285,7 @@ _executar_atualizacao_biblioteca() {
     done
     
     # Mover backups para diretório
-    if ! mv *_"${VERSAO}".bkp "${BACKUP}" 2>/dev/null; then
+    if ! mv ./*_"${VERSAO}".bkp "${BACKUP}" 2>/dev/null; then
         _mensagec "${YELLOW}" "Nenhum arquivo de backup para mover"
     fi
 
