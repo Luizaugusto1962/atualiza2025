@@ -3,6 +3,12 @@
 # backup.sh - Modulo do Sistema de Backup
 # Responsavel por backup completo, incremental e restauraçao
 #
+destino="${destino:-}"
+sistema="${sistema:-}"
+base="${base:-}"           # Caminho do diretorio da segunda base de dados.
+base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
+base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
+cmd_zip="${cmd_zip:-}"
 
 # Carregar configurações e variaveis globais
 _carregar_modulo "config.sh"
@@ -16,7 +22,7 @@ _executar_backup() {
     # Escolher base se necessario
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
-        base_trabalho="${BASE_TRABALHO}"
+#        base_trabalho="${BASE_TRABALHO}"
     else
         base_trabalho="${destino}${base}"
     fi
@@ -38,7 +44,8 @@ _executar_backup() {
     fi
 
     # Gerar nome do arquivo
-    local nome_backup="${EMPRESA}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
+    local nome_backup
+    nome_backup="${EMPRESA}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
     local caminho_backup="$BACKUP/$nome_backup"
 
     # Verificar backups recentes
@@ -86,7 +93,8 @@ _executar_backup() {
         fi
 
         data_referencia="${ano}-${mes}-01"
-        local data_atual=$(date +%Y%m%d)
+        local data_atual
+        data_atual=$(date +%Y%m%d)
         local data_input
         data_input=$(date -d "$data_referencia" +%Y%m%d 2>/dev/null) || {
             _mensagec "$RED" "Data invalida."
