@@ -4,7 +4,9 @@
 # Responsável pela apresentação e navegação dos menus do sistema
 #
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
-
+base="${base:-}"
+base=2"${base2:-}"
+base=3"${base3:-}"
 #---------- MENU PRINCIPAL ----------#
 # Menu principal do sistema
 _principal() {
