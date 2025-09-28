@@ -3,7 +3,14 @@
 # programas.sh - Módulo de Gestão de Programas
 # Responsável pela atualização, instalação e reversão de programas
 #
-
+destino="${destino:-}"
+sistema="${sistema:-}"
+acessossh="${acessossh:-}"
+cmd_zip="${cmd_zip:-}"
+cmd_unzip="${cmd_unzip:-}"
+cmd_find="${cmd_find:-}"
+class=${class:-}
+mclass=${mclass:-}
 #---------- VARIÁVEIS GLOBAIS DO MÓDULO ----------#
 
 # Arrays para armazenar programas e arquivos
