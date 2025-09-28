@@ -62,6 +62,23 @@ PORTA="${PORTA:-}"           # Variavel que define a porta a ser usada para.
 USUARIO="${USUARIO:-}"       # Variavel que define o usuario a ser usado.
 IPSERVER="${IPSERVER:-}"     # Variavel que define o ip do servidor da SAV.
 DESTINO2="${DESTINO2:-}"     # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
+cmd_zip="${cmd_zip:-}"
+cmd_unzip="${cmd_unzip:-}"
+cmd_find="${cmd_find:-}"
+RED="${RED:-}"
+GREEN="${GREEN:-}"
+YELLOW="${YELLOW:-}"
+BLUE="${BLUE:-}"
+PURPLE="${PURPLE:-}"
+CYAN="${CYAN:-}"
+NORM="${NORM:-}"
+UPDATE="${UPDATE:-}"
+LOG="${LOG:-}"
+LOG_ATU="${LOG_ATU:-}"
+LOG_LIMPA="${LOG_LIMPA:-}"
+LOG_TMP="${LOG_TMP:-}"
+UMADATA="${UMADATA:-}"
+ISCCLIENT="${ISCCLIENT:-}"
 
 # Configurações padrão
 DEFAULT_UNZIP="unzip"
@@ -109,7 +126,7 @@ _definir_cores() {
     fi
     
     # Tornar as variáveis de cores somente leitura
-    readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM
+#    readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM
 }
 
 # Verificar dependências do sistema
@@ -261,12 +278,12 @@ _configurar_variaveis_sistema() {
     fi
     
     # Configurar logs
-    readonly LOG_ATU="${LOGS}/atualiza.$(date +"%Y-%m-%d").log"
-    readonly LOG_LIMPA="${LOGS}/limpando.$(date +"%Y-%m-%d").log"
-    readonly LOG_TMP="${LOGS}/"
+    LOG_ATU="${LOGS}/atualiza.$(date +"%Y-%m-%d").log"
+    LOG_LIMPA="${LOGS}/limpando.$(date +"%Y-%m-%d").log"
+    LOG_TMP="${LOGS}/"
     
     # Data atual formatada
-    readonly UMADATA=$(date +"%d-%m-%Y_%H%M%S")
+    UMADATA=$(date +"%d-%m-%Y_%H%M%S")
     
     # Arquivo de backup padrão
     INI="backup-${VERSAO}.zip"
@@ -434,10 +451,10 @@ _configurar_ambiente() {
     fi
     
     # Tornar variáveis essenciais somente leitura
-    readonly TOOLS BACKUP OLDS PROGS LOGS ENVIA RECEBE LOG LIB CFG
-    readonly E_EXEC T_TELAS X_XML BASE1 BASE2 BASE3
-    readonly LOG_ATU LOG_LIMPA LOG_TMP UMADATA
-    readonly jut SAVISC JUTIL ISCCLIENT
+    #readonly TOOLS BACKUP OLDS PROGS LOGS ENVIA RECEBE LOG LIB CFG
+    #readonly E_EXEC T_TELAS X_XML BASE1 BASE2 BASE3
+    #readonly LOG_ATU LOG_LIMPA LOG_TMP UMADATA
+    #readonly jut SAVISC JUTIL ISCCLIENT
 }
 
 # Função para resetar variáveis (cleanup)
