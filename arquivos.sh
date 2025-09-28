@@ -3,9 +3,13 @@
 # arquivos.sh - Módulo de Gestão de Arquivos
 # Responsável por limpeza, recuperação, transferência e expurgo de arquivos
 #
+destino="${destino:-}"
+sistema="${sistema:-}"
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
+cmd_zip="${cmd_zip:-}"
+jut="${jut:-}"
 #---------- FUNÇÕES DE LIMPEZA ----------#
 
 # Executa limpeza de arquivos temporários
@@ -129,8 +133,8 @@ _recuperar_arquivo_especifico() {
     read -rp "${YELLOW}Nome do arquivo: ${NORM}" nome_arquivo
     nome_arquivo=$(echo "$nome_arquivo" | xargs) # Remove espaços extras
     # Remove espaços extras
-#    nome_arquivo="${nome_arquivo#"${nome_arquivo%%[![:space:]]*}"}"
-#    nome_arquivo="${nome_arquivo%"${nome_arquivo##*[![:space:]]}"}"
+    nome_arquivo="${nome_arquivo#"${nome_arquivo%%[![:space:]]*}"}"
+    nome_arquivo="${nome_arquivo%"${nome_arquivo##*[![:space:]]}"}"
     _linha "-" "${BLUE}"
     
     if [[ -z "$nome_arquivo" ]]; then
