@@ -113,7 +113,7 @@ _recuperar_arquivo_especifico() {
     # Escolher base se necessário
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
-        base_trabalho="${BASE_TRABALHO}"
+#        base_trabalho="${BASE_TRABALHO}"
     else
         base_trabalho="${destino}${base}"
     fi
