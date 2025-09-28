@@ -3,6 +3,27 @@
 # sistema.sh - Módulo de Informações do Sistema
 # Responsável por informações do IsCOBOL, Linux, parâmetros e atualizações
 #
+destino="${destino:-}"
+sistema="${sistema:-}"
+acessossh="${acessossh:-}"
+cmd_zip="${cmd_zip:-}"
+cmd_unzip="${cmd_unzip:-}"
+cmd_find="${cmd_find:-}"
+pasta="${pasta:-}"
+base="${base:-}"
+base2="${base2:-}"
+base3="${base3:-}"
+telas="${telas:-}"
+logs="${logs:-}"
+progs="${progs:-}"
+cfg="${cfg:-}"
+verclass="${verclass:-}"
+backup="${backup:-}"
+class="${class:-}"
+mclass="${mclass:-}"
+exec="${exec:-}"
+xml="${xml:-}"
+olds="${olds:-}"
 
 #---------- FUNÇÕES DE VERSÃO ----------#
 
@@ -131,38 +152,38 @@ _mostrar_versao_linux() {
 _mostrar_parametros() {
     clear
     _linha "=" "${GREEN}"
-    printf "${GREEN}Sistema e banco de dados: ${NORM}${BANCO}\n"
-    printf "${GREEN}Diretório raiz: ${NORM}${destino}\n"
-    printf "${GREEN}Diretório do atualiza.sh: ${NORM}${destino}${pasta}\n"
-    printf "${GREEN}Diretório da base principal: ${NORM}${destino}${base}\n"
-    printf "${GREEN}Diretório da segunda base: ${NORM}${destino}${base2}\n"
-    printf "${GREEN}Diretório da terceira base: ${NORM}${destino}${base3}\n"
-    printf "${GREEN}Diretório dos executáveis: ${NORM}${destino}/${exec}\n"
-    printf "${GREEN}Diretório das telas: ${NORM}${destino}/${telas}\n"
-    printf "${GREEN}Diretório dos xmls: ${NORM}${destino}/${xml}\n"
-    printf "${GREEN}Diretório dos logs: ${NORM}${destino}${pasta}${logs}\n"
-    printf "${GREEN}Diretório dos olds: ${NORM}${destino}${pasta}${olds}\n"
-    printf "${GREEN}Diretório dos progs: ${NORM}${destino}${pasta}${progs}\n"
-    printf "${GREEN}Diretório do backup: ${NORM}${destino}${pasta}${backup}\n"
-    printf "${GREEN}Diretório de configuracoes: ${NORM}${destino}${pasta}${cfg}\n"
-    printf "${GREEN}Sistema em uso: ${NORM}${sistema}\n"
-    printf "${GREEN}Versão em uso: ${NORM}${verclass}\n"
-    printf "${GREEN}Biblioteca 1: ${NORM}${SAVATU1}\n"
-    printf "${GREEN}Biblioteca 2: ${NORM}${SAVATU2}\n"
-    printf "${GREEN}Biblioteca 3: ${NORM}${SAVATU3}\n"
-    printf "${GREEN}Biblioteca 4: ${NORM}${SAVATU4}\n"
+    printf "${GREEN}Sistema e banco de dados: ${NORM}${BANCO}""%*s\n"
+    printf "${GREEN}Diretório raiz: ${NORM}${destino}""%*s\n"
+    printf "${GREEN}Diretório do atualiza.sh: ${NORM}${destino}${pasta}""%*s\n"
+    printf "${GREEN}Diretório da base principal: ${NORM}${destino}${base}""%*s\n"
+    printf "${GREEN}Diretório da segunda base: ${NORM}${destino}${base2}""%*s\n"
+    printf "${GREEN}Diretório da terceira base: ${NORM}${destino}${base3}""%*s\n"
+    printf "${GREEN}Diretório dos executáveis: ${NORM}${destino}/${exec}""%*s\n"
+    printf "${GREEN}Diretório das telas: ${NORM}${destino}/${telas}""%*s\n"
+    printf "${GREEN}Diretório dos xmls: ${NORM}${destino}/${xml}""%*s\n"
+    printf "${GREEN}Diretório dos logs: ${NORM}${destino}${pasta}${logs}""%*s\n"
+    printf "${GREEN}Diretório dos olds: ${NORM}${destino}${pasta}${olds}""%*s\n"
+    printf "${GREEN}Diretório dos progs: ${NORM}${destino}${pasta}${progs}""%*s\n"
+    printf "${GREEN}Diretório do backup: ${NORM}${destino}${pasta}${backup}""%*s\n"
+    printf "${GREEN}Diretório de configuracoes: ${NORM}${destino}${pasta}${cfg}""%*s\n"
+    printf "${GREEN}Sistema em uso: ${NORM}${sistema}""%*s\n"
+    printf "${GREEN}Versão em uso: ${NORM}${verclass}""%*s\n"
+    printf "${GREEN}Biblioteca 1: ${NORM}${SAVATU1}""%*s\n"
+    printf "${GREEN}Biblioteca 2: ${NORM}${SAVATU2}""%*s\n"
+    printf "${GREEN}Biblioteca 3: ${NORM}${SAVATU3}""%*s\n"
+    printf "${GREEN}Biblioteca 4: ${NORM}${SAVATU4}""%*s\n"
     _linha "=" "${GREEN}"
     _press
     clear
     _linha "=" "${GREEN}"
-    printf "${GREEN}Diretório para envio de backup: ${NORM}${ENVIABACK}\n"
-    printf "${GREEN}Servidor OFF: ${NORM}${SERACESOFF}\n"
-    printf "${GREEN}Versão anterior da biblioteca: ${NORM}${VERSAOANT}\n"
-    printf "${GREEN}Variável da classe: ${NORM}${class}\n"
-    printf "${GREEN}Variável da mclass: ${NORM}${mclass}\n"
-    printf "${GREEN}Porta de conexão: ${NORM}${PORTA}\n"
-    printf "${GREEN}Usuário de conexão: ${NORM}${USUARIO}\n"
-    printf "${GREEN}Servidor IP: ${NORM}${IPSERVER}\n"
+    printf "${GREEN}Diretório para envio de backup: ${NORM}${ENVIABACK}""%*s\n"
+    printf "${GREEN}Servidor OFF: ${NORM}${SERACESOFF}""%*s\n"
+    printf "${GREEN}Versão anterior da biblioteca: ${NORM}${VERSAOANT}""%*s\n"
+    printf "${GREEN}Variável da classe: ${NORM}${class}""%*s\n"
+    printf "${GREEN}Variável da mclass: ${NORM}${mclass}""%*s\n"
+    printf "${GREEN}Porta de conexão: ${NORM}${PORTA}""%*s\n"
+    printf "${GREEN}Usuário de conexão: ${NORM}${USUARIO}""%*s\n"
+    printf "${GREEN}Servidor IP: ${NORM}${IPSERVER}""%*s\n"
     _linha "=" "${GREEN}"
     _press
 }
@@ -188,14 +209,14 @@ _atualizar_online() {
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
 
     # Criar backup do arquivo atual
-    if [[ ! -d "$BACKUP" ]]; then
-        mkdir -p "$BACKUP" || {
+    if [[ ! -d "$backup" ]]; then
+        mkdir -p "$backup" || {
             _mensagec "${RED}" "Erro: Não foi possível criar diretório de backup"
             return 1
         }
     fi
 
-    if ! cp -f atualiza.sh "${BACKUP}/atualiza.sh.bak"; then
+    if ! cp -f atualiza.sh "${backup}/atualiza.sh.bak"; then
         _mensagec "${RED}" "Erro ao criar backup do atualiza.sh"
         return 1
     fi
@@ -207,11 +228,14 @@ _atualizar_online() {
     }
 
     # Criar e acessar diretório temporário
-    mkdir -p "$temp_dir" && cd "$temp_dir" || {
-        _mensagec "${RED}" "Erro ao criar/acessar diretório temporário"
+    mkdir -p "$temp_dir" || {
+        _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
         return 1
     }
-
+    cd "$temp_dir" || {
+        _mensagec "${RED}" "Erro: Nao foi possivel acessar o diretorio temporario $temp_dir."
+        return 1
+    }
     # Baixar arquivo
     if ! wget -q -c "$link"; then
         _mensagec "${RED}" "Erro ao baixar arquivo de atualização"
