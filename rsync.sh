@@ -3,7 +3,12 @@
 # rsync.sh - Módulo de Operações de Sincronização
 # Responsável por operações de download/upload via rsync, sftp e ssh
 #
-
+destino="${destino:-}"
+sistema="${sistema:-}"
+acessossh="${acessossh:-}"
+cmd_zip="${cmd_zip:-}"
+cmd_unzip="${cmd_unzip:-}"
+cmd_find="${cmd_find:-}"
 #---------- CONFIGURAÇÕES DE CONEXÃO ----------#
 
 # Configura parâmetros de conexão
