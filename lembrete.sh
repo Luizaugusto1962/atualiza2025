@@ -40,7 +40,7 @@ _visualizar_notas_arquivo() {
     local llinha
     
     if [[ ! -f "$arquivo" || ! -r "$arquivo" ]]; then
-        _mensagec "${RED}" "Arquivo de notas não encontrado ou ilegível: $arquivo"
+        _mensagec "${RED}" "Arquivo de notas nao encontrado ou ilegivel: $arquivo"
         _press
         return 1
     fi
