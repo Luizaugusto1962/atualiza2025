@@ -7,13 +7,14 @@
 #
 
 #set -euo pipefail
-#export LC_ALL=C
+export LC_ALL=C
 
 # Diretório do script
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly LIB_DIR="${SCRIPT_DIR}/lib"
 readonly LIB_CFG="${SCRIPT_DIR}/cfg"
-_press
+
 # Verificar se o diretório lib existe
 if [[ ! -d "${LIB_DIR}" ]]; then
     echo "ERRO: Diretório ${LIB_DIR} nao encontrado."
@@ -32,12 +33,12 @@ _carregar_modulo() {
     local modulo="$1"
     local caminho="${LIB_DIR}/${modulo}"
     if [[ ! -f "${caminho}" ]]; then
-        echo "ERRO: Módulo ${modulo} nao encontrado em ${caminho}"
+        echo "ERRO: Modulo ${modulo} nao encontrado em ${caminho}"
         exit 1
     fi
     
     if [[ ! -r "${caminho}" ]]; then
-        echo "ERRO: Módulo ${modulo} nao pode ser lido"
+        echo "ERRO: Modulo ${modulo} nao pode ser lido"
         exit 1
     fi
     
