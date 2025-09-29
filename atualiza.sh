@@ -10,10 +10,14 @@
 export LC_ALL=C
 
 # Diretório do script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly LIB_DIR="${SCRIPT_DIR}/lib"
-readonly LIB_CFG="${SCRIPT_DIR}/cfg"
+LIB_DIR="${SCRIPT_DIR}/lib"
+readonly LIB_DIR
+
+LIB_CFG="${SCRIPT_DIR}/cfg"
+readonly LIB_CFG
 
 # Verificar se o diretório lib existe
 if [[ ! -d "${LIB_DIR}" ]]; then

@@ -140,11 +140,13 @@ _restaurar_backup() {
     local backup_selecionado
 
     # Listar backups disponiveis
-    if ! mapfile -t arquivos_backup < <(ls -1 "${BACKUP}"/*.zip 2>/dev/null); then
-        _mensagec "${RED}" "Nenhum backup encontrado em ${BACKUP}"
-        _press
-        return 1
-    fi
+shopt -s nullglob
+mapfile -t arquivos_backup < <(printf '%s\n' "${BACKUP}"/*.zip)
+
+if (( ${#arquivos_backup[@]} == 0 )); then
+    echo "Nenhum arquivo .zip encontrado em ${BACKUP}"
+    exit 1
+fi
 
     # Mostrar backups disponiveis
     _linha
@@ -191,15 +193,17 @@ _restaurar_backup() {
 
 # Envia backup avulso
 _enviar_backup_avulso() {
-    local backup_selecionado
+local backup_selecionado
+shopt -s nullglob
 
-    # Listar backups disponiveis
-    if ! ls -1 "${BACKUP}/${EMPRESA}"_*.zip 2>/dev/null | grep -q .; then
-        _mensagec "${RED}" "Nenhum backup encontrado"
-        _press
-        return 1
-    fi
+# Listar backups disponíveis
+backups=( "${BACKUP}/${EMPRESA}"_*.zip )
 
+if (( ${#backups[@]} == 0 )); then
+    _mensagec "${RED}" "Nenhum backup encontrado"
+    _press
+    return 1
+fi
     # Mostrar lista
     _linha
     ls -lh "${BACKUP}/${EMPRESA}"_*.zip
