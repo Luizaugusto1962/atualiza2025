@@ -127,6 +127,60 @@ _validar_versao() {
     [[ -n "$versao" && "$versao" =~ ^[0-9]+([.-][0-9]+)*$ ]]
 }
 
+# Valida se a configuração do sistema está correta
+# Retorna: 0=válido 1=inválido
+_validar_configuracao_sistema() {
+    local erros=0
+    
+    # Verificar arquivos de configuração
+    if [[ ! -f "${CFG}/.atualizac" ]]; then
+        _log_erro "Arquivo .atualizac não encontrado"
+        ((erros++))
+    fi
+    
+    if [[ ! -f "${CFG}/.atualizap" ]]; then
+        _log_erro "Arquivo .atualizap não encontrado"
+        ((erros++))
+    fi
+    
+    # Verificar variáveis essenciais
+    if [[ -z "${sistema}" ]]; then
+        _log_erro "Variável 'sistema' não definida"
+        ((erros++))
+    fi
+    
+    if [[ -z "${destino}" ]]; then
+        _log_erro "Variável 'destino' não definida"
+        ((erros++))
+    fi
+    
+    # Verificar se a variável pasta está definida
+    if [[ -z "${pasta}" ]]; then
+        _log_erro "Variável 'pasta' não definida"
+        ((erros++))
+    fi
+    
+    # Verificar diretórios essenciais
+    local dirs=("exec" "telas" "olds" "progs" "logs" "backup" "cfg")
+    for dir in "${dirs[@]}"; do
+        local dir_path=""
+        # Tratamento especial para exec e telas que ficam em ${destino}/sav
+        if [[ "$dir" == "exec" ]] || [[ "$dir" == "telas" ]]; then
+            dir_path="${destino}/sav/${!dir}"
+        else
+            # Para outros diretórios, usar o caminho padrão
+            dir_path="${destino}${pasta}/${!dir}"
+        fi
+        
+        if [[ ! -d "${dir_path}" ]]; then
+            _log_erro "Diretório ${dir} não encontrado: ${dir_path}"
+            ((erros++))
+        fi
+    done
+    
+    return $(( erros > 0 ? 1 : 0 ))
+}
+
 #---------- FUNÇÕES DE ENTRADA DE DADOS ----------#
 
 # Solicita entrada do usuário com validação
@@ -385,7 +439,6 @@ _backup_arquivo() {
         _log_erro "Arquivo não encontrado para backup: $arquivo"
         return 1
     fi
-    
 	
     # Criar diretório de backup se necessário
     mkdir -p "$dir_backup"

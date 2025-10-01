@@ -4,9 +4,6 @@
 # Responsável por carregar configurações, validar sistema e definir variáveis globais
 #
 
-# Versão do sistema
-UPDATE="18/09/2025-00"
-
 #---------- VARIÁVEIS GLOBAIS ----------#
 
 # Arrays para organização das variáveis
@@ -15,6 +12,8 @@ declare -a caminhos_base=(BASE1 BASE2 BASE3 tools DIR destino pasta base base2 b
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who)
 declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC)
+
+#LIB_CFG="${LIB_CFG}"
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
 #-Variaveis de configuracao do sistema ---------------------------------------------------------#
@@ -34,7 +33,7 @@ telas="${telas:-}"           # Caminho do diretorio das telas.
 xml="${xml:-}"               # Caminho do diretorio dos arquivos xml.
 olds="${olds:-}"             # Caminho do diretorio dos arquivos de backup.
 cfg="${cfg:-}"               # Caminho do diretorio dos arquivos de configuracao.
-lib="${lib:-}"               # Caminho do diretorio das bibliotecas.
+libs="${libs:-}"               # Caminho do diretorio das bibliotecas.
 progs="${progs:-}"           # Caminho do diretorio dos programas.
 backup="${backup:-}"         # Caminho do diretorio de backup.
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
@@ -194,7 +193,7 @@ _configurar_diretorios() {
     destino="${raiz}${destino}"
     
     readonly TOOLS="${destino}${pasta}" # Diretório principal do sistema
-    readonly CFG="${TOOLS}/cfg"  # Diretório de configuração centralizado 
+#    readonly CFG="${TOOLS}/cfg"  # Diretório de configuração centralizado 
 
     # Verificar diretório principal
     if [[ -n "${TOOLS}" ]] && [[ -d "${TOOLS}" ]]; then
@@ -209,9 +208,9 @@ _configurar_diretorios() {
     fi
     
     # Criar diretório de configuração se não existir
-    if [[ ! -d "${CFG}" ]]; then
-        mkdir -p "${CFG}" || {
-            printf "Erro ao criar diretório de configuração %s\n" "${CFG}"
+    if [[ ! -d "${LIB_CFG}" ]]; then
+        mkdir -p "${LIB_CFG}" || {
+            printf "Erro ao criar diretório de configuração %s\n" "${LIB_CFG}"
             exit 1
         }
     fi
@@ -223,11 +222,10 @@ _configurar_diretorios() {
     readonly LOGS="${LOGS:-${TOOLS}/logs}"
     readonly ENVIA="${ENVIA:-${TOOLS}/envia}"
     readonly RECEBE="${RECEBE:-${TOOLS}/recebe}"
-    readonly LIB="${LIB:-${TOOLS}/lib}"
-    #export CFG="${CFG:-${TOOLS}/cfg}"
+    readonly LIBS="${LIBS:-${TOOLS}/libs}"
 
     # Criar diretórios se não existirem
-    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${BACKUP}" "${ENVIA}" "${LIB}" "${CFG}" "${RECEBE}")
+    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${BACKUP}" "${ENVIA}" "${LIBS}" "${RECEBE}")
     for dir in "${dirs[@]}"; do
         if [[ ! -d "${dir}" ]]; then
             mkdir -p "${dir}" || {
@@ -292,7 +290,7 @@ _configurar_variaveis_sistema() {
 # Funçao para carregar configuraçoes com verificaçao
 _carregar_parametros() {
  #   local modulo="$1"
-    local caminho_cfg="${CFG}/"
+    local caminho_cfg="${LIB_CFG}/"
     if [[ ! -d "${caminho_cfg}" ]]; then
         printf "ERRO: Não foi possível criar o diretório %s\n" "${caminho_cfg}"
         exit 1
@@ -301,7 +299,7 @@ _carregar_parametros() {
 
 # Carregar arquivo de configuração da empresa
 _carregar_config_empresa() {
-    local config_dir="${CFG}/"
+    local config_dir="${LIB_CFG}/"
     local config_file="${config_dir}.atualizac"
 
 # Criar diretório de configuração se não existir
@@ -329,7 +327,7 @@ _carregar_config_empresa() {
 }
 # Carregar arquivo de parâmetros do sistema
 _carregar_config_parametros() {
-    local config_dir="${CFG}/"
+    local config_dir="${LIB_CFG}/"
     local param_file="${config_dir}.atualizap"
     # Criar diretório de configuração se não existir
     if [[ ! -d "${config_dir}" ]]; then
@@ -451,10 +449,112 @@ _configurar_ambiente() {
     fi
     
     # Tornar variáveis essenciais somente leitura
-    #readonly TOOLS BACKUP OLDS PROGS LOGS ENVIA RECEBE LOG LIB CFG
+    #readonly TOOLS BACKUP OLDS PROGS LOGS ENVIA RECEBE LOG LIBS CFG
     #readonly E_EXEC T_TELAS X_XML BASE1 BASE2 BASE3
     #readonly LOG_ATU LOG_LIMPA LOG_TMP UMADATA
     #readonly jut SAVISC JUTIL ISCCLIENT
+}
+
+# Função para validar a configuração atual do sistema
+_validar_configuracao() {
+    clear
+    _linha "=" "${GREEN}"
+    _mensagec "${RED}" "Validação de Configuração"
+    _linha
+    
+    local erros=0
+    local warnings=0
+    
+    # Verificar arquivos de configuração
+    if [[ ! -f "${LIB_CFG}/.atualizac" ]]; then
+        _mensagec "${RED}" "ERRO: Arquivo .atualizac não encontrado!"
+        ((erros++))
+    else
+        _mensagec "${GREEN}" "OK: Arquivo .atualizac encontrado"
+    fi
+    
+    if [[ ! -f "${LIB_CFG}/.atualizap" ]]; then
+        _mensagec "${RED}" "ERRO: Arquivo .atualizap não encontrado!"
+        ((erros++))
+    else
+        _mensagec "${GREEN}" "OK: Arquivo .atualizap encontrado"
+    fi
+    
+    # Verificar variáveis essenciais
+    if [[ -z "${sistema}" ]]; then
+        _mensagec "${RED}" "ERRO: Variável 'sistema' não definida!"
+        ((erros++))
+    elif [[ "${sistema}" != "iscobol" && "${sistema}" != "cobol" ]]; then
+        _mensagec "${YELLOW}" "WARNING: Valor desconhecido para 'sistema': ${sistema}"
+        ((warnings++))
+    else
+        _mensagec "${GREEN}" "OK: Sistema definido como ${sistema}"
+    fi
+    
+    if [[ -z "${destino}" ]]; then
+        _mensagec "${RED}" "ERRO: Variável 'destino' não definida!"
+        ((erros++))
+    else
+        _mensagec "${GREEN}" "OK: Diretório raiz definido"
+    fi
+    
+    if [[ -z "${BANCO}" ]]; then
+        _mensagec "${YELLOW}" "WARNING: Variável 'BANCO' não definida"
+        ((warnings++))
+    else
+        _mensagec "${GREEN}" "OK: Configuração de banco de dados definida"
+    fi
+    
+    # Verificar diretórios essenciais
+    local dirs=("exec" "telas" "olds" "progs" "logs" "backup" "cfg")
+    for dir in "${dirs[@]}"; do
+        local dir_path=""
+        # Tratamento especial para exec e telas que ficam em ${destino}/sav
+        if [[ "$dir" == "exec" ]] || [[ "$dir" == "telas" ]]; then
+            dir_path="${destino}/${!dir}"
+        else
+            # Para outros diretórios, usar o caminho padrão
+            dir_path="${destino}${pasta}${!dir}"
+        fi
+        
+        if [[ ! -d "${dir_path}" ]]; then
+            _mensagec "${YELLOW}" "WARNING: Diretório ${dir} não encontrado: ${dir_path}"
+            ((warnings++))
+        else
+            _mensagec "${GREEN}" "OK: Diretório ${dir} encontrado"
+        fi
+    done
+    
+    # Verificar conectividade se for modo online
+    if [[ "${SERACESOFF}" == "n" ]]; then
+        _mensagec "${YELLOW}" "INFO: Verificando conectividade com servidor..."
+        if command -v ping >/dev/null 2>&1; then
+            if ping -c 1 -W 5 "${IPSERVER}" >/dev/null 2>&1; then
+                _mensagec "${GREEN}" "OK: Conectividade com servidor estabelecida"
+            else
+                _mensagec "${YELLOW}" "WARNING: Não foi possível conectar ao servidor ${IPSERVER}"
+                ((warnings++))
+            fi
+        else
+            _mensagec "${YELLOW}" "INFO: Comando ping não disponível para teste de conectividade"
+        fi
+    else
+        _mensagec "${GREEN}" "INFO: Modo offline - conectividade não verificada"
+    fi
+    
+    _linha
+    printf "\n"
+    _mensagec "${CYAN}" "Resumo:"
+    _mensagec "${RED}" "Erros: ${erros}"
+    _mensagec "${YELLOW}" "Avisos: ${warnings}"
+    
+    if (( erros == 0 )); then
+        _mensagec "${GREEN}" "Configuração válida!"
+    else
+        _mensagec "${RED}" "Configuração com erros!"
+    fi
+    
+    _linha
 }
 
 # Função para resetar variáveis (cleanup)

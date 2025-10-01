@@ -14,7 +14,7 @@ jut="${jut:-}"
 
 # Executa limpeza de arquivos temporários
 _executar_limpeza_temporarios() {
-    cd "${CFG}" || {
+    cd "${LIB_CFG}" || {
         _mensagec "${RED}" "Erro: Diretório ${CFG} não encontrado"
         return 1
     }
@@ -76,7 +76,7 @@ _limpar_base_especifica() {
 
 # Adiciona arquivo à lista de limpeza
 _adicionar_arquivo_lixo() {
-    cd "${CFG}" || {
+    cd "${LIB_CFG}" || {
         _mensagec "${RED}" "Erro: Diretório ${CFG} não encontrado"
         return 1
     }
@@ -203,7 +203,7 @@ _recuperar_arquivo_individual() {
 
 # Recupera arquivos principais baseado na lista
 _recuperar_arquivos_principais() {
-    cd "${CFG}" || return 1
+    cd "${LIB_CFG}" || return 1
     
     # Escolher base se necessário
     if [[ -n "${base2}" ]]; then
@@ -228,7 +228,7 @@ _recuperar_arquivos_principais() {
             ls NFE?"${var_ano4}".*.dat 2>/dev/null || true
         } > "${CFG}/atualizaj2"
         
-        cd "${CFG}" || return 1
+        cd "${LIB_CFG}" || return 1
         _read_sleep 1
         
         # Verificar arquivos de lista

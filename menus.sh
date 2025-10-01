@@ -7,7 +7,7 @@ sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou 
 base="${base:-}"
 base=2"${base2:-}"
 base=3"${base3:-}"
-
+pasta="${pasta:-}"
 #---------- MENU PRINCIPAL ----------#
 # Menu principal do sistema
 _principal() {
@@ -29,20 +29,20 @@ _principal() {
         # Opções do menu
         _mensagec "${GREEN}" "1${NORM} - Atualizar Programa(s)"
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Atualizar Biblioteca"
+        _mensagec "${GREEN}" "2${NORM} - Atualizar Biblioteca "
         printf "\n"
         
         if [[ "${sistema}" = "iscobol" ]]; then
-            _mensagec "${GREEN}" "3${NORM} - Versão do Iscobol"
+            _mensagec "${GREEN}" "3${NORM} - Versão do Iscobol   "
         else
             _mensagec "${GREEN}" "3${NORM} - Função não disponível"
         fi
         printf "\n"
-        _mensagec "${GREEN}" "4${NORM} - Versão do Linux"
+        _mensagec "${GREEN}" "4${NORM} - Versão do Linux     "
         printf "\n"
-        _mensagec "${GREEN}" "5${NORM} - Ferramentas"
+        _mensagec "${GREEN}" "5${NORM} - Ferramentas          "
         printf "\n\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Sair"
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Sair       "
         printf "\n"
         
         _mensaged "${BLUE}" "${UPDATE}"
@@ -82,17 +82,17 @@ _menu_programas() {
         printf "\n"
         _mensagec "${PURPLE}" "Escolha o tipo de Atualização:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Programa(s) ON-Line"
+        _mensagec "${GREEN}" "1${NORM} - Programa(s) ON-Line       "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Programa(s) OFF-Line"
+        _mensagec "${GREEN}" "2${NORM} - Programa(s) OFF-Line      "
         printf "\n"
-        _mensagec "${GREEN}" "3${NORM} - Programa(s) em Pacote"
+        _mensagec "${GREEN}" "3${NORM} - Programa(s) em Pacote     "
         printf "\n\n"
         _mensagec "${PURPLE}" "Escolha Desatualizar:"
         printf "\n"
         _mensagec "${GREEN}" "4${NORM} - Voltar programa Atualizado"
         printf "\n\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior    "
         printf "\n"
         
         if [[ -n "${verclass}" ]]; then
@@ -129,19 +129,19 @@ _menu_biblioteca() {
         _mensagec "${RED}" "Menu da Biblioteca"
         _linha "="
         printf "\n"
-        _mensagec "${PURPLE}" "Escolha o local da Biblioteca:"
+        _mensagec "${PURPLE}" "Escolha o local da Biblioteca: "
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Atualização do Transpc"
+        _mensagec "${GREEN}" "1${NORM} - Atualização do Transpc  "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Atualização do Savatu"
+        _mensagec "${GREEN}" "2${NORM} - Atualização do Savatu   "
         printf "\n"
-        _mensagec "${GREEN}" "3${NORM} - Atualização OFF-Line"
+        _mensagec "${GREEN}" "3${NORM} - Atualização OFF-Line    "
         printf "\n\n"
         _mensagec "${PURPLE}" "Escolha Desatualizar:"
         printf "\n"
         _mensagec "${GREEN}" "4${NORM} - Voltar antes da Biblioteca"
         printf "\n\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior    "
         printf "\n"
         
         if [[ -n "${VERSAOANT}" ]]; then
@@ -184,38 +184,38 @@ _menu_ferramentas() {
         
         # Verificar se sistema tem banco de dados
         if [[ "${BANCO}" = "s" ]]; then
-            _mensagec "${GREEN}" "1${NORM} - Temporários"
+            _mensagec "${GREEN}" "1${NORM} - Temporários               "
             printf "\n"
-            _mensagec "${GREEN}" "4${NORM} - Enviar e Receber Arquivos"
+            _mensagec "${GREEN}" "4${NORM} - Enviar e Receber Arquivos "
             printf "\n"
-            _mensagec "${GREEN}" "5${NORM} - Expurgador de Arquivos"
+            _mensagec "${GREEN}" "5${NORM} - Expurgador de Arquivos    "
             printf "\n"
-            _mensagec "${GREEN}" "6${NORM} - Parâmetros"
+            _mensagec "${GREEN}" "6${NORM} - Parâmetros                "
             printf "\n"
-            _mensagec "${GREEN}" "7${NORM} - Update"
-            printf "\n"
-            _mensagec "${GREEN}" "8${NORM} - Lembretes"
+            _mensagec "${GREEN}" "7${NORM} - Update                    "
+            printf "\n" 
+            _mensagec "${GREEN}" "8${NORM} - Lembretes                "
             printf "\n\n"
         else
-            _mensagec "${GREEN}" "1${NORM} - Temporários"
+            _mensagec "${GREEN}" "1${NORM} - Temporários             "
             printf "\n"
-            _mensagec "${GREEN}" "2${NORM} - Recuperar Arquivos"
-            printf "\n"
-            _mensagec "${GREEN}" "3${NORM} - Rotinas de Backup"
+            _mensagec "${GREEN}" "2${NORM} - Recuperar Arquivos       "
+            printf "\n" 
+            _mensagec "${GREEN}" "3${NORM} - Rotinas de Backup        "
             printf "\n"
             _mensagec "${GREEN}" "4${NORM} - Enviar e Receber Arquivos"
             printf "\n"
-            _mensagec "${GREEN}" "5${NORM} - Expurgador de Arquivos"
+            _mensagec "${GREEN}" "5${NORM} - Expurgador de Arquivos   "
             printf "\n"
-            _mensagec "${GREEN}" "6${NORM} - Parâmetros"
+            _mensagec "${GREEN}" "6${NORM} - Parâmetros              "
             printf "\n"
-            _mensagec "${GREEN}" "7${NORM} - Update"
+            _mensagec "${GREEN}" "7${NORM} - Update                   "
             printf "\n"
-            _mensagec "${GREEN}" "8${NORM} - Lembretes"
+            _mensagec "${GREEN}" "8${NORM} - Lembretes                "
             printf "\n\n"
         fi
         
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior   "
         printf "\n"
         _linha "=" "${GREEN}"
 
@@ -269,9 +269,9 @@ _menu_temporarios() {
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - Limpeza dos Arquivos Temporários"
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Adicionar Arquivos no ATUALIZAT"
+        _mensagec "${GREEN}" "2${NORM} - Adicionar Arquivos no ATUALIZAT  "
         printf "\n\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior           "
         printf "\n"
         _linha "=" "${GREEN}"
 
@@ -281,45 +281,6 @@ _menu_temporarios() {
         case "${opcao}" in
             1) _executar_limpeza_temporarios ;;
             2) _adicionar_arquivo_lixo ;;
-            9) return ;;
-            *)
-                _opinvalida
-                _read_sleep 1
-                ;;
-        esac
-    done
-}
-
-#---------- MENU DE BACKUP ----------#
-
-# Menu de backup do sistema
-_menu_backup() {
-    while true; do
-        clear
-        printf "\n"
-        _linha "=" "${GREEN}"
-        _mensagec "${RED}" "Menu de Backup(s)"
-        _linha
-        printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
-        printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Backup da base de dados"
-        printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Restaurar Backup da base de dados"
-        printf "\n"
-        _mensagec "${GREEN}" "3${NORM} - Enviar Backup"
-        printf "\n\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
-        printf "\n"
-        _linha "=" "${GREEN}"
-
-        local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
-
-        case "${opcao}" in
-            1) _executar_backup ;;
-            2) _restaurar_backup ;;
-            3) _enviar_backup_avulso ;;
             9) return ;;
             *)
                 _opinvalida
@@ -342,9 +303,9 @@ _menu_recuperar_arquivos() {
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opção:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Um arquivo ou Todos"
+        _mensagec "${GREEN}" "1${NORM} - Um arquivo ou Todos   "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Arquivos Principais"
+        _mensagec "${GREEN}" "2${NORM} - Arquivos Principais   "
         printf "\n\n"
         _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
         printf "\n"
@@ -365,6 +326,46 @@ _menu_recuperar_arquivos() {
     done
 }
 
+#---------- MENU DE BACKUP ----------#
+
+# Menu de backup do sistema
+_menu_backup() {
+    while true; do
+        clear
+        printf "\n"
+        _linha "=" "${GREEN}"
+        _mensagec "${RED}" "Menu de Backup(s)"
+        _linha
+        printf "\n"
+        _mensagec "${PURPLE}" " Escolha a opção:"
+        printf "\n"
+        _mensagec "${GREEN}" "1${NORM} - Backup da base de dados          "
+        printf "\n"
+        _mensagec "${GREEN}" "2${NORM} - Restaurar Backup da base de dados"
+        printf "\n"
+        _mensagec "${GREEN}" "3${NORM} - Enviar Backup                    "
+        printf "\n\n"
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior           "
+        printf "\n"
+        _linha "=" "${GREEN}"
+
+        local opcao
+        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+
+        case "${opcao}" in
+            1) _executar_backup ;;
+            2) _restaurar_backup ;;
+            3) _enviar_backup_avulso ;;
+            9) return ;;
+            *)
+                _opinvalida
+                _read_sleep 1
+                ;;
+        esac
+    done
+}
+
+
 #---------- MENU DE TRANSFERÊNCIA ----------#
 
 # Menu de envio e recebimento de arquivos
@@ -378,9 +379,9 @@ _menu_transferencia_arquivos() {
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opção:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Enviar arquivo(s)"
+        _mensagec "${GREEN}" "1${NORM} - Enviar arquivo(s)     "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Receber arquivo(s)"
+        _mensagec "${GREEN}" "2${NORM} - Receber arquivo(s)    "
         printf "\n\n"
         _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
         printf "\n"
@@ -412,11 +413,11 @@ _menu_setups() {
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opção:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Consulta de setup"
+        _mensagec "${GREEN}" "1${NORM} - Consulta de setup     "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Manutencao de setup"
+        _mensagec "${GREEN}" "2${NORM} - Manutencao de setup   "
         printf "\n"
-        _mensagec "${GREEN}" "3${NORM} - Setup Inicializacao"
+        _mensagec "${GREEN}" "3${NORM} - Validar configuração"
         printf "\n\n"
         _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
         printf "\n"
@@ -426,9 +427,26 @@ _menu_setups() {
         read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
 
         case "${opcao}" in
-            1) _mostrar_parametros ;;
-            2) _manutencao_setup ;;
-            3) _setup_inicializacao ;;
+            1) 
+                _mostrar_parametros
+                _press
+                ;;
+            2) 
+                _manutencao_setup
+                # Após a manutenção, recarregar as configurações
+                if [[ -f "${LIB_CFG}/.atualizac" && -f "${LIB_CFG}/.atualizap" ]]; then
+                    # shellcheck source=/dev/null
+                    "." "${LIB_CFG}/.atualizac"
+                    # shellcheck source=/dev/null
+                    "." "${LIB_CFG}/.atualizap"
+                    _mensagec "${GREEN}" "Configurações recarregadas com sucesso!"
+                    _read_sleep 2
+                fi
+                ;;
+            3)
+                _validar_configuracao
+                _press
+                ;;
             9) return ;;
             *)
                 _opinvalida
@@ -437,6 +455,8 @@ _menu_setups() {
         esac
     done
 }
+
+
 #---------- MENU DE LEMBRETES ----------#
 
 # Menu de bloco de notas/lembretes
@@ -450,13 +470,13 @@ _menu_lembretes() {
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opção:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Escrever nova nota"
+        _mensagec "${GREEN}" "1${NORM} - Escrever nova nota    "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Visualizar nota"
+        _mensagec "${GREEN}" "2${NORM} - Visualizar nota       "
         printf "\n"
-        _mensagec "${GREEN}" "3${NORM} - Editar nota"
+        _mensagec "${GREEN}" "3${NORM} - Editar nota           "
         printf "\n"
-        _mensagec "${GREEN}" "4${NORM} - Apagar nota"
+        _mensagec "${GREEN}" "4${NORM} - Apagar nota           "
         printf "\n\n"
         _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
         printf "\n"
@@ -503,7 +523,7 @@ _menu_escolha_base() {
         fi
         
         printf "\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior    "
         printf "\n"
         _linha "=" "${GREEN}"
 
@@ -597,16 +617,16 @@ _definir_base_trabalho() {
         return 1
     fi
     
-    export BASE_TRABALHO="${destino}${base_dir}"
+    export base_trabalho="${destino}${base_dir}"
     
-    if [[ ! -d "${BASE_TRABALHO}" ]]; then
-        _mensagec "${RED}" "Erro: Diretório ${BASE_TRABALHO} não encontrado"
+    if [[ ! -d "${base_trabalho}" ]]; then
+        _mensagec "${RED}" "Erro: Diretório ${base_trabalho} não encontrado"
         _linha
         _read_sleep 2
         return 1
     fi
     
-    _mensagec "${GREEN}" "Base de trabalho definida: ${BASE_TRABALHO}"
+    _mensagec "${GREEN}" "Base de trabalho definida: ${base_trabalho}"
     return 0
 }
 
