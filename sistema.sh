@@ -3,6 +3,7 @@
 # sistema.sh - Módulo de Informações do Sistema
 # Responsável por informações do IsCOBOL, Linux, parâmetros e atualizações
 #
+
 destino="${destino:-}"
 sistema="${sistema:-}"
 acessossh="${acessossh:-}"
@@ -194,17 +195,29 @@ _mostrar_parametros() {
 _executar_update() {
     if [[ "${SERACESOFF}" == "n" ]]; then
         _atualizar_online
+        export tipo_online 
     else
         _atualizar_offline
+        export tipo_offline
     fi
     _press
 }
 
 # Atualização online via GitHub
 _atualizar_online() {
-    local link="https://github.com/Luizaugusto1962/Atualiza/archive/master/atualiza.zip"
+#        cd "${LIB_DIR}" || exit 1
+#    local link="https://codeload.github.com/Luizaugusto1962/atualiza2025/zip/refs/tags/Atualiza"
+    local link="https://github.com/Luizaugusto1962/Atualiza2025/archive/master/atualiza.zip"
     local zipfile="atualiza.zip"
-    local temp_dir="${ENVIA}/temp_update"
+    local temp_dir="${ENVIA}"
+       # Criar e acessar diretório temporário
+    mkdir -p "$temp_dir" || {
+        _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
+        return 1
+    }
+    _atualizando
+}
+_atualizando() { 
 
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
 
@@ -216,9 +229,40 @@ _atualizar_online() {
         }
     fi
 
-    if ! cp -f atualiza.sh "${backup}/atualiza.sh.bak"; then
-        _mensagec "${RED}" "Erro ao criar backup do atualiza.sh"
+    # Fazer backup dos arquivos atuais
+    local backup_sucesso=0
+    local backup_erro=0
+    cd "${LIB_DIR}" || {
+        _mensagec "${RED}" "Erro: Diretório de atualização não encontrado"
         return 1
+    }   
+    # Processar todos os arquivos .sh para backup
+    for arquivo in *.sh; do
+        # Verificar se o arquivo existe
+        if [[ ! -f "$arquivo" ]]; then
+            _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
+            break
+        fi
+        
+        # Copiar o arquivo para o diretório de backup
+        if cp -f "$arquivo" "${backup}/.$arquivo.bak"; then
+            _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
+            ((backup_sucesso++))
+        else
+            _mensagec "${RED}" "Erro ao fazer backup de $arquivo"
+            ((backup_erro++))
+        fi
+    done
+    
+    # Verificar se houve erros no backup
+    if [[ $backup_erro -gt 0 ]]; then
+        _mensagec "${RED}" "Falha no backup de $backup_erro arquivo(s)"
+        return 1
+    elif [[ $backup_sucesso -eq 0 ]]; then
+        _mensagec "${YELLOW}" "Nenhum arquivo foi copiado para backup"
+        return 1
+    else
+        _mensagec "${GREEN}" "Backup de $backup_sucesso arquivo(s) realizado com sucesso"
     fi
 
     # Acessar diretório de trabalho
@@ -227,21 +271,12 @@ _atualizar_online() {
         return 1
     }
 
-    # Criar e acessar diretório temporário
-    mkdir -p "$temp_dir" || {
-        _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
-        return 1
-    }
-    cd "$temp_dir" || {
-        _mensagec "${RED}" "Erro: Nao foi possivel acessar o diretorio temporario $temp_dir."
-        return 1
-    }
     # Baixar arquivo
-    if ! wget -q -c "$link"; then
-        _mensagec "${RED}" "Erro ao baixar arquivo de atualização"
+        if ! wget -q -c "$link"; then
+            _mensagec "${RED}" "Erro ao baixar arquivo de atualização"
         return 1
-    fi
-
+        fi
+    #fi
     # Descompactar
     if ! "${cmd_unzip}" -o -j "$zipfile" >>"$LOG_ATU" 2>&1; then
         _mensagec "${RED}" "Erro ao descompactar atualização"
@@ -249,17 +284,52 @@ _atualizar_online() {
     fi
 
     # Verificar e instalar arquivos
-    for arquivo in atualiza.sh setup.sh; do
+    local arquivos_instalados=0
+    local arquivos_erro=0
+#    cd "$temp_dir" || {
+#        _mensagec "${RED}" "Erro: Nao foi possivel acessar o diretorio temporario $temp_dir."
+#        return 1
+#    }
+    # Processar todos os arquivos .sh encontrados
+    for arquivo in *.sh; do
+        # Verificar se o arquivo existe
         if [[ ! -f "$arquivo" ]]; then
-            _mensagec "${RED}" "Erro: Arquivo $arquivo não encontrado na atualização"
-            return 1
+            _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para processar"
+            break
+        else
+            chmod +x "$arquivo"    
         fi
-        chmod +x "$arquivo"
-        if ! mv -f "$arquivo" "$TOOLS"; then
-            _mensagec "${RED}" "Falha ao instalar $arquivo"
-            return 1
+        
+        # Mover o arquivo para o diretório de destino
+        if [ "$arquivo" = "atualiza.sh" ]; then
+            if mv -f "$arquivo" "${TOOLS}"; then
+                _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
+                ((arquivos_instalados++))
+            else
+            _mensagec "${RED}" "Erro ao instalar $arquivo"
+            ((arquivos_erro++))
+            fi
+        fi        # Mover o arquivo para o diretório de destino
+
+        if mv -f "$arquivo" "${LIB_DIR}"; then
+            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
+            ((arquivos_instalados++))
+        else
+            _mensagec "${RED}" "Erro ao instalar $arquivo"
+            ((arquivos_erro++))
         fi
     done
+    
+    # Verificar se houve erros na instalação
+    if [[ $arquivos_erro -gt 0 ]]; then
+        _mensagec "${RED}" "Falha na instalação de $arquivos_erro arquivo(s)"
+        return 1
+    elif [[ $arquivos_instalados -eq 0 ]]; then
+        _mensagec "${YELLOW}" "Nenhum arquivo foi instalado"
+        return 1
+    else
+        _mensagec "${GREEN}" "Instalados $arquivos_instalados arquivo(s) com sucesso"
+    fi
 
     # Limpeza
     cd "$ENVIA" && rm -rf "$temp_dir"
@@ -274,42 +344,31 @@ _atualizar_online() {
 
 # Atualização offline via arquivo local
 _atualizar_offline() {
-    local zipfile="atualiza.zip"
+    local temp_dir="${ENVIA}/temp_update/"
     local dir_offline="$destino$SERACESOFF"
+    local zipfile="atualiza.zip"
 
+    # Criar e acessar diretório temporário
+    mkdir -p "$temp_dir" || {
+        _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
+        return 1
+    }
+
+    # Acessar diretório offline
     cd "$dir_offline" || {
         _mensagec "${RED}" "Erro: Diretório offline $dir_offline não acessível"
         return 1
     }
 
+    # Verificar se o arquivo zip existe
     if [[ ! -f "$zipfile" ]]; then
         _mensagec "${RED}" "Erro: $zipfile não encontrado em $dir_offline"
         return 1
     fi
-
-    if ! "${cmd_unzip}" -o "$zipfile" >>"$LOG_ATU" 2>&1; then
-        _mensagec "${RED}" "Erro ao descompactar $zipfile"
-        return 1
-    fi
-
-    rm -f "$zipfile"
-
-    for arquivo in atualiza.sh setup.sh; do
-        if [[ ! -f "$arquivo" ]]; then
-            _mensagec "${RED}" "Erro: $arquivo não encontrado"
-            return 1
-        fi
-        chmod +x "$arquivo"
-        if ! mv -f "$arquivo" "$TOOLS"; then
-            _mensagec "${RED}" "Erro ao mover $arquivo"
-            return 1
-        fi
-    done
-
-    _linha
-    _mensagec "${GREEN}" "Atualização offline concluída!"
-    _linha
+    mv $zipfile "$temp_dir"
+    _atualizando
 }
+
 
 # Constantes
 readonly tracejada="#-------------------------------------------------------------------#"
