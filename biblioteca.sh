@@ -3,12 +3,48 @@
 # biblioteca.sh - Módulo de Gestão de Biblioteca
 # Responsável pela atualização das bibliotecas do sistema (Transpc, Savatu)
 #
-destino="${destino:-}"
-sistema="${sistema:-}"
-acessossh="${acessossh:-}"
-cmd_zip="${cmd_zip:-}"
-cmd_unzip="${cmd_unzip:-}"
-cmd_find="${cmd_find:-}"
+
+# Source do módulo de utilitários
+source utils.sh
+
+#---------- TRAPS PARA INTERRUPCOES ----------#
+declare -g pids=()  # Array global para rastrear PIDs de background
+
+# Função de cleanup em caso de interrupção
+_limpar_interrupcao() {
+    local sinal="$1"
+    _log "Interrupção detectada (sinal: $sinal). Limpando processos..."
+    
+    # Matar todos os PIDs pendentes
+    for pid in "${pids[@]}"; do
+        if kill -0 "$pid" 2>/dev/null; then
+            kill "$pid" 2>/dev/null
+            _log "Processo PID $pid interrompido"
+        fi
+    done
+    pids=()  # Limpar array
+    
+    # Limpeza de temporários (ex: zips parciais ou descompactados incompletos)
+    cd "${TOOLS}" || true
+    for temp_file in *"${VERSAO}".zip *"${VERSAO}".bkp; do
+        [[ -f "$temp_file" ]] && rm -f "$temp_file" && _log "Arquivo temporário removido: $temp_file"
+    done
+    
+    # Verificar se backup parcial existe e sugerir rollback
+    local ultimo_backup="${OLDS}/backup-*.zip"
+    if [[ -n "$(ls -A $ultimo_backup 2>/dev/null)" ]]; then
+        _mensagec "${YELLOW}" "Backup parcial encontrado. Considere reverter manualmente com '_reverter_biblioteca'"
+    fi
+    
+    _log "Cleanup concluído. Saída forçada."
+    _press  # Pausa para o usuário ver a mensagem
+    exit 1
+}
+
+# Configurar traps (SIGINT=2 para Ctrl+C, SIGTERM=15 para kill)
+trap '_limpar_interrupcao INT' INT
+trap '_limpar_interrupcao TERM' TERM
+
 #---------- FUNÇÕES PRINCIPAIS DE ATUALIZAÇÃO ----------#
 
 # Atualização do Transpc
@@ -78,12 +114,12 @@ _atualizar_biblioteca_offline() {
 
     if [[ "${SERACESOFF}" == "s" ]]; then
         _processar_biblioteca_offline
-#    else
-#        _mensagec "${RED}" "Modo offline não configurado"
-#        _press
-#        return 1
+    else
+        _mensagec "${RED}" "Modo offline não configurado"
+        _press
+        return 1
     fi
-#
+
     _salvar_atualizacao_biblioteca
 }
 
@@ -195,29 +231,69 @@ _processar_atualizacao_biblioteca() {
     local arquivo_backup="backup-${VERSAO}.zip"
     local caminho_backup="${OLDS}/${arquivo_backup}"
 
+    # Inicializar contadores para progresso geral (opcional, para log final)
+    local contador=0
+    local total_etapas=2 # Para sistemas não-iscobol
+    if [[ "$sistema" = "iscobol" ]]; then
+        total_etapas=3 # Para iscobol inclui XML
+    fi
+
     # Exibir mensagem inicial
     _linha
-    _mensagec "${YELLOW}" "Compactando os arquivos anteriores"
+    _mensagec "${YELLOW}" "Iniciando compactação dos arquivos anteriores para backup..."
     _linha
     _read_sleep 1
 
     # Compactação em E_EXEC
     cd "$E_EXEC" || return 1
-    if "$cmd_find" "$E_EXEC"/ -type f \( -iname "*.class" -o -iname "*.int" -o -iname "*.jpg" -o -iname "*.png" -o -iname "brw*.*" -o -iname "*." -o -iname "*.dll" \) -exec "$cmd_zip" -r -q "${caminho_backup}" {} +; then
-        _mensagec "${YELLOW}" "(Compactação de $E_EXEC concluída)"
+    {
+        "$cmd_find" "$E_EXEC"/ -type f \( -iname "*.class" -o -iname "*.int" -o -iname "*.jpg" -o -iname "*.png" -o -iname "brw*.*" -o -iname "*." -o -iname "*.dll" \) -exec "$cmd_zip" -r -q "${caminho_backup}" {} + >>"${LOG_ATU}" 2>&1
+    } &
+    local pid_zip_exec=$!
+    pids+=("$pid_zip_exec")  # Registrar PID para trap
+    _mostrar_progresso_backup "$pid_zip_exec"
+    if wait "$pid_zip_exec"; then
+        ((contador++))
+        _mensagec "${GREEN}" "Compactação de $E_EXEC concluída [Etapa ${contador}/${total_etapas}]"
+        _linha
+    else
+        _mensagec "${RED}" "Falha na compactação de $E_EXEC"
+        return 1
     fi
 
     # Compactação em T_TELAS
     cd "$T_TELAS" || return 1
-    if "$cmd_find" "$T_TELAS"/ -type f \( -iname "*.TEL" \) -exec "$cmd_zip" -r -q "${caminho_backup}" {} +; then
-        _mensagec "${YELLOW}" "(Compactação de $T_TELAS concluída)"
+    {
+        "$cmd_find" "$T_TELAS"/ -type f \( -iname "*.TEL" \) -exec "$cmd_zip" -r -q "${caminho_backup}" {} + >>"${LOG_ATU}" 2>&1
+    } &
+    local pid_zip_telas=$!
+    pids+=("$pid_zip_telas")  # Registrar PID
+    _mostrar_progresso_backup "$pid_zip_telas"
+    if wait "$pid_zip_telas"; then
+        ((contador++))
+        _mensagec "${GREEN}" "Compactação de $T_TELAS concluída [Etapa ${contador}/${total_etapas}]"
+        _linha
+    else
+        _mensagec "${RED}" "Falha na compactação de $T_TELAS"
+        return 1
     fi
 
     # Compactação em X_XML (apenas para IsCOBOL)
     if [[ "$sistema" == "iscobol" ]]; then
         cd "$X_XML" || return 1
-        if "$cmd_find" "$X_XML"/ -type f \( -iname "*.xml" \) -exec "$cmd_zip" -r -q "${caminho_backup}" {} +; then
-             _mensagec "${YELLOW}" "(Compactação de $X_XML concluída)"
+        {
+            "$cmd_find" "$X_XML"/ -type f \( -iname "*.xml" \) -exec "$cmd_zip" -r -q "${caminho_backup}" {} + >>"${LOG_ATU}" 2>&1
+        } &
+        local pid_zip_xml=$!
+        pids+=("$pid_zip_xml")  # Registrar PID
+        _mostrar_progresso_backup "$pid_zip_xml"
+        if wait "$pid_zip_xml"; then
+            ((contador++))
+            _mensagec "${GREEN}" "Compactação de $X_XML concluída [Etapa ${contador}/${total_etapas}]"
+            _linha
+        else
+            _mensagec "${RED}" "Falha na compactação de $X_XML"
+            return 1
         fi
     fi
 
@@ -238,10 +314,12 @@ _processar_atualizacao_biblioteca() {
         if _confirmar "Deseja continuar a atualização?" "S"; then
             _mensagec "${YELLOW}" "Continuando a atualização..."
         else
+            pids=()  # Limpar PIDs se saindo
             return 1
         fi
     fi
 
+    pids=()  # Limpar PIDs após sucesso
     _executar_atualizacao_biblioteca
 }
 
@@ -250,24 +328,40 @@ _executar_atualizacao_biblioteca() {
     cd "${TOOLS}" || return 1
     _definir_variaveis_biblioteca
 
+    # Contar arquivos a processar
+    local arquivos=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}")
+    local total_arquivos=0
+    for arquivo in "${arquivos[@]}"; do
+        [[ -n "${arquivo}" && -r "${arquivo}" ]] && ((total_arquivos++))
+    done
+
+    local contador=0
+
     # Processar cada arquivo de atualização
     for arquivo in "${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}"; do
         if [[ -n "${arquivo}" && -r "${arquivo}" ]]; then
             _linha
-            _mensagec "${YELLOW}" "Agora, ATUALIZANDO os programas..."
+            _mensagec "${YELLOW}" "Descompactando e atualizando: ${arquivo} [Etapa ${contador}/${total_arquivos}]"
             _linha
-            _mensagec "${GREEN}" "${arquivo}"
+            _mensagec "${GREEN}" "Iniciando descompactação..."
 
-            # Descompactar arquivo
-            if "${cmd_unzip}" -o "${arquivo}" -d "/${destino}" >>"${LOG_ATU}" 2>&1; then
-                _mensagec "${GREEN}" "Descompactação de ${arquivo} concluída"
+            # Descompactar arquivo em background
+            {
+                "${cmd_unzip}" -o "${arquivo}" -d "/${destino}" >>"${LOG_ATU}" 2>&1
+            } &
+            local pid_unzip=$!
+            pids+=("$pid_unzip")  # Registrar PID para trap
+            _mostrar_progresso_backup "$pid_unzip"
+            if wait "$pid_unzip"; then
+                _mensagec "${GREEN}" "Descompactação de ${arquivo} concluída com sucesso"
+                ((contador++))
             else
-                _mensagec "${RED}" "Erro na descompactação de ${arquivo}"
+                _mensagec "${RED}" "Erro na descompactação de ${arquivo} - Verifique o log ${LOG_ATU}"
+                return 1
             fi
 
-#            _atualizar_barra_progresso
             _linha
-            _read_sleep 2
+            _read_sleep 1
             clear
         fi
     done
@@ -285,7 +379,7 @@ _executar_atualizacao_biblioteca() {
     done
     
     # Mover backups para diretório
-    if ! mv ./*_"${VERSAO}".bkp "${BACKUP}" 2>/dev/null; then
+    if ! mv *_"${VERSAO}".bkp "${BACKUP}" 2>/dev/null; then
         _mensagec "${YELLOW}" "Nenhum arquivo de backup para mover"
     fi
 
@@ -303,6 +397,7 @@ _executar_atualizacao_biblioteca() {
         return 1
     fi
 
+    pids=()  # Limpar PIDs após sucesso
     _press
 }
 
@@ -430,6 +525,16 @@ _definir_variaveis_biblioteca() {
     ATUALIZA2="${SAVATU2}${VERSAO}.zip"
     ATUALIZA3="${SAVATU3}${VERSAO}.zip"
     ATUALIZA4="${SAVATU4}${VERSAO}.zip"
+}
+
+# Atualiza barra de progresso (mantida para compatibilidade, mas não usada nas novas funções)
+_atualizar_barra_progresso() {
+    ((contador++))
+    percent=$((contador * 100 / total_etapas))
+    preenchido=$((percent * barra_tamanho / 100))
+    vazio=$((barra_tamanho - preenchido))
+    barra=$(printf "%${preenchido}s" | tr ' ' '#')
+    barra+=$(printf "%${vazio}s" | tr ' ' '-')
 }
 
 #---------- VALIDAÇÕES ----------#

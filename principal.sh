@@ -8,7 +8,7 @@
 UPDATE="${UPDATE:-}"
 
 # Versão do sistema
-UPDATE="18/09/2025-00"
+UPDATE="03/10/2025-00"
 readonly UPDATE 
 cd ..
 # Diretório do script
