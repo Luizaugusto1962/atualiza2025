@@ -128,32 +128,6 @@ _definir_cores() {
 #    readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM
 }
 
-# Verificar dependências do sistema
-_check_instalado() {
-    local app
-    local missing=""
-    
-    for app in zip unzip rsync wget; do
-        if ! command -v "$app" &>/dev/null; then
-            missing="$missing $app"
-            printf "\n%s" "${RED}"
-            printf "%*s\n" $(((20 + COLUMNS) / 2)) "PROGRAMA NÃO ENCONTRADO: ${app}"
-            printf "\n%s" "${NORM}"
-            
-            case "$app" in
-                zip|unzip) echo "  Sugestão: Instale o zip e unzip." ;;
-                rsync)     echo "  Sugestão: Instale o rsync." ;;
-                wget)      echo "  Sugestão: Instale o wget." ;;
-            esac
-        fi
-    done
-    
-    if [[ -n "$missing" ]]; then
-        _mensagec "${YELLOW}" "Instale os programas ausentes ($missing) e tente novamente."
-        exit 1
-    fi
-}
-
 # Configurar comandos do sistema
 _configurar_comandos() {
     # Comando para descompactar

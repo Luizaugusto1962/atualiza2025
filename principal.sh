@@ -9,8 +9,8 @@ UPDATE="${UPDATE:-}"
 
 # Versão do sistema
 UPDATE="03/10/2025-00"
-readonly UPDATE 
-cd ..
+readonly UPDATE
+
 # Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly SCRIPT_DIR

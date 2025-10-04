@@ -4,9 +4,6 @@
 # Responsável pela atualização das bibliotecas do sistema (Transpc, Savatu)
 #
 
-# Source do módulo de utilitários
-source utils.sh
-
 #---------- TRAPS PARA INTERRUPCOES ----------#
 declare -g pids=()  # Array global para rastrear PIDs de background
 

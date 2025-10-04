@@ -431,15 +431,20 @@ _menu_setups() {
                 _mostrar_parametros
                 _press
                 ;;
-            2) 
-                _manutencao_setup
-                # Após a manutenção, recarregar as configurações
-                if [[ -f "${LIB_CFG}/.atualizac" && -f "${LIB_CFG}/.atualizap" ]]; then
-                    # shellcheck source=/dev/null
-                    "." "${LIB_CFG}/.atualizac"
-                    # shellcheck source=/dev/null
-                    "." "${LIB_CFG}/.atualizap"
-                    _mensagec "${GREEN}" "Configurações recarregadas com sucesso!"
+            2)
+                # Chamar o script de setup em modo de edição
+                if [[ -x "${SCRIPT_DIR}/setup.sh" ]]; then
+                    "${SCRIPT_DIR}/setup.sh" --edit
+
+                    # Recarregar configurações após a edição
+                    if [[ -f "${LIB_CFG}/.atualizac" && -f "${LIB_CFG}/.atualizap" ]]; then
+                        source "${LIB_CFG}/.atualizac"
+                        source "${LIB_CFG}/.atualizap"
+                        _mensagec "${GREEN}" "Configurações recarregadas com sucesso!"
+                        _read_sleep 2
+                    fi
+                else
+                    _mensagec "${RED}" "Erro: Script setup.sh não encontrado ou não executável."
                     _read_sleep 2
                 fi
                 ;;
