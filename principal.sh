@@ -50,7 +50,7 @@ _carregar_modulo() {
     fi
     
     # shellcheck source=/dev/null
-    source "${caminho}"
+    "." "${caminho}"
 }
 
 # Carregamento sequencial dos módulos (ordem importante)

@@ -509,11 +509,6 @@ if [[ ! -d "${CFG}" ]]; then
     exit 1
 fi
 
-#local CFG="${LIB_CFG}/"
-#LIB_CFG="${TOOLS_DIR}/cfg"
-#    # Mover para o diretório do script
-#    cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
-
     # Verificar modo de operação
     if [[ "$1" == "--edit" ]]; then
         _edit_setup
