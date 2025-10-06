@@ -483,9 +483,9 @@ atualizar_savatu_variaveis() {
 }
 
 # Se os arquivos existem, carrega e pergunta se quer editar campo a campo
-if [[ -f ".atualizac" && -f ".atualizap" ]]; then
+if [[ -f ".atualizac" ]]; then
     echo "=================================================="
-    echo "Arquivos .atualizac e .atualizap ja existem."
+    echo "Arquivo .atualizac ja existem."
     echo "Carregando parametros para edicao..."
     echo "=================================================="
     echo
@@ -496,19 +496,9 @@ if [[ -f ".atualizac" && -f ".atualizap" ]]; then
         exit 1
     }
 
-    # Carrega os valores existentes do arquivo .atualizap
-    "." ./.atualizap || {
-        echo "Erro: Falha ao carregar .atualizap"
-        exit 1
-    }
-
     # Faz backup dos arquivos
     cp .atualizac .atualizac.bak || {
         echo "Erro: Falha ao criar backup de .atualizac"
-        exit 1
-    }
-    cp .atualizap .atualizap.bak || {
-        echo "Erro: Falha ao criar backup de .atualizap"
         exit 1
     }
 fi
@@ -562,13 +552,6 @@ clear
         [[ -n "$base" ]] && echo "base=${base}"
         [[ -n "$base2" ]] && echo "base2=${base2}"
         [[ -n "$base3" ]] && echo "base3=${base3}"
-    } >.atualizac
-
-    # Recria .atualizap
-    echo "Recriando .atualizap com os parametros atualizados..."
-    echo ${tracejada}
-
-    {
         echo "exec=sav/classes"
         echo "telas=sav/tel_isc"
         echo "xml=sav/xml"
@@ -583,10 +566,10 @@ clear
         echo "logs=/logs"
         echo "cfg=/cfg"
         echo "backup=/backup"
-    } >.atualizap
+    } >.atualizac
 
     echo
-    echo "Arquivos .atualizac e .atualizap atualizados com sucesso!"
+    echo "Arquivo .atualizac atualizado com sucesso!"
     echo
     echo ${tracejada}
     

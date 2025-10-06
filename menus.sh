@@ -42,7 +42,7 @@ _principal() {
         printf "\n"
         _mensagec "${GREEN}" "5${NORM} - Ferramentas           "
         printf "\n\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Sair       "
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Sair         "
         printf "\n"
         
         _mensaged "${BLUE}" "${UPDATE}"
@@ -139,7 +139,7 @@ _menu_biblioteca() {
         printf "\n\n"
         _mensagec "${PURPLE}" "Escolha Desatualizar:               "
         printf "\n"
-        _mensagec "${GREEN}" "4${NORM} - Voltar Programa(s) da Biblioteca "
+        _mensagec "${GREEN}" "4${NORM} - Voltar Programa(s) da Biblioteca"
         printf "\n\n"
         _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior          "
         printf "\n"
@@ -267,11 +267,11 @@ _menu_temporarios() {
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opção:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Limpeza dos Arquivos Temporarios  "
+        _mensagec "${GREEN}" "1${NORM} - Limpeza dos Arquivos Temporarios "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Adicionar Arquivos no ATUALIZAT   "
+        _mensagec "${GREEN}" "2${NORM} - Adicionar Arquivos no ATUALIZAT  "
         printf "\n\n" 
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior             "
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior           "
         printf "\n"
         _linha "=" "${GREEN}"
 
@@ -419,7 +419,7 @@ _menu_setups() {
         printf "\n"
         _mensagec "${GREEN}" "3${NORM} - Validar configuração"
         printf "\n\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior  "
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior "
         printf "\n"
         _linha "=" "${GREEN}"
 
@@ -429,16 +429,14 @@ _menu_setups() {
         case "${opcao}" in
             1) 
                 _mostrar_parametros
-                _press
+#                _press
                 ;;
             2) 
                 _manutencao_setup
                 # Após a manutenção, recarregar as configurações
-                if [[ -f "${LIB_CFG}/.atualizac" && -f "${LIB_CFG}/.atualizap" ]]; then
+                if [[ -f "${LIB_CFG}/.atualizac" ]]; then
                     # shellcheck source=/dev/null
                     "." "${LIB_CFG}/.atualizac"
-                    # shellcheck source=/dev/null
-                    "." "${LIB_CFG}/.atualizap"
                     _mensagec "${GREEN}" "Configurações recarregadas com sucesso!"
                     _read_sleep 2
                 fi
@@ -571,9 +569,9 @@ _menu_tipo_backup() {
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opção:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Backup Completo"
+        _mensagec "${GREEN}" "1${NORM} - Backup Completo      "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Backup Incremental"
+        _mensagec "${GREEN}" "2${NORM} - Backup Incremental   "
         printf "\n\n"
         _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
         printf "\n"

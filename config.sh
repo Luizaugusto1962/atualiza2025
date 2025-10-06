@@ -13,8 +13,6 @@ declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who)
 declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC)
 
-#LIB_CFG="${LIB_CFG}"
-
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
 #-Variaveis de configuracao do sistema ---------------------------------------------------------#
 # Variaveis de configuracao do sistema que podem ser definidas pelo usuario.
@@ -128,31 +126,6 @@ _definir_cores() {
 #    readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM
 }
 
-# Verificar dependências do sistema
-_check_instalado() {
-    local app
-    local missing=""
-    
-    for app in zip unzip rsync wget; do
-        if ! command -v "$app" &>/dev/null; then
-            missing="$missing $app"
-            printf "\n%s" "${RED}"
-            printf "%*s\n" $(((20 + COLUMNS) / 2)) "PROGRAMA NÃO ENCONTRADO: ${app}"
-            printf "\n%s" "${NORM}"
-            
-            case "$app" in
-                zip|unzip) echo "  Sugestão: Instale o zip e unzip." ;;
-                rsync)     echo "  Sugestão: Instale o rsync." ;;
-                wget)      echo "  Sugestão: Instale o wget." ;;
-            esac
-        fi
-    done
-    
-    if [[ -n "$missing" ]]; then
-        _mensagec "${YELLOW}" "Instale os programas ausentes ($missing) e tente novamente."
-        exit 1
-    fi
-}
 
 # Configurar comandos do sistema
 _configurar_comandos() {
@@ -193,7 +166,6 @@ _configurar_diretorios() {
     destino="${raiz}${destino}"
     
     readonly TOOLS="${destino}${pasta}" # Diretório principal do sistema
-#    readonly CFG="${TOOLS}/cfg"  # Diretório de configuração centralizado 
 
     # Verificar diretório principal
     if [[ -n "${TOOLS}" ]] && [[ -d "${TOOLS}" ]]; then
@@ -225,7 +197,7 @@ _configurar_diretorios() {
     readonly LIBS="${LIBS:-${TOOLS}/libs}"
 
     # Criar diretórios se não existirem
-    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${BACKUP}" "${ENVIA}" "${LIBS}" "${RECEBE}")
+    local dirs=("${BACKUP}" "${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" )
     for dir in "${dirs[@]}"; do
         if [[ ! -d "${dir}" ]]; then
             mkdir -p "${dir}" || {
@@ -300,7 +272,7 @@ _carregar_parametros() {
 # Carregar arquivo de configuração da empresa
 _carregar_config_empresa() {
     local config_dir="${LIB_CFG}/"
-    local config_file="${config_dir}.atualizac"
+    local config_file="${LIB_CFG}/.atualizac"
 
 # Criar diretório de configuração se não existir
     if [[ ! -d "${config_dir}" ]]; then
@@ -309,11 +281,11 @@ _carregar_config_empresa() {
             exit 1
         }
     fi
-  
     # Verificar existência e permissões
     if [[ ! -e "${config_file}" ]]; then
         printf "ERRO: Arquivo não existe no diretório.\n" 
-        _setup_inicializacao
+        printf "ATENCAO: Use o programa .setup.sh que esta na pasta /libs para criar as configuracoes.\n" 
+        exit 1
     fi
     
     if [[ ! -r "${config_file}" ]]; then
@@ -325,35 +297,6 @@ _carregar_config_empresa() {
     # shellcheck source=/dev/null
     "." "${config_file}"
 }
-# Carregar arquivo de parâmetros do sistema
-_carregar_config_parametros() {
-    local config_dir="${LIB_CFG}/"
-    local param_file="${config_dir}.atualizap"
-    # Criar diretório de configuração se não existir
-    if [[ ! -d "${config_dir}" ]]; then
-        mkdir -p "${config_dir}" || {
-            printf "ERRO: Não foi possível criar o diretório %s\n" "${config_dir}"
-            exit 1
-        }
-    fi
-
-    # Verificar existência e permissões
-    if [[ ! -e "${param_file}" ]]; then
-        printf "ERRO: Arquivo %s não existe. Use ./setup.sh para configurar.\n" "${param_file}"
-        printf "DICA: O arquivo deve estar em %s\n" "${config_dir}"
-        exit 1
-    fi
-    
-    if [[ ! -r "${param_file}" ]]; then
-        printf "ERRO: Arquivo %s sem permissão de leitura.\n" "${param_file}"
-        exit 1
-    fi
-    
-    # Carregar parâmetros
-    # shellcheck source=/dev/null
-    "." "${param_file}"
-
-}
 
 # Configurar acesso offline se necessário
 _configurar_acesso_offline() {
@@ -362,16 +305,6 @@ _configurar_acesso_offline() {
         if [[ ! -d "${offline_dir}" ]]; then
             mkdir -p "${offline_dir}" || {
                 printf "Erro ao criar diretório offline %s\n" "${offline_dir}"
-                exit 1
-            }
-        fi
-        
-        # Mover arquivo batch se existir
-        local bat_file="${TOOLS}/atualiza.bat"
-        if [[ -f "${bat_file}" ]]; then
-            chmod 777 "${bat_file}"
-            mv -f "${bat_file}" "${offline_dir}" || {
-                printf "Erro ao mover arquivo batch para %s\n" "${offline_dir}"
                 exit 1
             }
         fi
@@ -388,7 +321,6 @@ _carregar_configuracoes() {
     
     # Carregar arquivos de configuração
     _carregar_config_empresa
-    _carregar_config_parametros
 
     # Configurar comandos
     _configurar_comandos
@@ -472,14 +404,7 @@ _validar_configuracao() {
     else
         _mensagec "${GREEN}" "OK: Arquivo .atualizac encontrado"
     fi
-    
-    if [[ ! -f "${LIB_CFG}/.atualizap" ]]; then
-        _mensagec "${RED}" "ERRO: Arquivo .atualizap não encontrado!"
-        ((erros++))
-    else
-        _mensagec "${GREEN}" "OK: Arquivo .atualizap encontrado"
-    fi
-    
+
     # Verificar variáveis essenciais
     if [[ -z "${sistema}" ]]; then
         _mensagec "${RED}" "ERRO: Variável 'sistema' não definida!"

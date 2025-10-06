@@ -5,7 +5,7 @@
 #
 
 # Source do módulo de utilitários
-source utils.sh
+#"." .utils.sh
 
 #---------- TRAPS PARA INTERRUPCOES ----------#
 declare -g pids=()  # Array global para rastrear PIDs de background
@@ -32,7 +32,7 @@ _limpar_interrupcao() {
     
     # Verificar se backup parcial existe e sugerir rollback
     local ultimo_backup="${OLDS}/backup-*.zip"
-    if [[ -n "$(ls -A $ultimo_backup 2>/dev/null)" ]]; then
+    if [[ -n "$(ls -A "$ultimo_backup" 2>/dev/null)" ]]; then
         _mensagec "${YELLOW}" "Backup parcial encontrado. Considere reverter manualmente com '_reverter_biblioteca'"
     fi
     

@@ -138,11 +138,6 @@ _validar_configuracao_sistema() {
         ((erros++))
     fi
     
-    if [[ ! -f "${CFG}/.atualizap" ]]; then
-        _log_erro "Arquivo .atualizap não encontrado"
-        ((erros++))
-    fi
-    
     # Verificar variáveis essenciais
     if [[ -z "${sistema}" ]]; then
         _log_erro "Variável 'sistema' não definida"
