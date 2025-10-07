@@ -3,10 +3,12 @@
 # biblioteca.sh - Módulo de Gestão de Biblioteca
 # Responsável pela atualização das bibliotecas do sistema (Transpc, Savatu)
 #
-
-# Source do módulo de utilitários
-#"." .utils.sh
-
+destino="${destino:-}"
+sistema="${sistema:-}"
+cmd_zip="${cmd_zip:-}"
+cmd_unzip="${cmd_unzip:-}"
+cmd_find="${cmd_find:-}"
+acessossh="${acessossh:-}"
 #---------- TRAPS PARA INTERRUPCOES ----------#
 declare -g pids=()  # Array global para rastrear PIDs de background
 
@@ -379,7 +381,13 @@ _executar_atualizacao_biblioteca() {
     done
     
     # Mover backups para diretório
-    if ! mv *_"${VERSAO}".bkp "${BACKUP}" 2>/dev/null; then
+    arquivos=(*_"${VERSAO}".bkp)
+    if (( ${#arquivos[@]} )); then
+        mv "${arquivos[@]}" "${BACKUP}" || {
+        _mensagec "${YELLOW}" "Erro ao mover arquivos de backup."
+        exit 1
+        }
+    else
         _mensagec "${YELLOW}" "Nenhum arquivo de backup para mover"
     fi
 
@@ -391,9 +399,18 @@ _executar_atualizacao_biblioteca() {
     _linha
 
     # Salvar versão anterior
-    if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> .atualizac; then
+    if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> "${LIB_CFG}/.atualizac"; then
         _mensagec "${RED}" "Erro ao gravar arquivo de versão atualizada"
         _press
+        exit
+        return 1
+    fi
+
+    # Salvar versão também no diretório /u/sav/tools/cfg
+    if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> "/u/sav/tools/cfg/.atualizac"; then
+        _mensagec "${RED}" "Erro ao gravar arquivo de versão atualizada em /u/sav/tools/cfg/"
+        _press
+        exit
         return 1
     fi
 
@@ -528,14 +545,14 @@ _definir_variaveis_biblioteca() {
 }
 
 # Atualiza barra de progresso (mantida para compatibilidade, mas não usada nas novas funções)
-_atualizar_barra_progresso() {
-    ((contador++))
-    percent=$((contador * 100 / total_etapas))
-    preenchido=$((percent * barra_tamanho / 100))
-    vazio=$((barra_tamanho - preenchido))
-    barra=$(printf "%${preenchido}s" | tr ' ' '#')
-    barra+=$(printf "%${vazio}s" | tr ' ' '-')
-}
+#_atualizar_barra_progresso() {
+#    ((contador++))
+#    percent=$((contador * 100 / total_etapas))
+#    preenchido=$((percent * barra_tamanho / 100))
+#    vazio=$((barra_tamanho - preenchido))
+#    barra=$(printf "%${preenchido}s" | tr ' ' '#')
+#    barra+=$(printf "%${vazio}s" | tr ' ' '-')
+#}
 
 #---------- VALIDAÇÕES ----------#
 
