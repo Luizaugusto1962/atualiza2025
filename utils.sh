@@ -284,7 +284,7 @@ _mostrar_progresso_backup() {
     local spin=( '⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏' )
     local i=0
     local elapsed=0
-    local msg="Backup em andamento"
+    local msg="Processo em andamento"
 
     # Verifica se o processo ainda esta ativo
     if ! kill -0 "$pid" 2>/dev/null; then
