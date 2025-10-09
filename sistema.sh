@@ -100,7 +100,7 @@ _mostrar_versao_linux() {
     printf "\n"
 
     # Checando Externo IP
-    if [[ "${SERACESOFF}" == "s" ]]; then
+    if [[ "${SERACESOFF}" == "n" ]]; then
         externalip=$(curl -s ipecho.net/plain || printf "Nao disponivel")
         printf "${GREEN}""IP Externo :""${NORM}""${externalip}""%*s\n"
     fi
@@ -204,20 +204,7 @@ _executar_update() {
 }
 
 # Atualização online via GitHub
-_atualizar_online() {
-#        cd "${LIB_DIR}" || exit 1
-#    local link="https://codeload.github.com/Luizaugusto1962/atualiza2025/zip/refs/tags/Atualiza"
-    local link="https://github.com/Luizaugusto1962/Atualiza2025/archive/master/atualiza.zip"
-    local zipfile="atualiza.zip"
-    local temp_dir="${ENVIA}"
-       # Criar e acessar diretório temporário
-    mkdir -p "$temp_dir" || {
-        _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
-        return 1
-    }
-    _atualizando
-}
-_atualizando() { 
+_atualizando() {
 
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
 
@@ -235,7 +222,7 @@ _atualizando() {
     cd "${LIB_DIR}" || {
         _mensagec "${RED}" "Erro: Diretório de atualização não encontrado"
         return 1
-    }   
+    }
     # Processar todos os arquivos .sh para backup
     for arquivo in *.sh; do
         # Verificar se o arquivo existe
@@ -243,7 +230,7 @@ _atualizando() {
             _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
             break
         fi
-        
+
         # Copiar o arquivo para o diretório de backup
         if cp -f "$arquivo" "${backup}/.$arquivo.bak"; then
             _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
@@ -253,7 +240,7 @@ _atualizando() {
             ((backup_erro++))
         fi
     done
-    
+
     # Verificar se houve erros no backup
     if [[ $backup_erro -gt 0 ]]; then
         _mensagec "${RED}" "Falha no backup de $backup_erro arquivo(s)"
@@ -297,21 +284,17 @@ _atualizando() {
             _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para processar"
             break
         else
-            chmod +x "$arquivo"    
+            chmod +x "$arquivo"
         fi
-        
-        # Mover o arquivo para o diretório de destino
-        if [ "$arquivo" = "atualiza.sh" ]; then
-            if mv -f "$arquivo" "${TOOLS}"; then
-                _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
-                ((arquivos_instalados++))
-            else
-            _mensagec "${RED}" "Erro ao instalar $arquivo"
-            ((arquivos_erro++))
-            fi
-        fi        # Mover o arquivo para o diretório de destino
 
-        if mv -f "$arquivo" "${LIB_DIR}"; then
+        # Determinar destino
+        if [ "$arquivo" = "atualiza.sh" ]; then
+            target="${TOOLS}"
+        else
+            target="${LIB_DIR}"
+        fi
+        # Mover o arquivo para o diretório de destino
+        if mv -f "$arquivo" "$target"; then
             _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
             ((arquivos_instalados++))
         else
@@ -319,7 +302,7 @@ _atualizando() {
             ((arquivos_erro++))
         fi
     done
-    
+
     # Verificar se houve erros na instalação
     if [[ $arquivos_erro -gt 0 ]]; then
         _mensagec "${RED}" "Falha na instalação de $arquivos_erro arquivo(s)"
@@ -340,6 +323,19 @@ _atualizando() {
     _linha
 
     exit 0
+}
+_atualizar_online() {
+#        cd "${LIB_DIR}" || exit 1
+#    local link="https://codeload.github.com/Luizaugusto1962/atualiza2025/zip/refs/tags/Atualiza"
+    local link="https://github.com/Luizaugusto1962/Atualiza2025/archive/master/atualiza.zip"
+    local zipfile="atualiza.zip"
+    local temp_dir="${ENVIA}/temp_update"
+       # Criar e acessar diretório temporário
+    mkdir -p "$temp_dir" || {
+        _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
+        return 1
+    }
+    _atualizando
 }
 
 # Atualização offline via arquivo local
@@ -365,10 +361,9 @@ _atualizar_offline() {
         _mensagec "${RED}" "Erro: $zipfile não encontrado em $dir_offline"
         return 1
     fi
-    mv $zipfile "$temp_dir"
+    mv "${zipfile}" "${temp_dir}"
     _atualizando
 }
-
 
 # Constantes
 readonly tracejada="#-------------------------------------------------------------------#"
