@@ -3,6 +3,9 @@
 # utils.sh - Módulo de Utilitários e Funções Auxiliares  
 # Funções básicas para formatação, mensagens, validação e controle de fluxo
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
+
 destino="${destino:-}"       # Caminho do diretorio raiz do programa.
 
 #---------- FUNÇÕES DE FORMATAÇÃO DE TELA ----------#

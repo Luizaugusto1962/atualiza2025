@@ -9,6 +9,8 @@
 #   - ./setup.sh: Modo de configuração inicial interativo.
 #   - ./setup.sh --edit: Modo de edição para modificar configurações existentes.
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
 
 #---------- FUNÇÕES DE LÓGICA DE NEGÓCIO ----------#
 
@@ -299,7 +301,7 @@ _setup_backup() {
     echo ${tracejada}
     echo "###     ( Nome de pasta no servidor da SAV )                ###"
     echo "Nome de pasta no servidor da SAV, informar somento o nome do cliente"
-    read -rp "(Ex: cliente/NOME_CLIENTE): " "/cliente/" ENVIABACK
+    read -rp "(Ex: cliente/NOME_CLIENTE): " ENVIABACK
     if [[ -z "$ENVIABACK" && "${SERACESOFF}" =~ ^[Nn]$ ]]; then
         echo "ENVIABACK=" >> .atualizac
     elif [[ -n "$ENVIABACK" ]]; then

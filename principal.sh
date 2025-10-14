@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 18/09/2025-00
+# Versao: 10/10/2025-00
 # Autor: Luiz Augusto
 # Email: luizaugusto@sav.com.br
 #
 UPDATE="${UPDATE:-}"
 
 # Versão do sistema
-UPDATE="03/10/2025-00"
-readonly UPDATE 
+UPDATE="03/10/2024-00"
+readonly UPDATE
 cd ..
 # Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

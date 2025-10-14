@@ -3,6 +3,8 @@
 # sistema.sh - Módulo de Informações do Sistema
 # Responsável por informações do IsCOBOL, Linux, parâmetros e atualizações
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
 
 destino="${destino:-}"
 sistema="${sistema:-}"
@@ -365,6 +367,7 @@ _atualizar_offline() {
     _atualizando
 }
 
+#---------- FUNÇÕES DE MANUTENÇÃO DO SETUP ----------#
 # Constantes
 readonly tracejada="#-------------------------------------------------------------------#"
 
@@ -574,7 +577,7 @@ if [[ "${acessossh}" = "s" ]]; then
 SERVER_IP="${IPSERVER}"        # IP do servidor (padrão: 177.45.80.10)
 SERVER_PORT="${SERVER_PORT:-41122}"            # Porta SFTP (padrão: 41122)
 SERVER_USER="${SERVER_USER:-atualiza}"         # Usuário SSH (padrão: atualiza)
-CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-/${destino}${pasta}/.ssh/control}"
+CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${destino}${pasta}/.ssh/control}"
 # VALIDAÇÃO DAS VARIÁVEIS OBRIGATÓRIAS
 if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
     echo "Erro: Variaveis obrigatorias nao definidas!"
@@ -627,16 +630,10 @@ EOF
     chmod 600 "/root/.ssh/config"
     echo "Configuracao SSH criada com parametros:"
 else
-    echo "Arquivo de configuracao ja existe: /root/.ssh/config"
+    echo "Arquivo de configuracao ja existe regravando: /root/.ssh/config"
     
     # Verifica se a configuração específica já está presente
-    if ! grep -q "Host sav_servidor" "/root/.ssh/config" 2>/dev/null; then
-        echo -e "\nA configuracao 'sav_servidor' NAO esta presente no arquivo."
-        echo "Deseja adiciona-la com os parametros atuais? (s/n)"
-        read -r resposta
-        if [[ ! "$resposta" =~ ^[Ss]$ ]]; then exit 0; fi
         cat << EOF >> "/root/.ssh/config"
-
 # Configuração adicionada automaticamente
 Host sav_servidor
     HostName $SERVER_IP
@@ -659,7 +656,6 @@ echo -e "\n Validacao concluida! Teste com:"
 echo "   sftp sav_servidor"
 echo
 echo
-fi
 _linha
 _press 
 exit 1

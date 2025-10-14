@@ -3,11 +3,15 @@
 # backup.sh - Modulo do Sistema de Backup
 # Responsavel por backup completo, incremental e restauraçao
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
+
 destino="${destino:-}"
 sistema="${sistema:-}"
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
+BASE_TRABALHO="${BASE_TRABALHO:-}"
 cmd_zip="${cmd_zip:-}"
 
 # Carregar configurações e variaveis globais
@@ -22,7 +26,7 @@ _executar_backup() {
     # Escolher base se necessario
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
-#        base_trabalho="${BASE_TRABALHO}"
+        base_trabalho="${BASE_TRABALHO}"
     else
         base_trabalho="${destino}${base}"
     fi
@@ -45,7 +49,7 @@ _executar_backup() {
 
     # Gerar nome do arquivo
     local nome_backup
-    nome_backup="${EMPRESA}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
+    nome_backup="${EMPRESA}_${base_trabalho}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
     local caminho_backup="$BACKUP/$nome_backup"
 
     # Verificar backups recentes
@@ -60,10 +64,6 @@ _executar_backup() {
 
     # Mudar para diretorio base
     _diretorio_trabalho
-#    cd "$base_trabalho" || {
-#        _mensagec "$RED" "Erro: Nao foi possivel acessar $base_trabalho"
-#        return 1
-#    }
 
     _linha
     _mensagec "$YELLOW" "Criando Backup..."
@@ -77,7 +77,7 @@ _executar_backup() {
         local mes ano data_referencia
 
         _linha
-        _mensagec "$YELLOW" "Digite o mês (01-12) e ano (ex: 2023) para o backup incremental:"
+        _mensagec "$YELLOW" "Digite o mês (01-12) e ano (ex: 202?) para o backup incremental:"
         _linha
 
         read -rp "${YELLOW}Mes (MM): ${NORM}" mes
@@ -305,7 +305,6 @@ _restaurar_arquivo_especifico() {
     local arquivo_backup="$1"
     local nome_arquivo
     base_trabalho="${destino}${base}"
-#    _diretorio_trabalho
     read -rp "${YELLOW}Nome do arquivo (maiúsculo, sem extensao): ${NORM}" nome_arquivo
     if [[ ! "$nome_arquivo" =~ ^[A-Z0-9]+$ ]]; then
         _mensagec "${RED}" "Nome de arquivo invalido"

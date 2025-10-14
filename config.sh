@@ -3,6 +3,8 @@
 # config.sh - Módulo de Configurações e Validações
 # Responsável por carregar configurações, validar sistema e definir variáveis globais
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
 
 #---------- VARIÁVEIS GLOBAIS ----------#
 
@@ -59,8 +61,6 @@ PORTA="${PORTA:-}"           # Variavel que define a porta a ser usada para.
 USUARIO="${USUARIO:-}"       # Variavel que define o usuario a ser usado.
 IPSERVER="${IPSERVER:-}"     # Variavel que define o ip do servidor da SAV.
 DESTINO2="${DESTINO2:-}"     # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
-cmd_zip="${cmd_zip:-}"
-cmd_unzip="${cmd_unzip:-}"
 cmd_find="${cmd_find:-}"
 RED="${RED:-}"
 GREEN="${GREEN:-}"
@@ -160,6 +160,9 @@ _configurar_comandos() {
 
 # Configurar diretórios do sistema
 _configurar_diretorios() {
+    # Salvar diretório atual
+    local dir_atual
+    dir_atual="$(pwd)"
     cd .. || exit 1
     
     local raiz="/"
@@ -206,6 +209,9 @@ _configurar_diretorios() {
             }
         fi
     done
+
+    # Restaurar diretório original
+    cd "$dir_atual" || exit 1
 }
 
 # Configurar variáveis do sistema

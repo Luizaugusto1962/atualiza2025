@@ -3,6 +3,9 @@
 # biblioteca.sh - Módulo de Gestão de Biblioteca
 # Responsável pela atualização das bibliotecas do sistema (Transpc, Savatu)
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
+
 destino="${destino:-}"
 sistema="${sistema:-}"
 cmd_zip="${cmd_zip:-}"
@@ -403,7 +406,6 @@ _executar_atualizacao_biblioteca() {
         _mensagec "${RED}" "Erro ao gravar arquivo de versão atualizada"
         _press
         exit
-        return 1
     fi
 
     # Salvar versão também no diretório /u/sav/tools/cfg
@@ -411,7 +413,6 @@ _executar_atualizacao_biblioteca() {
         _mensagec "${RED}" "Erro ao gravar arquivo de versão atualizada em /u/sav/tools/cfg/"
         _press
         exit
-        return 1
     fi
 
     pids=()  # Limpar PIDs após sucesso

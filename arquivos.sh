@@ -2,12 +2,16 @@
 #
 # arquivos.sh - Módulo de Gestão de Arquivos
 # Responsável por limpeza, recuperação, transferência e expurgo de arquivos
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
 #
+
 destino="${destino:-}"
 sistema="${sistema:-}"
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
+BASE_TRABALHO="${BASE_TRABALHO:-}"
 cmd_zip="${cmd_zip:-}"
 jut="${jut:-}"
 #---------- FUNÇÕES DE LIMPEZA ----------#
@@ -113,7 +117,7 @@ _recuperar_arquivo_especifico() {
     # Escolher base se necessário
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
-#        base_trabalho="${BASE_TRABALHO}"
+        BASE_TRABALHO="${base_trabalho}"
     else
         base_trabalho="${destino}${base}"
     fi
@@ -132,9 +136,6 @@ _recuperar_arquivo_especifico() {
     local nome_arquivo
     read -rp "${YELLOW}Nome do arquivo: ${NORM}" nome_arquivo
     nome_arquivo=$(echo "$nome_arquivo" | xargs) # Remove espaços extras
-    # Remove espaços extras
-    nome_arquivo="${nome_arquivo#"${nome_arquivo%%[![:space:]]*}"}"
-    nome_arquivo="${nome_arquivo%"${nome_arquivo##*[![:space:]]}"}"
     _linha "-" "${BLUE}"
     
     if [[ -z "$nome_arquivo" ]]; then
@@ -208,6 +209,9 @@ _recuperar_arquivos_principais() {
     # Escolher base se necessário
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
+        BASE_TRABALHO="${base_trabalho}"
+    else
+        base_trabalho="${destino}${base}"
     fi
     
     if [[ "${sistema}" = "iscobol" ]]; then

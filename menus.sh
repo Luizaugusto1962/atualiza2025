@@ -3,6 +3,9 @@
 # menus.sh - Sistema de Menus
 # Responsável pela apresentação e navegação dos menus do sistema
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
+
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
 base="${base:-}"
 base2="${base2:-}"

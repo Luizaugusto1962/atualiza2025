@@ -3,6 +3,9 @@
 # programas.sh - Módulo de Gestão de Programas
 # Responsável pela atualização, instalação e reversão de programas
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 10/10/2025-00
+
 destino="${destino:-}"
 sistema="${sistema:-}"
 acessossh="${acessossh:-}"
