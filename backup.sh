@@ -17,6 +17,30 @@ cmd_zip="${cmd_zip:-}"
 # Carregar configurações e variaveis globais
 _carregar_modulo "config.sh"
 
+# Verificar variáveis essenciais
+if [[ -z "$destino" ]]; then
+    _mensagec "${RED}" "Erro: Variável 'destino' não definida"
+    return 1
+fi
+
+if [[ -z "$sistema" ]]; then
+    _mensagec "${RED}" "Erro: Variável 'sistema' não definida"
+    return 1
+fi
+
+if [[ -z "$BACKUP" ]]; then
+    _mensagec "${RED}" "Erro: Variável 'BACKUP' não definida"
+    return 1
+fi
+
+# Verificar comandos externos necessários
+for cmd in zip unzip; do
+    if ! command -v "${cmd}" &>/dev/null; then
+        _mensagec "${RED}" "Erro: Comando ${cmd} não encontrado"
+        return 1
+    fi
+done
+
 #---------- FUNÇÕES PRINCIPAIS DE BACKUP ----------#
 
 # Executa backup do sistema
@@ -140,13 +164,17 @@ _restaurar_backup() {
     local backup_selecionado
 
     # Listar backups disponiveis
-shopt -s nullglob
-mapfile -t arquivos_backup < <(printf '%s\n' "${BACKUP}"/*.zip)
+    shopt -s nullglob
+    mapfile -t arquivos_backup < <(printf '%s\n' "${BACKUP}"/*.zip)
+    
+    # Restaurar configuração original ao sair da função
+    trap 'shopt -u nullglob' RETURN
 
-if (( ${#arquivos_backup[@]} == 0 )); then
-    echo "Nenhum arquivo .zip encontrado em ${BACKUP}"
-    exit 1
-fi
+    if (( ${#arquivos_backup[@]} == 0 )); then
+        _mensagec "${RED}" "Nenhum arquivo de backup encontrado em ${BACKUP}"
+        _press
+        return 1
+    fi
 
     # Mostrar backups disponiveis
     _linha
@@ -198,6 +226,9 @@ shopt -s nullglob
 
 # Listar backups disponíveis
 backups=( "${BACKUP}/${EMPRESA}"_*.zip )
+
+# Restaurar configuração original ao sair da função
+trap 'shopt -u nullglob' RETURN
 
 if (( ${#backups[@]} == 0 )); then
     _mensagec "${RED}" "Nenhum backup encontrado"
@@ -258,8 +289,28 @@ fi
 # Executa backup completo
 _executar_backup_completo() {
     local arquivo_destino="$1"
+    _log "Executando backup completo para: $arquivo_destino"
     _diretorio_trabalho
-    "$cmd_zip" "$arquivo_destino" ./*.* -x ./*.zip ./*.tar ./*.tar.gz >/dev/null 2>&1
+
+    local arquivos_encontrados
+    arquivos_encontrados=$(find . -maxdepth 1 -type f -name "*.*" ! -name "*.zip" ! -name "*.tar" ! -name "*.tar.gz" | wc -l)
+    _log "Arquivos encontrados para backup: $arquivos_encontrados"
+
+    if ! "$cmd_zip" "$arquivo_destino" ./*.* -x ./*.zip ./*.tar ./*.tar.gz >>"${LOG_ATU}" 2>&1; then
+        _mensagec "${RED}" "Erro ao criar backup completo"
+        _log_erro "Falha na criação do backup completo: $arquivo_destino"
+        return 1
+    fi
+
+    # Verificar se arquivo foi criado e tamanho
+    if [[ -f "$arquivo_destino" && -s "$arquivo_destino" ]]; then
+        local tamanho
+        tamanho=$(du -h "$arquivo_destino" | cut -f1)
+        _log_sucesso "Backup completo criado com sucesso: $arquivo_destino (Tamanho: $tamanho)"
+    else
+        _log_erro "Backup completo não foi criado ou está vazio: $arquivo_destino"
+        return 1
+    fi
 }
 
 # Executa backup incremental (recebe data como parâmetro)
@@ -268,9 +319,21 @@ _executar_backup_incremental() {
     local data_referencia="$2"
     _diretorio_trabalho
 
-    find . -type f -newermt "$data_referencia" \
+    local arquivos_encontrados
+    arquivos_encontrados=$(find . -type f -newermt "$data_referencia" \
+           ! -name "*.zip" ! -name "*.tar" ! -name "*.tar.gz" -print | wc -l)
+           
+    if [[ "$arquivos_encontrados" -eq 0 ]]; then
+        _mensagec "${YELLOW}" "Nenhum arquivo encontrado para backup incremental desde $data_referencia"
+        return 1
+    fi
+
+    if ! find . -type f -newermt "$data_referencia" \
            ! -name "*.zip" ! -name "*.tar" ! -name "*.tar.gz" -print0 | \
-        xargs -0 "$cmd_zip" "$arquivo_destino" >/dev/null 2>&1
+        xargs -0 "$cmd_zip" "$arquivo_destino" >/dev/null 2>&1; then
+        _mensagec "${RED}" "Erro ao criar backup incremental"
+        return 1
+    fi
 }
 
 # Diretorio de trabalho
@@ -314,7 +377,7 @@ _restaurar_arquivo_especifico() {
     _linha
     _mensagec "${YELLOW}" "Restaurando ${nome_arquivo}..."
     _linha
-    if ! "${cmd_unzip}" -o "$arquivo_backup" "${nome_arquivo}*.*" -d "${base_trabalho}" >>"${LOG_ATU}" 2>&1; then
+    if ! "${cmd_unzip}" -o "$arquivo_backup" "${nome_arquivo}"*.* -d "${base_trabalho}" >>"${LOG_ATU}" 2>&1; then
         _mensagec "${RED}" "Erro ao extrair ${nome_arquivo}"
         _press
         return 1
@@ -333,6 +396,13 @@ _restaurar_arquivo_especifico() {
 _enviar_backup_servidor() {
     local nome_backup="$1"
     local destino_remoto
+
+    # Verificar se rsync está disponível
+    if ! command -v rsync &>/dev/null; then
+        _mensagec "${RED}" "Erro: Comando rsync não encontrado"
+        _press
+        return 1
+    fi
 
     # Determinar destino
     if [[ -n "${ENVIABACK}" ]]; then
@@ -385,6 +455,14 @@ _mover_backup_offline() {
 _enviar_backup_rede() {
     local nome_backup="$1"
     local destino_remoto
+    
+    # Verificar se rsync está disponível
+    if ! command -v rsync &>/dev/null; then
+        _mensagec "${RED}" "Erro: Comando rsync não encontrado"
+        _press
+        return 1
+    fi
+    
     if [[ -n "${ENVIABACK}" ]]; then
         destino_remoto="${ENVIABACK}"
     else

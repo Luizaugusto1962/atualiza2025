@@ -399,7 +399,8 @@ _validar_configuracao() {
     _linha "=" "${GREEN}"
     _mensagec "${RED}" "Validação de Configuração"
     _linha
-    
+    _log "=== INICIANDO VALIDAÇÃO DE CONFIGURAÇÃO ==="
+
     local erros=0
     local warnings=0
     

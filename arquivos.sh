@@ -14,6 +14,7 @@ base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 BASE_TRABALHO="${BASE_TRABALHO:-}"
 cmd_zip="${cmd_zip:-}"
 jut="${jut:-}"
+
 #---------- FUNÇÕES DE LIMPEZA ----------#
 
 # Executa limpeza de arquivos temporários
@@ -158,16 +159,17 @@ _recuperar_todos_arquivos() {
     local -a extensoes=('*.ARQ.dat' '*.DAT.dat' '*.LOG.dat' '*.PAN.dat')
     _mensagec "${RED}" "Recuperando todos os arquivos principais..."
     _linha "-" "${YELLOW}"
-    
+
     if [[ -d "$base_trabalho" ]]; then
         for extensao in "${extensoes[@]}"; do
-            for arquivo in ${base_trabalho}/${extensao}; do
+            # Usar find ao invés de expansão direta para evitar problemas de word splitting
+            while IFS= read -r -d '' arquivo; do
                 if [[ -f "$arquivo" && -s "$arquivo" ]]; then
                     _executar_jutil "$arquivo"
                 else
                     _mensagec "${YELLOW}" "Arquivo nao encontrado ou vazio: ${arquivo##*/}"
                 fi
-            done
+            done < <(find "$base_trabalho" -name "$extensao" -type f -print0 2>/dev/null)
         done
     else
         _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} não existe"
@@ -178,23 +180,24 @@ _recuperar_todos_arquivos() {
 _recuperar_arquivo_individual() {
     local nome_arquivo="$1"
     local base_trabalho="$2"
-    
+
     # Validar nome do arquivo
     if [[ ! "$nome_arquivo" =~ ^[A-Z0-9]+$ ]]; then
         _mensagec "${RED}" "Nome de arquivo inválido. Use apenas letras maiúsculas e números."
         return 1
     fi
-    
+
     local padrao_arquivo="${nome_arquivo}.*.dat"
     local arquivos_encontrados=0
-    
-    for arquivo in ${base_trabalho}/${padrao_arquivo}; do
+
+    # Usar find ao invés de expansão direta para evitar problemas de word splitting
+    while IFS= read -r -d '' arquivo; do
         if [[ -f "$arquivo" ]]; then
             _executar_jutil "$arquivo"
             ((arquivos_encontrados++))
         fi
-    done
-    
+    done < <(find "$base_trabalho" -name "$padrao_arquivo" -type f -print0 2>/dev/null)
+
     if (( arquivos_encontrados == 0 )); then
         _mensagec "${YELLOW}" "Nenhum arquivo encontrado para: ${nome_arquivo}"
     else

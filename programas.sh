@@ -14,6 +14,7 @@ cmd_unzip="${cmd_unzip:-}"
 cmd_find="${cmd_find:-}"
 class=${class:-}
 mclass=${mclass:-}
+sucesso_arquivo=${sucesso_arquivo:-}
 #---------- VARIÁVEIS GLOBAIS DO MÓDULO ----------#
 
 # Arrays para armazenar programas e arquivos
@@ -282,40 +283,79 @@ _solicitar_pacotes_atualizacao() {
 # Baixa programas via RSYNC/SFTP
 _baixar_programas_rsync() {
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
+        _log_erro "Nenhum arquivo selecionado para download"
         return 1
     fi
 
     _linha
     _mensagec "${YELLOW}" "Realizando sincronização dos arquivos..."
+    _log "Iniciando download de ${#ARQUIVOS_PROGRAMA[@]} arquivos"
+
+    local sucesso=0
+    local falhas=0
 
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
         _linha
         _mensagec "${GREEN}" "Transferindo: $arquivo"
         _linha
+        _log "Tentando baixar arquivo: $arquivo"
+
+        local sucesso_arquivo=false
 
         if [[ "${acessossh}" == "n" ]]; then
-        _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
-        _linha
-		echo "Transferindo: $arquivo"
-		_press
-            if ! sftp -P "$PORTA" "$USUARIO"@"${IPSERVER}":"${DESTINO2SERVER}${arquivo}" .; then
+            _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
+            _linha
+            _log "Usando modo interativo SFTP para arquivo: $arquivo"
+            echo "Transferindo: $arquivo"
+            _press
+
+            if ! sftp -P "$PORTA" "$USUARIO"@"${IPSERVER}":"${DESTINO2SERVER}${arquivo}" . >>"${LOG_ATU}" 2>&1; then
                 _mensagec "${RED}" "Falha no download: $arquivo"
+                _log_erro "Falha no SFTP interativo para arquivo: $arquivo"
+                ((falhas++))
                 continue
             fi
         else
-            sftp sav_servidor <<EOF
-get "${DESTINO2SERVER}${arquivo}"
+            _log "Usando modo automático SFTP para arquivo: $arquivo"
+            # DEBUG: Logando início da transferência automática
+            _log "DEBUG: Iniciando transferência automática para arquivo: $arquivo"
+
+            if sftp sav_servidor >>"${LOG_ATU}" 2>&1 <<EOF
+ get "${DESTINO2SERVER}${arquivo}"
 EOF
+            then
+                local sucesso_arquivo=true
+                _log "DEBUG: Transferência automática bem-sucedida para arquivo: $arquivo"
+            else
+                local sucesso_arquivo=false
+                _log_erro "Falha no SFTP automático para arquivo: $arquivo"
+                _log "DEBUG: Código de saída $? indica falha na transferência de: $arquivo"
+            fi
         fi
 
         # Verificar se arquivo foi baixado
-        if [[ ! -f "$arquivo" || ! -s "$arquivo" ]]; then
-            _mensagec "${RED}" "ERRO: Falha ao baixar '$arquivo'"
+        if [[ ! -f "$arquivo" ]]; then
+            _mensagec "${RED}" "ERRO: Arquivo não encontrado após download: '$arquivo'"
+            _log_erro "Arquivo não encontrado após download: $arquivo"
+            ((falhas++))
             continue
         fi
-        
+
+        if [[ ! -s "$arquivo" ]]; then
+            _mensagec "${RED}" "ERRO: Arquivo vazio após download: '$arquivo'"
+            _log_erro "Arquivo vazio após download: $arquivo"
+            ((falhas++))
+            continue
+        fi
+
         _mensagec "${GREEN}" "Download concluído: $arquivo"
+        _log_sucesso "Download concluído com sucesso: $arquivo"
+        ((sucesso++))
     done
+
+    _log "Resumo download - Sucesso: $sucesso, Falhas: $falhas"
+    _linha
+    _mensagec "${YELLOW}" "Transferências concluídas - Sucesso: $sucesso, Falhas: $falhas"
 }
 
 # Baixa pacotes para diretório específico

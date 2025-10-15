@@ -15,7 +15,6 @@ cd ..
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly SCRIPT_DIR
 
-
 LIB_DIR="${SCRIPT_DIR}/libs"
 readonly LIB_DIR
 
@@ -67,20 +66,30 @@ _carregar_modulo "menus.sh"      # Sistema de menus por último
 
 # Funçao principal de inicializaçao
 _inicializar_sistema() {
+    # Log de início da inicialização
+    _log "=== INICIANDO SISTEMA SAV ==="
+
     # Carregar e validar configurações
+    _log "Carregando configurações..."
     _carregar_configuracoes
-    
-    # Verificar dependências
+
+    # Verificar dependências críticas
+    _log "Verificando dependências do sistema..."
     _check_instalado
 
-    # Validar diretórios
+    # Validar diretórios essenciais
+    _log "Validando diretórios do sistema..."
     _validar_diretorios
-    
+
     # Configurar ambiente
+    _log "Configurando ambiente..."
     _configurar_ambiente
-    
+
     # Executar limpeza automática diária
+    _log "Executando limpeza automática diária..."
     _executar_expurgador_diario
+
+    _log "Inicialização concluída com sucesso"
 }
 
 # Funçao principal do programa
