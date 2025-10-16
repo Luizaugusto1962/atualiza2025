@@ -6,8 +6,6 @@
 # SISTEMA SAV - Script de Atualizaçao Modular
 # Versao: 10/10/2025-00
 
-destino="${destino:-}"       # Caminho do diretorio raiz do programa.
-
 #---------- FUNÇÕES DE FORMATAÇÃO DE TELA ----------#
 
 # Limpa a tela e posiciona cursor no centro
@@ -136,25 +134,25 @@ _validar_configuracao_sistema() {
     local erros=0
     
     # Verificar arquivos de configuração
-    if [[ ! -f "${CFG}/.atualizac" ]]; then
+    if [[ ! -f "${LIB_CFG}/.atualizac" ]]; then
         _log_erro "Arquivo .atualizac não encontrado"
         ((erros++))
     fi
     
     # Verificar variáveis essenciais
     if [[ -z "${sistema}" ]]; then
-        _log_erro "Variável 'sistema' não definida"
+        _log_erro "Variavel 'sistema' nao definida"
         ((erros++))
     fi
     
     if [[ -z "${destino}" ]]; then
-        _log_erro "Variável 'destino' não definida"
+        _log_erro "Variavel 'destino' nao definida"
         ((erros++))
     fi
-    
+   
     # Verificar se a variável pasta está definida
     if [[ -z "${pasta}" ]]; then
-        _log_erro "Variável 'pasta' não definida"
+        _log_erro "Variavel 'pasta' nao definida"
         ((erros++))
     fi
     

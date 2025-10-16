@@ -489,7 +489,7 @@ _menu_lembretes() {
 
         case "${opcao}" in
             1) _escrever_nova_nota ;;
-            2) _visualizar_notas_arquivo "${CFG}/atualizal" ;;
+            2) _visualizar_notas_arquivo "${LIB_CFG}/atualizal" ;;
             3) _editar_nota_existente ;;
             4) _apagar_nota_existente ;;
             9) return ;;
@@ -514,18 +514,18 @@ _menu_escolha_base() {
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opção:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Base em ${destino}${base}"
+        _mensagec "${GREEN}" "1${NORM} - | Base em ${destino}${base}"
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Base em ${destino}${base2}"
+        _mensagec "${GREEN}" "2${NORM} - | Base em ${destino}${base2}"
         printf "\n"
         
         if [[ -n "${base3}" ]]; then
-            _mensagec "${GREEN}" "3${NORM} - Base em ${destino}${base3}"
+            _mensagec "${GREEN}" "3${NORM} - | Base em ${destino}${base3}"
             printf "\n"
         fi
         
         printf "\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior    "
+        _mensagec "${GREEN}" "9${NORM} - | ${RED}Menu Anterior    |"
         printf "\n"
         _linha "=" "${GREEN}"
 

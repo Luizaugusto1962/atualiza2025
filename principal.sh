@@ -8,18 +8,18 @@
 UPDATE="${UPDATE:-}"
 
 # Versão do sistema
-UPDATE="03/10/2024-00"
-readonly UPDATE
-cd ..
+UPDATE="15/10/2024-00"
+
 # Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly SCRIPT_DIR
+TOOLS_DIR="$(dirname "${SCRIPT_DIR}")"
+cd "${TOOLS_DIR}" || exit 1
 
-LIB_DIR="${SCRIPT_DIR}/libs"
-readonly LIB_DIR
-
-LIB_CFG="${SCRIPT_DIR}/cfg"
-readonly LIB_CFG
+# Diretório dos módulos
+LIB_DIR="${TOOLS_DIR}/libs"
+# Diretório dos arquivos de configuração
+LIB_CFG="${TOOLS_DIR}/cfg"
+readonly  UPDATE SCRIPT_DIR LIB_CFG
 
 # Verificar se o diretório lib existe
 if [[ ! -d "${LIB_DIR}" ]]; then
@@ -66,30 +66,20 @@ _carregar_modulo "menus.sh"      # Sistema de menus por último
 
 # Funçao principal de inicializaçao
 _inicializar_sistema() {
-    # Log de início da inicialização
-    _log "=== INICIANDO SISTEMA SAV ==="
-
     # Carregar e validar configurações
-    _log "Carregando configurações..."
     _carregar_configuracoes
-
-    # Verificar dependências críticas
-    _log "Verificando dependências do sistema..."
+    
+    # Verificar dependências
     _check_instalado
 
-    # Validar diretórios essenciais
-    _log "Validando diretórios do sistema..."
+    # Validar diretórios
     _validar_diretorios
-
+    
     # Configurar ambiente
-    _log "Configurando ambiente..."
     _configurar_ambiente
-
+    
     # Executar limpeza automática diária
-    _log "Executando limpeza automática diária..."
     _executar_expurgador_diario
-
-    _log "Inicialização concluída com sucesso"
 }
 
 # Funçao principal do programa

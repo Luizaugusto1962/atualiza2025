@@ -14,7 +14,7 @@ _escrever_nova_nota() {
     _mensagec "${YELLOW}" "Digite sua nota (pressione Ctrl+D para finalizar):"
     _linha
 
-    local arquivo_notas="${CFG}/atualizal"
+    local arquivo_notas="${LIB_CFG}/atualizal"
     if cat >> "$arquivo_notas"; then
         _linha
         _mensagec "${YELLOW}" "Nota gravada com sucesso!"
@@ -27,7 +27,7 @@ _escrever_nova_nota() {
 
 # Mostra notas iniciais se existirem
 _mostrar_notas_iniciais() {
-    local nota_file="${CFG}/atualizal"
+    local nota_file="${LIB_CFG}/atualizal"
     
     if [[ -f "$nota_file" && -s "$nota_file" ]]; then
         _visualizar_notas_arquivo "$nota_file"
@@ -79,7 +79,7 @@ _visualizar_notas_arquivo() {
 
 # Edita nota existente
 _editar_nota_existente() {
-    local arquivo_notas="${CFG}/atualizal"
+    local arquivo_notas="${LIB_CFG}/atualizal"
     
     clear
     if [[ -f "$arquivo_notas" ]]; then
@@ -95,7 +95,7 @@ _editar_nota_existente() {
 
 # Apaga nota existente
 _apagar_nota_existente() {
-    local arquivo_notas="${CFG}/atualizal"
+    local arquivo_notas="${LIB_CFG}/atualizal"
     
     if [[ ! -f "$arquivo_notas" ]]; then
         _mensagec "${YELLOW}" "Nenhuma nota encontrada para excluir!"

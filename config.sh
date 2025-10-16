@@ -32,7 +32,7 @@ mclass="${mclass:-}"         # Extensao do programa compilando em modo debug.
 telas="${telas:-}"           # Caminho do diretorio das telas.
 xml="${xml:-}"               # Caminho do diretorio dos arquivos xml.
 olds="${olds:-}"             # Caminho do diretorio dos arquivos de backup.
-cfg="${cfg:-}"               # Caminho do diretorio dos arquivos de configuracao.
+
 libs="${libs:-}"               # Caminho do diretorio das bibliotecas.
 progs="${progs:-}"           # Caminho do diretorio dos programas.
 backup="${backup:-}"         # Caminho do diretorio de backup.
@@ -164,24 +164,26 @@ _configurar_diretorios() {
     local dir_atual
     dir_atual="$(pwd)"
     cd .. || exit 1
-    
+    # Definir diretório raiz
     local raiz="/"
-    destino="${raiz}${destino}"
     
-    readonly TOOLS="${destino}${pasta}" # Diretório principal do sistema
+    # Definir diretório de destino
+    destino="${raiz}${destino}"
+    TOOLS="$(dirname "${SCRIPT_DIR}")"
+    readonly destino TOOLS 
 
     # Verificar diretório principal
     if [[ -n "${TOOLS}" ]] && [[ -d "${TOOLS}" ]]; then
         _mensagec "${CYAN}" "Diretório encontrado: ${TOOLS}"
         cd "${TOOLS}" || {
-            printf "Erro: Não foi possível acessar %s\n" "${TOOLS}"
+            _mensagec "${RED}" "Erro: Não foi possível acessar %s\n" "${TOOLS}"
             exit 1
         }
     else
-        printf "ERRO: Diretório %s não encontrado.\n" "${TOOLS}"
+        _mensagec "${RED}" "ERRO: Diretório %s não encontrado.\n" "${TOOLS}"
         exit 1
     fi
-    
+
     # Criar diretório de configuração se não existir
     if [[ ! -d "${LIB_CFG}" ]]; then
         mkdir -p "${LIB_CFG}" || {
@@ -399,8 +401,7 @@ _validar_configuracao() {
     _linha "=" "${GREEN}"
     _mensagec "${RED}" "Validação de Configuração"
     _linha
-    _log "=== INICIANDO VALIDAÇÃO DE CONFIGURAÇÃO ==="
-
+    
     local erros=0
     local warnings=0
     
@@ -424,7 +425,7 @@ _validar_configuracao() {
     fi
     
     if [[ -z "${destino}" ]]; then
-        _mensagec "${RED}" "ERRO: Variável 'destino' não definida!"
+        _mensagec "${RED}" "ERRO: Variavel 'destino' nao definida!"
         ((erros++))
     else
         _mensagec "${GREEN}" "OK: Diretório raiz definido"

@@ -9,24 +9,24 @@
 set -euo pipefail
 export LC_ALL=C
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PSCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Diretório do script tools
-LIBS_DIR="${SCRIPT_DIR}/libs"
-readonly LIBS_DIR SCRIPT_DIR
+PLIBS_DIR="${PSCRIPT_DIR}/libs"
+readonly PLIBS_DIR PSCRIPT_DIR 
 
 # Verifica se o diretório libs existe
-if [[ ! -d "${LIBS_DIR}" ]]; then
-    echo "ERRO: Diretório ${LIBS_DIR} nao encontrado."
+if [[ ! -d "${PLIBS_DIR}" ]]; then
+    echo "ERRO: Diretório ${PLIBS_DIR} nao encontrado."
     exit 1
 fi
 
 # Verifica se o arquivo principal.sh existe
-if [[ ! -f "${LIBS_DIR}/principal.sh" ]]; then
-    echo "ERRO: Arquivo ${LIBS_DIR}/principal.sh nao encontrado."
-    exit 1
+if [[ -f "${PLIBS_DIR}/principal.sh" ]]; then
+    echo "Carregando utilitario..."
+## Carrega o script principal
+    cd "${PLIBS_DIR}" || exit 1
+    ./"principal.sh"
+else
+    echo "ERRO: Arquivo ${PLIBS_DIR}/principal.sh nao encontrado."
 fi
-
-# Carrega o script principal
-cd "${LIBS_DIR}" || exit 1
-./principal.sh

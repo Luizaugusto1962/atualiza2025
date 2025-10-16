@@ -12,8 +12,7 @@ cmd_zip="${cmd_zip:-}"
 cmd_unzip="${cmd_unzip:-}"
 cmd_find="${cmd_find:-}"
 acessossh="${acessossh:-}"
-"." "config.sh"
-"." "utils.sh"
+
 #---------- TRAPS PARA INTERRUPCOES ----------#
 declare -g pids=()  # Array global para rastrear PIDs de background
 

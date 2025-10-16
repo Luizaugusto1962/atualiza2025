@@ -19,7 +19,7 @@ base3="${base3:-}"
 telas="${telas:-}"
 logs="${logs:-}"
 progs="${progs:-}"
-cfg="${cfg:-}"
+
 verclass="${verclass:-}"
 backup="${backup:-}"
 class="${class:-}"
@@ -372,16 +372,13 @@ _atualizar_offline() {
 readonly tracejada="#-------------------------------------------------------------------#"
 
 # Variáveis globais
-#declare -l sistema base base2 base3 BANCO destino SERACESOFF ENVIABACK
-#declare -u EMPRESA
-# Posiciona o script no diretório cfg
-#readonly CFG="${CFG:-${TOOLS}/cfg}"
-#CFG=LIB_CFG="${LIB_CFG}"
-#    cd "${LIB_CFG}" || {
-#        _mensagec "${RED}" "Erro: Diretório ${CFG} não encontrado"
-#        return 1
-#    }
-
+declare -l sistema base base2 base3 BANCO destino SERACESOFF ENVIABACK
+declare -u EMPRESA
+# Posiciona o script no diretório LIB_CFG.
+cd "${LIB_CFG}" || {
+    _mensagec "${RED}" "Erro: Diretório ${LIB_CFG} não encontrado"
+    return 1
+}
 
 editar_variavel() {
     local nome="$1"
@@ -577,7 +574,7 @@ if [[ "${acessossh}" = "s" ]]; then
 SERVER_IP="${IPSERVER}"        # IP do servidor (padrão: 177.45.80.10)
 SERVER_PORT="${SERVER_PORT:-41122}"            # Porta SFTP (padrão: 41122)
 SERVER_USER="${SERVER_USER:-atualiza}"         # Usuário SSH (padrão: atualiza)
-CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${destino}${pasta}/.ssh/control}"
+CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS}/.ssh/control}"
 # VALIDAÇÃO DAS VARIÁVEIS OBRIGATÓRIAS
 if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
     echo "Erro: Variaveis obrigatorias nao definidas!"

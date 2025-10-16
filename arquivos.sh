@@ -14,19 +14,20 @@ base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 BASE_TRABALHO="${BASE_TRABALHO:-}"
 cmd_zip="${cmd_zip:-}"
 jut="${jut:-}"
+#LIB_CFG="${LIB_CFG:-}"
 
 #---------- FUNÇÕES DE LIMPEZA ----------#
 
 # Executa limpeza de arquivos temporários
 _executar_limpeza_temporarios() {
     cd "${LIB_CFG}" || {
-        _mensagec "${RED}" "Erro: Diretório ${CFG} não encontrado"
+        _mensagec "${RED}" "Erro: Diretório ${LIB_CFG} não encontrado"
         return 1
     }
 
     # Verificar arquivo de lista de temporários
-    local arquivo_lista="atualizat"
-    if [[ ! -e "${arquivo_lista}" ]]; then
+    local arquivo_lista="${LIB_CFG}/atualizat"
+    if [[ ! -f "${arquivo_lista}" ]]; then
         _mensagec "${RED}" "ERRO: Arquivo ${arquivo_lista} não existe no diretório"
         return 1
     elif [[ ! -r "${arquivo_lista}" ]]; then
@@ -82,7 +83,7 @@ _limpar_base_especifica() {
 # Adiciona arquivo à lista de limpeza
 _adicionar_arquivo_lixo() {
     cd "${LIB_CFG}" || {
-        _mensagec "${RED}" "Erro: Diretório ${CFG} não encontrado"
+        _mensagec "${RED}" "Erro: Diretório ${LIB_CFG} não encontrado"
         return 1
     }
     
@@ -159,17 +160,16 @@ _recuperar_todos_arquivos() {
     local -a extensoes=('*.ARQ.dat' '*.DAT.dat' '*.LOG.dat' '*.PAN.dat')
     _mensagec "${RED}" "Recuperando todos os arquivos principais..."
     _linha "-" "${YELLOW}"
-
+    
     if [[ -d "$base_trabalho" ]]; then
         for extensao in "${extensoes[@]}"; do
-            # Usar find ao invés de expansão direta para evitar problemas de word splitting
-            while IFS= read -r -d '' arquivo; do
+            for arquivo in ${base_trabalho}/${extensao}; do
                 if [[ -f "$arquivo" && -s "$arquivo" ]]; then
                     _executar_jutil "$arquivo"
                 else
                     _mensagec "${YELLOW}" "Arquivo nao encontrado ou vazio: ${arquivo##*/}"
                 fi
-            done < <(find "$base_trabalho" -name "$extensao" -type f -print0 2>/dev/null)
+            done
         done
     else
         _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} não existe"
@@ -180,24 +180,23 @@ _recuperar_todos_arquivos() {
 _recuperar_arquivo_individual() {
     local nome_arquivo="$1"
     local base_trabalho="$2"
-
+    
     # Validar nome do arquivo
     if [[ ! "$nome_arquivo" =~ ^[A-Z0-9]+$ ]]; then
         _mensagec "${RED}" "Nome de arquivo inválido. Use apenas letras maiúsculas e números."
         return 1
     fi
-
+    
     local padrao_arquivo="${nome_arquivo}.*.dat"
     local arquivos_encontrados=0
-
-    # Usar find ao invés de expansão direta para evitar problemas de word splitting
-    while IFS= read -r -d '' arquivo; do
+    
+    for arquivo in ${base_trabalho}/${padrao_arquivo}; do
         if [[ -f "$arquivo" ]]; then
             _executar_jutil "$arquivo"
             ((arquivos_encontrados++))
         fi
-    done < <(find "$base_trabalho" -name "$padrao_arquivo" -type f -print0 2>/dev/null)
-
+    done
+    
     if (( arquivos_encontrados == 0 )); then
         _mensagec "${YELLOW}" "Nenhum arquivo encontrado para: ${nome_arquivo}"
     else
@@ -233,7 +232,7 @@ _recuperar_arquivos_principais() {
         {
             ls ATE"${var_ano}"*.dat 2>/dev/null || true
             ls NFE?"${var_ano4}".*.dat 2>/dev/null || true
-        } > "${CFG}/atualizaj2"
+        } > "${LIB_CFG}/atualizaj2"
         
         cd "${LIB_CFG}" || return 1
         _read_sleep 1

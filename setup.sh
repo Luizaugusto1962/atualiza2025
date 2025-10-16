@@ -87,7 +87,7 @@ _edit_setup() {
     }
 
     # Verificar se os arquivos de configuração existem
-    if [[ -f "${CFG}/.atualizac" ]]; then
+    if [[ -f "${LIB_CFG}/.atualizac" ]]; then
         echo "Arquivos de configuração não encontrados. Execute o setup inicial primeiro."
         exit 1
     fi
@@ -452,7 +452,7 @@ _configure_ssh_access() {
     local SERVER_IP="${IPSERVER}"
     local SERVER_PORT="${PORTA:-41122}"
     local SERVER_USER="${USUARIO:-atualiza}"
-    local CONTROL_PATH_BASE="/${destino}${pasta}/.ssh/control"
+    local CONTROL_PATH_BASE="/${TOOLS}/.ssh/control"
 
     if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
         echo "Erro: Variáveis de servidor não definidas para configuração SSH."
@@ -498,16 +498,20 @@ EOF
 
 # Função principal que direciona para o modo correto
 main() {
-cd ..    
+cd ..
+# Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly SCRIPT_DIR
 
-CFG="${SCRIPT_DIR}/cfg"
-readonly CFG
+#LIB_DIR="${SCRIPT_DIR}/libs"
+#readonly LIB_DIR
+
+LIB_CFG="${SCRIPT_DIR}/cfg"
+readonly LIB_CFG
 
 # Verifica se o diretório tools existe
-if [[ ! -d "${CFG}" ]]; then
-    echo "ERRO: Diretório ${CFG} nao encontrado."
+if [[ ! -d "${LIB_CFG}" ]]; then
+    echo "ERRO: Diretório ${LIB_CFG} nao encontrado."
     exit 1
 fi
 
@@ -516,7 +520,7 @@ fi
         _edit_setup
     else
         # Verificar se os arquivos de configuração já existem
-        if [[ -f "${CFG}/.atualizac" ]]; then
+        if [[ -f "${LIB_CFG}/.atualizac" ]]; then
             clear
             echo "Arquivos de configuração já existem."
             read -rp "Deseja sobrescrevê-los com a configuração inicial? [s/N]: " choice
