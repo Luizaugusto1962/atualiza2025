@@ -546,18 +546,7 @@ _definir_variaveis_biblioteca() {
     ATUALIZA4="${SAVATU4}${VERSAO}.zip"
 }
 
-# Atualiza barra de progresso (mantida para compatibilidade, mas não usada nas novas funções)
-#_atualizar_barra_progresso() {
-#    ((contador++))
-#    percent=$((contador * 100 / total_etapas))
-#    preenchido=$((percent * barra_tamanho / 100))
-#    vazio=$((barra_tamanho - preenchido))
-#    barra=$(printf "%${preenchido}s" | tr ' ' '#')
-#    barra+=$(printf "%${vazio}s" | tr ' ' '-')
-#}
-
 #---------- VALIDAÇÕES ----------#
-
 # Valida se os diretórios de destino estão configurados
 _validar_diretorios_biblioteca() {
     local diretorios_validar=(

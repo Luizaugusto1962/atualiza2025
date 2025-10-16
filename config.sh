@@ -32,7 +32,6 @@ mclass="${mclass:-}"         # Extensao do programa compilando em modo debug.
 telas="${telas:-}"           # Caminho do diretorio das telas.
 xml="${xml:-}"               # Caminho do diretorio dos arquivos xml.
 olds="${olds:-}"             # Caminho do diretorio dos arquivos de backup.
-
 libs="${libs:-}"               # Caminho do diretorio das bibliotecas.
 progs="${progs:-}"           # Caminho do diretorio dos programas.
 backup="${backup:-}"         # Caminho do diretorio de backup.
@@ -69,7 +68,6 @@ BLUE="${BLUE:-}"
 PURPLE="${PURPLE:-}"
 CYAN="${CYAN:-}"
 NORM="${NORM:-}"
-#UPDATE="${UPDATE:-}"
 LOG="${LOG:-}"
 LOG_ATU="${LOG_ATU:-}"
 LOG_LIMPA="${LOG_LIMPA:-}"
@@ -119,11 +117,9 @@ _definir_cores() {
         PURPLE=""
         CYAN=""
         NORM=""
-        readonly COLUMNS=80
+        COLUMNS=80
     fi
-    
-    # Tornar as variáveis de cores somente leitura
-#    readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM
+readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM COLUMNS
 }
 
 
@@ -386,13 +382,7 @@ _configurar_ambiente() {
     # Verificar se o jutil existe para sistemas IsCOBOL
     if [[ "${sistema}" == "iscobol" ]] && [[ ! -x "${jut}" ]]; then
         _mensagec "${YELLOW}" "Aviso: jutil não encontrado em ${jut}"
-    fi
-    
-    # Tornar variáveis essenciais somente leitura
-    #readonly TOOLS BACKUP OLDS PROGS LOGS ENVIA RECEBE LOG LIBS CFG
-    #readonly E_EXEC T_TELAS X_XML BASE1 BASE2 BASE3
-    #readonly LOG_ATU LOG_LIMPA LOG_TMP UMADATA
-    #readonly jut SAVISC JUTIL ISCCLIENT
+    fi 
 }
 
 # Função para validar a configuração atual do sistema

@@ -19,7 +19,6 @@ base3="${base3:-}"
 telas="${telas:-}"
 logs="${logs:-}"
 progs="${progs:-}"
-
 verclass="${verclass:-}"
 backup="${backup:-}"
 class="${class:-}"
@@ -275,10 +274,7 @@ _atualizando() {
     # Verificar e instalar arquivos
     local arquivos_instalados=0
     local arquivos_erro=0
-#    cd "$temp_dir" || {
-#        _mensagec "${RED}" "Erro: Nao foi possivel acessar o diretorio temporario $temp_dir."
-#        return 1
-#    }
+
     # Processar todos os arquivos .sh encontrados
     for arquivo in *.sh; do
         # Verificar se o arquivo existe
@@ -327,8 +323,6 @@ _atualizando() {
     exit 0
 }
 _atualizar_online() {
-#        cd "${LIB_DIR}" || exit 1
-#    local link="https://codeload.github.com/Luizaugusto1962/atualiza2025/zip/refs/tags/Atualiza"
     local link="https://github.com/Luizaugusto1962/Atualiza2025/archive/master/atualiza.zip"
     local zipfile="atualiza.zip"
     local temp_dir="${ENVIA}/temp_update"

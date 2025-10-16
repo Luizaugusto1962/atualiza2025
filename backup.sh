@@ -60,11 +60,6 @@ _executar_backup() {
 
     # Mudar para diretorio base
     _diretorio_trabalho
-#    cd "$base_trabalho" || {
-#        _mensagec "$RED" "Erro: Nao foi possivel acessar $base_trabalho"
-#        return 1
-#    }
-
     _linha
     _mensagec "$YELLOW" "Criando Backup da pasta: ${base_trabalho}..."
     _linha

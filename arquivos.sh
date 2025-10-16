@@ -14,7 +14,6 @@ base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 BASE_TRABALHO="${BASE_TRABALHO:-}"
 cmd_zip="${cmd_zip:-}"
 jut="${jut:-}"
-#LIB_CFG="${LIB_CFG:-}"
 
 #---------- FUNÇÕES DE LIMPEZA ----------#
 
