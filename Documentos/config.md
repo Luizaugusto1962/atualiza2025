@@ -84,7 +84,7 @@ if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
 else
     # Terminal sem suporte
     RED="" GREEN="" YELLOW="" # ... variáveis vazias
-    readonly COLUMNS=80
+    COLUMNS=80
 fi
 ```
 

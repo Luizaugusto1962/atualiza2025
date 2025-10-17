@@ -120,7 +120,7 @@ _definir_cores() {
         NORM=""    # Limpar variavel Normal
         COLUMNS=80 # Definir colunas padrão
     fi
-readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM COLUMNS
+readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM 
 }
 
 
