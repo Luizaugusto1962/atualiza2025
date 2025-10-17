@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #
+# Atualiza.sh - Script de Atualizaçao Modular do SISTEMA SAV
 # SISTEMA SAV - Script de Atualizaçao Modular
 # Versao: 10/10/2025-00
 # Autor: Luiz Augusto

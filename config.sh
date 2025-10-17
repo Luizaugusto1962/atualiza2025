@@ -60,34 +60,35 @@ PORTA="${PORTA:-}"           # Variavel que define a porta a ser usada para.
 USUARIO="${USUARIO:-}"       # Variavel que define o usuario a ser usado.
 IPSERVER="${IPSERVER:-}"     # Variavel que define o ip do servidor da SAV.
 DESTINO2="${DESTINO2:-}"     # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
-cmd_find="${cmd_find:-}"
-RED="${RED:-}"
-GREEN="${GREEN:-}"
-YELLOW="${YELLOW:-}"
-BLUE="${BLUE:-}"
-PURPLE="${PURPLE:-}"
-CYAN="${CYAN:-}"
-NORM="${NORM:-}"
-LOG="${LOG:-}"
-LOG_ATU="${LOG_ATU:-}"
-LOG_LIMPA="${LOG_LIMPA:-}"
-LOG_TMP="${LOG_TMP:-}"
-UMADATA="${UMADATA:-}"
-ISCCLIENT="${ISCCLIENT:-}"
+cmd_find="${cmd_find:-}"     # Comando para buscar arquivos.
+RED="${RED:-}"               # Cor vermelha
+GREEN="${GREEN:-}"           # Cor verde
+YELLOW="${YELLOW:-}"         # Cor amarela
+BLUE="${BLUE:-}"             # Cor azul
+PURPLE="${PURPLE:-}"         # Cor roxa
+CYAN="${CYAN:-}"             # Cor ciano
+NORM="${NORM:-}"             # Cor normal
+COLUMNS="${COLUMNS:-}"       # Numero de colunas do terminal
+LOG="${LOG:-}"               # Variavel que define o caminho do arquivo de log.
+LOG_ATU="${LOG_ATU:-}"       # Variavel que define o caminho do arquivo de log de atualizacao.
+LOG_LIMPA="${LOG_LIMPA:-}"   # Variavel que define o caminho do arquivo de log de limpeza.
+LOG_TMP="${LOG_TMP:-}"       # Variavel que define o caminho do arquivo de log temporario.
+UMADATA="${UMADATA:-}"       # Variavel que define o caminho do arquivo de dados da UMA.
+ISCCLIENT="${ISCCLIENT:-}"   # Variavel que define o caminho do cliente ISC.
 
 # Configurações padrão
-DEFAULT_UNZIP="unzip"
-DEFAULT_ZIP="zip"
-DEFAULT_FIND="find"
-DEFAULT_WHO="who"
-DEFAULT_PORTA="41122"
-DEFAULT_USUARIO="atualiza"
+DEFAULT_UNZIP="unzip"        # Comando padrão para descompactar
+DEFAULT_ZIP="zip"            # Comando padrão para compactar
+DEFAULT_FIND="find"          # Comando padrão para buscar arquivos
+DEFAULT_WHO="who"            # Comando padrão para verificar usuários
+DEFAULT_PORTA="41122"        # Porta padrão
+DEFAULT_USUARIO="atualiza"   # Usuário padrão
 
 # Diretórios de destino para diferentes tipos de biblioteca
-export DESTINO2SERVER="/u/varejo/man/"
-export DESTINO2SAVATUISC="/home/savatu/biblioteca/temp/ISCobol/sav-5.0/"
-export DESTINO2SAVATUMF="/home/savatu/biblioteca/temp/Isam/sav-3.1"
-export DESTINO2TRANSPC="/u/varejo/trans_pc/"
+export DESTINO2SERVER="/u/varejo/man/"                                   # Diretório do servidor de atualização
+export DESTINO2SAVATUISC="/home/savatu/biblioteca/temp/ISCobol/sav-5.0/" # Diretório da biblioteca IsCOBOL
+export DESTINO2SAVATUMF="/home/savatu/biblioteca/temp/Isam/sav-3.1"      # Diretório da biblioteca Isam
+export DESTINO2TRANSPC="/u/varejo/trans_pc/"                             # Diretório de transporte PC
 
 #---------- FUNÇÕES DE CONFIGURAÇÃO ----------#
 
@@ -95,29 +96,29 @@ export DESTINO2TRANSPC="/u/varejo/trans_pc/"
 _definir_cores() {
     # Verificar se o terminal suporta cores
     if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
-        RED=$(tput bold)$(tput setaf 1)
-        GREEN=$(tput bold)$(tput setaf 2)
-        YELLOW=$(tput bold)$(tput setaf 3)
-        BLUE=$(tput bold)$(tput setaf 4)
-        PURPLE=$(tput bold)$(tput setaf 5)
-        CYAN=$(tput bold)$(tput setaf 6)
-        NORM=$(tput sgr0)
-        COLUMNS=$(tput cols)
-        
+        RED=$(tput bold)$(tput setaf 1)    # Vermelho
+        GREEN=$(tput bold)$(tput setaf 2)  # Verde
+        YELLOW=$(tput bold)$(tput setaf 3) # Amarelo
+        BLUE=$(tput bold)$(tput setaf 4)   # Azul
+        PURPLE=$(tput bold)$(tput setaf 5) # Roxo
+        CYAN=$(tput bold)$(tput setaf 6)   # Ciano
+        NORM=$(tput sgr0)                  # Normal
+        COLUMNS=$(tput cols)               # Numero de colunas do terminal
+
         # Limpar tela inicial
-        tput clear
-        tput bold
-        tput setaf 7
+        tput clear     # Limpa a tela
+        tput bold      # Ativa o negrito
+        tput setaf 7   # Define a cor branca para o texto
     else
         # Terminal sem suporte a cores
-        RED=""
-        GREEN=""
-        YELLOW=""
-        BLUE=""
-        PURPLE=""
-        CYAN=""
-        NORM=""
-        COLUMNS=80
+        RED=""     # Limpar variavel Vermelho
+        GREEN=""   # Limpar variavel Verde
+        YELLOW=""  # Limpar variavel Amarelo
+        BLUE=""    # Limpar variavel Azul
+        PURPLE=""  # Limpar variavel Roxo
+        CYAN=""    # Limpar variavel Ciano
+        NORM=""    # Limpar variavel Normal
+        COLUMNS=80 # Definir colunas padrão
     fi
 readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM COLUMNS
 }
@@ -189,13 +190,14 @@ _configurar_diretorios() {
     fi
         
     # Definir diretórios de trabalho
-    readonly BACKUP="${BACKUP:-${TOOLS}/backup}"
-    readonly OLDS="${OLDS:-${TOOLS}/olds}"
-    readonly PROGS="${PROGS:-${TOOLS}/progs}"
-    readonly LOGS="${LOGS:-${TOOLS}/logs}"
-    readonly ENVIA="${ENVIA:-${TOOLS}/envia}"
-    readonly RECEBE="${RECEBE:-${TOOLS}/recebe}"
-    readonly LIBS="${LIBS:-${TOOLS}/libs}"
+    BACKUP="${BACKUP:-${TOOLS}/backup}"  # Diretório de backup
+    OLDS="${OLDS:-${TOOLS}/olds}"        # Diretório de arquivos antigos
+    PROGS="${PROGS:-${TOOLS}/progs}"     # Diretório de programas
+    LOGS="${LOGS:-${TOOLS}/logs}"        # Diretório de logs
+    ENVIA="${ENVIA:-${TOOLS}/envia}"     # Diretório de envio
+    RECEBE="${RECEBE:-${TOOLS}/recebe}"  # Diretório de recebimento
+    LIBS="${LIBS:-${TOOLS}/libs}"        # Diretório de bibliotecas
+    readonly BACKUP OLDS PROGS LOGS ENVIA RECEBE LIBS  # Diretórios principais
 
     # Criar diretórios se não existirem
     local dirs=("${BACKUP}" "${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" )

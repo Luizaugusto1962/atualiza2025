@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
+# lembrete.sh - Módulo de Lembretes e Notas
 # Versao: 10/10/2025-00
 # Autor: Luiz Augusto
 # utils.sh - Módulo de Utilitários e Funções Auxiliares  

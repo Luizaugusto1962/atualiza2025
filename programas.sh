@@ -351,10 +351,10 @@ _mover_arquivos_offline() {
 
 # Processa atualização dos programas
 _processar_atualizacao_programas() {
-    local arquivo
-    local extensao
-    local backup_file
-    local programa_idx=0
+    local arquivo         # Nome do arquivo
+    local extensao        # Extensão do arquivo
+    local backup_file     # Nome do arquivo de backup
+    local programa_idx=0  # Índice do programa no array
 
     # Verificar se arquivos existem
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
@@ -462,8 +462,8 @@ _processar_atualizacao_pacotes() {
 
     # Processar arquivos .class encontrados
     find . -type f -name "*.class" | while read -r classfile; do
-        local progname="${classfile##*/}"
-        progname="${progname%%.class}"
+        local progname="${classfile##*/}" # Extrair nome do arquivo
+        progname="${progname%%.class}"    # Remover extensão
 
         # Backup dos arquivos antigos
         if [[ "${sistema}" == "iscobol" ]]; then
@@ -508,7 +508,7 @@ _processar_reversao_programas() {
 
 # Obtém data de modificação do arquivo
 _obter_data_arquivo() {
-    local arquivo="$1"
+    local arquivo="$1" # Nome do arquivo
     if [[ -f "${E_EXEC}/${arquivo}" ]]; then
         local data_modificacao
         data_modificacao=$(stat -c %y "${E_EXEC}/${arquivo}" 2>/dev/null)

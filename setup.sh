@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #
 # setup.sh - Gerencia a configuração do sistema
-#
 # Este script gerencia a criação e a edição dos arquivos de configuração
 # .atualizac e .atualizac, que são essenciais para o funcionamento do sistema.
 #
