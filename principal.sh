@@ -8,7 +8,7 @@
 UPDATE="${UPDATE:-}"
 
 # Versão do sistema
-UPDATE="15/10/2024-00"
+UPDATE="20/10/2025-00"
 
 # Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
