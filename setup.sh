@@ -308,7 +308,7 @@ _setup_backup() {
     elif [[ -n "$ENVIABACK" ]]; then
         echo "ENVIABACK=cliente/${ENVIABACK}" >> .atualizac
     else
-        echo "ENVIABACK=${SERACESOFF}" >> .atualizac
+        echo "ENVIABACK=${Offline}" >> .atualizac
     fi
 }
 _setup_empresa() {

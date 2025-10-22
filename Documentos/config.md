@@ -399,7 +399,7 @@ _configurar_diretorios
 - `destino` - Diretório raiz do sistema SAV
 - `sistema` - Tipo de sistema (iscobol/cobol)
 - `BANCO` - Uso de banco de dados (s/n)
-- `SERACESOFF` - Modo offline (s/n ou caminho)
+- `Offline` - Modo offline (s/n ou caminho)
 - `acessossh` - Método de acesso SSH (s/n)
 
 ### Constantes Internas

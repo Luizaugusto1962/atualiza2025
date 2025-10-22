@@ -106,7 +106,7 @@ Controlador principal do sistema de atualização.
 
 **Lógica de decisão:**
 ```bash
-if [[ "${SERACESOFF}" == "n" ]]; then
+if [[ "${Offline}" == "n" ]]; then
     _atualizar_online
 else
     _atualizar_offline
@@ -125,7 +125,7 @@ Atualização via GitHub usando wget.
 Atualização via arquivo local no diretório offline.
 
 **Características:**
-- Usa variável `${SERACESOFF}` como caminho
+- Usa variável `${Offline}` como caminho
 - Move arquivo zip para diretório temporário
 - Processa atualização local
 
@@ -183,7 +183,7 @@ Interface interativa para edição de variáveis específicas.
 - **`BANCO`**: Uso de banco de dados (Sim/Não)
 - **`acessossh`**: Método de acesso fácil (Sim/Não)
 - **`IPSERVER`**: IP do servidor SAV
-- **`SERACESOFF`**: Modo offline (Sim/Não)
+- **`Offline`**: Modo offline (Sim/Não)
 
 **Tratamento de entrada:**
 ```bash
@@ -349,7 +349,7 @@ editar_variavel "IPSERVER"
 ## Variáveis de Ambiente
 
 ### Variáveis Suportadas
-- `SERACESOFF` - Modo offline (n/online, caminho/offline)
+- `Offline` - Modo offline (n/offline, s/online)
 - `LOG_TMP` - Diretório para arquivos temporários
 - `LOG_ATU` - Arquivo de log de atualizações
 - `TOOLS` - Diretório de ferramentas

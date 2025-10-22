@@ -239,7 +239,7 @@ fi
     _mensagec "${YELLOW}" "Backup selecionado: ${backup_selecionado}"
 
     # Verificar modo offline
-    if [[ "${SERACESOFF}" == "s" ]]; then
+    if [[ "${Offline}" == "s" ]]; then
         _mover_backup_offline "$backup_selecionado"
         return
     fi

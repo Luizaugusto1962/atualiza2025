@@ -43,7 +43,7 @@ destino=/sav
 base=/sav/dados
 IPSERVER=177.45.80.10
 acessossh=s
-SERACESOFF=n
+Offline=n
 ```
 
 ### `.atualizac` (Constantes)
