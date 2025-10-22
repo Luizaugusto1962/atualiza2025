@@ -198,7 +198,6 @@ _recuperar_arquivo_individual() {
     
     if (( arquivos_encontrados == 0 )); then
         _mensagec "${YELLOW}" "Nenhum arquivo encontrado para: ${nome_arquivo}"
-    else
         _linha "-" "${GREEN}"
     fi
 }

@@ -12,8 +12,10 @@ acessossh="${acessossh:-}"
 cmd_zip="${cmd_zip:-}"
 cmd_unzip="${cmd_unzip:-}"
 cmd_find="${cmd_find:-}"
-class=${class:-}
-mclass=${mclass:-}
+class="${class:-}"
+mclass="${mclass:-}"
+Offline="${Offline:-}"
+down_dir="${down_dir:-}"
 #---------- VARIÁVEIS GLOBAIS DO MÓDULO ----------#
 
 # Arrays para armazenar programas e arquivos
@@ -24,7 +26,7 @@ declare -a ARQUIVOS_PROGRAMA=()
 
 # Atualização de programas via conexão online
 _atualizar_programa_online() {
-    if [[ "${SERACESOFF}" == "s" ]]; then
+    if [[ "${Offline}" == "s" ]]; then
         _linha
         _mensagec "${YELLOW}" "Parâmetro do servidor OFF ativo"
         _linha
@@ -62,7 +64,7 @@ _atualizar_programa_offline() {
     fi
     
     _linha
-    _mensagec "${YELLOW}" "Os programas devem estar no diretório ${TOOLS}"
+    _mensagec "${YELLOW}" "Os programas devem estar no diretório ${down_dir}"
     _linha
     _read_sleep 1
     
@@ -77,19 +79,17 @@ _atualizar_programa_offline() {
 
 # Atualização de programas em pacotes
 _atualizar_programa_pacote() {
-    if [[ "${SERACESOFF}" == "s" ]]; then
+       _solicitar_pacotes_atualizacao
+    if [[ "${Offline}" == "s" ]]; then
         _linha
         _mensagec "${YELLOW}" "Parâmetro do servidor OFF ativo"
-        _linha
-        _press
-        return 1
+        _mover_arquivos_offline
+    else 
+       _baixar_pacotes_rsync
     fi
-    
-    _solicitar_pacotes_atualizacao
-    _baixar_pacotes_rsync
-    _processar_atualizacao_pacotes
-    
-    _press
+       _processar_atualizacao_pacotes
+       _press
+   
 }
 
 #---------- FUNÇÕES DE REVERSÃO ----------#
@@ -320,8 +320,9 @@ EOF
 
 # Baixa pacotes para diretório específico
 _baixar_pacotes_rsync() {
-    cd "$RECEBE" || {
-        _mensagec "${RED}" "Erro: Diretório $RECEBE não encontrado"
+    cd "$
+    " || {
+        _mensagec "${RED}" "Erro: Diretório $down_dir não encontrado"
         return 1
     }
 
@@ -332,12 +333,11 @@ _baixar_pacotes_rsync() {
 
 # Move arquivos do servidor offline
 _mover_arquivos_offline() {
-    if [[ "${SERACESOFF}" == "s" ]]; then
-        local servidor_off="${destino}${SERACESOFF}"
-        
+    cd "${down_dir}" || return 1
+    if [[ "${Offline}" == "s" ]]; then
         for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
-            if [[ -f "${servidor_off}/${arquivo}" ]]; then
-                if ! mv -f "${servidor_off}/${arquivo}" .; then
+            if [[ -f "${down_dir}/${arquivo}" ]]; then
+                if ! mv -f "${down_dir}/${arquivo}" "${TOOLS}"; then
                     _mensagec "${RED}" "Erro ao mover: ${arquivo}"
                     continue
                 fi
@@ -355,7 +355,10 @@ _processar_atualizacao_programas() {
     local extensao        # Extensão do arquivo
     local backup_file     # Nome do arquivo de backup
     local programa_idx=0  # Índice do programa no array
-
+    if [[ "$Offline" == "s" ]]; then
+       cd "${down_dir}" || return 1
+    fi
+     
     # Verificar se arquivos existem
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
         if [[ ! -f "${arquivo}" ]]; then
@@ -437,7 +440,7 @@ _processar_atualizacao_programas() {
 
 # Processa atualização de pacotes
 _processar_atualizacao_pacotes() {
-    cd "$RECEBE" || return 1
+    cd "${down_dir}" || return 1
     
     # Descompactar pacotes
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do

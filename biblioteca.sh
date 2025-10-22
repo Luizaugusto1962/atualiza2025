@@ -12,8 +12,9 @@ cmd_zip="${cmd_zip:-}"
 cmd_unzip="${cmd_unzip:-}"
 cmd_find="${cmd_find:-}"
 acessossh="${acessossh:-}"
+Offline="${Offline:-}"
+down_dir="${down_dir:-}"
 
-#---------- TRAPS PARA INTERRUPCOES ----------#
 declare -g pids=()  # Array global para rastrear PIDs de background
 
 # Função de cleanup em caso de interrupção
@@ -62,19 +63,19 @@ _atualizar_transpc() {
         return 1
     fi
 
-    if [[ "${SERACESOFF}" == "s" ]]; then
+    if [[ "${Offline}" == "s" ]]; then
         _linha
         _mensagec "${YELLOW}" "Parâmetro de biblioteca do servidor OFF ativo"
         _linha
         _press
         return 1
     fi
-
     _linha
     _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
     _linha
 
     DESTINO2="${DESTINO2TRANSPC}"
+    _configurar_acessos
     _baixar_biblioteca_rsync
 }
 
@@ -87,7 +88,7 @@ _atualizar_savatu() {
         return 1
     fi
 
-    if [[ "${SERACESOFF}" == "s" ]]; then
+    if [[ "${Offline}" == "s" ]]; then
         _linha
         _mensagec "${YELLOW}" "Parâmetro de biblioteca do servidor OFF ativo"
         _linha
@@ -105,7 +106,7 @@ _atualizar_savatu() {
     else
         DESTINO2="${DESTINO2SAVATUMF}"
     fi
-
+    _configurar_acessos
     _baixar_biblioteca_rsync
 }
 
@@ -118,12 +119,8 @@ _atualizar_biblioteca_offline() {
         return 1
     fi
 
-    if [[ "${SERACESOFF}" == "s" ]]; then
+    if [[ "${Offline}" == "s" ]]; then
         _processar_biblioteca_offline
-    else
-        _mensagec "${RED}" "Modo offline não configurado"
-        _press
-        return 1
     fi
 
     _salvar_atualizacao_biblioteca
@@ -167,28 +164,17 @@ _reverter_biblioteca() {
 
 # Processa biblioteca offline
 _processar_biblioteca_offline() {
-    local diretorio_off="${destino}${SERACESOFF}"
-    
-    if [[ ! -d "${diretorio_off}" ]]; then
-        _mensagec "${RED}" "Diretório offline não encontrado: ${diretorio_off}"
-        return 1
-    fi
+    _configurar_acessos
+    cd "$down_dir" || return 1
 
-    _mensagec "${YELLOW}" "Acessando biblioteca do servidor OFF..."
-    _linha
-    
     _definir_variaveis_biblioteca
-    
+  
     local -a arquivos_update
-    if [[ "${sistema}" == "iscobol" ]]; then
-        arquivos_update=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}")
-    else
-        arquivos_update=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}")
-    fi
+    read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
 
     for arquivo in "${arquivos_update[@]}"; do
-        if [[ -f "${diretorio_off}/${arquivo}" ]]; then
-            if mv -f "${diretorio_off}/${arquivo}" "${TOOLS}"; then
+        if [[ -f "${down_dir}/${arquivo}" ]]; then
+            if mv -f "${down_dir}/${arquivo}" "${TOOLS}"; then
                 _mensagec "${GREEN}" "Movendo biblioteca: ${arquivo}"
                 _linha
             else
@@ -199,12 +185,13 @@ _processar_biblioteca_offline() {
             _mensagec "${YELLOW}" "Arquivo não encontrado: ${arquivo}"
         fi
     done
-
+    _salvar_atualizacao_biblioteca
     _read_sleep 2
 }
 
 # Salva atualização da biblioteca
 _salvar_atualizacao_biblioteca() {
+    cd "${TOOLS}" || return 1
     clear
     _definir_variaveis_biblioteca
 
@@ -214,11 +201,7 @@ _salvar_atualizacao_biblioteca() {
 
     # Verificar arquivos de atualização
     local -a arquivos_verificar
-    if [[ "${sistema}" = "iscobol" ]]; then
-        arquivos_verificar=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}")
-    else
-        arquivos_verificar=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}")
-    fi
+    read -ra arquivos_verificar <<< "$(_obter_arquivos_atualizacao)"
 
     for arquivo in "${arquivos_verificar[@]}"; do
         if [[ ! -r "${arquivo}" ]]; then
@@ -303,7 +286,7 @@ _processar_atualizacao_biblioteca() {
         fi
     fi
 
-    cd "$TOOLS" || return 1
+    cd "${TOOLS}" || return 1
     clear
     _linha
     _mensagec "${YELLOW}" "Backup Completo"
@@ -332,19 +315,19 @@ _processar_atualizacao_biblioteca() {
 # Executa a atualização da biblioteca
 _executar_atualizacao_biblioteca() {
     cd "${TOOLS}" || return 1
-    _definir_variaveis_biblioteca
 
+    _definir_variaveis_biblioteca
+    local -a arquivos_update
+    read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
     # Contar arquivos a processar
-    local arquivos=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}")
     local total_arquivos=0
-    for arquivo in "${arquivos[@]}"; do
+    for arquivo in "${arquivos_update[@]}"; do
         [[ -n "${arquivo}" && -r "${arquivo}" ]] && ((total_arquivos++))
     done
-
     local contador=0
 
     # Processar cada arquivo de atualização
-    for arquivo in "${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}"; do
+    for arquivo in "${arquivos_update[@]}"; do
         if [[ -n "${arquivo}" && -r "${arquivo}" ]]; then
             _linha
             _mensagec "${YELLOW}" "Descompactando e atualizando: ${arquivo} [Etapa ${contador}/${total_arquivos}]"
@@ -365,7 +348,6 @@ _executar_atualizacao_biblioteca() {
                 _mensagec "${RED}" "Erro na descompactação de ${arquivo} - Verifique o log ${LOG_ATU}"
                 return 1
             fi
-
             _linha
             _read_sleep 1
             clear
@@ -484,13 +466,17 @@ _reverter_programa_especifico_biblioteca() {
 
 # Baixa biblioteca via RSYNC
 _baixar_biblioteca_rsync() {
+    cd "${TOOLS}" || return 1
+
     if [[ "${acessossh}" == "n" ]]; then
         if [[ "${sistema}" == "iscobol" ]]; then
             local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
             sftp -P "$PORTA" "${src}" "."
         else
             _definir_variaveis_biblioteca
-            local arquivos_update=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}")
+            local arquivos_update
+            read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
+
             for arquivo in "${arquivos_update[@]}"; do
                 local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
                 sftp -P "$PORTA" "${src}" "."
@@ -499,12 +485,8 @@ _baixar_biblioteca_rsync() {
     else
         _definir_variaveis_biblioteca
         local arquivos_update
-        if [[ "${sistema}" == "iscobol" ]]; then
-            arquivos_update=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}")
-        else
-            arquivos_update=("${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}")
-        fi
-        
+        read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
+
         for arquivo in "${arquivos_update[@]}"; do
             local src="${DESTINO2}${arquivo}"
             sftp sav_servidor <<EOF
@@ -546,6 +528,14 @@ _definir_variaveis_biblioteca() {
     ATUALIZA4="${SAVATU4}${VERSAO}.zip"
 }
 
+_obter_arquivos_atualizacao() {
+    if [[ "${sistema}" == "iscobol" ]]; then
+        echo "${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}"
+    else
+        echo "${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}"
+    fi
+}
+
 #---------- VALIDAÇÕES ----------#
 # Valida se os diretórios de destino estão configurados
 _validar_diretorios_biblioteca() {
@@ -565,3 +555,4 @@ _validar_diretorios_biblioteca() {
     
     return 0
 }
+

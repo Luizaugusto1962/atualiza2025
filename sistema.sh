@@ -26,6 +26,8 @@ mclass="${mclass:-}"
 exec="${exec:-}"
 xml="${xml:-}"
 olds="${olds:-}"
+Offline="${Offline:-}"
+down_dir="${down_dir:-}"
 
 #---------- FUNÇÕES DE VERSÃO ----------#
 
@@ -101,7 +103,7 @@ _mostrar_versao_linux() {
     printf "\n"
 
     # Checando Externo IP
-    if [[ "${SERACESOFF}" == "n" ]]; then
+    if [[ "${Offline}" == "n" ]]; then
         externalip=$(curl -s ipecho.net/plain || printf "Nao disponivel")
         printf "${GREEN}""IP Externo :""${NORM}""${externalip}""%*s\n"
     fi
@@ -179,7 +181,7 @@ _mostrar_parametros() {
     clear
     _linha "=" "${GREEN}"
     printf "${GREEN}Diretório para envio de backup: ${NORM}${ENVIABACK}""%*s\n"
-    printf "${GREEN}Servidor OFF: ${NORM}${SERACESOFF}""%*s\n"
+    printf "${GREEN}Servidor OFF: ${NORM}${Offline}""%*s\n"
     printf "${GREEN}Versão anterior da biblioteca: ${NORM}${VERSAOANT}""%*s\n"
     printf "${GREEN}Variável da classe: ${NORM}${class}""%*s\n"
     printf "${GREEN}Variável da mclass: ${NORM}${mclass}""%*s\n"
@@ -194,7 +196,7 @@ _mostrar_parametros() {
 
 # Executa atualização do script
 _executar_update() {
-    if [[ "${SERACESOFF}" == "n" ]]; then
+    if [[ "${Offline}" == "n" ]]; then
         _atualizar_online
         export tipo_online 
     else
@@ -337,7 +339,7 @@ _atualizar_online() {
 # Atualização offline via arquivo local
 _atualizar_offline() {
     local temp_dir="${ENVIA}/temp_update/"
-    local dir_offline="$destino$SERACESOFF"
+    local dir_offline="$down_dir"
     local zipfile="atualiza.zip"
 
     # Criar e acessar diretório temporário
@@ -366,7 +368,7 @@ _atualizar_offline() {
 readonly tracejada="#-------------------------------------------------------------------#"
 
 # Variáveis globais
-declare -l sistema base base2 base3 BANCO destino SERACESOFF ENVIABACK
+declare -l sistema base base2 base3 BANCO destino Offline ENVIABACK
 declare -u EMPRESA
 # Posiciona o script no diretório LIB_CFG.
 cd "${LIB_CFG}" || {
@@ -431,7 +433,7 @@ editar_variavel() {
             echo "Mantendo valor anterior: $valor_atual"
         fi    
 
-        elif [[ "$nome" == "SERACESOFF" ]]; then
+        elif [[ "$nome" == "Offline" ]]; then
             printf "\n"
             printf "%s\n" "${tracejada}"
             printf "%s\n" "O sistema em modo Offline ?"
@@ -439,8 +441,8 @@ editar_variavel() {
             printf "%s\n" "2) Nao"
             read -rp "Opcao [1-2]: " opcao
             case "$opcao" in
-            1) SERACESOFF="/sav/portalsav/Atualiza" ;;
-            2) SERACESOFF="n" ;;
+            1) Offline="s" ;;
+            2) Offline="n" ;;
             *) printf "%s\n" "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
         else
@@ -515,7 +517,7 @@ clear
     editar_variavel destino
     editar_variavel acessossh
     editar_variavel IPSERVER
-    editar_variavel SERACESOFF
+    editar_variavel Offline
     editar_variavel ENVIABACK
     editar_variavel EMPRESA
     editar_variavel base
@@ -535,7 +537,7 @@ clear
         [[ -n "$destino" ]] && echo "destino=${destino}"
         [[ -n "$acessossh" ]] && echo "acessossh=${acessossh}"
         [[ -n "$IPSERVER" ]] && echo "IPSERVER=${IPSERVER}"      
-        [[ -n "$SERACESOFF" ]] && echo "SERACESOFF=${SERACESOFF}"
+        [[ -n "$Offline" ]] && echo "Offline=${Offline}"
         [[ -n "$ENVIABACK" ]] && echo "ENVIABACK=${ENVIABACK}"
         [[ -n "$EMPRESA" ]] && echo "EMPRESA=${EMPRESA}"
         [[ -n "$base" ]] && echo "base=${base}"
@@ -652,4 +654,3 @@ _press
 exit 1
 
 }
-

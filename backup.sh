@@ -9,6 +9,8 @@ base="${base:-}"           # Caminho do diretorio da segunda base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 cmd_zip="${cmd_zip:-}"
+Offline="${Offline:-}"
+down_dir="${down_dir:-}"
 
 # Carregar configurações e variaveis globais
 _carregar_modulo "config.sh"
@@ -363,7 +365,7 @@ _enviar_backup_servidor() {
 # Move backup para diretorio offline
 _mover_backup_offline() {
     local nome_backup="$1"
-    local destino_offline="${destino}${SERACESOFF}"
+    local destino_offline="${down_dir}"
     mkdir -p "$destino_offline" || {
         _mensagec "${RED}" "Erro ao criar diretorio offline"
         return 1

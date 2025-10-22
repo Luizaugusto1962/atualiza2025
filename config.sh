@@ -13,7 +13,7 @@ declare -a cores=(RED GREEN YELLOW BLUE PURPLE CYAN NORM)
 declare -a caminhos_base=(BASE1 BASE2 BASE3 tools DIR destino pasta base base2 base3 logs exec class telas xml olds progs backup sistema TEMPS UMADATA DIRB ENVIABACK ENVBASE SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who)
-declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC)
+declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC Offline)
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
 #-Variaveis de configuracao do sistema ---------------------------------------------------------#
@@ -45,8 +45,10 @@ verclass="${verclass:-}"     # Ano da versao
 ENVIABACK="${ENVIABACK:-}"   # Variavel que define o caminho para onde sera enviado o backup.
 VERSAO="${VERSAO:-}"         # Variavel que define a versao do programa.
 INI="${INI:-}"               # Variavel que define o caminho do arquivo de configuracao do sistema.
+Offline="${Offline:-}"       # Variavel que define se o sistema esta em modo offline.
+down_dir="${down_dir:-}"     # Variavel que define o caminho do diretorio do servidor off.  
 SERACESOFF="${SERACESOFF:-}" # Variavel que define o caminho do diretorio do servidor off.
-acessossh="${acessossh:-}" # Variavel que define o caminho do diretorio do servidor off.
+acessossh="${acessossh:-}"   # Variavel que define o caminho do diretorio do servidor off.
 VERSAOANT="${VERSAOANT:-}"   # Variavel que define a versao do programa anterior.
 cmd_unzip="${cmd_unzip:-}"   # Comando para descompactar arquivos.
 cmd_zip="${cmd_zip:-}"       # Comando para compactar arquivos.
@@ -76,6 +78,7 @@ LOG_TMP="${LOG_TMP:-}"       # Variavel que define o caminho do arquivo de log t
 UMADATA="${UMADATA:-}"       # Variavel que define o caminho do arquivo de dados da UMA.
 ISCCLIENT="${ISCCLIENT:-}"   # Variavel que define o caminho do cliente ISC.
 
+
 # Configurações padrão
 DEFAULT_UNZIP="unzip"        # Comando padrão para descompactar
 DEFAULT_ZIP="zip"            # Comando padrão para compactar
@@ -89,7 +92,7 @@ export DESTINO2SERVER="/u/varejo/man/"                                   # Diret
 export DESTINO2SAVATUISC="/home/savatu/biblioteca/temp/ISCobol/sav-5.0/" # Diretório da biblioteca IsCOBOL
 export DESTINO2SAVATUMF="/home/savatu/biblioteca/temp/Isam/sav-3.1"      # Diretório da biblioteca Isam
 export DESTINO2TRANSPC="/u/varejo/trans_pc/"                             # Diretório de transporte PC
-
+export SERACESOFF="/sav/portalsav/Atualiza"                              # Diretório do servidor offline
 #---------- FUNÇÕES DE CONFIGURAÇÃO ----------#
 
 # Função para definir cores do terminal
@@ -167,8 +170,7 @@ _configurar_diretorios() {
     # Definir diretório de destino
     destino="${raiz}${destino}"
     TOOLS="$(dirname "${SCRIPT_DIR}")"
-    readonly destino TOOLS 
-
+   
     # Verificar diretório principal
     if [[ -n "${TOOLS}" ]] && [[ -d "${TOOLS}" ]]; then
         _mensagec "${CYAN}" "Diretório encontrado: ${TOOLS}"
@@ -277,16 +279,8 @@ _carregar_parametros() {
 
 # Carregar arquivo de configuração da empresa
 _carregar_config_empresa() {
-    local config_dir="${LIB_CFG}/"
     local config_file="${LIB_CFG}/.atualizac"
 
-# Criar diretório de configuração se não existir
-    if [[ ! -d "${config_dir}" ]]; then
-        mkdir -p "${config_dir}" || {
-            printf "ERRO: Não foi possível criar o diretório %s\n" "${config_dir}"
-            exit 1
-        }
-    fi
     # Verificar existência e permissões
     if [[ ! -e "${config_file}" ]]; then
         printf "ERRO: Arquivo não existe no diretório.\n" 
@@ -305,15 +299,17 @@ _carregar_config_empresa() {
 }
 
 # Configurar acesso offline se necessário
-_configurar_acesso_offline() {
-    if [[ "${SERACESOFF}" == "s" ]]; then
-        local offline_dir="${destino}${SERACESOFF}"
-        if [[ ! -d "${offline_dir}" ]]; then
-            mkdir -p "${offline_dir}" || {
-                printf "Erro ao criar diretório offline %s\n" "${offline_dir}"
+_configurar_acessos() {
+    if [[ "${Offline}" == "s" ]]; then
+            down_dir="${destino}${SERACESOFF}"
+        if [[ ! -d "${down_dir}" ]]; then
+            mkdir -p "${down_dir}" || {
+                printf "Erro ao criar diretório offline %s\n" "${down_dir}"
                 exit 1
             }
-        fi
+        fi    
+    else
+        down_dir="${TOOLS}"
     fi
 }
 
@@ -338,7 +334,7 @@ _carregar_configuracoes() {
     _configurar_variaveis_sistema
     
     # Configurar acesso offline
-    _configurar_acesso_offline
+    _configurar_acessos
 }
 
 # Função para validar diretórios essenciais
@@ -451,7 +447,7 @@ _validar_configuracao() {
     done
     
     # Verificar conectividade se for modo online
-    if [[ "${SERACESOFF}" == "n" ]]; then
+    if [[ "${Offline}" == "n" ]]; then
         _mensagec "${YELLOW}" "INFO: Verificando conectividade com servidor..."
         if command -v ping >/dev/null 2>&1; then
             if ping -c 1 -W 5 "${IPSERVER}" >/dev/null 2>&1; then

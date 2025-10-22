@@ -124,7 +124,7 @@ _edit_setup() {
     _editar_variavel destino
     _editar_variavel acessossh
     _editar_variavel IPSERVER
-    _editar_variavel SERACESOFF
+    _editar_variavel Offline
     _editar_variavel ENVIABACK
     _editar_variavel EMPRESA
     _editar_variavel base
@@ -287,12 +287,14 @@ _setup_acesso_remoto() {
     echo ${tracejada}
 
     echo "###      ( Tipo de acesso        )         ###"
-    read -rp "Servidor OFF [S/N]: " -n1 SERACESOFF
+    read -rp "Servidor OFF [S/N]: " -n1 opt 
     echo
-    if [[ "${SERACESOFF}" =~ ^[Ss]$ ]]; then
-        echo "SERACESOFF=/sav/portalsav/Atualiza" >> .atualizac
+    if [[ "${opt}" =~ ^[Ss]$ ]]; then
+        Offline="s"
+        echo "Offline=s" >> .atualizac
     else
-        echo "SERACESOFF=n" >> .atualizac
+        Offline="n"
+        echo "Offline=n" >> .atualizac
     fi
 }
 
@@ -301,12 +303,12 @@ _setup_backup() {
     echo "###     ( Nome de pasta no servidor da SAV )                ###"
     echo "Nome de pasta no servidor da SAV, informar somento o nome do cliente"
     read -rp "(Ex: cliente/NOME_CLIENTE): " ENVIABACK
-    if [[ -z "$ENVIABACK" && "${SERACESOFF}" =~ ^[Nn]$ ]]; then
+    if [[ -z "$ENVIABACK" && "${Offline}" =~ ^[Nn]$ ]]; then
         echo "ENVIABACK=" >> .atualizac
     elif [[ -n "$ENVIABACK" ]]; then
         echo "ENVIABACK=cliente/${ENVIABACK}" >> .atualizac
     else
-        echo "ENVIABACK=/sav/portalsav/Atualiza" >> .atualizac
+        echo "ENVIABACK=${SERACESOFF}" >> .atualizac
     fi
 }
 _setup_empresa() {
@@ -341,14 +343,12 @@ _editar_variavel() {
                 [[ "$opt" == "s" ]] && eval "$nome=s"
                 [[ "$opt" == "n" ]] && eval "$nome=n"
                 ;;
-            "SERACESOFF")
-                read -rp "Sistema em modo Offline? (s/n): " opt
-                if [[ "$opt" == "s" ]]; then
-                    SERACESOFF="/sav/portalsav/Atualiza"
-                else
-                    SERACESOFF="n"
-                fi
+            "Offline")
+                read -rp "Sistema em modo Offline? (s/n): " opt            
+                [[ "$opt" == "s" ]] && eval "Offline=s" 
+                [[ "$opt" == "n" ]] && eval "Offline=n" 
                 ;;
+
             *)
                 read -rp "Novo valor para ${nome}: " novo_valor
                 eval "$nome=\"$novo_valor\""
@@ -383,7 +383,8 @@ _recreate_config_files() {
         echo "destino=${destino}"
         echo "acessossh=${acessossh}"
         echo "IPSERVER=${IPSERVER}"
-        echo "SERACESOFF=${SERACESOFF}"
+        echo "Offline=${Offline}"
+#        echo "SERACESOFF=${SERACESOFF}"
         echo "ENVIABACK=${ENVIABACK}"
         echo "EMPRESA=${EMPRESA}"
         echo "base=${base}"
@@ -412,40 +413,6 @@ _recreate_config_files() {
 }
 
 #---------- FUNÇÕES AUXILIARES ----------#
-
-# Cria script de lote para Windows
-_create_batch_script() {
-    local complemento classA classB classC classD classE
-
-    if [[ "$sistema" == "cobol" ]]; then
-        complemento="-6"
-        mcomplemento="-m6"
-        classA="tempSAVintA_"
-        classB="tempSAVintB_"
-        classC="tempSAVtel_"
-    else
-        local verclass_sufixo="${VERCLASS: -2}"
-        complemento="-class${verclass_sufixo}"
-        mcomplemento="-mclass${verclass_sufixo}"
-        classA="tempSAV_IS${VERCLASS}_classA_"
-        classB="tempSAV_IS${VERCLASS}_classB_"
-        classC="tempSAV_IS${VERCLASS}_tel_isc_"
-        classD="tempSAV_IS${VERCLASS}_xml_"
-    fi
-
-    {
-        echo "@echo off"
-        echo "cls"
-        echo "setlocal EnableDelayedExpansion"
-        echo "set class=${complemento}"
-        echo "set mclass=${mcomplemento}"
-        echo "set SAVATU1=${classA}"
-        echo "set SAVATU2=${classB}"
-        echo "set SAVATU3=${classC}"
-        [[ -n "$classD" ]] && echo "set SAVATU4=${classD}"
-    } > atualiza.bat
-}
-
 # Configura acesso SSH facilitado
 _configure_ssh_access() {
     local SERVER_IP="${IPSERVER}"
@@ -502,13 +469,11 @@ cd ..
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly SCRIPT_DIR
 
-#LIB_DIR="${SCRIPT_DIR}/libs"
-#readonly LIB_DIR
-
+# Diretório de configuração
 LIB_CFG="${SCRIPT_DIR}/cfg"
 readonly LIB_CFG
 
-# Verifica se o diretório tools existe
+# Verifica se o diretório libs existe
 if [[ ! -d "${LIB_CFG}" ]]; then
     echo "ERRO: Diretório ${LIB_CFG} nao encontrado."
     exit 1
