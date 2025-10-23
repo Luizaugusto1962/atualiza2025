@@ -27,7 +27,6 @@ exec="${exec:-}"
 xml="${xml:-}"
 olds="${olds:-}"
 Offline="${Offline:-}"
-down_dir="${down_dir:-}"
 
 #---------- FUNÇÕES DE VERSÃO ----------#
 
@@ -339,7 +338,7 @@ _atualizar_online() {
 # Atualização offline via arquivo local
 _atualizar_offline() {
     local temp_dir="${ENVIA}/temp_update/"
-    local dir_offline="$down_dir"
+#    local dir_offline="$down_dir"
     local zipfile="atualiza.zip"
 
     # Criar e acessar diretório temporário
@@ -349,14 +348,14 @@ _atualizar_offline() {
     }
 
     # Acessar diretório offline
-    cd "$dir_offline" || {
-        _mensagec "${RED}" "Erro: Diretório offline $dir_offline não acessível"
+    cd "$down_dir" || {
+        _mensagec "${RED}" "Erro: Diretório offline $down_dir não acessível"
         return 1
     }
 
     # Verificar se o arquivo zip existe
     if [[ ! -f "$zipfile" ]]; then
-        _mensagec "${RED}" "Erro: $zipfile não encontrado em $dir_offline"
+        _mensagec "${RED}" "Erro: $zipfile não encontrado em $down_dir"
         return 1
     fi
     mv "${zipfile}" "${temp_dir}"

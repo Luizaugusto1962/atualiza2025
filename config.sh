@@ -309,7 +309,7 @@ _configurar_acessos() {
             }
         fi    
     else
-        down_dir="${TOOLS}"
+        down_dir="${destino}{pasta}"
     fi
 }
 
