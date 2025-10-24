@@ -13,7 +13,7 @@ declare -a cores=(RED GREEN YELLOW BLUE PURPLE CYAN NORM)
 declare -a caminhos_base=(BASE1 BASE2 BASE3 tools DIR destino pasta base base2 base3 logs exec class telas xml olds progs backup sistema TEMPS UMADATA DIRB ENVIABACK ENVBASE SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who)
-declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC Offline)
+declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC Offline base_trabalho)
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
 #-Variaveis de configuracao do sistema ---------------------------------------------------------#
@@ -62,7 +62,6 @@ PORTA="${PORTA:-}"           # Variavel que define a porta a ser usada para.
 USUARIO="${USUARIO:-}"       # Variavel que define o usuario a ser usado.
 IPSERVER="${IPSERVER:-}"     # Variavel que define o ip do servidor da SAV.
 DESTINO2="${DESTINO2:-}"     # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
-cmd_find="${cmd_find:-}"     # Comando para buscar arquivos.
 RED="${RED:-}"               # Cor vermelha
 GREEN="${GREEN:-}"           # Cor verde
 YELLOW="${YELLOW:-}"         # Cor amarela
@@ -77,7 +76,7 @@ LOG_LIMPA="${LOG_LIMPA:-}"   # Variavel que define o caminho do arquivo de log d
 LOG_TMP="${LOG_TMP:-}"       # Variavel que define o caminho do arquivo de log temporario.
 UMADATA="${UMADATA:-}"       # Variavel que define o caminho do arquivo de dados da UMA.
 ISCCLIENT="${ISCCLIENT:-}"   # Variavel que define o caminho do cliente ISC.
-
+base_trabalho="${base_trabalho:-}" # Variavel que define o caminho do diretorio de trabalho.
 
 # Configurações padrão
 DEFAULT_UNZIP="unzip"        # Comando padrão para descompactar

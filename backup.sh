@@ -368,10 +368,14 @@ _mover_backup_offline() {
     _linha
     if [[ -z "${down_dir}" ]]; then
         _mensagec "${RED}" "Diretorio offline nao configurado"
+        return 1
+    fi
+# Criando diretorio diretorio offline
+    if [[ ! -d "${down_dir}" ]]; then
         mkdir -p "${down_dir}" || {
         _mensagec "${RED}" "Erro ao criar diretorio offline"
         return 1
-    }
+        }
     fi
     
     if mv -f "${backup}/${nome_backup}" "$down_dir"; then

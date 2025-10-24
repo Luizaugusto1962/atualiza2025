@@ -320,8 +320,7 @@ EOF
 
 # Baixa pacotes para diretório específico
 _baixar_pacotes_rsync() {
-    cd "$
-    " || {
+    cd "${down_dir}" || {
         _mensagec "${RED}" "Erro: Diretório $down_dir não encontrado"
         return 1
     }
