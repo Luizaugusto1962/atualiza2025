@@ -192,18 +192,17 @@ _configurar_diretorios() {
     fi
         
     # Definir diretórios de trabalho
-    OLDS="${TOOLS}/olds"        # Diretório de arquivos antigos
-    PROGS="${TOOLS}/progs"     # Diretório de programas
-    LOGS="${TOOLS}/logs"        # Diretório de logs
-    ENVIA="${TOOLS}/envia"     # Diretório de envio
-    RECEBE="${TOOLS}/recebe"  # Diretório de recebimento
-    LIBS="${TOOLS}/libs"        # Diretório de bibliotecas
-    backup="${TOOLS}/backup"  # Diretório de backup
-
-    down_dir="${destino}${pasta}"      # Diretório do servidor off-line
+    backup="${backup:-${TOOLS}/backup}"  # Diretório de backup
+    OLDS="${OLDS:-${TOOLS}/olds}"        # Diretório de arquivos antigos
+    PROGS="${PROGS:-${TOOLS}/progs}"     # Diretório de programas
+    LOGS="${LOGS:-${TOOLS}/logs}"        # Diretório de logs
+    ENVIA="${ENVIA:-${TOOLS}/envia}"     # Diretório de envio
+    RECEBE="${RECEBE:-${TOOLS}/recebe}"  # Diretório de recebimento
+    LIBS="${LIBS:-${TOOLS}/libs}"        # Diretório de bibliotecas
+    readonly backup OLDS PROGS LOGS ENVIA RECEBE LIBS  # Diretórios principais
 
     # Criar diretórios se não existirem
-    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${down_dir}" "${backup}")
+    local dirs=("${backup}" "${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" )
     for dir in "${dirs[@]}"; do
         if [[ ! -d "${dir}" ]]; then
             mkdir -p "${dir}" || {
@@ -215,7 +214,6 @@ _configurar_diretorios() {
 
     # Restaurar diretório original
     cd "$dir_atual" || exit 1
-
 }
 
 # Configurar variáveis do sistema
@@ -310,6 +308,8 @@ _configurar_acessos() {
                 exit 1
             }
         fi    
+    else
+        down_dir="${destino}{pasta}"
     fi
 }
 

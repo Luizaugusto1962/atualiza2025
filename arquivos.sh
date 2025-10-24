@@ -14,6 +14,7 @@ base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 BASE_TRABALHO="${BASE_TRABALHO:-}"
 cmd_zip="${cmd_zip:-}"
 jut="${jut:-}"
+backup="${backup:-}"
 
 #---------- FUNÇÕES DE LIMPEZA ----------#
 
@@ -35,7 +36,7 @@ _executar_limpeza_temporarios() {
     fi
 
     # Limpar temporários antigos do backup
-    find "${BACKUP}" -type f -name "Temps*" -mtime +10 -delete 2>/dev/null || true
+    find "${backup}" -type f -name "Temps*" -mtime +10 -delete 2>/dev/null || true
 
     # Processar cada base de dados configurada
     for base_dir in "$base" "$base2" "$base3"; do
@@ -70,7 +71,7 @@ _limpar_base_especifica() {
             
             # Compactar e mover arquivos temporários
             local zip_temporarios="Temps-${UMADATA}.zip"
-            if find "$caminho_base" -type f -iname "$padrao_arquivo" -exec "$cmd_zip" -m "${BACKUP}/${zip_temporarios}" {} + >>"${LOG_LIMPA}" 2>&1; then
+            if find "$caminho_base" -type f -iname "$padrao_arquivo" -exec "$cmd_zip" -m "${backup}/${zip_temporarios}" {} + >>"${LOG_LIMPA}" 2>&1; then
                 _log "Arquivos temporarios processados: $padrao_arquivo"
             fi
         fi
@@ -442,7 +443,7 @@ _executar_expurgador() {
     
     # Definir diretórios para limpeza
     local diretorios_limpeza=(
-        "${BACKUP}/"
+        "${backup}/"
         "${OLDS}/"
         "${PROGS}/"
         "${LOGS}/"

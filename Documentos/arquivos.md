@@ -80,7 +80,7 @@ Processa limpeza de uma base específica.
 # Processamento de cada padrão
 for padrao_arquivo in "${arquivos_temp[@]}"; do
     find "$caminho_base" -type f -iname "$padrao_arquivo" \
-        -exec "$cmd_zip" -m "${BACKUP}/${zip_temporarios}" {} +
+        -exec "$cmd_zip" -m "${backup}/${zip_temporarios}" {} +
 done
 ```
 
@@ -185,7 +185,7 @@ Limpeza automática de arquivos antigos.
 #### Diretórios Gerais (>30 dias)
 ```bash
 local diretorios_limpeza=(
-    "${BACKUP}/"           # Backups antigos
+    "${backup}/"           # Backups antigos
     "${OLDS}/"             # Arquivos antigos
     "${PROGS}/"            # Programas processados
     "${LOGS}/"             # Logs antigos
@@ -255,7 +255,7 @@ local diretorios_zip=(
 ### Arquivos de Sistema
 - `${LIB_CFG}/atualizat` - Lista de padrões para limpeza
 - `${jut}` - Caminho do utilitário jutil IsCobol
-- `${BACKUP}/Temps-${UMADATA}.zip` - Arquivo de temporários removidos
+- `${backup}/Temps-${UMADATA}.zip` - Arquivo de temporários removidos
 
 ## Exemplos de Uso
 
@@ -378,7 +378,7 @@ cat "${LIB_CFG}/atualizat"
 "${jut}" -rebuild arquivo.dat -a -f
 
 # Verificar estrutura de diretórios
-find "${BACKUP}" -name "Temps*" -mtime +10
+find "${backup}" -name "Temps*" -mtime +10
 
 # Verificar logs de limpeza
 tail -f "${LOG_LIMPA}"

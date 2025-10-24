@@ -157,7 +157,7 @@ _validar_configuracao_sistema() {
     fi
     
     # Verificar diretórios essenciais
-    local dirs=("exec" "telas" "olds" "progs" "logs" "backup" "cfg")
+    local dirs=("exec" "telas")
     for dir in "${dirs[@]}"; do
         local dir_path=""
         # Tratamento especial para exec e telas que ficam em ${destino}/sav
@@ -425,7 +425,7 @@ _verificar_espaco() {
 # Parâmetros: $1=arquivo_original $2=diretório_backup(opcional)
 _backup_arquivo() {
     local arquivo="$1"
-    local dir_backup="${2:-${BACKUP:-./backup}}"
+    local dir_backup="${2:-${backup:-./backup}}"
     local nome_base
     local extensao
     local timestamp
@@ -507,7 +507,7 @@ _executar_expurgador_diario() {
     
     # Executar limpeza básica
     _limpar_arquivos_antigos "${LOGS}" 30 "*.log"
-    _limpar_arquivos_antigos "${BACKUP}" 30 "Temps*"
+    _limpar_arquivos_antigos "${backup}" 30 "Temps*"
     _limpar_arquivos_antigos "${OLDS}" 30 "Temps*"
     _limpar_arquivos_antigos "${savlog}" 30 "Temps*"
     _limpar_arquivos_antigos "${err_isc}" 30 "Temps*"

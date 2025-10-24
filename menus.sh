@@ -329,7 +329,7 @@ _menu_recuperar_arquivos() {
     done
 }
 
-#---------- MENU DE BACKUP ----------#
+#---------- MENU DE backup ----------#
 
 # Menu de backup do sistema
 _menu_backup() {
@@ -559,7 +559,7 @@ _menu_escolha_base() {
     done
 }
 
-#---------- MENU DE TIPO DE BACKUP ----------#
+#---------- MENU DE TIPO DE backup ----------#
 
 # Menu para escolher tipo de backup
 _menu_tipo_backup() {

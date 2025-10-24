@@ -195,11 +195,11 @@ _mostrar_parametros() {
 
 # Executa atualização do script
 _executar_update() {
-    local temp_dir="${ENVIA}/temp_update/"
     local zipfile="atualiza.zip"
+    local temp_dir="${ENVIA}/temp_update"
     local down_dir="${down_dir}"
     _configurar_acessos
-    
+
     if [[ "${Offline}" == "n" ]]; then
         _atualizar_online
         export tipo_online 
@@ -212,12 +212,12 @@ _executar_update() {
 
 # Atualização online via GitHub
 _atualizando() {
-    _configurar_diretorios
+
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
 
     # Criar backup do arquivo atual
-    if [[ ! -d "${backup}" ]]; then
-        mkdir -p "${backup}" || {
+    if [[ ! -d "$backup" ]]; then
+        mkdir -p "$backup" || {
             _mensagec "${RED}" "Erro: Não foi possível criar diretório de backup"
             return 1
         }
@@ -239,7 +239,7 @@ _atualizando() {
         fi
 
         # Copiar o arquivo para o diretório de backup
-        if cp -f "$arquivo" "$backup/$arquivo.bak"; then
+        if cp -f "$arquivo" "${backup}/.$arquivo.bak"; then
             _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
             ((backup_sucesso++))
         else
@@ -330,6 +330,7 @@ _atualizando() {
 }
 _atualizar_online() {
     local link="https://github.com/Luizaugusto1962/Atualiza2025/archive/master/atualiza.zip"
+
        # Criar e acessar diretório temporário
     mkdir -p "$temp_dir" || {
         _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
@@ -340,6 +341,7 @@ _atualizar_online() {
 
 # Atualização offline via arquivo local
 _atualizar_offline() {
+
     # Criar e acessar diretório temporário
     mkdir -p "$temp_dir" || {
         _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."

@@ -369,7 +369,7 @@ _executar_atualizacao_biblioteca() {
     # Mover backups para diretório
     arquivos=(*_"${VERSAO}".bkp)
     if (( ${#arquivos[@]} )); then
-        mv "${arquivos[@]}" "${BACKUP}" || {
+        mv "${arquivos[@]}" "${backup}" || {
         _mensagec "${YELLOW}" "Erro ao mover arquivos de backup."
         exit 1
         }

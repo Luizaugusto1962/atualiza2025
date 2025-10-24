@@ -36,7 +36,7 @@ base2="${base2:-}"
 base3="${base3:-}"
 
 # Configurações de backup
-BACKUP="${BACKUP:-}"
+backup="${backup:-}"
 cmd_zip="${cmd_zip:-}"
 EMPRESA="${EMPRESA:-}"
 ```
@@ -44,7 +44,7 @@ EMPRESA="${EMPRESA:-}"
 ### Validações Iniciais
 ```bash
 # Verificar variáveis essenciais
-if [[ -z "$destino" || -z "$sistema" || -z "$BACKUP" ]]; then
+if [[ -z "$destino" || -z "$sistema" || -z "$backup" ]]; then
     _mensagec "${RED}" "Erro: Variáveis essenciais não definidas"
     return 1
 fi
@@ -123,7 +123,7 @@ Transferência via rsync com configurações SSH.
 - **Feedback visual** durante transferência
 
 ```bash
-rsync -avzP -e "ssh -p ${PORTA}" "${BACKUP}/${nome_backup}" \
+rsync -avzP -e "ssh -p ${PORTA}" "${backup}/${nome_backup}" \
     "${USUARIO}@${IPSERVER}:/${destino_remoto}"
 ```
 
@@ -132,7 +132,7 @@ Movimentação para diretório local configurado.
 
 ```bash
 # Mover para diretório offline
-mv -f "${BACKUP}/${nome_backup}" "$destino_offline"
+mv -f "${backup}/${nome_backup}" "$destino_offline"
 ```
 
 ## Funcionalidades Avançadas
@@ -140,9 +140,9 @@ mv -f "${BACKUP}/${nome_backup}" "$destino_offline"
 ### Verificação de Backups Recentes
 ```bash
 _verificar_backups_recentes() {
-    if find "$BACKUP" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
+    if find "$backup" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
         # Mostra backups dos últimos 2 dias
-        ls -ltrh "${BACKUP}/${EMPRESA}"_*.zip
+        ls -ltrh "${backup}/${EMPRESA}"_*.zip
         return 0
     fi
     return 1
@@ -221,7 +221,7 @@ nome_backup="${EMPRESA}_${base_trabalho}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
 - `ls` - Listagem formatada de arquivos
 
 ### Variáveis de Ambiente
-- `BACKUP` - Diretório de armazenamento de backups
+- `backup` - Diretório de armazenamento de backups
 - `EMPRESA` - Nome da empresa para identificação
 - `USUARIO` - Usuário para conexão remota
 - `IPSERVER` - Endereço do servidor remoto
@@ -271,10 +271,10 @@ wait "$backup_pid"
 ### Busca Inteligente de Arquivos
 ```bash
 # Arrays para armazenar resultados
-mapfile -t arquivos_backup < <(printf '%s\n' "${BACKUP}"/*.zip)
+mapfile -t arquivos_backup < <(printf '%s\n' "${backup}"/*.zip)
 
 # Busca por padrão
-mapfile -t backups_encontrados < <(ls -1 "${BACKUP}"/*"${nome_backup}"*.zip 2>/dev/null)
+mapfile -t backups_encontrados < <(ls -1 "${backup}"/*"${nome_backup}"*.zip 2>/dev/null)
 ```
 
 ### Controle de Diretórios Múltiplos
@@ -325,13 +325,13 @@ fi
 ### Diagnóstico de Problemas
 ```bash
 # Verificar backups existentes
-ls -la "${BACKUP}"
+ls -la "${backup}"
 
 # Testar comandos externos
 command -v zip unzip rsync
 
 # Verificar permissões
-ls -ld "${BACKUP}"
+ls -ld "${backup}"
 ```
 
 ## Casos de Uso Comuns

@@ -468,7 +468,7 @@ Cria backup de arquivo com timestamp.
 ```bash
 _backup_arquivo() {
     local arquivo="$1"
-    local dir_backup="${2:-${BACKUP:-./backup}}"
+    local dir_backup="${2:-${backup:-./backup}}"
     local nome_base=$(basename "$arquivo")
     local extensao=""
     local timestamp=$(date +"%Y%m%d_%H%M%S")
@@ -533,7 +533,7 @@ _executar_expurgador_diario() {
     
     # Limpeza de diferentes diretórios
     _limpar_arquivos_antigos "${LOGS}" 30 "*.log"
-    _limpar_arquivos_antigos "${BACKUP}" 30 "Temps*"
+    _limpar_arquivos_antigos "${backup}" 30 "Temps*"
     # ... demais diretórios
     
     touch "$flag_file"
@@ -672,7 +672,7 @@ _log_sucesso "Operação concluída"
 ### Variáveis de Ambiente Utilizadas
 - `COLUMNS` - Largura do terminal
 - `LOG_ATU` - Arquivo de log padrão
-- `BACKUP` - Diretório de backup
+- `backup` - Diretório de backup
 - `LOGS` - Diretório de logs
 - `TOOLS` - Diretório de ferramentas
 

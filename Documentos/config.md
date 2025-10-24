@@ -135,7 +135,7 @@ Criação e configuração da estrutura completa de diretórios.
 
 ```bash
 readonly TOOLS="${destino}${pasta}"     # /sav/sav/tools
-readonly BACKUP="${TOOLS}/backup"       # Diretório de backups
+readonly backup="${TOOLS}/backup"       # Diretório de backups
 readonly OLDS="${TOOLS}/olds"           # Backups antigos
 readonly PROGS="${TOOLS}/progs"         # Programas processados
 readonly LOGS="${TOOLS}/logs"           # Arquivos de log
@@ -344,7 +344,7 @@ _resetando() {
 - **`TOOLS`** - Diretório principal (`/sav/sav/tools`)
 - **`LIBS`** - Bibliotecas do sistema (`/sav/sav/tools/libs`)
 - **`LOGS`** - Arquivos de log (`/sav/sav/tools/logs`)
-- **`BACKUP`** - Backups (`/sav/sav/tools/backup`)
+- **`backup`** - Backups (`/sav/sav/tools/backup`)
 
 ## Exemplos de Uso
 
