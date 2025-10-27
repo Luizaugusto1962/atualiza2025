@@ -135,13 +135,14 @@ _restaurar_backup() {
     local backup_selecionado
 
     # Listar backups disponiveis
-shopt -s nullglob
-mapfile -t arquivos_backup < <(printf '%s\n' "${backup}"/*.zip)
+    shopt -s nullglob
+    mapfile -t arquivos_backup < <(printf '%s\n' "${backup}"/*.zip)
 
-if (( ${#arquivos_backup[@]} == 0 )); then
-    echo "Nenhum arquivo .zip encontrado em ${backup}"
-    exit 1
-fi
+    if (( ${#arquivos_backup[@]} == 0 )); then
+        _mensagec "${RED}" "Nenhum arquivo .zip encontrado em ${backup}"
+        _press
+        return 1
+    fi
 
     # Mostrar backups disponiveis
     _linha
@@ -191,14 +192,16 @@ _enviar_backup_avulso() {
 local backup_selecionado
 shopt -s nullglob
 
-# Listar backups disponíveis
-backups=( "${backup}/${EMPRESA}"_*.zip )
+    # Listar backups disponíveis
+    local backups=()
+    backups=( "${backup}/${EMPRESA}"_*.zip )
 
-if (( ${#backups[@]} == 0 )); then
-    _mensagec "${RED}" "Nenhum backup encontrado"
-    _press
-    return 1
-fi
+    # Verificar se há backups disponíveis
+    if [[ ! -e "${backups[0]}" ]]; then
+        _mensagec "${RED}" "Nenhum backup encontrado"
+        _press
+        return 1
+    fi
     # Mostrar lista
     _linha
     ls -lh "${backup}/${EMPRESA}"_*.zip
@@ -261,11 +264,24 @@ _executar_backup_completo() {
 _executar_backup_incremental() {
     local arquivo_destino="$1"
     local data_referencia="$2"
+
+    # Validar data antes de usar
+    if ! date -d "$data_referencia" >/dev/null 2>&1; then
+        _mensagec "${RED}" "Data inválida: $data_referencia"
+        return 1
+    fi
+
     _diretorio_trabalho
 
     find . -type f -newermt "$data_referencia" \
            ! -name "*.zip" ! -name "*.tar" ! -name "*.tar.gz" -print0 | \
         xargs -0 "$cmd_zip" "$arquivo_destino" >/dev/null 2>&1
+
+        # Verificar se o backup foi criado
+    if [[ ! -f "$arquivo_destino" ]]; then
+        _mensagec "${RED}" "Erro: Backup não foi criado"
+        return 1
+    fi    
 }
 
 # Diretorio de trabalho

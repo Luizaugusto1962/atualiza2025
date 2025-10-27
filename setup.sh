@@ -86,7 +86,7 @@ _edit_setup() {
     }
 
     # Verificar se os arquivos de configuração existem
-    if [[ -f "${LIB_CFG}/.atualizac" ]]; then
+    if [[ ! -f "${LIB_CFG}/.atualizac" ]]; then
         echo "Arquivos de configuração não encontrados. Execute o setup inicial primeiro."
         exit 1
     fi
@@ -384,7 +384,6 @@ _recreate_config_files() {
         echo "acessossh=${acessossh}"
         echo "IPSERVER=${IPSERVER}"
         echo "Offline=${Offline}"
-#        echo "SERACESOFF=${SERACESOFF}"
         echo "ENVIABACK=${ENVIABACK}"
         echo "EMPRESA=${EMPRESA}"
         echo "base=${base}"
@@ -407,7 +406,7 @@ _recreate_config_files() {
         echo "logs=/logs"
         echo "cfg=/cfg"
         echo "backup=/backup"
-    } > .atualizac
+    } >> .atualizac
 
     echo "$tracejada"
 }
@@ -464,7 +463,7 @@ EOF
 
 # Função principal que direciona para o modo correto
 main() {
-cd ..
+    cd .. || exit 1
 # Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly SCRIPT_DIR

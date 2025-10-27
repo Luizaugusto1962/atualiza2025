@@ -10,7 +10,8 @@
 
 # Arrays para organização das variáveis
 declare -a cores=(RED GREEN YELLOW BLUE PURPLE CYAN NORM)
-declare -a caminhos_base=(BASE1 BASE2 BASE3 tools DIR destino pasta base base2 base3 logs exec class telas xml olds progs backup sistema TEMPS UMADATA DIRB ENVIABACK ENVBASE SERACESOFF E_EXEC T_TELAS X_XML)
+declare -a caminhos_base=(BASE1 BASE2 BASE3 tools DIR destino pasta base base2 base3 logs exec class telas xml olds)
+declare -a caminhos_base2=(progs backup sistema TEMPS UMADATA DIRB ENVIABACK ENVBASE SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who)
 declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC Offline base_trabalho)
@@ -175,18 +176,18 @@ _configurar_diretorios() {
         _mensagec "${CYAN}" "Diretório encontrado: ${TOOLS}"
         cd "${TOOLS}" || {
             _mensagec "${RED}" "Erro: Não foi possível acessar %s\n" "${TOOLS}"
-            exit 1
+            return 1
         }
     else
         _mensagec "${RED}" "ERRO: Diretório %s não encontrado.\n" "${TOOLS}"
-        exit 1
+        return 1
     fi
 
     # Criar diretório de configuração se não existir
     if [[ ! -d "${LIB_CFG}" ]]; then
         mkdir -p "${LIB_CFG}" || {
             printf "Erro ao criar diretório de configuração %s\n" "${LIB_CFG}"
-            exit 1
+            return 1
         }
     fi
         
@@ -431,10 +432,10 @@ _validar_configuracao() {
         local dir_path=""
         # Tratamento especial para exec e telas que ficam em ${destino}/sav
         if [[ "$dir" == "exec" ]] || [[ "$dir" == "telas" ]]; then
-            dir_path="${destino}/${!dir}"
+            dir_path="${destino}/sav/${!dir}"
         else
             # Para outros diretórios, usar o caminho padrão
-            dir_path="${destino}${pasta}${!dir}"
+            dir_path="${destino}${pasta}/${!dir}"
         fi
         
         if [[ ! -d "${dir_path}" ]]; then
@@ -480,7 +481,8 @@ _validar_configuracao() {
 # Função para resetar variáveis (cleanup)
 _resetando() {
     unset -v "${cores[@]}" 2>/dev/null || true
-    unset -v "${caminhos_base[@]}" 2>/dev/null || true  
+    unset -v "${caminhos_base[@]}" 2>/dev/null || true
+    unset -v "${caminhos_base2[@]}" 2>/dev/null || true
     unset -v "${biblioteca[@]}" 2>/dev/null || true
     unset -v "${comandos[@]}" 2>/dev/null || true
     unset -v "${outros[@]}" 2>/dev/null || true

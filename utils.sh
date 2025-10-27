@@ -40,7 +40,7 @@ _mensaged() {
 # Cria linha horizontal com caractere especificado
 # Parâmetros: $1=caractere (opcional, padrão='-') $2=cor (opcional)
 _linha() {
-    local Traco=${1:-'-'}
+    local Traco="${1:--}"
     local CCC="${2:-}"
     local Espacos
     local linhas

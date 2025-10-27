@@ -319,7 +319,11 @@ _atualizando() {
     fi
 
     # Limpeza
-    cd "$ENVIA" && rm -rf "$temp_dir"
+    cd "$ENVIA" || {
+        _mensagec "${RED}" "Erro: Diretório $ENVIA não acessível para limpeza"
+        return 1
+    }
+    rm -rf ./*
 
     _linha
     _mensagec "${GREEN}" "Atualização concluída com sucesso!"

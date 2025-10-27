@@ -187,7 +187,7 @@ _menu_ferramentas() {
         
         # Verificar se sistema tem banco de dados
         if [[ "${BANCO}" = "s" ]]; then
-            _mensagec "${GREEN}" "1${NORM} - | Temporarios               "
+            _mensagec "${GREEN}" "1${NORM} - | Temporarios               |"
             printf "\n"
             _mensagec "${GREEN}" "4${NORM} - | Enviar e Receber Arquivos |"
             printf "\n"

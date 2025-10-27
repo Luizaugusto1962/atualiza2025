@@ -79,17 +79,16 @@ _atualizar_programa_offline() {
 
 # Atualização de programas em pacotes
 _atualizar_programa_pacote() {
-       _solicitar_pacotes_atualizacao
+        _solicitar_pacotes_atualizacao
     if [[ "${Offline}" == "s" ]]; then
         _linha
         _mensagec "${YELLOW}" "Parâmetro do servidor OFF ativo"
         _mover_arquivos_offline
     else 
-       _baixar_pacotes_rsync
+        _baixar_pacotes_rsync
     fi
-       _processar_atualizacao_pacotes
-       _press
-   
+        _processar_atualizacao_pacotes
+        _press
 }
 
 #---------- FUNÇÕES DE REVERSÃO ----------#
@@ -294,10 +293,10 @@ _baixar_programas_rsync() {
         _linha
 
         if [[ "${acessossh}" == "n" ]]; then
-        _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
-        _linha
-		echo "Transferindo: $arquivo"
-		_press
+            _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
+            _linha
+            echo "Transferindo: $arquivo"
+            _press
             if ! sftp -P "$PORTA" "$USUARIO"@"${IPSERVER}":"${DESTINO2SERVER}${arquivo}" .; then
                 _mensagec "${RED}" "Falha no download: $arquivo"
                 continue

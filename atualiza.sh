@@ -10,6 +10,11 @@
 set -euo pipefail
 export LC_ALL=C
 
+# Verificações básicas
+if [[ ! -t 0 && ! -p /dev/stdin ]]; then
+    echo "Este script deve ser executado interativamente" >&2
+    exit 1
+fi
 PSCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Diretório do script tools
@@ -25,9 +30,9 @@ fi
 # Verifica se o arquivo principal.sh existe
 if [[ -f "${PLIBS_DIR}/principal.sh" ]]; then
     echo "Carregando utilitario..."
-## Carrega o script principal
+    # Carrega o script principal
     cd "${PLIBS_DIR}" || exit 1
-    ./"principal.sh"
+    "./principal.sh"
 else
     echo "ERRO: Arquivo ${PLIBS_DIR}/principal.sh nao encontrado."
 fi

@@ -41,7 +41,7 @@ _executar_limpeza_temporarios() {
     # Processar cada base de dados configurada
     for base_dir in "$base" "$base2" "$base3"; do
         if [[ -n "$base_dir" ]]; then
-            local caminho_base="${destino}${base_dir}/"
+            local caminho_base="${destino}${base_dir}"
             if [[ -d "$caminho_base" ]]; then
                 _limpar_base_especifica "$caminho_base" "$arquivo_lista"
             else

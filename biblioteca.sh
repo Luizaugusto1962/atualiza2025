@@ -25,16 +25,20 @@ _limpar_interrupcao() {
     # Matar todos os PIDs pendentes
     for pid in "${pids[@]}"; do
         if kill -0 "$pid" 2>/dev/null; then
-            kill "$pid" 2>/dev/null
+            kill "$pid" 2>/dev/null || true
             _log "Processo PID $pid interrompido"
         fi
     done
     pids=()  # Limpar array
     
     # Limpeza de temporários (ex: zips parciais ou descompactados incompletos)
-    cd "${TOOLS}" || true
+    cd "${TOOLS}" 2>/dev/null || true
+
     for temp_file in *"${VERSAO}".zip *"${VERSAO}".bkp; do
-        [[ -f "$temp_file" ]] && rm -f "$temp_file" && _log "Arquivo temporário removido: $temp_file"
+        if [[ -f "$temp_file" ]]; then
+            rm -f "$temp_file" 
+            _log "Arquivo temporário removido: $temp_file"
+        fi
     done
     
     # Verificar se backup parcial existe e sugerir rollback
@@ -45,7 +49,7 @@ _limpar_interrupcao() {
     
     _log "Cleanup concluído. Saída forçada."
     _press  # Pausa para o usuário ver a mensagem
-    exit 1
+    return 1
 }
 
 # Configurar traps (SIGINT=2 para Ctrl+C, SIGTERM=15 para kill)
@@ -121,9 +125,9 @@ _atualizar_biblioteca_offline() {
 
     if [[ "${Offline}" == "s" ]]; then
         _processar_biblioteca_offline
+    else
+        _salvar_atualizacao_biblioteca
     fi
-
-    _salvar_atualizacao_biblioteca
 }
 
 # Reverter biblioteca para versão anterior
@@ -367,11 +371,11 @@ _executar_atualizacao_biblioteca() {
     done
     
     # Mover backups para diretório
-    arquivos=(*_"${VERSAO}".bkp)
+    local arquivos=(*_"${VERSAO}".bkp)
     if (( ${#arquivos[@]} )); then
-        mv "${arquivos[@]}" "${backup}" || {
+        mv -- "${arquivos[@]}" "${OLDS}" || {
         _mensagec "${YELLOW}" "Erro ao mover arquivos de backup."
-        exit 1
+        return 1
         }
     else
         _mensagec "${YELLOW}" "Nenhum arquivo de backup para mover"
@@ -387,13 +391,6 @@ _executar_atualizacao_biblioteca() {
     # Salvar versão anterior
     if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> "${LIB_CFG}/.atualizac"; then
         _mensagec "${RED}" "Erro ao gravar arquivo de versão atualizada"
-        _press
-        exit
-    fi
-
-    # Salvar versão também no diretório /u/sav/tools/cfg
-    if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> "/u/sav/tools/cfg/.atualizac"; then
-        _mensagec "${RED}" "Erro ao gravar arquivo de versão atualizada em /u/sav/tools/cfg/"
         _press
         exit
     fi
