@@ -200,10 +200,8 @@ _configurar_diretorios() {
     LIBS="${TOOLS}/libs"        # Diretório de bibliotecas
     backup="${TOOLS}/backup"  # Diretório de backup
 
-    down_dir="${destino}${pasta}"      # Diretório do servidor off-line
-
     # Criar diretórios se não existirem
-    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${down_dir}" "${backup}")
+    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${backup}")
     for dir in "${dirs[@]}"; do
         if [[ ! -d "${dir}" ]]; then
             mkdir -p "${dir}" || {
