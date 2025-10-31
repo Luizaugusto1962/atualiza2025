@@ -48,7 +48,7 @@ _principal() {
         _mensagec "${GREEN}" "9 ${RED}- | Sair              |"
         printf "\n"
         
-        _mensaged "${BLUE}" "${UPDATE}"
+        _mensaged "${BLUE}" "${UPDATE}""-V2"
         _linha "=" "${GREEN}"
 
         local opcao
