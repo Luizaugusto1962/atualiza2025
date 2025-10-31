@@ -198,10 +198,10 @@ _configurar_diretorios() {
     ENVIA="${TOOLS}/envia"     # Diretório de envio
     RECEBE="${TOOLS}/recebe"  # Diretório de recebimento
     LIBS="${TOOLS}/libs"        # Diretório de bibliotecas
-    backup="${TOOLS}/backup"  # Diretório de backup
-
+    dirbackup="${TOOLS}/backup"  # Diretório de backup
+    
     # Criar diretórios se não existirem
-    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${backup}")
+    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${dirbackup}")
     for dir in "${dirs[@]}"; do
         if [[ ! -d "${dir}" ]]; then
             mkdir -p "${dir}" || {
@@ -210,7 +210,6 @@ _configurar_diretorios() {
             }
         fi
     done
-
     # Restaurar diretório original
     cd "$dir_atual" || exit 1
 
@@ -425,15 +424,15 @@ _validar_configuracao() {
     fi
     
     # Verificar diretórios essenciais
-    local dirs=("exec" "telas" "olds" "progs" "logs" "backup" "cfg")
+    local dirs=("exec" "telas" "olds" "progs" "logs" "cfg" "libs" "backup")
     for dir in "${dirs[@]}"; do
         local dir_path=""
         # Tratamento especial para exec e telas que ficam em ${destino}/sav
         if [[ "$dir" == "exec" ]] || [[ "$dir" == "telas" ]]; then
-            dir_path="${destino}/sav/${!dir}"
+            dir_path="${destino}/${!dir}"
         else
             # Para outros diretórios, usar o caminho padrão
-            dir_path="${destino}${pasta}/${!dir}"
+            dir_path="${TOOLS}${!dir}"
         fi
         
         if [[ ! -d "${dir_path}" ]]; then

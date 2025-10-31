@@ -14,7 +14,7 @@ base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 BASE_TRABALHO="${BASE_TRABALHO:-}"
 cmd_zip="${cmd_zip:-}"
 jut="${jut:-}"
-backup="${backup:-}"
+dirbackup="${dirbackup:-}"
 
 #---------- FUNÇÕES DE LIMPEZA ----------#
 
@@ -36,7 +36,7 @@ _executar_limpeza_temporarios() {
     fi
 
     # Limpar temporários antigos do backup
-    find "${backup}" -type f -name "Temps*" -mtime +10 -delete 2>/dev/null || true
+    find "${dirbackup}" -type f -name "Temps*" -mtime +10 -delete 2>/dev/null || true
 
     # Processar cada base de dados configurada
     for base_dir in "$base" "$base2" "$base3"; do
@@ -98,6 +98,7 @@ _adicionar_arquivo_lixo() {
 
     if [[ -z "$novo_arquivo" ]]; then
         _mensagec "${RED}" "Nome de arquivo não informado"
+        _linha
         _press
         return 1
     fi

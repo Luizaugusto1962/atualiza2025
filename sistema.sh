@@ -17,10 +17,11 @@ base="${base:-}"
 base2="${base2:-}"
 base3="${base3:-}"
 telas="${telas:-}"
-logs="${logs:-}"
-progs="${progs:-}"
+LOGS="${LOGS:-}"
+PROGS="${PROGS:-}"
+OLDS="${OLDS:-}"
 verclass="${verclass:-}"
-backup="${backup:-}"
+dirbackup="${dirbackup:-}"
 class="${class:-}"
 mclass="${mclass:-}"
 exec="${exec:-}"
@@ -164,11 +165,11 @@ _mostrar_parametros() {
     printf "${GREEN}Diretório dos executáveis: ${NORM}${destino}/${exec}""%*s\n"
     printf "${GREEN}Diretório das telas: ${NORM}${destino}/${telas}""%*s\n"
     printf "${GREEN}Diretório dos xmls: ${NORM}${destino}/${xml}""%*s\n"
-    printf "${GREEN}Diretório dos logs: ${NORM}${destino}${pasta}${logs}""%*s\n"
-    printf "${GREEN}Diretório dos olds: ${NORM}${destino}${pasta}${olds}""%*s\n"
-    printf "${GREEN}Diretório dos progs: ${NORM}${destino}${pasta}${progs}""%*s\n"
-    printf "${GREEN}Diretório do backup: ${NORM}${destino}${pasta}${backup}""%*s\n"
-    printf "${GREEN}Diretório de configuracoes: ${NORM}${destino}${pasta}${LIB_CFG}""%*s\n"
+    printf "${GREEN}Diretório dos logs: ${NORM}${LOGS}""%*s\n"
+    printf "${GREEN}Diretório dos olds: ${NORM}${OLDS}""%*s\n"
+    printf "${GREEN}Diretório dos progs: ${NORM}${PROGS}""%*s\n"
+    printf "${GREEN}Diretório do backup: ${NORM}${dirbackup}""%*s\n"
+    printf "${GREEN}Diretório de configuracoes: ${NORM}${LIB_CFG}""%*s\n"
     printf "${GREEN}Sistema em uso: ${NORM}${sistema}""%*s\n"
     printf "${GREEN}Versão em uso: ${NORM}${verclass}""%*s\n"
     printf "${GREEN}Biblioteca 1: ${NORM}${SAVATU1}""%*s\n"
@@ -216,8 +217,8 @@ _atualizando() {
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
 
     # Criar backup do arquivo atual
-    if [[ ! -d "${backup}" ]]; then
-        mkdir -p "${backup}" || {
+    if [[ ! -d "${dirbackup}" ]]; then
+        mkdir -p "${dirbackup}" || {
             _mensagec "${RED}" "Erro: Não foi possível criar diretório de backup"
             return 1
         }
@@ -239,7 +240,7 @@ _atualizando() {
         fi
 
         # Copiar o arquivo para o diretório de backup
-        if cp -f "$arquivo" "$backup/$arquivo.bak"; then
+        if cp -f "$arquivo" "$dirbackup/$arquivo.bak"; then
             _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
             ((backup_sucesso++))
         else
@@ -558,7 +559,7 @@ clear
         echo "olds=/olds"
         echo "logs=/logs"
         echo "cfg=/cfg"
-        echo "backup=/backup"
+        echo "dirbackup=/dirbackup"
     } >.atualizac
 
     echo

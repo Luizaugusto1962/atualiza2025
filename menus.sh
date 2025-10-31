@@ -45,7 +45,7 @@ _principal() {
         printf "\n"
         _mensagec "${GREEN}" "5${NORM} - | Ferramentas           |"
         printf "\n\n"
-        _mensagec "${GREEN}" "9 ${RED}- | Sair             |"
+        _mensagec "${GREEN}" "9 ${RED}- | Sair              |"
         printf "\n"
         
         _mensaged "${BLUE}" "${UPDATE}"

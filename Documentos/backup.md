@@ -44,7 +44,7 @@ EMPRESA="${EMPRESA:-}"
 ### Validações Iniciais
 ```bash
 # Verificar variáveis essenciais
-if [[ -z "$destino" || -z "$sistema" || -z "$backup" ]]; then
+if [[ -z "$destino" || -z "$sistema" || -z "$dirbackup" ]]; then
     _mensagec "${RED}" "Erro: Variáveis essenciais não definidas"
     return 1
 fi

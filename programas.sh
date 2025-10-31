@@ -39,6 +39,7 @@ _atualizar_programa_online() {
     
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
         _mensagec "${YELLOW}" "Nenhum programa selecionado"
+        _linha
         _press
         return 1
     fi
@@ -59,6 +60,7 @@ _atualizar_programa_offline() {
     
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
         _mensagec "${YELLOW}" "Nenhum programa selecionado"
+        _linha
         _press
         return 1
     fi
@@ -145,6 +147,7 @@ _reverter_programa() {
         _mensagem_conclusao_reversao
     else
         _mensagec "${RED}" "Nenhum programa foi selecionado para reversão"
+        _linha
         _press
     fi
 }
@@ -244,6 +247,7 @@ _solicitar_pacotes_atualizacao() {
 
         if [[ -z "${programa}" ]]; then
             _mensagec "${YELLOW}" "Finalizando seleção de pacotes..."
+            _linha
             break
         fi
 
@@ -296,7 +300,7 @@ _baixar_programas_rsync() {
             _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
             _linha
             echo "Transferindo: $arquivo"
-            _press
+#            _press
             if ! sftp -P "$PORTA" "$USUARIO"@"${IPSERVER}":"${DESTINO2SERVER}${arquivo}" .; then
                 _mensagec "${RED}" "Falha no download: $arquivo"
                 continue
@@ -319,6 +323,8 @@ EOF
 
 # Baixa pacotes para diretório específico
 _baixar_pacotes_rsync() {
+    _configurar_acessos
+
     cd "${down_dir}" || {
         _mensagec "${RED}" "Erro: Diretório $down_dir não encontrado"
         return 1
@@ -331,6 +337,8 @@ _baixar_pacotes_rsync() {
 
 # Move arquivos do servidor offline
 _mover_arquivos_offline() {
+    _configurar_acessos
+
     cd "${down_dir}" || return 1
     if [[ "${Offline}" == "s" ]]; then
         for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
@@ -353,9 +361,7 @@ _processar_atualizacao_programas() {
     local extensao        # Extensão do arquivo
     local backup_file     # Nome do arquivo de backup
     local programa_idx=0  # Índice do programa no array
-    if [[ "$Offline" == "s" ]]; then
-       cd "${down_dir}" || return 1
-    fi
+    _configurar_acessos
      
     # Verificar se arquivos existem
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
@@ -438,8 +444,8 @@ _processar_atualizacao_programas() {
 
 # Processa atualização de pacotes
 _processar_atualizacao_pacotes() {
-    cd "${down_dir}" || return 1
-    
+#    cd "${down_dir}" || return 1
+    _configurar_acessos
     # Descompactar pacotes
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
         if [[ ! -f "${arquivo}" ]]; then
@@ -528,7 +534,7 @@ _mensagem_conclusao_reversao() {
     _mensagec "${YELLOW}" "Volta do(s) Programa(s) Concluída(s)"
     _linha
     _press
-
+    _linha
     # Perguntar se deseja reverter mais programas
     if _confirmar "Deseja reverter mais algum programa?" "N"; then
         _reverter_programa

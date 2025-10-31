@@ -12,7 +12,7 @@ cmd_zip="${cmd_zip:-}"
 Offline="${Offline:-}"
 #down_dir="${down_dir:-}"
 backup="${backup:-}"
-
+dirbackup="${dirbackup:-}"
 #---------- FUNÇÕES PRINCIPAIS DE backup ----------#
 
 # Executa backup do sistema
@@ -26,16 +26,6 @@ _executar_backup() {
     else
         base_trabalho="${destino}${base}"
     fi
- 
-
-    # Criar diretorio de backup se nao existir
-    if [[ ! -d "$backup" ]]; then
-        _mensagec "$YELLOW" "Criando diretorio de backups em $backup..."
-        mkdir -p "$backup" || {
-            _mensagec "$RED" "Erro ao criar diretorio de backup"
-            return 1
-        }
-    fi
 
     # Escolher tipo de backup
     _menu_tipo_backup
@@ -46,12 +36,13 @@ _executar_backup() {
     # Gerar nome do arquivo
     local nome_backup
     nome_backup="${EMPRESA}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
-    local caminho_backup="$backup/$nome_backup"
+    local caminho_backup="${dirbackup}/${nome_backup}"
 
     # Verificar backups recentes
     if _verificar_backups_recentes; then
         if ! _confirmar "Ja existe backup recente. Deseja continuar?" "N"; then
             _mensagec "$RED" "Operaçao cancelada"
+            _linha
             _read_sleep 3
             return 1
         fi
@@ -140,13 +131,14 @@ _restaurar_backup() {
 
     if (( ${#arquivos_backup[@]} == 0 )); then
         _mensagec "${RED}" "Nenhum arquivo .zip encontrado em ${backup}"
+        _linha
         _press
         return 1
     fi
 
     # Mostrar backups disponiveis
     _linha
-    ls -lh "${backup}"/*.zip 2>/dev/null
+    ls -lh "${dirbackup}"/*.zip 2>/dev/null
     _linha
     _mensagec "${RED}" "Informe parte do nome do backup para restaurar:"
     _linha
@@ -155,6 +147,7 @@ _restaurar_backup() {
     read -rp "${YELLOW}Nome do backup: ${NORM}" nome_backup
     if [[ -z "$nome_backup" ]]; then
         _mensagec "${RED}" "Nome nao informado"
+        _linha
         _press
         return 1
     fi
@@ -194,7 +187,7 @@ shopt -s nullglob
 
     # Listar backups disponíveis
     local backups=()
-    backups=( "${backup}/${EMPRESA}"_*.zip )
+    backups=( "${dirbackup}/${EMPRESA}"_*.zip )
 
     # Verificar se há backups disponíveis
     if [[ ! -e "${backups[0]}" ]]; then
@@ -204,7 +197,7 @@ shopt -s nullglob
     fi
     # Mostrar lista
     _linha
-    ls -lh "${backup}/${EMPRESA}"_*.zip
+    ls -lh "${dirbackup}/${EMPRESA}"_*.zip
     _linha
 
     # Solicitar seleçao
@@ -218,7 +211,7 @@ shopt -s nullglob
 
     # Buscar backups
     local backups_encontrados=()
-    mapfile -t backups_encontrados < <(ls -1 "${backup}"/*"${nome_backup}"*.zip 2>/dev/null)
+    mapfile -t backups_encontrados < <(ls -1 "${dirbackup}"/*"${nome_backup}"*.zip 2>/dev/null)
     case ${#backups_encontrados[@]} in
         0)
             _mensagec "${RED}" "Backup nao encontrado"
@@ -360,14 +353,14 @@ _enviar_backup_servidor() {
     _linha
     _mensagec "${YELLOW}" "Enviando backup via rsync..."
     _linha
-    if rsync -avzP -e "ssh -p ${PORTA}" "${backup}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}"; then
+    if rsync -avzP -e "ssh -p ${PORTA}" "${dirbackup}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}"; then
         _mensagec "${YELLOW}" "Backup enviado para \"${destino_remoto}\""
         _read_sleep 3
         # Perguntar sobre manter backup local
         if _confirmar "Manter backup local?" "S"; then
             _mensagec "${YELLOW}" "Backup local mantido"
         else
-            if rm -f "${backup}/${nome_backup}"; then
+            if rm -f "${dirbackup}/${nome_backup}"; then
                 _mensagec "${YELLOW}" "Backup local excluido"
             fi
         fi
@@ -394,7 +387,7 @@ _mover_backup_offline() {
         }
     fi
     
-    if mv -f "${backup}/${nome_backup}" "$down_dir"; then
+    if mv -f "${dirbackup}/${nome_backup}" "$down_dir"; then
         _mensagec "${YELLOW}" "Backup movido para: ${down_dir}"
         _press
     else
@@ -420,7 +413,7 @@ _enviar_backup_rede() {
     _linha
     _mensagec "${YELLOW}" "Enviando backup..."
     _linha
-    if rsync -avzP -e "ssh -p ${PORTA}" "${backup}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}" 2>/dev/null; then
+    if rsync -avzP -e "ssh -p ${PORTA}" "${dirbackup}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}" 2>/dev/null; then
         _mensagec "${YELLOW}" "Backup enviado para \"${destino_remoto}\" no servidor ${IPSERVER}"
         _read_sleep 3
     else
@@ -433,11 +426,11 @@ _enviar_backup_rede() {
 
 # Verifica backups recentes (últimos 2 dias)
 _verificar_backups_recentes() {
-    if find "$backup" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
+    if find "${dirbackup}" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
         _linha
-        _mensagec "$CYAN" "Ja existe backup recente em $backup:"
+        _mensagec "$CYAN" "Ja existe backup recente em ${dirbackup}:"
         _linha
-        ls -ltrh "${backup}/${EMPRESA}"_*.zip
+        ls -ltrh "${dirbackup}/${EMPRESA}"_*.zip
         _linha
         return 0
     fi
