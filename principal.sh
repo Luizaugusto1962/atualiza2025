@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 10/10/2025-00
+# Versao: 01/11/2025-00
 # Autor: Luiz Augusto
 # Email: luizaugusto@sav.com.br
 #
 # Versão do sistema
 readonly UPDATE="22/10/2025-01"
+export UPDATE
 
 cd .. || exit 1
 
 # Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Diretórios dos módulos 
+# Diretórios dos módulos e configurações
 LIB_DIR="${SCRIPT_DIR}/libs"
-# Diretórios dos  arquivos de configurações										   
 LIB_CFG="${SCRIPT_DIR}/cfg"
 readonly SCRIPT_DIR LIB_DIR LIB_CFG
 
@@ -47,7 +47,7 @@ _carregar_modulo() {
     fi
     
     # shellcheck source=/dev/null
-    if ! "." "${caminho}"; then
+    if ! source "${caminho}"; then
         echo "ERRO: Falha ao carregar módulo ${modulo}"
         exit 1
     fi
