@@ -4,7 +4,7 @@
 # Responsável por carregar configurações, validar sistema e definir variáveis globais
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 10/10/2025-00
+# Versao: 01/11/2025-00
 
 #---------- VARIÁVEIS GLOBAIS ----------#
 
@@ -158,26 +158,32 @@ _configurar_comandos() {
     done
 }
 
-# Configurar diretórios do sistema
 _configurar_diretorios() {
-    # Salvar diretório atual
+# Definir diretório do script
+
+#SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" || {
+#    printf "Erro: não foi possível determinar o diretório do script\n"
+#    return 1
+#}
+#readonly SCRIPT_DIR
+    
+    # Configurar trap para garantir restauração do diretório em caso de erro
     local dir_atual
     dir_atual="$(pwd)"
-    cd .. || exit 1
+    trap 'cd "$dir_atual" 2>/dev/null || true' RETURN
+    
     # Definir diretório raiz
     local raiz="/"
     
     # Definir diretório de destino
     destino="${raiz}${destino}"
-    TOOLS="$(dirname "${SCRIPT_DIR}")"
-   
+    
+    # Definir TOOLS baseado no diretório do script
+    TOOLS="${SCRIPT_DIR}"
+  
     # Verificar diretório principal
     if [[ -n "${TOOLS}" ]] && [[ -d "${TOOLS}" ]]; then
         _mensagec "${CYAN}" "Diretório encontrado: ${TOOLS}"
-        cd "${TOOLS}" || {
-            _mensagec "${RED}" "Erro: Não foi possível acessar %s\n" "${TOOLS}"
-            return 1
-        }
     else
         _mensagec "${RED}" "ERRO: Diretório %s não encontrado.\n" "${TOOLS}"
         return 1
@@ -198,21 +204,21 @@ _configurar_diretorios() {
     ENVIA="${TOOLS}/envia"     # Diretório de envio
     RECEBE="${TOOLS}/recebe"  # Diretório de recebimento
     LIBS="${TOOLS}/libs"        # Diretório de bibliotecas
-    dirbackup="${TOOLS}/backup"  # Diretório de backup
+    BACKUP="${TOOLS}/backup"  # Diretório de backup
     
     # Criar diretórios se não existirem
-    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${dirbackup}")
+    local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${BACKUP}")
     for dir in "${dirs[@]}"; do
         if [[ ! -d "${dir}" ]]; then
             mkdir -p "${dir}" || {
                 printf "Erro ao criar diretório %s\n" "${dir}"
-                exit 1
+                return 1
             }
         fi
     done
-    # Restaurar diretório original
-    cd "$dir_atual" || exit 1
-
+    
+    # Exportar variáveis de diretório
+    export TOOLS OLDS PROGS LOGS ENVIA RECEBE LIBS BACKUP LIB_CFG
 }
 
 # Configurar variáveis do sistema
@@ -224,7 +230,9 @@ _configurar_variaveis_sistema() {
     export BASE1="${destino}${base}"
     export BASE2="${destino}${base2}"
     export BASE3="${destino}${base3}"
-    
+
+    readonly SAVATU="${destino}/sav/"
+        
     # Configuração do SAVISC
     readonly SAVISCC="${destino}/sav/savisc/iscobol/bin/"
     if [[ -n "${SAVISCC}" ]]; then
@@ -445,19 +453,9 @@ _validar_configuracao() {
     
     # Verificar conectividade se for modo online
     if [[ "${Offline}" == "n" ]]; then
-        _mensagec "${YELLOW}" "INFO: Verificando conectividade com servidor..."
-        if command -v ping >/dev/null 2>&1; then
-            if ping -c 1 -W 5 "${IPSERVER}" >/dev/null 2>&1; then
-                _mensagec "${GREEN}" "OK: Conectividade com servidor estabelecida"
-            else
-                _mensagec "${YELLOW}" "WARNING: Não foi possível conectar ao servidor ${IPSERVER}"
-                ((warnings++))
-            fi
-        else
-            _mensagec "${YELLOW}" "INFO: Comando ping não disponível para teste de conectividade"
-        fi
-    else
-        _mensagec "${GREEN}" "INFO: Modo offline - conectividade não verificada"
+        _mensagec "${YELLOW}" "INFO: Servidor em modo On ..."
+    else 
+        _mensagec "${GREEN}" "INFO: Servidor em modo Off ..."
     fi
     
     _linha

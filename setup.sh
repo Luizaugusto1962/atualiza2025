@@ -9,7 +9,7 @@
 #   - ./setup.sh --edit: Modo de edição para modificar configurações existentes.
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 10/10/2025-00
+# Versao: 01/11/2025-00
 
 #---------- FUNÇÕES DE LÓGICA DE NEGÓCIO ----------#
 

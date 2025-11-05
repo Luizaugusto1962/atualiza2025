@@ -2,10 +2,8 @@
 #
 # Atualiza.sh - Script de Atualizaçao Modular do SISTEMA SAV
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 10/10/2025-00
+# Versao: 01/11/2025-00
 # Autor: Luiz Augusto
-# Email: luizaugusto@sav.com.br
-#
 
 set -euo pipefail
 export LC_ALL=C

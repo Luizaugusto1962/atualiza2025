@@ -5,21 +5,19 @@
 # Autor: Luiz Augusto
 # Email: luizaugusto@sav.com.br
 #
-UPDATE="${UPDATE:-}"
-
 # Versão do sistema
-UPDATE="01/11/2025-00"
+readonly UPDATE="22/10/2025-01"
+
+cd .. || exit 1
 
 # Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TOOLS_DIR="$(dirname "${SCRIPT_DIR}")"
-cd "${TOOLS_DIR}" || exit 1
 
-# Diretório dos módulos
-LIB_DIR="${TOOLS_DIR}/libs"
-# Diretório dos arquivos de configuração
-LIB_CFG="${TOOLS_DIR}/cfg"
-readonly  UPDATE SCRIPT_DIR LIB_CFG
+# Diretórios dos módulos 
+LIB_DIR="${SCRIPT_DIR}/libs"
+# Diretórios dos  arquivos de configurações										   
+LIB_CFG="${SCRIPT_DIR}/cfg"
+readonly SCRIPT_DIR LIB_DIR LIB_CFG
 
 # Verificar se o diretório lib existe
 if [[ ! -d "${LIB_DIR}" ]]; then
@@ -49,7 +47,10 @@ _carregar_modulo() {
     fi
     
     # shellcheck source=/dev/null
-    "." "${caminho}"
+    if ! "." "${caminho}"; then
+        echo "ERRO: Falha ao carregar módulo ${modulo}"
+        exit 1
+    fi
 }
 
 # Carregamento sequencial dos módulos (ordem importante)

@@ -3,6 +3,10 @@
 # backup.sh - Modulo do Sistema de Backup
 # Responsavel por backup completo, incremental e restauraçao
 #
+# SISTEMA SAV - Script de Atualizaçao Modular
+# Versao: 01/11/2025-00
+# Autor: Luiz Augusto
+
 destino="${destino:-}"
 sistema="${sistema:-}"
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
@@ -10,9 +14,9 @@ base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 cmd_zip="${cmd_zip:-}"
 Offline="${Offline:-}"
-#down_dir="${down_dir:-}"
+BACKUP="${BACBACKUP:-}"
 backup="${backup:-}"
-dirbackup="${dirbackup:-}"
+
 #---------- FUNÇÕES PRINCIPAIS DE backup ----------#
 
 # Executa backup do sistema
@@ -22,9 +26,19 @@ _executar_backup() {
     # Escolher base se necessario
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
-#        base_trabalho="${BASE_TRABALHO}"
+        BASE_TRABALHO="${base_trabalho}"
     else
         base_trabalho="${destino}${base}"
+    fi
+ 
+
+    # Criar diretorio de backup se nao existir
+    if [[ ! -d "$backup" ]]; then
+        _mensagec "$YELLOW" "Criando diretorio de backups em $backup..."
+        mkdir -p "$backup" || {
+            _mensagec "$RED" "Erro ao criar diretorio de backup"
+            return 1
+        }
     fi
 
     # Escolher tipo de backup
@@ -36,13 +50,12 @@ _executar_backup() {
     # Gerar nome do arquivo
     local nome_backup
     nome_backup="${EMPRESA}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
-    local caminho_backup="${dirbackup}/${nome_backup}"
+    local caminho_backup="${BACKUP}/$nome_backup"
 
     # Verificar backups recentes
     if _verificar_backups_recentes; then
         if ! _confirmar "Ja existe backup recente. Deseja continuar?" "N"; then
             _mensagec "$RED" "Operaçao cancelada"
-            _linha
             _read_sleep 3
             return 1
         fi
@@ -63,7 +76,7 @@ _executar_backup() {
         local mes ano data_referencia
 
         _linha
-        _mensagec "$YELLOW" "Digite o mês (01-12) e ano (ex: 2023) para o backup incremental:"
+        _mensagec "$YELLOW" "Digite o mês (01-12) e ano (ex: 2025) para o backup incremental:"
         _linha
 
         read -rp "${YELLOW}Mes (MM): ${NORM}" mes
@@ -127,18 +140,17 @@ _restaurar_backup() {
 
     # Listar backups disponiveis
     shopt -s nullglob
-    mapfile -t arquivos_backup < <(printf '%s\n' "${backup}"/*.zip)
+    mapfile -t arquivos_backup < <(printf '%s\n' "${BACKUP}"/*.zip)
 
     if (( ${#arquivos_backup[@]} == 0 )); then
-        _mensagec "${RED}" "Nenhum arquivo .zip encontrado em ${backup}"
-        _linha
+        _mensagec "${RED}" "Nenhum arquivo .zip encontrado em ${BACKUP}"
         _press
         return 1
     fi
 
     # Mostrar backups disponiveis
     _linha
-    ls -lh "${dirbackup}"/*.zip 2>/dev/null
+    ls -lh "${BACKUP}"/*.zip 2>/dev/null
     _linha
     _mensagec "${RED}" "Informe parte do nome do backup para restaurar:"
     _linha
@@ -147,14 +159,13 @@ _restaurar_backup() {
     read -rp "${YELLOW}Nome do backup: ${NORM}" nome_backup
     if [[ -z "$nome_backup" ]]; then
         _mensagec "${RED}" "Nome nao informado"
-        _linha
         _press
         return 1
     fi
 
     # Buscar backups correspondentes
     local backups_encontrados=()
-    mapfile -t backups_encontrados < <(ls -1 "${backup}"/*"${nome_backup}"*.zip 2>/dev/null)
+    mapfile -t backups_encontrados < <(ls -1 "${BACKUP}"/*"${nome_backup}"*.zip 2>/dev/null)
     case ${#backups_encontrados[@]} in
         0)
             _mensagec "${RED}" "Nenhum backup corresponde a \"${nome_backup}\""
@@ -187,7 +198,7 @@ shopt -s nullglob
 
     # Listar backups disponíveis
     local backups=()
-    backups=( "${dirbackup}/${EMPRESA}"_*.zip )
+    backups=( "${BACKUP}/${EMPRESA}"_*.zip )
 
     # Verificar se há backups disponíveis
     if [[ ! -e "${backups[0]}" ]]; then
@@ -197,7 +208,7 @@ shopt -s nullglob
     fi
     # Mostrar lista
     _linha
-    ls -lh "${dirbackup}/${EMPRESA}"_*.zip
+    ls -lh "${BACKUP}/${EMPRESA}"_*.zip
     _linha
 
     # Solicitar seleçao
@@ -211,7 +222,7 @@ shopt -s nullglob
 
     # Buscar backups
     local backups_encontrados=()
-    mapfile -t backups_encontrados < <(ls -1 "${dirbackup}"/*"${nome_backup}"*.zip 2>/dev/null)
+    mapfile -t backups_encontrados < <(ls -1 "${BACKUP}"/*"${nome_backup}"*.zip 2>/dev/null)
     case ${#backups_encontrados[@]} in
         0)
             _mensagec "${RED}" "Backup nao encontrado"
@@ -353,14 +364,14 @@ _enviar_backup_servidor() {
     _linha
     _mensagec "${YELLOW}" "Enviando backup via rsync..."
     _linha
-    if rsync -avzP -e "ssh -p ${PORTA}" "${dirbackup}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}"; then
+    if rsync -avzP -e "ssh -p ${PORTA}" "${BACKUP}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}"; then
         _mensagec "${YELLOW}" "Backup enviado para \"${destino_remoto}\""
         _read_sleep 3
         # Perguntar sobre manter backup local
         if _confirmar "Manter backup local?" "S"; then
             _mensagec "${YELLOW}" "Backup local mantido"
         else
-            if rm -f "${dirbackup}/${nome_backup}"; then
+            if rm -f "${BACKUP}/${nome_backup}"; then
                 _mensagec "${YELLOW}" "Backup local excluido"
             fi
         fi
@@ -387,7 +398,7 @@ _mover_backup_offline() {
         }
     fi
     
-    if mv -f "${dirbackup}/${nome_backup}" "$down_dir"; then
+    if mv -f "${BACKUP}/${nome_backup}" "$down_dir"; then
         _mensagec "${YELLOW}" "Backup movido para: ${down_dir}"
         _press
     else
@@ -413,7 +424,7 @@ _enviar_backup_rede() {
     _linha
     _mensagec "${YELLOW}" "Enviando backup..."
     _linha
-    if rsync -avzP -e "ssh -p ${PORTA}" "${dirbackup}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}" 2>/dev/null; then
+    if rsync -avzP -e "ssh -p ${PORTA}" "${BACKUP}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}" 2>/dev/null; then
         _mensagec "${YELLOW}" "Backup enviado para \"${destino_remoto}\" no servidor ${IPSERVER}"
         _read_sleep 3
     else
@@ -426,11 +437,11 @@ _enviar_backup_rede() {
 
 # Verifica backups recentes (últimos 2 dias)
 _verificar_backups_recentes() {
-    if find "${dirbackup}" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
+    if find "${BACKUP}" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
         _linha
-        _mensagec "$CYAN" "Ja existe backup recente em ${dirbackup}:"
+        _mensagec "$CYAN" "Ja existe backup recente em $backup:"
         _linha
-        ls -ltrh "${dirbackup}/${EMPRESA}"_*.zip
+        ls -ltrh "${BACKUP}/${EMPRESA}"_*.zip
         _linha
         return 0
     fi

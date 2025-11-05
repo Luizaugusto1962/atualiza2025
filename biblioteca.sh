@@ -4,7 +4,7 @@
 # Responsável pela atualização das bibliotecas do sistema (Transpc, Savatu)
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 10/10/2025-00
+# Versao: 01/11/2025-00
 
 destino="${destino:-}"
 sistema="${sistema:-}"
@@ -158,13 +158,10 @@ _reverter_biblioteca() {
 
     # Perguntar se é reversão completa ou específica
     if _confirmar "Reverter todos os programas da biblioteca?" "N"; then
-       _linha 
         _reverter_biblioteca_completa "${arquivo_backup}"
     else
-        _linha
         _reverter_programa_especifico_biblioteca "${arquivo_backup}"
     fi
-#    _linha 
 }
 
 #---------- FUNÇÕES DE PROCESSAMENTO ----------#
@@ -408,7 +405,7 @@ _executar_atualizacao_biblioteca() {
 _reverter_biblioteca_completa() {
     local arquivo_backup="$1"
     local raiz="/"
-    
+
     if ! cd "${OLDS}"; then
         _mensagec "${RED}" "Erro: Falha ao acessar o diretório ${OLDS}"
         _press
@@ -457,9 +454,8 @@ _reverter_programa_especifico_biblioteca() {
         _press
         return 1
     fi
-    
+
     _mensagec "${YELLOW}" "Volta do Programa Concluída"
-    _linha
     _press
 }
 

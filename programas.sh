@@ -4,7 +4,7 @@
 # Responsável pela atualização, instalação e reversão de programas
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 10/10/2025-00
+# Versao: 01/11/2025-00
 
 destino="${destino:-}"
 sistema="${sistema:-}"
@@ -39,7 +39,6 @@ _atualizar_programa_online() {
     
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
         _mensagec "${YELLOW}" "Nenhum programa selecionado"
-        _linha
         _press
         return 1
     fi
@@ -60,7 +59,6 @@ _atualizar_programa_offline() {
     
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
         _mensagec "${YELLOW}" "Nenhum programa selecionado"
-        _linha
         _press
         return 1
     fi
@@ -147,7 +145,6 @@ _reverter_programa() {
         _mensagem_conclusao_reversao
     else
         _mensagec "${RED}" "Nenhum programa foi selecionado para reversão"
-        _linha
         _press
     fi
 }
@@ -247,7 +244,6 @@ _solicitar_pacotes_atualizacao() {
 
         if [[ -z "${programa}" ]]; then
             _mensagec "${YELLOW}" "Finalizando seleção de pacotes..."
-            _linha
             break
         fi
 
@@ -534,7 +530,7 @@ _mensagem_conclusao_reversao() {
     _mensagec "${YELLOW}" "Volta do(s) Programa(s) Concluída(s)"
     _linha
     _press
-    _linha
+
     # Perguntar se deseja reverter mais programas
     if _confirmar "Deseja reverter mais algum programa?" "N"; then
         _reverter_programa

@@ -4,7 +4,7 @@
 # Responsável pela apresentação e navegação dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 10/10/2025-00
+# Versao: 01/11/2025-00
 
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
 base="${base:-}"
@@ -45,10 +45,10 @@ _principal() {
         printf "\n"
         _mensagec "${GREEN}" "5${NORM} - | Ferramentas           |"
         printf "\n\n"
-        _mensagec "${GREEN}" "9 ${RED}- | Sair              |"
+        _mensagec "${GREEN}" "9 ${RED}- | Sair             |"
         printf "\n"
         
-        _mensaged "${BLUE}" "${UPDATE}""-V2"
+        _mensaged "${BLUE}" "${UPDATE}"
         _linha "=" "${GREEN}"
 
         local opcao
