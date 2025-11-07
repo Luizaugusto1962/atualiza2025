@@ -6,7 +6,7 @@
 # Email: luizaugusto@sav.com.br
 #
 # Versão do sistema
-readonly UPDATE="22/10/2025-01"
+readonly UPDATE="10/11/2025-00"
 export UPDATE
 
 cd .. || exit 1
