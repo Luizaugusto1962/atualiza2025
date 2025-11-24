@@ -179,8 +179,9 @@ _configurar_diretorios() {
     destino="${raiz}${destino}"
     
     # Definir TOOLS baseado no diretório do script
-    TOOLS="${SCRIPT_DIR}"
-  
+#    TOOLS="${SCRIPT_DIR}"
+    TOOLS="${destino}${pasta}"
+
     # Verificar diretório principal
     if [[ -n "${TOOLS}" ]] && [[ -d "${TOOLS}" ]]; then
         _mensagec "${CYAN}" "Diretório encontrado: ${TOOLS}"
@@ -199,12 +200,12 @@ _configurar_diretorios() {
         
     # Definir diretórios de trabalho
     OLDS="${TOOLS}/olds"        # Diretório de arquivos antigos
-    PROGS="${TOOLS}/progs"     # Diretório de programas
+    PROGS="${TOOLS}/progs"      # Diretório de programas
     LOGS="${TOOLS}/logs"        # Diretório de logs
-    ENVIA="${TOOLS}/envia"     # Diretório de envio
-    RECEBE="${TOOLS}/recebe"  # Diretório de recebimento
+    ENVIA="${TOOLS}/envia"      # Diretório de envio
+    RECEBE="${TOOLS}/recebe"    # Diretório de recebimento
     LIBS="${TOOLS}/libs"        # Diretório de bibliotecas
-    BACKUP="${TOOLS}/backup"  # Diretório de backup
+    BACKUP="${TOOLS}/backup"    # Diretório de backup
     
     # Criar diretórios se não existirem
     local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${BACKUP}")
