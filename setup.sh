@@ -9,7 +9,7 @@
 #   - ./setup.sh --edit: Modo de edição para modificar configurações existentes.
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# Versao: 24/11/2025-00
 
 #---------- FUNÇÕES DE LÓGICA DE NEGÓCIO ----------#
 
@@ -80,7 +80,7 @@ _edit_setup() {
     local tracejada="#-------------------------------------------------------------------#"
 
     # Mover para o diretório de configuração
-    cd cfg || {
+    cd "${LIB_CFG}" || {
         echo "Erro: Diretório 'cfg' não encontrado."
         exit 1
     }
@@ -100,8 +100,6 @@ _edit_setup() {
 
     # Fazer backup
     cp .atualizac .atualizac.bak
-
-    clear
 
     # Edição interativa das variáveis
     _editar_variavel sistema
