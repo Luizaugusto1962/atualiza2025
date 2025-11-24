@@ -231,8 +231,6 @@ _configurar_variaveis_sistema() {
     export BASE1="${destino}${base}"
     export BASE2="${destino}${base2}"
     export BASE3="${destino}${base3}"
-
-    readonly SAVATU="${destino}/sav/"
         
     # Configuração do SAVISC
     readonly SAVISCC="${destino}/sav/savisc/iscobol/bin/"

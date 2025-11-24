@@ -436,7 +436,7 @@ _menu_setups() {
 #                _press
                 ;;
             2) 
-                _manutencao_setup
+               _manutencao_setup
                 # Após a manutenção, recarregar as configurações
                 if [[ -f "${LIB_CFG}/.atualizac" ]]; then
                     # shellcheck source=/dev/null

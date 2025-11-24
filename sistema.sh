@@ -455,19 +455,20 @@ editar_variavel() {
     printf "%s\n" "${tracejada}"
 }
 _manutencao_setup() {
+
 # Atualiza as variáveis SAVATU* com base na verclass
 atualizar_savatu_variaveis() {
     local ano="${verclass}"
     local sufixo="IS${ano}"
 
-    SAVATU="tempSAV_${sufixo}_*_"
+#    SAVATU="tempSAV_${sufixo}_*_"
     SAVATU1="tempSAV_${sufixo}_classA_"
     SAVATU2="tempSAV_${sufixo}_classB_"
     SAVATU3="tempSAV_${sufixo}_tel_isc_"
     SAVATU4="tempSAV_${sufixo}_xml_"
 
     echo "Variaveis SAVATU atualizadas com base em verclass:"
-    echo "SAVATU=$SAVATU"
+#    echo "SAVATU=$SAVATU"
     echo "SAVATU1=$SAVATU1"
     echo "SAVATU2=$SAVATU2"
     echo "SAVATU3=$SAVATU3"
@@ -548,7 +549,7 @@ clear
         echo "exec=sav/classes"
         echo "telas=sav/tel_isc"
         echo "xml=sav/xml"
-        echo "SAVATU=${SAVATU}"
+#        echo "SAVATU=${SAVATU}"
         echo "SAVATU1=${SAVATU1}"
         echo "SAVATU2=${SAVATU2}"
         echo "SAVATU3=${SAVATU3}"
@@ -574,41 +575,41 @@ SERVER_PORT="${SERVER_PORT:-41122}"            # Porta SFTP (padrão: 41122)
 SERVER_USER="${SERVER_USER:-atualiza}"         # Usuário SSH (padrão: atualiza)
 CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS}/.ssh/control}"
 # VALIDAÇÃO DAS VARIÁVEIS OBRIGATÓRIAS
-if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
-    echo "Erro: Variaveis obrigatorias nao definidas!"
-    echo "Defina via ambiente ou edite as configuracoes no inicio do script:"
-    echo "  export SERVER_IP='seu.ip.aqui'"
-    echo "  export SERVER_PORT='porta'"
-    echo "  export SERVER_USER='usuario'"
-    exit 1
-fi
+    if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
+        echo "Erro: Variaveis obrigatorias nao definidas!"
+        echo "Defina via ambiente ou edite as configuracoes no inicio do script:"
+        echo "  export SERVER_IP='seu.ip.aqui'"
+        echo "  export SERVER_PORT='porta'"
+        echo "  export SERVER_USER='usuario'"
+        exit 1
+    fi
 
 # PREPARAÇÃO DOS DIRETÓRIOS
 SSH_CONFIG_DIR="$(dirname "$CONTROL_PATH_BASE")"
 CONTROL_PATH="$CONTROL_PATH_BASE"
 
 # Verifica/cria diretório base
-if [[ ! -d "$SSH_CONFIG_DIR" ]]; then
-    echo "Criando diretorio $SSH_CONFIG_DIR..."
-    mkdir -p "$SSH_CONFIG_DIR" || {
-        echo "Falha: Permissao negada para criar $SSH_CONFIG_DIR. Use sudo se necessario."
-        exit 1
-    }
-    chmod 700 "$SSH_CONFIG_DIR"
-fi
+    if [[ ! -d "$SSH_CONFIG_DIR" ]]; then
+        echo "Criando diretorio $SSH_CONFIG_DIR..."
+        mkdir -p "$SSH_CONFIG_DIR" || {
+            echo "Falha: Permissao negada para criar $SSH_CONFIG_DIR. Use sudo se necessario."
+            exit 1
+        }
+        chmod 700 "$SSH_CONFIG_DIR"
+    fi
 
 # Verifica/cria diretório de controle
-if [[ ! -d "$CONTROL_PATH" ]]; then
-    echo "Criando diretorio de controle $CONTROL_PATH..."
-    mkdir -p "$CONTROL_PATH" || {
-        echo "Falha: Permissao negada para criar $SSH_CONFIG_DIR."
-        exit 1
-    }
-    chmod 700 "$CONTROL_PATH"
-fi
+    if [[ ! -d "$CONTROL_PATH" ]]; then
+        echo "Criando diretorio de controle $CONTROL_PATH..."
+        mkdir -p "$CONTROL_PATH" || {
+            echo "Falha: Permissao negada para criar $SSH_CONFIG_DIR."
+            exit 1
+        }
+        chmod 700 "$CONTROL_PATH"
+    fi
 
 # CONFIGURAÇÃO SSH
-if [[ ! -f "/root/.ssh/config" ]]; then
+    if [[ ! -f "/root/.ssh/config" ]]; then
     mkdir -p "/root/.ssh"
     chmod 700 "/root/.ssh"
     
@@ -624,7 +625,7 @@ Host sav_servidor
 EOF
     chmod 600 "/root/.ssh/config"
     echo "Configuracao SSH criada com parametros:"
-else
+    else
     echo "Arquivo de configuracao ja existe regravando: /root/.ssh/config"
     
     # Verifica se a configuração específica já está presente
@@ -640,19 +641,21 @@ Host sav_servidor
 EOF
         echo "Configuracao 'sav_servidor' adicionada com parametros:"
     fi
-fi
+
 _linha
 # EXIBE OS PARÂMETROS UTILIZADOS
-echo -e "\n   IP do Servidor:   $SERVER_IP"
-echo "   Porta:            $SERVER_PORT"
-echo "   Usuário:          $SERVER_USER"
-echo "   ControlPath:      $CONTROL_PATH/%r@%h:%p"
+echo -e "\n   IP do Servidor:   ${SERVER_IP}"
+echo "   Porta:            ${SERVER_PORT}"
+echo "   Usuário:          ${SERVER_USER}"
+echo "   ControlPath:      ${CONTROL_PATH}/%r@%h:%p"
 echo -e "\n Validacao concluida! Teste com:"
 echo "   sftp sav_servidor"
 echo
 echo
 _linha
 _press 
+else
+    echo "Acesso SSH desativado. Para configurar, defina acessossh=s no arquivo .atualizac"    
 exit 1
-
+fi
 }

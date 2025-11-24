@@ -461,16 +461,24 @@ EOF
 
 # Função principal que direciona para o modo correto
 main() {
-    cd .. || exit 1
+
+cd .. || exit 1
+
 # Diretório do script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly SCRIPT_DIR
 
-# Diretório de configuração
+# Diretórios dos módulos e configurações
+LIB_DIR="${SCRIPT_DIR}/libs"
 LIB_CFG="${SCRIPT_DIR}/cfg"
-readonly LIB_CFG
+readonly SCRIPT_DIR LIB_DIR LIB_CFG
 
 # Verifica se o diretório libs existe
+if [[ ! -d "${LIB_DIR}" ]]; then
+    echo "ERRO: Diretório ${LIB_DIR} nao encontrado."
+    exit 1
+fi
+
+# Verifica se o diretório cfg existe
 if [[ ! -d "${LIB_CFG}" ]]; then
     echo "ERRO: Diretório ${LIB_CFG} nao encontrado."
     exit 1
