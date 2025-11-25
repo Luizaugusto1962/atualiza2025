@@ -3,7 +3,7 @@
 # arquivos.sh - Módulo de Gestão de Arquivos
 # Responsável por limpeza, recuperação, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# Versao: 25/11/2025-00
 #
 # Variaveis globais esperadas
 destino="${destino:-}" # Caminho do diretório de destino principal.
@@ -107,6 +107,27 @@ _adicionar_arquivo_lixo() {
     _mensagec "${CYAN}" "Arquivo '${novo_arquivo}' adicionado com sucesso ao 'atualizat'"
     _linha
     
+    _press
+}
+
+_lista_arquivos_lixo() {
+    cd "${LIB_CFG}" || {
+        _mensagec "${RED}" "Erro: Diretório ${LIB_CFG} não encontrado"
+        return 1
+    }
+    
+    clear
+    _meiodatela
+    _mensagec "${CYAN}" "Lista de arquivos no atualizat:"
+    _linha
+
+    if [[ -f "atualizat" && -s "atualizat" ]]; then
+        nl -w3 -s'. ' atualizat
+    else
+        _mensagec "${YELLOW}" "Nenhum arquivo listado no 'atualizat'"
+    fi
+
+    _linha
     _press
 }
 

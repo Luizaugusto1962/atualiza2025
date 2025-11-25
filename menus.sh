@@ -4,7 +4,7 @@
 # Responsável pela apresentação e navegação dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# Versao: 25/11/2025-00
 
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
 base="${base:-}"
@@ -273,6 +273,8 @@ _menu_temporarios() {
         _mensagec "${GREEN}" "1${NORM} - | Limpeza dos Arquivos Temporarios |"
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} - | Adicionar Arquivos no ATUALIZAT  |"
+        printf "\n"
+        _mensagec "${GREEN}" "3${NORM} - | Listar Arquivos do ATUALIZAT     |"
         printf "\n\n" 
         _mensagec "${GREEN}" "9${RED} - | Menu Anterior                  |"
         printf "\n"
@@ -284,6 +286,7 @@ _menu_temporarios() {
         case "${opcao}" in
             1) _executar_limpeza_temporarios ;;
             2) _adicionar_arquivo_lixo ;;
+            3) _lista_arquivos_lixo ;;
             9) return ;;
             *)
                 _opinvalida
