@@ -170,8 +170,7 @@ _recuperar_arquivo_especifico() {
     _linha "-" "${YELLOW}"
     _mensagec "${YELLOW}" "Arquivo(s) recuperado(s)..."
     _linha
-
-    cd "${TOOLS}" || return 1
+    _ir_para_tools
     _press
 }
 
@@ -503,8 +502,7 @@ _executar_expurgador() {
     printf "\n\n"
     _linha
     _press
-    
-    cd "${TOOLS}" || return 1
+    _ir_para_tools
     
     # Retornar ao menu baseado na origem
     if [[ "$origem" == "ferramentas" ]]; then

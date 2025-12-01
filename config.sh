@@ -307,13 +307,15 @@ _carregar_config_empresa() {
 # Configurar acesso offline se necessário
 _configurar_acessos() {
     if [[ "${Offline}" == "s" ]]; then
-            down_dir="${destino}${SERACESOFF}"
+            down_dir="${destino}${SERACESOFF}"    #"SERACESOFF=/sav/portalsav/Atualiza"
         if [[ ! -d "${down_dir}" ]]; then
             mkdir -p "${down_dir}" || {
                 printf "Erro ao criar diretório offline %s\n" "${down_dir}"
                 exit 1
             }
-        fi    
+        fi
+    else
+        down_dir="${TOOLS}"       
     fi
 }
 
@@ -470,6 +472,13 @@ _validar_configuracao() {
     fi
     
     _linha
+}
+
+_ir_para_tools() {
+    cd "${TOOLS}" || {
+        printf "Erro ao acessar o diretório %s\n" "${TOOLS}"
+        exit 1
+    }
 }
 
 # Função para resetar variáveis (cleanup)

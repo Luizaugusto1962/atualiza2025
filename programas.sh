@@ -280,6 +280,8 @@ _solicitar_pacotes_atualizacao() {
 
 # Baixa programas via RSYNC/SFTP
 _baixar_programas_rsync() {
+   _ir_para_tools
+
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
         return 1
     fi
@@ -353,11 +355,12 @@ _mover_arquivos_offline() {
 
 # Processa atualização dos programas
 _processar_atualizacao_programas() {
+    _ir_para_tools
     local arquivo         # Nome do arquivo
     local extensao        # Extensão do arquivo
     local backup_file     # Nome do arquivo de backup
     local programa_idx=0  # Índice do programa no array
-    _configurar_acessos
+#    _configurar_acessos
      
     # Verificar se arquivos existem
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
@@ -503,7 +506,7 @@ _processar_reversao_programas() {
     done
 
     # Processar atualização com os arquivos revertidos
-    cd "${TOOLS}" || return 1
+    _ir_para_tools
     _processar_atualizacao_programas
 }
 

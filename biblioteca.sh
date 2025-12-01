@@ -32,7 +32,7 @@ _limpar_interrupcao() {
     pids=()  # Limpar array
     
     # Limpeza de temporários (ex: zips parciais ou descompactados incompletos)
-    cd "${TOOLS}" 2>/dev/null || true
+    _ir_para_tools
 
     for temp_file in *"${VERSAO}".zip *"${VERSAO}".bkp; do
         if [[ -f "$temp_file" ]]; then
@@ -195,7 +195,7 @@ _processar_biblioteca_offline() {
 
 # Salva atualização da biblioteca
 _salvar_atualizacao_biblioteca() {
-    cd "${TOOLS}" || return 1
+    _ir_para_tools
     clear
     _definir_variaveis_biblioteca
 
@@ -289,8 +289,7 @@ _processar_atualizacao_biblioteca() {
             return 1
         fi
     fi
-
-    cd "${TOOLS}" || return 1
+    _ir_para_tools
     clear
     _linha
     _mensagec "${YELLOW}" "Backup Completo"
@@ -318,8 +317,7 @@ _processar_atualizacao_biblioteca() {
 
 # Executa a atualização da biblioteca
 _executar_atualizacao_biblioteca() {
-    cd "${TOOLS}" || return 1
-
+    _ir_para_tools
     _definir_variaveis_biblioteca
     local -a arquivos_update
     read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
@@ -417,8 +415,7 @@ _reverter_biblioteca_completa() {
         _press
         return 1
     fi
-
-    cd "${TOOLS}" || return 1
+    _ir_para_tools
     _mensagec "${YELLOW}" "Voltando backup anterior..."
     _linha
     _mensagec "${YELLOW}" "Volta dos Programas Concluída"
@@ -463,7 +460,7 @@ _reverter_programa_especifico_biblioteca() {
 
 # Baixa biblioteca via RSYNC
 _baixar_biblioteca_rsync() {
-    cd "${TOOLS}" || return 1
+    _ir_para_tools
 
     if [[ "${acessossh}" == "n" ]]; then
         if [[ "${sistema}" == "iscobol" ]]; then
