@@ -1,52 +1,52 @@
-# Documentação do Módulo lembrete.sh
+# Documentacao do Modulo lembrete.sh
 
-## Visão Geral
-O módulo `lembrete.sh` implementa um **sistema completo de bloco de notas** integrado ao **Sistema SAV (Script de Atualização Modular)**. Este módulo oferece funcionalidades para criação, visualização, edição e gerenciamento de lembretes e notas importantes para os usuários do sistema.
+## Visao Geral
+O modulo `lembrete.sh` implementa um **sistema completo de bloco de notas** integrado ao **Sistema SAV (Script de Atualizacao Modular)**. Este modulo oferece funcionalidades para criacao, visualizacao, edicao e gerenciamento de lembretes e notas importantes para os usuarios do sistema.
 
 ## Funcionalidades Principais
 
-### 1. Gestão de Notas
-- **Criação interativa** de novas notas
-- **Visualização formatada** com moldura elegante
-- **Edição avançada** usando editor externo
-- **Exclusão segura** com confirmação
+### 1. Gestao de Notas
+- **Criacao interativa** de novas notas
+- **Visualizacao formatada** com moldura elegante
+- **Edicao avancada** usando editor externo
+- **Exclusao segura** com confirmacao
 
-### 2. Integração com o Sistema
-- **Exibição automática** na inicialização
+### 2. Integracao com o Sistema
+- **Exibicao automatica** na inicializacao
 - **Arquivo único** para todas as notas
-- **Formatação responsiva** baseada no terminal
-- **Persistência** entre sessões
+- **Formatacao responsiva** baseada no terminal
+- **Persistência** entre sessoes
 
-### 3. Interface Amigável
+### 3. Interface Amigavel
 - **Entrada multilinha** com Ctrl+D
-- **Visualização elegante** com bordas
-- **Controle de editor** externo configurável
-- **Feedback visual** para todas as operações
+- **Visualizacao elegante** com bordas
+- **Controle de editor** externo configuravel
+- **Feedback visual** para todas as operacoes
 
-## Estrutura do Código
+## Estrutura do Codigo
 
 ### Arquivo de Notas
 ```bash
-# Localização padrão
-local arquivo_notas="${LIB_CFG}/atualizal"
+# Localizacao padrao
+local arquivo_notas="${cfg_dir}/atualizal"
 
-# Características:
+# Caracteristicas:
 # - Uma nota por linha
 # - Suporte a texto multilinha
-# - Persistência automática
+# - Persistência automatica
 # - Backup integrado ao sistema
 ```
 
-## Funções Principais
+## Funcoes Principais
 
 ### `_escrever_nova_nota()`
-Criação interativa de nova nota.
+Criacao interativa de nova nota.
 
-**Características:**
+**Caracteristicas:**
 - **Entrada multilinha** com `cat >>`
-- **Finalização com Ctrl+D**
+- **Finalizacao com Ctrl+D**
 - **Feedback imediato** de sucesso/erro
-- **Append automático** ao arquivo existente
+- **Append automatico** ao arquivo existente
 
 ```bash
 _escrever_nova_nota() {
@@ -55,7 +55,7 @@ _escrever_nova_nota() {
     _mensagec "${YELLOW}" "Digite sua nota (pressione Ctrl+D para finalizar):"
     _linha
 
-    local arquivo_notas="${LIB_CFG}/atualizal"
+    local arquivo_notas="${cfg_dir}/atualizal"
     if cat >> "$arquivo_notas"; then
         _mensagec "${YELLOW}" "Nota gravada com sucesso!"
         sleep 2
@@ -67,17 +67,17 @@ _escrever_nova_nota() {
 ```
 
 ### `_mostrar_notas_iniciais()`
-Exibe notas automaticamente na inicialização.
+Exibe notas automaticamente na inicializacao.
 
-**Características:**
-- **Verificação automática** de existência
-- **Validação de tamanho** (arquivo não vazio)
-- **Chamada integrada** à função de visualização
-- **Execução silenciosa** se não houver notas
+**Caracteristicas:**
+- **Verificacao automatica** de existência
+- **Validacao de tamanho** (arquivo nao vazio)
+- **Chamada integrada** à funcao de visualizacao
+- **Execucao silenciosa** se nao houver notas
 
 ```bash
 _mostrar_notas_iniciais() {
-    local nota_file="${LIB_CFG}/atualizal"
+    local nota_file="${cfg_dir}/atualizal"
 
     if [[ -f "$nota_file" && -s "$nota_file" ]]; then
         _visualizar_notas_arquivo "$nota_file"
@@ -86,12 +86,12 @@ _mostrar_notas_iniciais() {
 ```
 
 ### `_visualizar_notas_arquivo()`
-Visualização formatada com moldura elegante.
+Visualizacao formatada com moldura elegante.
 
-**Características:**
-- **Cálculo dinâmico** da largura baseada no conteúdo
+**Caracteristicas:**
+- **Calculo dinamico** da largura baseada no conteúdo
 - **Moldura adaptativa** com caracteres `+` e `=`
-- **Formatação responsiva** baseada no terminal
+- **Formatacao responsiva** baseada no terminal
 - **Controle robusto** de leitura de arquivo
 
 ```bash
@@ -101,7 +101,7 @@ _visualizar_notas_arquivo() {
     local largura_total
     local llinha
 
-    # Calcular largura máxima do conteúdo
+    # Calcular largura maxima do conteúdo
     while IFS= read -r llinha; do
         if (( ${#llinha} > largura_max )); then
             largura_max=${#llinha}
@@ -128,17 +128,17 @@ _visualizar_notas_arquivo() {
 ```
 
 ### `_editar_nota_existente()`
-Edição avançada usando editor externo.
+Edicao avancada usando editor externo.
 
-**Características:**
-- **Detecção automática** de existência de notas
-- **Editor configurável** (`${EDITOR:-nano}`)
+**Caracteristicas:**
+- **Deteccao automatica** de existência de notas
+- **Editor configuravel** (`${EDITOR:-nano}`)
 - **Tratamento de erros** se editor falhar
 - **Feedback visual** sobre resultado
 
 ```bash
 _editar_nota_existente() {
-    local arquivo_notas="${LIB_CFG}/atualizal"
+    local arquivo_notas="${cfg_dir}/atualizal"
 
     if [[ -f "$arquivo_notas" ]]; then
         if ! ${EDITOR:-nano} "$arquivo_notas"; then
@@ -153,17 +153,17 @@ _editar_nota_existente() {
 ```
 
 ### `_apagar_nota_existente()`
-Exclusão segura com confirmação.
+Exclusao segura com confirmacao.
 
-**Características:**
-- **Verificação prévia** de existência
-- **Confirmação obrigatória** antes da exclusão
-- **Remoção completa** do arquivo
+**Caracteristicas:**
+- **Verificacao previa** de existência
+- **Confirmacao obrigatoria** antes da exclusao
+- **Remocao completa** do arquivo
 - **Feedback visual** sobre resultado
 
 ```bash
 _apagar_nota_existente() {
-    local arquivo_notas="${LIB_CFG}/atualizal"
+    local arquivo_notas="${cfg_dir}/atualizal"
 
     if [[ ! -f "$arquivo_notas" ]]; then
         _mensagec "${YELLOW}" "Nenhuma nota encontrada para excluir!"
@@ -173,7 +173,7 @@ _apagar_nota_existente() {
 
     if _confirmar "Tem certeza que deseja apagar todas as notas?" "N"; then
         if rm -f "$arquivo_notas"; then
-            _mensagec "${RED}" "Notas excluídas com sucesso!"
+            _mensagec "${RED}" "Notas excluidas com sucesso!"
         else
             _mensagec "${RED}" "Erro ao excluir notas"
         fi
@@ -182,13 +182,13 @@ _apagar_nota_existente() {
 }
 ```
 
-## Características de Interface
+## Caracteristicas de Interface
 
-### Formatação Visual Elegante
+### Formatacao Visual Elegante
 ```bash
-# Exemplo de saída formatada:
+# Exemplo de saida formatada:
 # +================================+
-# | Esta é uma nota importante     |
+# | Esta e uma nota importante     |
 # | sobre o sistema SAV            |
 # |                                |
 # | Lembrete: fazer backup mensal  |
@@ -197,18 +197,18 @@ _apagar_nota_existente() {
 
 ### Controle de Editor Externo
 ```bash
-# Usa variável de ambiente EDITOR
+# Usa variavel de ambiente EDITOR
 ${EDITOR:-nano} "$arquivo_notas"
 
 # Exemplos:
 # EDITOR=vim ./sistema.sh
 # EDITOR=code ./sistema.sh
-# (padrão: nano)
+# (padrao: nano)
 ```
 
 ### Entrada Interativa
 ```bash
-# Criação de nota multilinha
+# Criacao de nota multilinha
 cat >> "$arquivo_notas" << 'EOF'
 Primeira linha da nota
 Segunda linha da nota
@@ -216,113 +216,113 @@ Segunda linha da nota
 EOF
 ```
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Validações de Segurança
-- **Verificação de permissões** de leitura/escrita
-- **Validação de existência** antes de operações
-- **Confirmação obrigatória** para exclusão
-- **Tratamento seguro** de variáveis de ambiente
+### Validacoes de Seguranca
+- **Verificacao de permissoes** de leitura/escrita
+- **Validacao de existência** antes de operacoes
+- **Confirmacao obrigatoria** para exclusao
+- **Tratamento seguro** de variaveis de ambiente
 
 ### Tratamento Seguro de Arquivos
 - **Controle de acesso** ao arquivo de notas
-- **Backup automático** através do sistema de arquivos
-- **Validação de caminhos** seguros
+- **Backup automatico** atraves do sistema de arquivos
+- **Validacao de caminhos** seguros
 - **Tratamento de erros** graceful
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização do Código
-- **Funções específicas** por operação
-- **Validações centralizadas** antes de ações
-- **Comentários claros** sobre cada função
+### Organizacao do Codigo
+- **Funcoes especificas** por operacao
+- **Validacoes centralizadas** antes de acoes
+- **Comentarios claros** sobre cada funcao
 - **Tratamento uniforme** de erros
 
-### Interface do Usuário
-- **Instruções claras** para entrada de dados
+### Interface do Usuario
+- **Instrucoes claras** para entrada de dados
 - **Feedback visual** constante
-- **Controle intuitivo** de navegação
+- **Controle intuitivo** de navegacao
 - **Mensagens informativas** sobre estado
 
 ### Manutenibilidade
 - **Arquivo único** para todas as notas
-- **Formatação responsiva** ao terminal
-- **Editor configurável** pelo usuário
+- **Formatacao responsiva** ao terminal
+- **Editor configuravel** pelo usuario
 - **Logs integrados** ao sistema
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Dependências de Módulos
-- **`config.sh`** - Variáveis de configuração (`LIB_CFG`)
-- **`utils.sh`** - Funções utilitárias (cores, mensagens, validações)
-- **`menus.sh`** - Interface de navegação integrada
+### Dependências de Modulos
+- **`config.sh`** - Variaveis de configuracao (`cfg_dir`)
+- **`utils.sh`** - Funcoes utilitarias (cores, mensagens, validacoes)
+- **`menus.sh`** - Interface de navegacao integrada
 
 ### Arquivo de Notas
-- **Localização**: `${LIB_CFG}/atualizal`
+- **Localizacao**: `${cfg_dir}/atualizal`
 - **Formato**: Texto simples, uma nota por linha
-- **Backup**: Incluído automaticamente nos backups do sistema
-- **Permissões**: Controle de acesso integrado
+- **Backup**: Incluido automaticamente nos backups do sistema
+- **Permissoes**: Controle de acesso integrado
 
 ## Exemplos de Uso
 
-### Criação de Nova Nota
+### Criacao de Nova Nota
 ```bash
-# Chamar função de criação
+# Chamar funcao de criacao
 _escrever_nova_nota
 
 # Interface mostrada:
 # ============================================================
 # Digite sua nota (pressione Ctrl+D para finalizar):
 # ============================================================
-# [usuário digita nota multilinha]
+# [usuario digita nota multilinha]
 # [Ctrl+D para finalizar]
 # ============================================================
 # Nota gravada com sucesso!
 ```
 
-### Visualização de Notas
+### Visualizacao de Notas
 ```bash
-# Visualização automática na inicialização
+# Visualizacao automatica na inicializacao
 _mostrar_notas_iniciais
 
-# Ou visualização manual
-_visualizar_notas_arquivo "${LIB_CFG}/atualizal"
+# Ou visualizacao manual
+_visualizar_notas_arquivo "${cfg_dir}/atualizal"
 
-# Saída formatada:
+# Saida formatada:
 # +============================================================+
 # | Lembrete: Fazer backup dos dados hoje                     |
-# | Verificar atualização do sistema IsCobol versão 2024      |
-# | Contatar administrador sobre nova versão da biblioteca    |
+# | Verificar atualizacao do sistema IsCobol versao 2024      |
+# | Contatar administrador sobre nova versao da biblioteca    |
 # +============================================================+
 ```
 
-### Edição de Notas
+### Edicao de Notas
 ```bash
-# Edição com editor padrão
+# Edicao com editor padrao
 _editar_nota_existente
 
-# Usa nano por padrão, mas pode ser configurado:
+# Usa nano por padrao, mas pode ser configurado:
 # EDITOR=vim _editar_nota_existente
 # EDITOR=code _editar_nota_existente
 ```
 
-### Exclusão de Notas
+### Exclusao de Notas
 ```bash
-# Exclusão com confirmação
+# Exclusao com confirmacao
 _apagar_nota_existente
 
 # Processo:
 # 1. Verifica existência de notas
-# 2. Solicita confirmação
+# 2. Solicita confirmacao
 # 3. Remove arquivo se confirmado
 # 4. Feedback do resultado
 ```
 
-## Características Avançadas
+## Caracteristicas Avancadas
 
-### Formatação Responsiva
+### Formatacao Responsiva
 ```bash
-# Cálculo dinâmico baseado no conteúdo
+# Calculo dinamico baseado no conteúdo
 while IFS= read -r llinha; do
     if (( ${#llinha} > largura_max )); then
         largura_max=${#llinha}
@@ -334,11 +334,11 @@ largura_total=$((largura_max + 4))
 
 ### Controle de Editor Inteligente
 ```bash
-# Usa variável de ambiente com fallback
+# Usa variavel de ambiente com fallback
 ${EDITOR:-nano} "$arquivo_notas"
 
-# Benefícios:
-# - Respeita preferência do usuário
+# Beneficios:
+# - Respeita preferência do usuario
 # - Fallback seguro para nano
 # - Funciona em diferentes ambientes
 ```
@@ -355,61 +355,61 @@ fi
 
 ## Tratamento de Erros
 
-### Estratégias Implementadas
-- **Validação prévia** de arquivos e permissões
-- **Mensagens específicas** para diferentes tipos de erro
-- **Confirmações importantes** antes de ações destrutivas
-- **Recuperação automática** quando possível
+### Estrategias Implementadas
+- **Validacao previa** de arquivos e permissoes
+- **Mensagens especificas** para diferentes tipos de erro
+- **Confirmacoes importantes** antes de acoes destrutivas
+- **Recuperacao automatica** quando possivel
 
-### Códigos de Retorno
+### Codigos de Retorno
 - `0` - Sucesso
-- `1` - Erro de arquivo ou permissão
+- `1` - Erro de arquivo ou permissao
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações
+### Otimizacoes
 - **Leitura eficiente** com `while IFS= read`
-- **Cálculo único** da largura máxima
-- **Formatação direta** sem processamento desnecessário
-- **Controle mínimo** de recursos
+- **Calculo único** da largura maxima
+- **Formatacao direta** sem processamento desnecessario
+- **Controle minimo** de recursos
 
 ### Recursos de Sistema
-- **Memória mínima** durante processamento
-- **CPU otimizada** para formatação
+- **Memoria minima** durante processamento
+- **CPU otimizada** para formatacao
 - **I/O controlado** com redirecionamento adequado
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
-- **Verificação visual** da formatação
+### Estrategias para Debug
+- **Verificacao visual** da formatacao
 - **Teste de diferentes terminais** e larguras
-- **Validação de permissões** de arquivo
+- **Validacao de permissoes** de arquivo
 - **Teste de editor externo** configurado
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 ```bash
 # Verificar arquivo de notas
-ls -la "${LIB_CFG}/atualizal"
+ls -la "${cfg_dir}/atualizal"
 
-# Testar permissões
-touch "${LIB_CFG}/atualizal"
-echo "teste" >> "${LIB_CFG}/atualizal"
+# Testar permissoes
+touch "${cfg_dir}/atualizal"
+echo "teste" >> "${cfg_dir}/atualizal"
 
-# Verificar editor padrão
+# Verificar editor padrao
 echo "Editor: $EDITOR"
-which nano vim  # Verificar editores disponíveis
+which nano vim  # Verificar editores disponiveis
 ```
 
 ## Casos de Uso Comuns
 
-### Anotações de Manutenção
+### Anotacoes de Manutencao
 ```bash
-# Registrar atividades de manutenção
+# Registrar atividades de manutencao
 _escrever_nova_nota
 # Conteúdo:
 # Backup realizado em 16/12/2024
-# Verificação de bibliotecas concluída
-# Sistema atualizado para versão 2024
+# Verificacao de bibliotecas concluida
+# Sistema atualizado para versao 2024
 ```
 
 ### Lembretes de Procedimentos
@@ -417,51 +417,51 @@ _escrever_nova_nota
 # Documentar procedimentos importantes
 _escrever_nova_nota
 # Conteúdo:
-# Procedimento de atualização:
+# Procedimento de atualizacao:
 # 1. Fazer backup completo
-# 2. Baixar nova versão
+# 2. Baixar nova versao
 # 3. Testar em ambiente de desenvolvimento
-# 4. Aplicar em produção
+# 4. Aplicar em producao
 ```
 
-### Notas de Configuração
+### Notas de Configuracao
 ```bash
-# Registrar configurações específicas
+# Registrar configuracoes especificas
 _escrever_nova_nota
 # Conteúdo:
 # Sistema configurado para:
 # - IsCobol 2024
 # - Base principal: /sav/dados
-# - Backup automático: habilitado
+# - Backup automatico: habilitado
 # - Modo offline: desabilitado
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Fluxo de Inicialização
+### Fluxo de Inicializacao
 ```
-principal.sh → _mostrar_notas_iniciais → _visualizar_notas_arquivo → interface do usuário
-```
-
-### Integração com Menus
-```
-menus.sh → _menu_lembretes → funções de lembrete → retorno ao menu
+principal.sh → _mostrar_notas_iniciais → _visualizar_notas_arquivo → interface do usuario
 ```
 
-## Variáveis de Ambiente
+### Integracao com Menus
+```
+menus.sh → _menu_lembretes → funcoes de lembrete → retorno ao menu
+```
 
-### Variáveis Utilizadas
-- `LIB_CFG` - Diretório de configuração (de config.sh)
-- `EDITOR` - Editor externo para edição (opcional)
+## Variaveis de Ambiente
+
+### Variaveis Utilizadas
+- `cfg_dir` - Diretorio de configuracao (de config.sh)
+- `EDITOR` - Editor externo para edicao (opcional)
 - `COLUMNS` - Largura do terminal (de utils.sh)
 
 ### Arquivos Relacionados
-- `${LIB_CFG}/atualizal` - Arquivo principal de notas
-- `${EDITOR:-nano}` - Editor para edição avançada
+- `${cfg_dir}/atualizal` - Arquivo principal de notas
+- `${EDITOR:-nano}` - Editor para edicao avancada
 
-## Características Especiais
+## Caracteristicas Especiais
 
-### Formatação ASCII Art
+### Formatacao ASCII Art
 ```bash
 # Moldura elegante com caracteres especiais
 printf "+"
@@ -474,12 +474,12 @@ printf "| %-*s |\n" $((largura_total - 4)) "$llinha"
 
 ### Controle de Terminal Inteligente
 ```bash
-# Adaptação automática à largura do terminal
+# Adaptacao automatica à largura do terminal
 largura_total=$((largura_max + 4))
 
 # Funciona em diferentes ambientes:
 # - Terminais largos (120+ colunas)
-# - Terminais padrão (80 colunas)
+# - Terminais padrao (80 colunas)
 # - Terminais estreitos (40 colunas)
 ```
 
@@ -492,18 +492,18 @@ while IFS= read -r llinha || [[ -n "$llinha" ]]; do
 done < "$arquivo"
 ```
 
-## Exemplos Práticos
+## Exemplos Praticos
 
-### Cenário de Uso Típico
+### Cenario de Uso Tipico
 ```bash
 # 1. Sistema inicia e mostra notas existentes
 _mostrar_notas_iniciais
 # +================================+
 # | Backup pendente para hoje      |
-# | Verificar atualização IsCobol  |
+# | Verificar atualizacao IsCobol  |
 # +================================+
 
-# 2. Usuário acessa menu de lembretes
+# 2. Usuario acessa menu de lembretes
 _menu_lembretes → 1 (Escrever nova nota)
 _escrever_nova_nota
 # Digita: "Sistema atualizado em 16/12/2024"
@@ -512,12 +512,12 @@ _escrever_nova_nota
 _visualizar_notas_arquivo
 # +================================+
 # | Backup pendente para hoje      |
-# | Verificar atualização IsCobol  |
+# | Verificar atualizacao IsCobol  |
 # | Sistema atualizado em 16/12/2024 |
 # +================================+
 ```
 
-### Edição Avançada
+### Edicao Avancada
 ```bash
 # Editar com Vim
 EDITOR=vim _editar_nota_existente
@@ -528,15 +528,15 @@ EDITOR=code _editar_nota_existente
 
 ## Tratamento de Erros
 
-### Estratégias Implementadas
-- **Validação de arquivo** antes de operações
-- **Verificação de permissões** de leitura/escrita
+### Estrategias Implementadas
+- **Validacao de arquivo** antes de operacoes
+- **Verificacao de permissoes** de leitura/escrita
 - **Mensagens claras** sobre problemas encontrados
-- **Fallback automático** para situações de erro
+- **Fallback automatico** para situacoes de erro
 
-### Recuperação de Erros
+### Recuperacao de Erros
 ```bash
-# Tratamento específico por situação
+# Tratamento especifico por situacao
 if [[ ! -f "$arquivo_notas" ]]; then
     _mensagec "${YELLOW}" "Nenhuma nota encontrada para editar!"
     sleep 2
@@ -544,92 +544,92 @@ if [[ ! -f "$arquivo_notas" ]]; then
 fi
 ```
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações
-- **Leitura única** para cálculo de largura
-- **Formatação direta** sem armazenamento intermediário
-- **Controle mínimo** de recursos durante visualização
+### Otimizacoes
+- **Leitura única** para calculo de largura
+- **Formatacao direta** sem armazenamento intermediario
+- **Controle minimo** de recursos durante visualizacao
 - **Processamento eficiente** de grandes arquivos
 
 ### Recursos de Sistema
-- **Memória proporcional** ao tamanho do arquivo
-- **CPU mínima** durante formatação
+- **Memoria proporcional** ao tamanho do arquivo
+- **CPU minima** durante formatacao
 - **I/O otimizado** com redirecionamento adequado
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
+### Estrategias para Debug
 - **Teste visual** em diferentes terminais
-- **Verificação de largura** de conteúdo
+- **Verificacao de largura** de conteúdo
 - **Teste de editor externo** configurado
-- **Validação de permissões** de arquivo
+- **Validacao de permissoes** de arquivo
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 ```bash
 # Verificar conteúdo do arquivo
-cat "${LIB_CFG}/atualizal"
+cat "${cfg_dir}/atualizal"
 
-# Testar formatação
-_visualizar_notas_arquivo "${LIB_CFG}/atualizal"
+# Testar formatacao
+_visualizar_notas_arquivo "${cfg_dir}/atualizal"
 
 # Verificar editor
-echo "Editor padrão: ${EDITOR:-nano}"
+echo "Editor padrao: ${EDITOR:-nano}"
 ```
 
-## Casos de Uso Avançados
+## Casos de Uso Avancados
 
-### Documentação de Procedimentos
+### Documentacao de Procedimentos
 ```bash
 # Registrar procedimentos complexos
 _escrever_nova_nota
 # Conteúdo multilinha:
-# Procedimento de recuperação de emergência:
-# 1. Identificar último backup válido
-# 2. Parar serviços relacionados
+# Procedimento de recuperacao de emergência:
+# 1. Identificar último backup valido
+# 2. Parar servicos relacionados
 # 3. Restaurar backup completo
 # 4. Verificar integridade dos dados
-# 5. Reiniciar serviços
-# 6. Testar funcionalidades críticas
+# 5. Reiniciar servicos
+# 6. Testar funcionalidades criticas
 ```
 
-### Lista de Verificação
+### Lista de Verificacao
 ```bash
-# Criar checklist de manutenção
+# Criar checklist de manutencao
 _escrever_nova_nota
 # Conteúdo:
 # ☑ Backup completo realizado
-# ☐ Verificação de logs de erro
+# ☐ Verificacao de logs de erro
 # ☐ Teste de conectividade com servidor
-# ☐ Validação de bibliotecas atualizadas
-# ☐ Limpeza de arquivos temporários
+# ☐ Validacao de bibliotecas atualizadas
+# ☐ Limpeza de arquivos temporarios
 ```
 
-### Notas de Configuração
+### Notas de Configuracao
 ```bash
-# Documentar configurações específicas
+# Documentar configuracoes especificas
 _escrever_nova_nota
 # Conteúdo:
-# Configuração atual:
+# Configuracao atual:
 # Sistema: IsCobol 2024
 # Base: /sav/dados
-# Backup: automático diário
+# Backup: automatico diario
 # Modo: online
-# Última atualização: 16/12/2024
+# Última atualizacao: 16/12/2024
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
 ### Fluxo Completo
 ```
-inicialização → _mostrar_notas_iniciais → usuário lê notas → menu → _menu_lembretes → operações de nota → retorno
+inicializacao → _mostrar_notas_iniciais → usuario lê notas → menu → _menu_lembretes → operacoes de nota → retorno
 ```
 
-### Backup e Recuperação
-- **Arquivo de notas** incluído automaticamente nos backups
-- **Restauração automática** junto com configurações
-- **Preservação de histórico** entre versões
+### Backup e Recuperacao
+- **Arquivo de notas** incluido automaticamente nos backups
+- **Restauracao automatica** junto com configuracoes
+- **Preservacao de historico** entre versoes
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

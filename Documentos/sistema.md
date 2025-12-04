@@ -1,80 +1,80 @@
-# Documentação do Módulo sistema.sh
+# Documentacao do Modulo sistema.sh
 
-## Visão Geral
-O módulo `sistema.sh` é responsável pela gestão completa de informações do sistema, configurações e atualizações do **Sistema SAV (Script de Atualização Modular)**. Este é um dos módulos mais complexos, oferecendo funcionalidades para diagnóstico, configuração e manutenção do ambiente.
+## Visao Geral
+O modulo `sistema.sh` e responsavel pela gestao completa de informacoes do sistema, configuracoes e atualizacoes do **Sistema SAV (Script de Atualizacao Modular)**. Este e um dos modulos mais complexos, oferecendo funcionalidades para diagnostico, configuracao e manutencao do ambiente.
 
 ## Funcionalidades Principais
 
-### 1. Informações de Sistema
-- **Versão IsCOBOL**: Exibição da versão do ambiente IsCOBOL
-- **Informações Linux**: Diagnóstico completo do sistema operacional
-- **Parâmetros do Sistema**: Visualização de todas as configurações
+### 1. Informacoes de Sistema
+- **Versao IsCOBOL**: Exibicao da versao do ambiente IsCOBOL
+- **Informacoes Linux**: Diagnostico completo do sistema operacional
+- **Parametros do Sistema**: Visualizacao de todas as configuracoes
 
-### 2. Sistema de Atualização
-- **Online**: Atualização via GitHub com wget
-- **Offline**: Atualização via arquivos locais
-- **Backup automático**: Criação de backups antes da atualização
+### 2. Sistema de Atualizacao
+- **Online**: Atualizacao via GitHub com wget
+- **Offline**: Atualizacao via arquivos locais
+- **Backup automatico**: Criacao de backups antes da atualizacao
 
-### 3. Manutenção de Setup
-- **Configuração interativa**: Interface para edição de variáveis
-- **Persistência**: Salva configurações em arquivo `.atualizac`
-- **Validação**: Verificação de parâmetros obrigatórios
+### 3. Manutencao de Setup
+- **Configuracao interativa**: Interface para edicao de variaveis
+- **Persistência**: Salva configuracoes em arquivo `.atualizac`
+- **Validacao**: Verificacao de parametros obrigatorios
 
-### 4. Configuração SSH
-- **Auto configuração**: Criação automática de configuração SSH
-- **Multiplexação**: Controle de conexão persistente
-- **Segurança**: Controle de permissões adequado
+### 4. Configuracao SSH
+- **Auto configuracao**: Criacao automatica de configuracao SSH
+- **Multiplexacao**: Controle de conexao persistente
+- **Seguranca**: Controle de permissoes adequado
 
-## Estrutura do Código
+## Estrutura do Codigo
 
-### Variáveis Globais
+### Variaveis Globais
 ```bash
-# Diretórios e caminhos
+# Diretorios e caminhos
 destino="${destino:-}"
 sistema="${sistema:-}"
 pasta="${pasta:-}"
 base="${base:-}"
 
-# Configurações de compilação
+# Configuracoes de compilacao
 verclass="${verclass:-}"
 class="${class:-}"
 mclass="${mclass:-}"
 
-# Diretórios específicos
+# Diretorios especificos
 exec="${exec:-}"
 xml="${xml:-}"
 olds="${olds:-}"
 ```
 
-## Funções de Informação do Sistema
+## Funcoes de Informacao do Sistema
 
 ### `_mostrar_versao_iscobol()`
-Exibe informações da versão do IsCOBOL instalado.
+Exibe informacoes da versao do IsCOBOL instalado.
 
-**Características:**
-- Verificação de existência do executável
-- Execução com parâmetro `-v` para versão
-- Tratamento específico para sistema IsCOBOL
+**Caracteristicas:**
+- Verificacao de existência do executavel
+- Execucao com parametro `-v` para versao
+- Tratamento especifico para sistema IsCOBOL
 
 ### `_mostrar_versao_linux()`
-Realiza diagnóstico completo do sistema Linux.
+Realiza diagnostico completo do sistema Linux.
 
-**Informações coletadas:**
-- **Conectividade**: Teste de conexão com internet
-- **Sistema Operacional**: Tipo e distribuição
+**Informacoes coletadas:**
+- **Conectividade**: Teste de conexao com internet
+- **Sistema Operacional**: Tipo e distribuicao
 - **Hostname**: Nome do servidor
 - **IPs**: Interno e externo (se online)
-- **Usuários**: Sessões ativas
-- **Memória**: Uso de RAM e SWAP
-- **Disco**: Espaço em disco utilizado
+- **Usuarios**: Sessoes ativas
+- **Memoria**: Uso de RAM e SWAP
+- **Disco**: Espaco em disco utilizado
 - **Uptime**: Tempo de atividade do sistema
 
-**Técnicas utilizadas:**
+**Tecnicas utilizadas:**
 ```bash
 # Teste de conectividade
 ping -c 1 google.com &>/dev/null
 
-# Informações de SO
+# Informacoes de SO
 grep 'NAME\|VERSION' /etc/os-release
 
 # IPs e hostname
@@ -88,23 +88,23 @@ df -h | grep 'Filesystem\|/dev/sda*'
 uptime -p
 ```
 
-## Funções de Parâmetros
+## Funcoes de Parametros
 
 ### `_mostrar_parametros()`
-Exibe todas as configurações do sistema SAV.
+Exibe todas as configuracoes do sistema SAV.
 
-**Grupos de informação:**
-1. **Banco de dados e diretórios principais**
-2. **Bibliotecas e versões**
-3. **Configurações de rede**
-4. **Parâmetros de conexão**
+**Grupos de informacao:**
+1. **Banco de dados e diretorios principais**
+2. **Bibliotecas e versoes**
+3. **Configuracoes de rede**
+4. **Parametros de conexao**
 
-## Sistema de Atualização
+## Sistema de Atualizacao
 
 ### `_executar_update()`
-Controlador principal do sistema de atualização.
+Controlador principal do sistema de atualizacao.
 
-**Lógica de decisão:**
+**Logica de decisao:**
 ```bash
 if [[ "${Offline}" == "n" ]]; then
     _atualizar_online
@@ -114,29 +114,29 @@ fi
 ```
 
 ### `_atualizar_online()`
-Atualização via GitHub usando wget.
+Atualizacao via GitHub usando wget.
 
 **Processo:**
-1. Definição do link de download
-2. Criação de diretório temporário
-3. Execução da função `_atualizando`
+1. Definicao do link de download
+2. Criacao de diretorio temporario
+3. Execucao da funcao `_atualizando`
 
 ### `_atualizar_offline()`
-Atualização via arquivo local no diretório offline.
+Atualizacao via arquivo local no diretorio offline.
 
-**Características:**
-- Usa variável `${Offline}` como caminho
-- Move arquivo zip para diretório temporário
-- Processa atualização local
+**Caracteristicas:**
+- Usa variavel `${Offline}` como caminho
+- Move arquivo zip para diretorio temporario
+- Processa atualizacao local
 
 ### `_atualizando()`
-Função principal de processamento de atualização.
+Funcao principal de processamento de atualizacao.
 
 **Etapas detalhadas:**
 
-#### 1. Preparação e Backup
+#### 1. Preparacao e Backup
 ```bash
-# Criar diretório de backup
+# Criar diretorio de backup
 mkdir -p "$backup"
 
 # Backup de todos os arquivos .sh
@@ -145,24 +145,24 @@ for arquivo in *.sh; do
 done
 ```
 
-#### 2. Download e Descompactação
+#### 2. Download e Descompactacao
 ```bash
 # Download via wget
 wget -q -c "$link"
 
-# Descompactação com log
+# Descompactacao com log
 "${cmd_unzip}" -o -j "$zipfile" >>"$LOG_ATU" 2>&1
 ```
 
-#### 3. Instalação de Arquivos
+#### 3. Instalacao de Arquivos
 ```bash
 # Processar cada arquivo .sh
 for arquivo in *.sh; do
     chmod +x "$arquivo"
     if [ "$arquivo" = "atualiza.sh" ]; then
-        target="${TOOLS}"
+        target="${TOOLS_DIR}"
     else
-        target="${LIB_DIR}"
+        target="${lib_dir}"
     fi
     mv -f "$arquivo" "$target"
 done
@@ -173,17 +173,17 @@ done
 cd "$ENVIA" && rm -rf "$temp_dir"
 ```
 
-## Sistema de Manutenção de Setup
+## Sistema de Manutencao de Setup
 
 ### `editar_variavel()`
-Interface interativa para edição de variáveis específicas.
+Interface interativa para edicao de variaveis especificas.
 
-**Variáveis especiais com menus:**
+**Variaveis especiais com menus:**
 - **`sistema`**: Escolha entre IsCobol/Micro Focus Cobol
-- **`BANCO`**: Uso de banco de dados (Sim/Não)
-- **`acessossh`**: Método de acesso fácil (Sim/Não)
+- **`BANCO`**: Uso de banco de dados (Sim/Nao)
+- **`acessossh`**: Metodo de acesso facil (Sim/Nao)
 - **`IPSERVER`**: IP do servidor SAV
-- **`Offline`**: Modo offline (Sim/Não)
+- **`Offline`**: Modo offline (Sim/Nao)
 
 **Tratamento de entrada:**
 ```bash
@@ -192,28 +192,28 @@ alterar=${alterar,,}  # Converte para minúsculo
 ```
 
 ### `_manutencao_setup()`
-Controlador principal da manutenção de configuração.
+Controlador principal da manutencao de configuracao.
 
 **Funcionalidades:**
-- Carregamento de configuração existente (`.atualizac`)
-- Backup automático antes da edição
-- Edição sequencial de variáveis
-- Recriação do arquivo de configuração
-- Configuração automática de SSH (se necessário)
+- Carregamento de configuracao existente (`.atualizac`)
+- Backup automatico antes da edicao
+- Edicao sequencial de variaveis
+- Recriacao do arquivo de configuracao
+- Configuracao automatica de SSH (se necessario)
 
-## Configuração SSH Automática
+## Configuracao SSH Automatica
 
-### Variáveis de Configuração
+### Variaveis de Configuracao
 ```bash
 SERVER_IP="${IPSERVER}"
 SERVER_PORT="${SERVER_PORT:-41122}"
 SERVER_USER="${SERVER_USER:-atualiza}"
-CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS}/.ssh/control}"
+CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS_DIR}/.ssh/control}"
 ```
 
-### Processo de Configuração
+### Processo de Configuracao
 
-#### 1. Validação de Variáveis
+#### 1. Validacao de Variaveis
 ```bash
 if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
     echo "Erro: Variaveis obrigatorias nao definidas!"
@@ -221,13 +221,13 @@ if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
 fi
 ```
 
-#### 2. Criação de Diretórios
+#### 2. Criacao de Diretorios
 ```bash
 mkdir -p "$SSH_CONFIG_DIR"
 chmod 700 "$SSH_CONFIG_DIR"
 ```
 
-#### 3. Geração de Configuração SSH
+#### 3. Geracao de Configuracao SSH
 ```bash
 cat << EOF >> "/root/.ssh/config"
 Host sav_servidor
@@ -242,151 +242,151 @@ EOF
 
 ## Sistema de Backup
 
-### Estratégia de Backup
-- **Arquivos originais**: `.bak` no diretório de backup
-- **Configuração**: `.atualizac.bak` antes da edição
+### Estrategia de Backup
+- **Arquivos originais**: `.bak` no diretorio de backup
+- **Configuracao**: `.atualizac.bak` antes da edicao
 - **Controle de erros**: Contadores de sucesso/erro
 
 ### Logs e Auditoria
-- **Arquivo de log**: `${LOG_ATU}` para operações de atualização
-- **Logs temporários**: `${LOG_TMP}*` para operações intermediárias
-- **Limpeza automática**: Remoção de arquivos temporários
+- **Arquivo de log**: `${LOG_ATU}` para operacoes de atualizacao
+- **Logs temporarios**: `${LOG_TMP}*` para operacoes intermediarias
+- **Limpeza automatica**: Remocao de arquivos temporarios
 
 ## Tratamento de Erros
 
-### Validações Implementadas
-- **Existência de arquivos**: Verificação antes de operações
-- **Permissões**: Controle de acesso a arquivos e diretórios
+### Validacoes Implementadas
+- **Existência de arquivos**: Verificacao antes de operacoes
+- **Permissoes**: Controle de acesso a arquivos e diretorios
 - **Conectividade**: Teste de internet para funcionalidades online
-- **Parâmetros obrigatórios**: Validação antes da configuração SSH
+- **Parametros obrigatorios**: Validacao antes da configuracao SSH
 
-### Códigos de Retorno
+### Codigos de Retorno
 - `0` - Sucesso
 - `1` - Erro/Falha
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Controle de Permissões
+### Controle de Permissoes
 ```bash
 chmod 700 "$SSH_CONFIG_DIR"    # rwx para owner apenas
 chmod 600 "/root/.ssh/config"  # rw para owner apenas
 ```
 
-### Variáveis Sensíveis
-- **IPs de servidores**: Protegidos em variáveis de ambiente
-- **Credenciais SSH**: Configuração segura com permissões restritas
-- **Dados de sistema**: Tratamento seguro de informações sensíveis
+### Variaveis Sensiveis
+- **IPs de servidores**: Protegidos em variaveis de ambiente
+- **Credenciais SSH**: Configuracao segura com permissoes restritas
+- **Dados de sistema**: Tratamento seguro de informacoes sensiveis
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização do Código
-- **Separação clara**: Funções bem definidas por responsabilidade
-- **Tratamento robusto**: Múltiplas camadas de validação
-- **Logs detalhados**: Rastreabilidade completa das operações
+### Organizacao do Codigo
+- **Separacao clara**: Funcoes bem definidas por responsabilidade
+- **Tratamento robusto**: Múltiplas camadas de validacao
+- **Logs detalhados**: Rastreabilidade completa das operacoes
 
-### Interface do Usuário
-- **Menus interativos**: Escolhas claras para variáveis complexas
+### Interface do Usuario
+- **Menus interativos**: Escolhas claras para variaveis complexas
 - **Feedback visual**: Mensagens coloridas informativas
-- **Confirmações**: Validação antes de alterações críticas
+- **Confirmacoes**: Validacao antes de alteracoes criticas
 
 ### Manutenibilidade
-- **Comentários claros**: Documentação inline das funções
-- **Tratamento de erros**: Recuperação graceful de falhas
-- **Backup automático**: Proteção contra perda de dados
+- **Comentarios claros**: Documentacao inline das funcoes
+- **Tratamento de erros**: Recuperacao graceful de falhas
+- **Backup automatico**: Protecao contra perda de dados
 
 ## Dependências Externas
 
 ### Comandos Utilizados
 - `wget` - Download de arquivos
-- `unzip` - Descompactação
+- `unzip` - Descompactacao
 - `ping` - Teste de conectividade
-- `curl` - Obtenção de IP externo
-- `free` - Informações de memória
+- `curl` - Obtencao de IP externo
+- `free` - Informacoes de memoria
 - `df` - Uso de disco
 - `uptime` - Tempo de atividade
-- `chmod`/`mkdir` - Gerenciamento de permissões
+- `chmod`/`mkdir` - Gerenciamento de permissoes
 
 ### Arquivos de Sistema
-- `/etc/os-release` - Informações do sistema operacional
-- `/root/.ssh/config` - Configuração SSH
-- `.atualizac` - Arquivo de configuração local
+- `/etc/os-release` - Informacoes do sistema operacional
+- `/root/.ssh/config` - Configuracao SSH
+- `.atualizac` - Arquivo de configuracao local
 
 ## Exemplos de Uso
 
-### Verificação de Sistema
+### Verificacao de Sistema
 ```bash
-# Mostrar informações do IsCOBOL
+# Mostrar informacoes do IsCOBOL
 _mostrar_versao_iscobol
 
-# Diagnóstico completo do Linux
+# Diagnostico completo do Linux
 _mostrar_versao_linux
 
-# Exibir parâmetros do sistema
+# Exibir parametros do sistema
 _mostrar_parametros
 ```
 
-### Atualização do Sistema
+### Atualizacao do Sistema
 ```bash
-# Atualização online
+# Atualizacao online
 _atualizar_online
 
-# Atualização offline
+# Atualizacao offline
 _atualizar_offline
 
-# Execução automática baseada na configuração
+# Execucao automatica baseada na configuracao
 _executar_update
 ```
 
-### Manutenção de Configuração
+### Manutencao de Configuracao
 ```bash
-# Interface interativa de configuração
+# Interface interativa de configuracao
 _manutencao_setup
 
-# Edição específica de variável
+# Edicao especifica de variavel
 editar_variavel "IPSERVER"
 ```
 
-## Variáveis de Ambiente
+## Variaveis de Ambiente
 
-### Variáveis Suportadas
+### Variaveis Suportadas
 - `Offline` - Modo offline (n/offline, s/online)
-- `LOG_TMP` - Diretório para arquivos temporários
-- `LOG_ATU` - Arquivo de log de atualizações
-- `TOOLS` - Diretório de ferramentas
-- `LIB_DIR` - Diretório de bibliotecas
-- `ENVIA` - Diretório de envio/recepção
+- `LOG_TMP` - Diretorio para arquivos temporarios
+- `LOG_ATU` - Arquivo de log de atualizacoes
+- `TOOLS_DIR` - Diretorio de ferramentas
+- `lib_dir` - Diretorio de bibliotecas
+- `ENVIA` - Diretorio de envio/recepcao
 
 ### Constantes Internas
 - `tracejada` - Separador visual para interface
-- `UPDATE` - Versão do sistema
+- `UPDATE` - Versao do sistema
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações Implementadas
+### Otimizacoes Implementadas
 - **Processamento eficiente**: Loops controlados com contadores
-- **Limpeza automática**: Remoção de arquivos temporários
-- **Cache de conexões**: SSH com ControlPersist
+- **Limpeza automatica**: Remocao de arquivos temporarios
+- **Cache de conexoes**: SSH com ControlPersist
 - **Download incremental**: Uso de `-c` (continue) no wget
 
 ### Recursos de Sistema
-- **Monitoramento**: Coleta não intrusiva de informações
+- **Monitoramento**: Coleta nao intrusiva de informacoes
 - **Logs rotativos**: Controle de tamanho de logs
-- **Limpeza automática**: Manutenção de espaço em disco
+- **Limpeza automatica**: Manutencao de espaco em disco
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
-- **Logs detalhados**: Todas as operações são registradas
-- **Validações em pontos críticos**: Verificação antes de ações
+### Estrategias para Debug
+- **Logs detalhados**: Todas as operacoes sao registradas
+- **Validacoes em pontos criticos**: Verificacao antes de acoes
 - **Feedback imediato**: Mensagens de erro informativas
-- **Backups automáticos**: Recuperação de estado anterior
+- **Backups automaticos**: Recuperacao de estado anterior
 
 ### Testes
-- **Conectividade**: Ping antes de operações de rede
-- **Permissões**: Verificação antes de escrita
-- **Existência**: Validação antes de processamento
-- **Integridade**: Checksums implícitos via tamanho de arquivo
+- **Conectividade**: Ping antes de operacoes de rede
+- **Permissoes**: Verificacao antes de escrita
+- **Existência**: Validacao antes de processamento
+- **Integridade**: Checksums implicitos via tamanho de arquivo
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

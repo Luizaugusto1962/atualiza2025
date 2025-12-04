@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 #
-# setup.sh - Gerencia a configuração do sistema
-# Este script gerencia a criação e a edição dos arquivos de configuração
-# .atualizac e .atualizac, que são essenciais para o funcionamento do sistema.
+# setup.sh - Gerencia a configuracao do sistema
+# Este script gerencia a criacao e a edicao dos arquivos de configuracao
+# .atualizac e .atualizac, que sao essenciais para o funcionamento do sistema.
 #
-# Modos de Operação:
-#   - ./setup.sh: Modo de configuração inicial interativo.
-#   - ./setup.sh --edit: Modo de edição para modificar configurações existentes.
+# Modos de Operacao:
+#   - ./setup.sh: Modo de configuracao inicial interativo.
+#   - ./setup.sh --edit: Modo de edicao para modificar configuracoes existentes.
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 24/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 
-#---------- FUNÇÕES DE LÓGICA DE NEGÓCIO ----------#
+#---------- FUNcoES DE LoGICA DE NEGoCIO ----------#
 
-# Configuração inicial do sistema
+# Configuracao inicial do sistema
 _initial_setup() {
     clear
 
@@ -24,16 +24,16 @@ _initial_setup() {
     # Header inicial
     echo "$traco"
     echo ${traco} >.atualizac
-    echo "###      ( Parâmetros para serem usados no atualiza.sh )          ###"
+    echo "###      ( Parametros para serem usados no atualiza.sh )          ###"
     echo "$traco"
     echo ${traco} >.atualizac
-    # Criar arquivos de configuração
+    # Criar arquivos de configuracao
     echo "$traco" > .atualizac
-    echo "###      ( Parâmetros para serem usados no atualiza.sh )          ###" >> .atualizac
+    echo "###      ( Parametros para serem usados no atualiza.sh )          ###" >> .atualizac
     echo "$traco" >> .atualizac
 
     # Selecionar sistema (IsCobol ou Microfocus)
-    echo "Em qual sistema o SAV está rodando?"
+    echo "Em qual sistema o SAV esta rodando?"
     echo "1) Iscobol"
     echo "2) Microfocus"
     read -n1 -rp "Escolha o sistema: " escolha
@@ -49,7 +49,7 @@ _initial_setup() {
             ;;
     esac
 
-    # Configurações adicionais
+    # Configuracoes adicionais
     _setup_banco_de_dados
     _setup_diretorios
     _setup_acesso_remoto
@@ -58,7 +58,6 @@ _initial_setup() {
 
     # Finalizar .atualizac
     {
-        echo "pasta=/sav/tools"
         echo "progs=/progs"
         echo "olds=/olds"
         echo "logs=/logs"
@@ -68,40 +67,40 @@ _initial_setup() {
     } >> .atualizac
 
     # Criar atalho global
-    echo "cd ${destino}${pasta:-/sav/tools}" > /usr/local/bin/atualiza
+    echo "cd ${TOOLS_DIR:-TOOLS_DIR}" > /usr/local/bin/atualiza
     echo "./atualiza.sh" >> /usr/local/bin/atualiza
     chmod +x /usr/local/bin/atualiza
 
     echo "Pronto!"
 }
 
-# Edição de configurações existentes
+# Edicao de configuracoes existentes
 _edit_setup() {
     local tracejada="#-------------------------------------------------------------------#"
 
-    # Mover para o diretório de configuração
-    cd "${LIB_CFG}" || {
-        echo "Erro: Diretório 'cfg' não encontrado."
+    # Mover para o diretorio de configuracao
+    cd "${cfg_dir}" || {
+        echo "Erro: Diretorio 'cfg' nao encontrado."
         exit 1
     }
 
-    # Verificar se os arquivos de configuração existem
-    if [[ ! -f "${LIB_CFG}/.atualizac" ]]; then
-        echo "Arquivos de configuração não encontrados. Execute o setup inicial primeiro."
+    # Verificar se os arquivos de configuracao existem
+    if [[ ! -f "${cfg_dir}/.atualizac" ]]; then
+        echo "Arquivos de configuracao nao encontrados. Execute o setup inicial primeiro."
         exit 1
     fi
 
     echo "=================================================="
-    echo "Carregando parâmetros para edição..."
+    echo "Carregando parametros para edicao..."
     echo "=================================================="
 
-    # Carregar configurações existentes
+    # Carregar configuracoes existentes
     "." ./.atualizac
 
     # Fazer backup
     cp .atualizac .atualizac.bak
 
-    # Edição interativa das variáveis
+    # Edicao interativa das variaveis
     _editar_variavel sistema
     _editar_variavel verclass
 
@@ -119,7 +118,7 @@ _edit_setup() {
     fi
 
     _editar_variavel BANCO
-    _editar_variavel destino
+#    _editar_variavel destino
     _editar_variavel acessossh
     _editar_variavel IPSERVER
     _editar_variavel Offline
@@ -129,7 +128,7 @@ _edit_setup() {
     _editar_variavel base2
     _editar_variavel base3
 
-    # Recriar arquivos de configuração
+    # Recriar arquivos de configuracao
     _recreate_config_files
 
     echo "Arquivos .atualizac e .atualizac atualizados com sucesso!"
@@ -144,14 +143,14 @@ _edit_setup() {
     exit 0
 }
 
-#---------- FUNÇÕES DE SETUP INICIAL ----------#
+#---------- FUNcoES DE SETUP INICIAL ----------#
 
-# Configuração para IsCobol
+# Configuracao para IsCobol
 _setup_iscobol() {
     sistema="iscobol"
     echo "sistema=iscobol" >> .atualizac
     echo "$tracejada"
-    echo "Escolha a versão do Iscobol:"
+    echo "Escolha a versao do Iscobol:"
     echo "1) Versao 2018"
     echo "2) Versao 2020"
     echo "3) Versao 2023"
@@ -172,9 +171,9 @@ _setup_iscobol() {
     esac
 
     {
-        echo "exec=sav/classes"
-        echo "telas=sav/tel_isc"
-        echo "xml=sav/xml"
+        echo "exec=/classes"
+        echo "telas=/tel_isc"
+        echo "xml=/xml"
         local classA="IS${VERCLASS}_*_"
         local classB="IS${VERCLASS}_classA_"
         local classC="IS${VERCLASS}_classB_"
@@ -188,7 +187,7 @@ _setup_iscobol() {
     } >> .atualizac
 }
 
-# Configuração para Micro Focus Cobol
+# Configuracao para Micro Focus Cobol
 _setup_cobol() {
     sistema="cobol"
     {
@@ -197,15 +196,15 @@ _setup_cobol() {
         echo "mclass=-m6"
     } >> .atualizac
     {
-        echo "exec=sav/int"
-        echo "telas=sav/tel"
+        echo "exec=/int"
+        echo "telas=/tel"
         echo "SAVATU1=tempSAVintA_"
         echo "SAVATU2=tempSAVintB_"
         echo "SAVATU3=tempSAVtel_"
     } >> .atualizac
 }
 
-# Funções de versão do IsCobol
+# Funcoes de versao do IsCobol
 _2018() {
     {
         echo "verclass=2018"
@@ -239,7 +238,7 @@ _2024() {
     VERCLASS="2024"
 }
 
-# Configurações adicionais
+# Configuracoes adicionais
 _setup_banco_de_dados() {
     echo "$tracejada"
     read -rp "Sistema em banco de dados [S/N]: " -n1 BANCO
@@ -251,21 +250,16 @@ _setup_banco_de_dados() {
     fi
 }
 _setup_diretorios() {
-    echo "$tracejada"
-    echo "###     ( Informe a letra da pasta do sistema )    ###"
-    read -rp "Informe o diretorio raiz sem o /->: " -n1  destino
-    echo "destino=${destino}" >> .atualizac
-    echo
     echo ${tracejada}
     echo "###     ( Nome de pasta no servidor )              ###"
-    read -rp "Nome da pasta da base de dados (Ex: sav/dados): " base
-    echo "base=/${base}" >> .atualizac
+    read -rp "Nome da pasta da base de dados (Ex: /dados_jisam): " base
+    echo "base=${base}" >> .atualizac
     echo ${tracejada}
     read -rp "Nome da pasta da base 2 (Opcional): " base2
-    [[ -n "$base2" ]] && echo "base2=/${base2}" >> .atualizac || echo "#base2=" >> .atualizac
+    [[ -n "$base2" ]] && echo "base2=${base2}" >> .atualizac || echo "#base2=" >> .atualizac
     echo ${tracejada}
     read -rp "Nome da pasta da base 3 (Opcional): " base3
-    [[ -n "$base3" ]] && echo "base3=/${base3}" >> .atualizac || echo "#base3=" >> .atualizac
+    [[ -n "$base3" ]] && echo "base3=${base3}" >> .atualizac || echo "#base3=" >> .atualizac
     echo ${tracejada}
 }
 _setup_acesso_remoto() {
@@ -300,7 +294,7 @@ _setup_backup() {
     echo ${tracejada}
     echo "###     ( Nome de pasta no servidor da SAV )                ###"
     echo "Nome de pasta no servidor da SAV, informar somento o nome do cliente"
-    read -rp "(Ex: cliente/NOME_CLIENTE): " ENVIABACK
+    read -rp "(Ex: cliente/NOME_da_pasta_do_CLIENTE): " ENVIABACK
     if [[ -z "$ENVIABACK" && "${Offline}" =~ ^[Nn]$ ]]; then
         echo "ENVIABACK=" >> .atualizac
     elif [[ -n "$ENVIABACK" ]]; then
@@ -312,15 +306,15 @@ _setup_backup() {
 _setup_empresa() {
 echo ${tracejada}
 echo "###     ( NOME DA EMPRESA )                   ###"
-echo "###   Nao pode conter espacos entre o nome    ###"
+echo "###   Nao pode conter espacos entre os nomes    ###"
 echo ${tracejada}
-    read -rp "Nome da Empresa (sem espaços): " EMPRESA
+    read -rp "Nome da Empresa (sem espacos): " EMPRESA
     echo "EMPRESA=${EMPRESA}" >> .atualizac
 }
 
-#---------- FUNÇÕES DE EDIÇÃO ----------#
+#---------- FUNcoES DE EDIcaO ----------#
 
-# Edita uma variável de forma interativa
+# Edita uma variavel de forma interativa
 _editar_variavel() {
     local nome="$1"
     local valor_atual="${!nome}"
@@ -332,7 +326,7 @@ _editar_variavel() {
             "sistema")
                 echo "1) IsCobol"
                 echo "2) Micro Focus Cobol"
-                read -rp "Opção [1-2]: " opt
+                read -rp "Opcao [1-2]: " opt
                 [[ "$opt" == "1" ]] && sistema="iscobol"
                 [[ "$opt" == "2" ]] && sistema="cobol"
                 ;;
@@ -356,7 +350,7 @@ _editar_variavel() {
     echo "$tracejada"
 }
 
-# Atualiza as variáveis SAVATU com base na 'verclass'
+# Atualiza as variaveis SAVATU com base na 'verclass'
 _atualizar_savatu_variaveis() {
     local ano="${verclass}"
     local sufixo="IS${ano}"
@@ -367,10 +361,10 @@ _atualizar_savatu_variaveis() {
     SAVATU4="tempSAV_${sufixo}_xml_"
 }
 
-# Recria os arquivos de configuração
+# Recria os arquivos de configuracao
 _recreate_config_files() {
     local tracejada="#-------------------------------------------------------------------#"
-    echo "Recriando arquivos de configuração..."
+    echo "Recriando arquivos de configuracao..."
 
     {
         echo "sistema=${sistema}"
@@ -378,7 +372,6 @@ _recreate_config_files() {
         [[ -n "$class" ]] && echo "class=${class}"
         [[ -n "$mclass" ]] && echo "mclass=${mclass}"
         echo "BANCO=${BANCO}"
-        echo "destino=${destino}"
         echo "acessossh=${acessossh}"
         echo "IPSERVER=${IPSERVER}"
         echo "Offline=${Offline}"
@@ -390,15 +383,14 @@ _recreate_config_files() {
     } > .atualizac
 
     {
-        echo "exec=sav/classes"
-        echo "telas=sav/tel_isc"
-        echo "xml=sav/xml"
+        echo "exec=/classes"
+        echo "telas=/tel_isc"
+        echo "xml=/xml"
         echo "SAVATU=${SAVATU}"
         echo "SAVATU1=${SAVATU1}"
         echo "SAVATU2=${SAVATU2}"
         echo "SAVATU3=${SAVATU3}"
         echo "SAVATU4=${SAVATU4}"
-        echo "pasta=/sav/tools"
         echo "progs=/progs"
         echo "olds=/olds"
         echo "logs=/logs"
@@ -409,16 +401,16 @@ _recreate_config_files() {
     echo "$tracejada"
 }
 
-#---------- FUNÇÕES AUXILIARES ----------#
+#---------- FUNcoES AUXILIARES ----------#
 # Configura acesso SSH facilitado
 _configure_ssh_access() {
     local SERVER_IP="${IPSERVER}"
     local SERVER_PORT="${PORTA:-41122}"
     local SERVER_USER="${USUARIO:-atualiza}"
-    local CONTROL_PATH_BASE="/${TOOLS}/.ssh/control"
+    local CONTROL_PATH_BASE="/${TOOLS_DIR}/.ssh/control"
 
     if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
-        echo "Erro: Variáveis de servidor não definidas para configuração SSH."
+        echo "Erro: Variaveis de servidor nao definidas para configuracao SSH."
         return 1
     fi
 
@@ -441,9 +433,9 @@ Host sav_servidor
     ControlPersist 10m
 EOF
         chmod 600 "/root/.ssh/config"
-        echo "Configuração SSH criada."
+        echo "Configuracao SSH criada."
     elif ! grep -q "Host sav_servidor" "/root/.ssh/config"; then
-        echo "Adicionando configuração 'sav_servidor' ao seu ~/.ssh/config..."
+        echo "Adicionando configuracao 'sav_servidor' ao seu ~/.ssh/config..."
         cat << EOF >> "/root/.ssh/config"
 
 Host sav_servidor
@@ -459,45 +451,45 @@ EOF
 
 #---------- PONTO DE ENTRADA PRINCIPAL ----------#
 
-# Função principal que direciona para o modo correto
+# Funcao principal que direciona para o modo correto
 main() {
 
 cd .. || exit 1
 
-# Diretório do script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Diretorio do script
+TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Diretórios dos módulos e configurações
-LIB_DIR="${SCRIPT_DIR}/libs"
-LIB_CFG="${SCRIPT_DIR}/cfg"
-readonly SCRIPT_DIR LIB_DIR LIB_CFG
+# Diretorios dos modulos e configuracoes
+lib_dir="${TOOLS_DIR}/libs"
+cfg_dir="${TOOLS_DIR}/cfg"
+readonly TOOLS_DIR lib_dir cfg_dir
 
-# Verifica se o diretório libs existe
-if [[ ! -d "${LIB_DIR}" ]]; then
-    echo "ERRO: Diretório ${LIB_DIR} nao encontrado."
+# Verifica se o diretorio libs existe
+if [[ ! -d "${lib_dir}" ]]; then
+    echo "ERRO: Diretorio ${lib_dir} nao encontrado."
     exit 1
 fi
 
-# Verifica se o diretório cfg existe
-if [[ ! -d "${LIB_CFG}" ]]; then
-    echo "ERRO: Diretório ${LIB_CFG} nao encontrado."
+# Verifica se o diretorio cfg existe
+if [[ ! -d "${cfg_dir}" ]]; then
+    echo "ERRO: Diretorio ${cfg_dir} nao encontrado."
     exit 1
 fi
 
-    # Verificar modo de operação
+    # Verificar modo de operacao
     if [[ "$1" == "--edit" ]]; then
         _edit_setup
     else
-        # Verificar se os arquivos de configuração já existem
-        if [[ -f "${LIB_CFG}/.atualizac" ]]; then
+        # Verificar se os arquivos de configuracao ja existem
+        if [[ -f "${cfg_dir}/.atualizac" ]]; then
             clear
-            echo "Arquivos de configuração já existem."
-            read -rp "Deseja sobrescrevê-los com a configuração inicial? [s/N]: " choice
+            echo "Arquivos de configuracao ja existem."
+            read -rp "Deseja sobrescrevê-los com a configuracao inicial? [s/N]: " choice
             if [[ "${choice,,}" == "s" ]]; then
                 cd cfg || exit 1
                 _initial_setup
             else
-                echo "Operação cancelada. Use './setup.sh --edit' para modificar."
+                echo "Operacao cancelada. Use './setup.sh --edit' para modificar."
                 exit 0
             fi
         else
@@ -508,5 +500,5 @@ fi
     fi
 }
 
-# Executar a função principal
+# Executar a funcao principal
 main "$@"

@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 #
-# utils.sh - Módulo de Utilitários e Funções Auxiliares  
-# Funções básicas para formatação, mensagens, validação e controle de fluxo
+# utils.sh - Modulo de Utilitarios e Funcoes Auxiliares  
+# Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 
-#---------- FUNÇÕES DE FORMATAÇÃO DE TELA ----------#
+#---------- FUNcoES DE FORMATAcaO DE TELA ----------#
+
+cfg_dir="${cfg_dir:-}" # Caminho do diretorio de configuracao do programa.
 
 # Limpa a tela e posiciona cursor no centro
 _meiodatela() {
@@ -14,7 +16,7 @@ _meiodatela() {
 }
 
 # Exibe mensagem centralizada colorida
-# Parâmetros: $1=cor $2=mensagem
+# Parametros: $1=cor $2=mensagem
 _mensagec() {
     local color="${1}"
     local message="${2}"
@@ -22,7 +24,7 @@ _mensagec() {
 }
 
 # Exibe mensagem alinhada à direita
-# Parâmetros: $1=cor $2=mensagem  
+# Parametros: $1=cor $2=mensagem  
 _mensaged() {
     local color="${1}"
     local mensagem="${2}"
@@ -38,7 +40,7 @@ _mensaged() {
 }
 
 # Cria linha horizontal com caractere especificado
-# Parâmetros: $1=caractere (opcional, padrão='-') $2=cor (opcional)
+# Parametros: $1=caractere (opcional, padrao='-') $2=cor (opcional)
 _linha() {
     local Traco="${1:--}"
     local CCC="${2:-}"
@@ -52,10 +54,10 @@ _linha() {
     printf "%s" "${NORM}"
 }
 
-#---------- FUNÇÕES DE CONTROLE DE FLUXO ----------#
+#---------- FUNcoES DE CONTROLE DE FLUXO ----------#
 
-# Pausa a execução por tempo especificado
-# Parâmetros: $1=tempo_em_segundos
+# Pausa a execucao por tempo especificado
+# Parametros: $1=tempo_em_segundos
 _read_sleep() {
     if [[ -z "${1}" ]]; then
         printf "Erro: Nenhum argumento passado para _read_sleep.\n"
@@ -63,7 +65,7 @@ _read_sleep() {
     fi
 
     if ! [[ "${1}" =~ ^[0-9.]+$ ]]; then
-        printf "Erro: Argumento inválido para _read_sleep: %s\n" "${1}"
+        printf "Erro: Argumento invalido para _read_sleep: %s\n" "${1}"
         return 1
     fi
 
@@ -79,97 +81,97 @@ _press() {
     tput sgr0
 }
 
-# Exibe mensagem de opção inválida
+# Exibe mensagem de opcao invalida
 _opinvalida() {
     _linha
-    _mensagec "${RED}" "Opção Inválida"
+    _mensagec "${RED}" "Opcao Invalida"
     _linha
 }
 
-#---------- FUNÇÕES DE VALIDAÇÃO ----------#
+#---------- FUNcoES DE VALIDAcaO ----------#
 
 # Valida nome de programa (letras maiúsculas e números)
-# Parâmetros: $1=nome_programa
-# Retorna: 0=válido 1=inválido
+# Parametros: $1=nome_programa
+# Retorna: 0=valido 1=invalido
 _validar_nome_programa() {
     local programa="$1"
     [[ -n "$programa" && "$programa" =~ ^[A-Z0-9]+$ ]]
 }
 
-# Valida se diretório existe e é acessível
-# Parâmetros: $1=caminho_diretorio
-# Retorna: 0=válido 1=inválido
+# Valida se diretorio existe e e acessivel
+# Parametros: $1=caminho_diretorio
+# Retorna: 0=valido 1=invalido
 _validar_diretorio() {
     local dir="$1"
     [[ -n "$dir" && -d "$dir" && -r "$dir" ]]
 }
 
-# Valida se arquivo existe e é legível
-# Parâmetros: $1=caminho_arquivo
-# Retorna: 0=válido 1=inválido  
+# Valida se arquivo existe e e legivel
+# Parametros: $1=caminho_arquivo
+# Retorna: 0=valido 1=invalido  
 _validar_arquivo() {
     local arquivo="$1"
     [[ -n "$arquivo" && -f "$arquivo" && -r "$arquivo" ]]
 }
 
 # Valida formato de data (DD-MM-AAAA)
-# Parâmetros: $1=data
-# Retorna: 0=válido 1=inválido
+# Parametros: $1=data
+# Retorna: 0=valido 1=invalido
 _validar_data() {
     local data="$1"
     [[ "$data" =~ ^[0-9]{2}-[0-9]{2}-[0-9]{4}$ ]]
 }
 
-# Valida formato de versão (numérico)
-# Parâmetros: $1=versao
-# Retorna: 0=válido 1=inválido
+# Valida formato de versao (numerico)
+# Parametros: $1=versao
+# Retorna: 0=valido 1=invalido
 _validar_versao() {
     local versao="$1"
     [[ -n "$versao" && "$versao" =~ ^[0-9]+([.-][0-9]+)*$ ]]
 }
 
-# Valida se a configuração do sistema está correta
-# Retorna: 0=válido 1=inválido
+# Valida se a configuracao do sistema esta correta
+# Retorna: 0=valido 1=invalido
 _validar_configuracao_sistema() {
     local erros=0
     
-    # Verificar arquivos de configuração
-    if [[ ! -f "${LIB_CFG}/.atualizac" ]]; then
-        _log_erro "Arquivo .atualizac não encontrado"
+    # Verificar arquivos de configuracao
+    if [[ ! -f "${cfg_dir}/.atualizac" ]]; then
+        _log_erro "Arquivo .atualizac nao encontrado"
         ((erros++))
     fi
     
-    # Verificar variáveis essenciais
+    # Verificar variaveis essenciais
     if [[ -z "${sistema}" ]]; then
         _log_erro "Variavel 'sistema' nao definida"
         ((erros++))
     fi
     
-    if [[ -z "${destino}" ]]; then
-        _log_erro "Variavel 'destino' nao definida"
+    if [[ -z "${raiz}" ]]; then
+        _log_erro "Variavel 'raiz' nao definida"
         ((erros++))
     fi
    
-    # Verificar se a variável pasta está definida
+    # Verificar se a variavel pasta esta definida
     if [[ -z "${pasta}" ]]; then
         _log_erro "Variavel 'pasta' nao definida"
         ((erros++))
     fi
     
-    # Verificar diretórios essenciais
+    # Verificar diretorios essenciais
     local dirs=("exec" "telas")
     for dir in "${dirs[@]}"; do
         local dir_path=""
-        # Tratamento especial para exec e telas que ficam em ${destino}/sav
-        if [[ "$dir" == "exec" ]] || [[ "$dir" == "telas" ]]; then
-            dir_path="${destino}/sav/${!dir}"
+        # Tratamento especial para exec e telas que ficam em ${raiz}
+                if [[ "$dir" == "exec" ]] || [[ "$dir" == "telas" ]]; then
+            dir_path="${raiz}/${!dir}"
         else
-            # Para outros diretórios, usar o caminho padrão
-            dir_path="${destino}${pasta}/${!dir}"
+            # Para outros diretorios, usar o caminho padrao
+            dir_path="${TOOLS_DIR}/${!dir}"
         fi
         
         if [[ ! -d "${dir_path}" ]]; then
-            _log_erro "Diretório ${dir} não encontrado: ${dir_path}"
+            _log_erro "Diretorio ${dir} nao encontrado: ${dir_path}"
             ((erros++))
         fi
     done
@@ -177,15 +179,15 @@ _validar_configuracao_sistema() {
     return $(( erros > 0 ? 1 : 0 ))
 }
 
-#---------- FUNÇÕES DE ENTRADA DE DADOS ----------#
+#---------- FUNcoES DE ENTRADA DE DADOS ----------#
 
-# Solicita entrada do usuário com validação
-# Parâmetros: $1=prompt $2=função_validacao $3=mensagem_erro
+# Solicita entrada do usuario com validacao
+# Parametros: $1=prompt $2=funcao_validacao $3=mensagem_erro
 # Retorna: valor validado em stdout
 _solicitar_entrada() {
     local prompt="$1"
     local funcao_validacao="$2" 
-    local mensagem_erro="${3:-Entrada inválida}"
+    local mensagem_erro="${3:-Entrada invalida}"
     local entrada
     local tentativas=0
     local max_tentativas=3
@@ -193,13 +195,13 @@ _solicitar_entrada() {
     while (( tentativas < max_tentativas )); do
         read -rp "${YELLOW}${prompt}: ${NORM}" entrada
         
-        # Permite saída com ENTER vazio
+        # Permite saida com ENTER vazio
         if [[ -z "$entrada" ]]; then
             echo ""
             return 0
         fi
         
-        # Valida entrada se função fornecida
+        # Valida entrada se funcao fornecida
         if [[ -n "$funcao_validacao" ]]; then
             if "$funcao_validacao" "$entrada"; then
                 echo "$entrada"
@@ -214,13 +216,13 @@ _solicitar_entrada() {
         fi
     done
     
-    _mensagec "${RED}" "Máximo de tentativas excedido"
+    _mensagec "${RED}" "Maximo de tentativas excedido"
     return 1
 }
 
-# Solicita confirmação S/N
-# Parâmetros: $1=mensagem $2=padrão(S/N)
-# Retorna: 0=sim 1=não
+# Solicita confirmacao S/N
+# Parametros: $1=mensagem $2=padrao(S/N)
+# Retorna: 0=sim 1=nao
 _confirmar() {
     local mensagem="$1"
     local padrao="${2:-N}"
@@ -235,25 +237,25 @@ _confirmar() {
     
     read -rp "${YELLOW}${mensagem} ${opcoes}: ${NORM}" resposta
     
-    # Se resposta vazia, usar padrão
+    # Se resposta vazia, usar padrao
     if [[ -z "$resposta" ]]; then
         resposta="$padrao"
     fi
     
     case "${resposta,,}" in
         s|sim|y|yes) return 0 ;;
-        n|nao|não|no) return 1 ;;
+        n|nao|no) return 1 ;;
         *) 
-            _mensagec "${RED}" "Resposta inválida"
+            _mensagec "${RED}" "Resposta invalida"
             _confirmar "$mensagem" "$padrao"
             ;;
     esac
 }
 
-#---------- FUNÇÕES DE PROGRESSO ----------#
+#---------- FUNcoES DE PROGRESSO ----------#
 
 # Exibe barra de progresso simples
-# Parâmetros: $1=atual $2=total $3=largura_barra(opcional)
+# Parametros: $1=atual $2=total $3=largura_barra(opcional)
 _barra_progresso() {
     local atual="$1"
     local total="$2"
@@ -297,13 +299,13 @@ _mostrar_progresso_backup() {
     # Oculta o cursor
     tput civis
 
-    # Salva posiçao do cursor
+    # Salva posicao do cursor
     tput sc
     printf "${YELLOW}%s... [${NORM}" "$msg"
 
-    # Loop de animaçao
+    # Loop de animacao
     while kill -0 "$pid" 2>/dev/null; do
-        tput rc  # Restaura posiçao
+        tput rc  # Restaura posicao
         printf "${YELLOW}%s... [%3ds] ${NORM}${GREEN}%s${NORM}" \
             "$msg" "$elapsed" "${spin[i]}"
         ((i = (i + 1) % ${#spin[@]}))
@@ -322,10 +324,10 @@ _mostrar_progresso_backup() {
     fi
 }
 
-#---------- FUNÇÕES DE LOG ----------#
+#---------- FUNcoES DE LOG ----------#
 
 # Registra mensagem no log com timestamp
-# Parâmetros: $1=mensagem $2=arquivo_log(opcional)
+# Parametros: $1=mensagem $2=arquivo_log(opcional)
 _log() {
     local mensagem="$1"
     local arquivo_log="${2:-$LOG_ATU}"
@@ -336,7 +338,7 @@ _log() {
 }
 
 # Registra erro no log
-# Parâmetros: $1=mensagem_erro $2=arquivo_log(opcional)
+# Parametros: $1=mensagem_erro $2=arquivo_log(opcional)
 _log_erro() {
     local erro="$1"
     local arquivo_log="${2:-$LOG_ATU}"
@@ -345,7 +347,7 @@ _log_erro() {
 }
 
 # Registra sucesso no log  
-# Parâmetros: $1=mensagem_sucesso $2=arquivo_log(opcional)
+# Parametros: $1=mensagem_sucesso $2=arquivo_log(opcional)
 _log_sucesso() {
     local sucesso="$1"
     local arquivo_log="${2:-$LOG_ATU}"
@@ -353,10 +355,10 @@ _log_sucesso() {
     _log "SUCESSO: $sucesso" "$arquivo_log"
 }
 
-#---------- FUNÇÕES DE FORMATAÇÃO DE DADOS ----------#
+#---------- FUNcoES DE FORMATAcaO DE DADOS ----------#
 
 # Formata tamanho de arquivo para leitura humana
-# Parâmetros: $1=tamanho_bytes
+# Parametros: $1=tamanho_bytes
 _formatar_tamanho() {
     local tamanho="$1"
     local unidades=('B' 'KB' 'MB' 'GB' 'TB')
@@ -370,8 +372,8 @@ _formatar_tamanho() {
     printf "%d %s" "$tamanho" "${unidades[$unidade]}"
 }
 
-# Formata duração em segundos para formato legível
-# Parâmetros: $1=segundos
+# Formata duracao em segundos para formato legivel
+# Parametros: $1=segundos
 _formatar_duracao() {
     local segundos="$1"
     local horas=$(( segundos / 3600 ))
@@ -387,28 +389,28 @@ _formatar_duracao() {
     fi
 }
 
-#---------- FUNÇÕES DE SISTEMA ----------#
+#---------- FUNcoES DE SISTEMA ----------#
 
-# Obtém informações básicas do sistema
+# Obtem informacoes basicas do sistema
 _info_sistema() {
     echo "OS: $(uname -s)"
     echo "Versao: $(uname -r)"
     echo "Arquitetura: $(uname -m)"
     echo "Hostname: $(hostname)"
-    echo "Usuário: $(whoami)"
-    echo "Diretório: $(pwd)"
+    echo "Usuario: $(whoami)"
+    echo "Diretorio: $(pwd)"
 }
 
-# Verifica espaço em disco disponível
-# Parâmetros: $1=caminho
-# Retorna: espaço_livre_em_MB
+# Verifica espaco em disco disponivel
+# Parametros: $1=caminho
+# Retorna: espaco_livre_em_MB
 _espaco_livre() {
     local caminho="${1:-.}"
     df -m "$caminho" | awk 'NR==2 {print $4}'
 }
 
-# Verifica se há espaço suficiente
-# Parâmetros: $1=caminho $2=espaço_necessário_MB
+# Verifica se ha espaco suficiente
+# Parametros: $1=caminho $2=espaco_necessario_MB
 # Retorna: 0=suficiente 1=insuficiente
 _verificar_espaco() {
     local caminho="$1"
@@ -419,10 +421,10 @@ _verificar_espaco() {
     (( livre >= necessario ))
 }
 
-#---------- FUNÇÕES DE ARQUIVO ----------#
+#---------- FUNcoES DE ARQUIVO ----------#
 
 # Cria backup de arquivo com timestamp
-# Parâmetros: $1=arquivo_original $2=diretório_backup(opcional)
+# Parametros: $1=arquivo_original $2=diretorio_backup(opcional)
 _backup_arquivo() {
     local arquivo="$1"
     local dir_backup="${2:-${backup:-./backup}}"
@@ -432,14 +434,14 @@ _backup_arquivo() {
     local arquivo_backup
     
     if [[ ! -f "$arquivo" ]]; then
-        _log_erro "Arquivo não encontrado para backup: $arquivo"
+        _log_erro "Arquivo nao encontrado para backup: $arquivo"
         return 1
     fi
 	
-    # Criar diretório de backup se necessário
+    # Criar diretorio de backup se necessario
     mkdir -p "$dir_backup"
     
-    # Extrair nome e extensão
+    # Extrair nome e extensao
     nome_base=$(basename "$arquivo")
     if [[ "$nome_base" == *.* ]]; then
         extensao=".${nome_base##*.}"
@@ -461,8 +463,8 @@ _backup_arquivo() {
     fi
 }
 
-# Remove arquivos antigos de um diretório
-# Parâmetros: $1=diretório $2=dias $3=padrão(opcional)
+# Remove arquivos antigos de um diretorio
+# Parametros: $1=diretorio $2=dias $3=padrao(opcional)
 _limpar_arquivos_antigos() {
     local diretorio="$1"
     local dias="$2"
@@ -470,7 +472,7 @@ _limpar_arquivos_antigos() {
     local count
     
     if [[ ! -d "$diretorio" ]]; then
-        _log_erro "Diretório não encontrado: $diretorio"
+        _log_erro "Diretorio nao encontrado: $diretorio"
         return 1
     fi
     
@@ -486,18 +488,18 @@ _limpar_arquivos_antigos() {
     fi
 }
 
-#---------- FUNÇÕES DE INICIALIZAÇÃO ----------#
+#---------- FUNcoES DE INICIALIZAcaO ----------#
 
-# Executa limpeza automática diária
+# Executa limpeza automatica diaria
 _executar_expurgador_diario() {
     local flag_file
-    local savlog="${destino}/sav/portalsav/log"
-    local err_isc="${destino}/sav/err_isc"
-    local viewvix="${destino}/sav/savisc/viewvix/tmp"
+    local savlog="${raiz}/portalsav/log"
+    local err_isc="${raiz}/err_isc"
+    local viewvix="${raiz}/savisc/viewvix/tmp"
 
     flag_file="${LOGS}/.expurgador_$(date +%Y%m%d)"
     
-    # Se já foi executado hoje, pular
+    # Se ja foi executado hoje, pular
     if [[ -f "$flag_file" ]]; then
         return 0
     fi
@@ -505,7 +507,7 @@ _executar_expurgador_diario() {
     # Remover flags antigas (mais de 3 dias)
     find "${LOGS}" -name ".expurgador_*" -mtime +3-delete 2>/dev/null || true
     
-    # Executar limpeza básica
+    # Executar limpeza basica
     _limpar_arquivos_antigos "${LOGS}" 30 "*.log"
     _limpar_arquivos_antigos "${backup}" 30 "Temps*"
     _limpar_arquivos_antigos "${OLDS}" 30 "Temps*"
@@ -516,7 +518,7 @@ _executar_expurgador_diario() {
     # Criar flag para hoje
     touch "$flag_file"
     
-    _log "Limpeza automática diária executada"
+    _log "Limpeza automatica diaria executada"
 }
 
 # Funcao para checar se o zip esta instalado

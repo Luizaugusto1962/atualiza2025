@@ -1,49 +1,49 @@
-# Documentação do Módulo atualiza.sh
+# Documentacao do Modulo atualiza.sh
 
-## Visão Geral
-O módulo `atualiza.sh` é o **ponto de entrada principal** do **Sistema SAV (Script de Atualização Modular)**. Este arquivo funciona como um bootstrap/loader responsável por inicializar todo o sistema de forma segura e controlada.
+## Visao Geral
+O modulo `atualiza.sh` e o **ponto de entrada principal** do **Sistema SAV (Script de Atualizacao Modular)**. Este arquivo funciona como um bootstrap/loader responsavel por inicializar todo o sistema de forma segura e controlada.
 
-## Função Principal
-Este arquivo implementa o padrão de **"Script Bootstrap"** em bash, sendo responsável por:
-- Configuração inicial segura do ambiente
-- Validação de dependências críticas
+## Funcao Principal
+Este arquivo implementa o padrao de **"Script Bootstrap"** em bash, sendo responsavel por:
+- Configuracao inicial segura do ambiente
+- Validacao de dependências criticas
 - Carregamento do sistema principal
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Opções Bash Seguras
+### Opcoes Bash Seguras
 ```bash
 set -euo pipefail
 export LC_ALL=C
 ```
 
-**Explicação das opções:**
+**Explicacao das opcoes:**
 - **`set -e`**: Sai imediatamente se qualquer comando falhar
-- **`set -u`**: Trata variáveis não definidas como erro
+- **`set -u`**: Trata variaveis nao definidas como erro
 - **`set -o pipefail`**: Falha se qualquer comando em pipe falhar
-- **`export LC_ALL=C`**: Configuração local para consistência
+- **`export LC_ALL=C`**: Configuracao local para consistência
 
-## Estrutura do Código
+## Estrutura do Codigo
 
-### Localização e Constantes
+### Localizacao e Constantes
 ```bash
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIBS_DIR="${SCRIPT_DIR}/libs"
-readonly LIBS_DIR SCRIPT_DIR
+TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LIBS_DIR="${TOOLS_DIR}/libs"
+readonly LIBS_DIR TOOLS_DIR
 ```
 
-**Características:**
-- **`SCRIPT_DIR`**: Diretório onde o script está localizado
-- **`LIBS_DIR`**: Diretório contendo os módulos (`libs/`)
-- **`readonly`**: Proteção contra modificação acidental
+**Caracteristicas:**
+- **`TOOLS_DIR`**: Diretorio onde o script esta localizado
+- **`LIBS_DIR`**: Diretorio contendo os modulos (`libs/`)
+- **`readonly`**: Protecao contra modificacao acidental
 
-## Sistema de Validação
+## Sistema de Validacao
 
-### Validação de Dependências
+### Validacao de Dependências
 ```bash
-# Verifica se o diretório libs existe
+# Verifica se o diretorio libs existe
 if [[ ! -d "${LIBS_DIR}" ]]; then
-    echo "ERRO: Diretório ${LIBS_DIR} nao encontrado."
+    echo "ERRO: Diretorio ${LIBS_DIR} nao encontrado."
     exit 1
 fi
 
@@ -54,12 +54,12 @@ if [[ ! -f "${LIBS_DIR}/principal.sh" ]]; then
 fi
 ```
 
-**Validações críticas:**
-1. **Existência do diretório `libs/`**
-2. **Presença do arquivo `principal.sh`**
-3. **Permissões adequadas** para execução
+**Validacoes criticas:**
+1. **Existência do diretorio `libs/`**
+2. **Presenca do arquivo `principal.sh`**
+3. **Permissoes adequadas** para execucao
 
-## Processo de Inicialização
+## Processo de Inicializacao
 
 ### Carregamento do Sistema
 ```bash
@@ -69,110 +69,110 @@ cd "${LIBS_DIR}" || exit 1
 ```
 
 **Sequência:**
-1. **Navegação** para o diretório `libs/`
-2. **Execução** do script `principal.sh`
+1. **Navegacao** para o diretorio `libs/`
+2. **Execucao** do script `principal.sh`
 3. **Transferência de controle** para o sistema principal
 
 ## Tratamento de Erros
 
-### Estratégia de Falha
-- **Saída imediata** (`exit 1`) em caso de erro
-- **Mensagens claras** indicando o problema específico
-- **Validação em pontos críticos** antes da execução
+### Estrategia de Falha
+- **Saida imediata** (`exit 1`) em caso de erro
+- **Mensagens claras** indicando o problema especifico
+- **Validacao em pontos criticos** antes da execucao
 
-### Códigos de Saída
+### Codigos de Saida
 - `0` - Sucesso (herdado do script principal)
-- `1` - Erro de validação ou execução
+- `1` - Erro de validacao ou execucao
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Proteções Implementadas
-- **Variáveis readonly** para constantes críticas
-- **Validação rigorosa** de dependências
-- **Configuração segura** do ambiente bash
-- **Controle de localização** preciso
+### Protecoes Implementadas
+- **Variaveis readonly** para constantes criticas
+- **Validacao rigorosa** de dependências
+- **Configuracao segura** do ambiente bash
+- **Controle de localizacao** preciso
 
-### Prevenção de Ataques
+### Prevencao de Ataques
 - **Caminhos absolutos** para evitar path traversal
-- **Validação de existência** antes da execução
-- **Configuração local consistente** (`LC_ALL=C`)
+- **Validacao de existência** antes da execucao
+- **Configuracao local consistente** (`LC_ALL=C`)
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização do Código
+### Organizacao do Codigo
 - **Simplicidade**: Arquivo conciso e focado
-- **Clareza**: Cada seção com responsabilidade única
-- **Comentários**: Documentação inline clara
+- **Clareza**: Cada secao com responsabilidade única
+- **Comentarios**: Documentacao inline clara
 
 ### Manutenibilidade
-- **Dependências explícitas**: Validação clara do que é necessário
-- **Mensagens de erro informativas**: Facilita diagnóstico
-- **Estrutura modular**: Separação entre bootstrap e lógica principal
+- **Dependências explicitas**: Validacao clara do que e necessario
+- **Mensagens de erro informativas**: Facilita diagnostico
+- **Estrutura modular**: Separacao entre bootstrap e logica principal
 
 ## Arquivos Relacionados
 
-### Dependências Críticas
-- **`libs/principal.sh`**: Sistema principal (obrigatório)
-- **`libs/`**: Diretório contendo todos os módulos
+### Dependências Criticas
+- **`libs/principal.sh`**: Sistema principal (obrigatorio)
+- **`libs/`**: Diretorio contendo todos os modulos
 
 ### Arquivos Gerados
 - **Nenhum arquivo gerado** (apenas executa o sistema)
 
 ## Exemplos de Uso
 
-### Execução Normal
+### Execucao Normal
 ```bash
 # Executar o sistema SAV
 ./atualiza.sh
 
 # Ou via caminho absoluto
-/sav/tools/atualiza.sh
+/sav/TOOLS_DIR/atualiza.sh
 
 # Ou via atalho global (se configurado)
 atualiza
 ```
 
-### Execução com Parâmetros
+### Execucao com Parametros
 ```bash
-# Passar parâmetros para o sistema
+# Passar parametros para o sistema
 ./atualiza.sh parametro1 parametro2
 ```
 
-## Variáveis de Ambiente
+## Variaveis de Ambiente
 
-### Variáveis Internas
-- `SCRIPT_DIR` - Diretório do script (readonly)
-- `LIBS_DIR` - Diretório de bibliotecas (readonly)
-- `LC_ALL` - Configuração local (C)
+### Variaveis Internas
+- `TOOLS_DIR` - Diretorio do script (readonly)
+- `LIBS_DIR` - Diretorio de bibliotecas (readonly)
+- `LC_ALL` - Configuracao local (C)
 
-### Variáveis Herdadas
-Todas as variáveis do sistema principal são carregadas através do `principal.sh`
+### Variaveis Herdadas
+Todas as variaveis do sistema principal sao carregadas atraves do `principal.sh`
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações
-- **Inicialização mínima**: Apenas validações essenciais
-- **Carregamento direto**: Sem processamento desnecessário
+### Otimizacoes
+- **Inicializacao minima**: Apenas validacoes essenciais
+- **Carregamento direto**: Sem processamento desnecessario
 - **Transferência imediata**: Controle passado rapidamente
 
 ### Recursos
-- **Memória mínima**: Apenas variáveis essenciais
-- **I/O mínimo**: Apenas validações de existência
-- **CPU mínimo**: Processamento direto sem loops
+- **Memoria minima**: Apenas variaveis essenciais
+- **I/O minimo**: Apenas validacoes de existência
+- **CPU minimo**: Processamento direto sem loops
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
+### Estrategias para Debug
 - **Mensagens claras** de erro com contexto
-- **Validações em sequência** lógica
-- **Saída imediata** em caso de problemas
+- **Validacoes em sequência** logica
+- **Saida imediata** em caso de problemas
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 ```bash
 # Verificar se arquivo existe
 ls -la libs/principal.sh
 
-# Verificar permissões
+# Verificar permissoes
 ls -ld libs/
 
 # Executar com debug
@@ -181,40 +181,40 @@ bash -x atualiza.sh
 
 ## Casos de Uso Comuns
 
-### Instalação Nova
+### Instalacao Nova
 ```bash
-# Primeiro uso após instalação
+# Primeiro uso apos instalacao
 ./atualiza.sh
-# Irá carregar o sistema e mostrar menu principal
+# Ira carregar o sistema e mostrar menu principal
 ```
 
-### Manutenção do Sistema
+### Manutencao do Sistema
 ```bash
-# Após modificações nos módulos
+# Apos modificacoes nos modulos
 ./atualiza.sh
-# Recarrega todos os módulos atualizados
+# Recarrega todos os modulos atualizados
 ```
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 ```bash
-# Verificar se sistema está íntegro
+# Verificar se sistema esta integro
 ./atualiza.sh
-# Se falhar, mostrará exatamente o que está errado
+# Se falhar, mostrara exatamente o que esta errado
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Fluxo de Inicialização
+### Fluxo de Inicializacao
 ```
-atualiza.sh → principal.sh → módulos → sistema operacional
+atualiza.sh → principal.sh → modulos → sistema operacional
 ```
 
 ### Responsabilidades
-- **`atualiza.sh`**: Bootstrap e validação
-- **`principal.sh`**: Carregamento de módulos
-- **Módulos**: Funcionalidades específicas
-- **Sistema**: Execução das tarefas
+- **`atualiza.sh`**: Bootstrap e validacao
+- **`principal.sh`**: Carregamento de modulos
+- **Modulos**: Funcionalidades especificas
+- **Sistema**: Execucao das tarefas
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

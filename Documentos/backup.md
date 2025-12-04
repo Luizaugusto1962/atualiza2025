@@ -1,125 +1,125 @@
-# Documentação do Módulo backup.sh
+# Documentacao do Modulo backup.sh
 
-## Visão Geral
-O módulo `backup.sh` é responsável pelo **sistema completo de backup e restauração** do **Sistema SAV (Script de Atualização Modular)**. Este módulo oferece funcionalidades avançadas para criação, gerenciamento e restauração de backups com interface interativa completa.
+## Visao Geral
+O modulo `backup.sh` e responsavel pelo **sistema completo de backup e restauracao** do **Sistema SAV (Script de Atualizacao Modular)**. Este modulo oferece funcionalidades avancadas para criacao, gerenciamento e restauracao de backups com interface interativa completa.
 
 ## Funcionalidades Principais
 
 ### 1. Tipos de Backup
-- **Backup Completo**: Todos os arquivos do diretório selecionado
-- **Backup Incremental**: Apenas arquivos modificados desde uma data específica
-- **Verificação automática**: Detecção de backups recentes para evitar duplicatas
+- **Backup Completo**: Todos os arquivos do diretorio selecionado
+- **Backup Incremental**: Apenas arquivos modificados desde uma data especifica
+- **Verificacao automatica**: Deteccao de backups recentes para evitar duplicatas
 
-### 2. Restauração de Dados
-- **Restauração completa**: Todos os arquivos do backup
-- **Restauração seletiva**: Arquivos específicos por nome
-- **Busca inteligente**: Localização automática por parte do nome
+### 2. Restauracao de Dados
+- **Restauracao completa**: Todos os arquivos do backup
+- **Restauracao seletiva**: Arquivos especificos por nome
+- **Busca inteligente**: Localizacao automatica por parte do nome
 
 ### 3. Transferência de Backups
-- **Envio automático**: Para servidor remoto via rsync
-- **Modo offline**: Movimentação para diretório local
-- **Confirmação interativa**: Controle sobre manutenção de cópias locais
+- **Envio automatico**: Para servidor remoto via rsync
+- **Modo offline**: Movimentacao para diretorio local
+- **Confirmacao interativa**: Controle sobre manutencao de copias locais
 
 ### 4. Interface Interativa
-- **Menus visuais**: Seleção clara de opções
-- **Confirmações**: Validação antes de operações críticas
-- **Barra de progresso**: Feedback visual durante operações
+- **Menus visuais**: Selecao clara de opcoes
+- **Confirmacoes**: Validacao antes de operacoes criticas
+- **Barra de progresso**: Feedback visual durante operacoes
 
-## Estrutura do Código
+## Estrutura do Codigo
 
-### Variáveis Essenciais
+### Variaveis Essenciais
 ```bash
-# Diretórios de dados
+# Diretorios de dados
 destino="${destino:-}"
 base="${base:-}"
 base2="${base2:-}"
 base3="${base3:-}"
 
-# Configurações de backup
+# Configuracoes de backup
 backup="${backup:-}"
 cmd_zip="${cmd_zip:-}"
 EMPRESA="${EMPRESA:-}"
 ```
 
-### Validações Iniciais
+### Validacoes Iniciais
 ```bash
-# Verificar variáveis essenciais
+# Verificar variaveis essenciais
 if [[ -z "$destino" || -z "$sistema" || -z "$dirbackup" ]]; then
-    _mensagec "${RED}" "Erro: Variáveis essenciais não definidas"
+    _mensagec "${RED}" "Erro: Variaveis essenciais nao definidas"
     return 1
 fi
 
 # Verificar comandos externos
 for cmd in zip unzip; do
     if ! command -v "${cmd}" &>/dev/null; then
-        _mensagec "${RED}" "Erro: Comando ${cmd} não encontrado"
+        _mensagec "${RED}" "Erro: Comando ${cmd} nao encontrado"
         return 1
     fi
 done
 ```
 
-## Funções Principais de Backup
+## Funcoes Principais de Backup
 
 ### `_executar_backup()`
 Controlador principal do processo de backup.
 
-**Fluxo de execução:**
-1. **Seleção de base** (se múltiplas disponíveis)
-2. **Criação de diretório** de backup (se necessário)
+**Fluxo de execucao:**
+1. **Selecao de base** (se múltiplas disponiveis)
+2. **Criacao de diretorio** de backup (se necessario)
 3. **Escolha do tipo** de backup (completo/incremental)
-4. **Geração de nome** do arquivo de backup
-5. **Verificação de recentes** para evitar duplicatas
-6. **Execução em background** com barra de progresso
-7. **Confirmação de envio** para servidor remoto
+4. **Geracao de nome** do arquivo de backup
+5. **Verificacao de recentes** para evitar duplicatas
+6. **Execucao em background** com barra de progresso
+7. **Confirmacao de envio** para servidor remoto
 
 ### Tipos de Backup
 
 #### Backup Completo (`_executar_backup_completo`)
 ```bash
-# Exclusão de arquivos de backup existentes
+# Exclusao de arquivos de backup existentes
 "$cmd_zip" "$arquivo_destino" ./*.* -x ./*.zip ./*.tar ./*.tar.gz
 ```
 
 #### Backup Incremental (`_executar_backup_incremental`)
 ```bash
-# Busca arquivos modificados desde data específica
+# Busca arquivos modificados desde data especifica
 find . -type f -newermt "$data_referencia" \
     ! -name "*.zip" ! -name "*.tar" ! -name "*.tar.gz" -print0 | \
 xargs -0 "$cmd_zip" "$arquivo_destino"
 ```
 
-## Sistema de Restauração
+## Sistema de Restauracao
 
 ### `_restaurar_backup()`
-Interface principal para restauração de backups.
+Interface principal para restauracao de backups.
 
 **Funcionalidades:**
-- **Listagem automática** de backups disponíveis
+- **Listagem automatica** de backups disponiveis
 - **Busca inteligente** por parte do nome
-- **Seleção interativa** quando múltiplos encontrados
-- **Escolha entre restauração** completa ou seletiva
+- **Selecao interativa** quando múltiplos encontrados
+- **Escolha entre restauracao** completa ou seletiva
 
-### Restauração Completa (`_restaurar_backup_completo`)
+### Restauracao Completa (`_restaurar_backup_completo`)
 ```bash
-# Restauração de todos os arquivos
+# Restauracao de todos os arquivos
 "${cmd_unzip:-unzip}" -o "$arquivo_backup" -d "${base_trabalho}"
 ```
 
-### Restauração Seletiva (`_restaurar_arquivo_especifico`)
+### Restauracao Seletiva (`_restaurar_arquivo_especifico`)
 ```bash
-# Extração específica por nome
+# Extracao especifica por nome
 "${cmd_unzip}" -o "$arquivo_backup" "${nome_arquivo}"*.* -d "${base_trabalho}"
 ```
 
 ## Sistema de Transferência
 
 ### Envio para Servidor (`_enviar_backup_servidor`)
-Transferência via rsync com configurações SSH.
+Transferência via rsync com configuracoes SSH.
 
-**Características:**
-- **Verificação de dependências** (rsync disponível)
-- **Configuração automática** de destino remoto
-- **Controle interativo** sobre manutenção de cópia local
+**Caracteristicas:**
+- **Verificacao de dependências** (rsync disponivel)
+- **Configuracao automatica** de destino remoto
+- **Controle interativo** sobre manutencao de copia local
 - **Feedback visual** durante transferência
 
 ```bash
@@ -128,16 +128,16 @@ rsync -avzP -e "ssh -p ${PORTA}" "${backup}/${nome_backup}" \
 ```
 
 ### Modo Offline (`_mover_backup_offline`)
-Movimentação para diretório local configurado.
+Movimentacao para diretorio local configurado.
 
 ```bash
-# Mover para diretório offline
+# Mover para diretorio offline
 mv -f "${backup}/${nome_backup}" "$destino_offline"
 ```
 
-## Funcionalidades Avançadas
+## Funcionalidades Avancadas
 
-### Verificação de Backups Recentes
+### Verificacao de Backups Recentes
 ```bash
 _verificar_backups_recentes() {
     if find "$backup" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
@@ -149,83 +149,83 @@ _verificar_backups_recentes() {
 }
 ```
 
-### Seleção Interativa de Backup
+### Selecao Interativa de Backup
 ```bash
 _selecionar_backup_menu() {
     select escolha in "${backups[@]}" "Cancelar"; do
-        # Tratamento de seleção com validação
+        # Tratamento de selecao com validacao
     done
 }
 ```
 
-### Geração de Nomes de Arquivo
+### Geracao de Nomes de Arquivo
 ```bash
 nome_backup="${EMPRESA}_${base_trabalho}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
 ```
 
 ## Tratamento de Erros
 
-### Validações Implementadas
-- **Variáveis essenciais** antes da execução
-- **Comandos externos** necessários
-- **Existência de diretórios** de trabalho
-- **Permissões de escrita** nos diretórios
-- **Datas válidas** para backup incremental
+### Validacoes Implementadas
+- **Variaveis essenciais** antes da execucao
+- **Comandos externos** necessarios
+- **Existência de diretorios** de trabalho
+- **Permissoes de escrita** nos diretorios
+- **Datas validas** para backup incremental
 
-### Recuperação de Erros
-- **Mensagens informativas** sobre problemas específicos
-- **Opções alternativas** quando possível
-- **Logs detalhados** das operações (`${LOG_ATU}`)
-- **Confirmações** antes de operações críticas
+### Recuperacao de Erros
+- **Mensagens informativas** sobre problemas especificos
+- **Opcoes alternativas** quando possivel
+- **Logs detalhados** das operacoes (`${LOG_ATU}`)
+- **Confirmacoes** antes de operacoes criticas
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Proteções Implementadas
-- **Validação rigorosa** de entradas do usuário
-- **Controle de permissões** em operações de arquivo
-- **Confirmações interativas** antes de operações destrutivas
+### Protecoes Implementadas
+- **Validacao rigorosa** de entradas do usuario
+- **Controle de permissoes** em operacoes de arquivo
+- **Confirmacoes interativas** antes de operacoes destrutivas
 - **Logs de auditoria** para rastreabilidade
 
-### Sanitização de Dados
+### Sanitizacao de Dados
 - **Nomes de arquivo validados** (maiúsculas e números apenas)
-- **Caminhos seguros** com validação de existência
-- **Tratamento seguro** de variáveis de ambiente
+- **Caminhos seguros** com validacao de existência
+- **Tratamento seguro** de variaveis de ambiente
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização do Código
-- **Funções específicas** por responsabilidade
+### Organizacao do Codigo
+- **Funcoes especificas** por responsabilidade
 - **Tratamento uniforme** de erros
-- **Comentários claros** sobre cada função
-- **Separação lógica** entre tipos de operação
+- **Comentarios claros** sobre cada funcao
+- **Separacao logica** entre tipos de operacao
 
-### Interface do Usuário
-- **Menus intuitivos** com opções numeradas
-- **Feedback visual** constante durante operações
-- **Confirmações claras** antes de ações importantes
+### Interface do Usuario
+- **Menus intuitivos** com opcoes numeradas
+- **Feedback visual** constante durante operacoes
+- **Confirmacoes claras** antes de acoes importantes
 - **Mensagens coloridas** informativas
 
 ### Performance
-- **Execução em background** para operações longas
+- **Execucao em background** para operacoes longas
 - **Barra de progresso** para feedback visual
 - **Processamento eficiente** com find e xargs
-- **Verificação mínima** antes de operações
+- **Verificacao minima** antes de operacoes
 
 ## Dependências Externas
 
 ### Comandos Utilizados
-- `zip`/`unzip` - Compactação e descompactação
+- `zip`/`unzip` - Compactacao e descompactacao
 - `rsync` - Transferência segura de arquivos
-- `find` - Busca avançada de arquivos
-- `date` - Geração de timestamps
+- `find` - Busca avancada de arquivos
+- `date` - Geracao de timestamps
 - `ls` - Listagem formatada de arquivos
 
-### Variáveis de Ambiente
-- `backup` - Diretório de armazenamento de backups
-- `EMPRESA` - Nome da empresa para identificação
-- `USUARIO` - Usuário para conexão remota
-- `IPSERVER` - Endereço do servidor remoto
-- `PORTA` - Porta SSH para conexão
+### Variaveis de Ambiente
+- `backup` - Diretorio de armazenamento de backups
+- `EMPRESA` - Nome da empresa para identificacao
+- `USUARIO` - Usuario para conexao remota
+- `IPSERVER` - Endereco do servidor remoto
+- `PORTA` - Porta SSH para conexao
 
 ## Exemplos de Uso
 
@@ -240,27 +240,27 @@ _executar_backup
 
 ### Backup Incremental
 ```bash
-# Backup desde data específica
+# Backup desde data especifica
 _executar_backup
 # Tipo: incremental
 # Data referência: 12/2024
 # Apenas arquivos modificados desde 01/12/2024
 ```
 
-### Restauração de Arquivo
+### Restauracao de Arquivo
 ```bash
-# Restaurar arquivo específico
+# Restaurar arquivo especifico
 _restaurar_backup
 # Backup: backup_20241216.zip
-# Restauração: seletiva
+# Restauracao: seletiva
 # Arquivo: PROGRAMA
 ```
 
-## Características Avançadas
+## Caracteristicas Avancadas
 
 ### Processamento em Background
 ```bash
-# Execução assíncrona com controle de PID
+# Execucao assincrona com controle de PID
 _executar_backup_completo "$caminho_backup" &
 backup_pid=$!
 
@@ -273,13 +273,13 @@ wait "$backup_pid"
 # Arrays para armazenar resultados
 mapfile -t arquivos_backup < <(printf '%s\n' "${backup}"/*.zip)
 
-# Busca por padrão
+# Busca por padrao
 mapfile -t backups_encontrados < <(ls -1 "${backup}"/*"${nome_backup}"*.zip 2>/dev/null)
 ```
 
-### Controle de Diretórios Múltiplos
+### Controle de Diretorios Múltiplos
 ```bash
-# Seleção automática baseada em configuração
+# Selecao automatica baseada em configuracao
 if [[ -n "${base2}" ]]; then
     _menu_escolha_base || return 1
     base_trabalho="${BASE_TRABALHO}"
@@ -291,38 +291,38 @@ fi
 ## Logs e Auditoria
 
 ### Arquivo de Log
-- `${LOG_ATU}` - Registro de operações de backup/restauração
-- Captura saída de unzip e outras operações
-- Rastreabilidade completa das ações
+- `${LOG_ATU}` - Registro de operacoes de backup/restauracao
+- Captura saida de unzip e outras operacoes
+- Rastreabilidade completa das acoes
 
-### Informações de Debug
+### Informacoes de Debug
 - **Comandos executados** registrados
 - **Arquivos processados** listados
-- **Erros específicos** detalhados
+- **Erros especificos** detalhados
 - **Timestamps** para auditoria
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações Implementadas
-- **find com -print0** para arquivos com espaços
+### Otimizacoes Implementadas
+- **find com -print0** para arquivos com espacos
 - **xargs -0** para processamento eficiente
-- **Execução em background** para operações longas
-- **Verificações mínimas** antes do processamento
+- **Execucao em background** para operacoes longas
+- **Verificacoes minimas** antes do processamento
 
 ### Recursos de Sistema
-- **Memória controlada** com arrays locais
+- **Memoria controlada** com arrays locais
 - **I/O eficiente** com redirecionamento adequado
-- **CPU otimizada** com processamento paralelo quando possível
+- **CPU otimizada** com processamento paralelo quando possivel
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
-- **Validações em pontos críticos** com mensagens claras
-- **Logs detalhados** de todas as operações
-- **Variáveis essenciais** verificadas no início
-- **Estados intermediários** mostrados ao usuário
+### Estrategias para Debug
+- **Validacoes em pontos criticos** com mensagens claras
+- **Logs detalhados** de todas as operacoes
+- **Variaveis essenciais** verificadas no inicio
+- **Estados intermediarios** mostrados ao usuario
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 ```bash
 # Verificar backups existentes
 ls -la "${backup}"
@@ -330,54 +330,54 @@ ls -la "${backup}"
 # Testar comandos externos
 command -v zip unzip rsync
 
-# Verificar permissões
+# Verificar permissoes
 ls -ld "${backup}"
 ```
 
 ## Casos de Uso Comuns
 
-### Backup Diário Automatizado
+### Backup Diario Automatizado
 ```bash
-# Backup completo diário
+# Backup completo diario
 _executar_backup
 # Tipo: completo
 # Nome: EMPRESA_savdados_completo_20241216.zip
 ```
 
-### Backup Pré-atualização
+### Backup Pre-atualizacao
 ```bash
-# Backup antes de atualização do sistema
+# Backup antes de atualizacao do sistema
 _executar_backup
-# Confirmação: enviar para servidor automaticamente
+# Confirmacao: enviar para servidor automaticamente
 ```
 
-### Recuperação de Arquivo Específico
+### Recuperacao de Arquivo Especifico
 ```bash
-# Restaurar programa específico
+# Restaurar programa especifico
 _restaurar_backup
-# Seleção: arquivo específico
+# Selecao: arquivo especifico
 # Nome: PROGRAMA
 ```
 
-### Migração Entre Bases
+### Migracao Entre Bases
 ```bash
-# Backup de uma base e restauração em outra
+# Backup de uma base e restauracao em outra
 _executar_backup  # Base 1
 _restaurar_backup # Base 2
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Dependências de Módulos
-- **`config.sh`** - Carregado automaticamente para configurações
-- **`utils.sh`** - Funções utilitárias (mensagens, confirmações)
-- **`rsync.sh`** - Funcionalidades de rede (se disponível)
+### Dependências de Modulos
+- **`config.sh`** - Carregado automaticamente para configuracoes
+- **`utils.sh`** - Funcoes utilitarias (mensagens, confirmacoes)
+- **`rsync.sh`** - Funcionalidades de rede (se disponivel)
 
-### Fluxo de Integração
+### Fluxo de Integracao
 ```
 backup.sh → config.sh → sistema de arquivos → rsync/ssh → servidor remoto
 ```
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

@@ -1,85 +1,85 @@
-# Documentação do Módulo config.sh
+# Documentacao do Modulo config.sh
 
-## Visão Geral
+## Visao Geral
 
-O módulo `config.sh` é responsável pela **configuração completa e validação** do **Sistema SAV (Script de Atualização Modular)**. Este módulo centraliza todas as variáveis de configuração, valida o ambiente do sistema e estabelece as bases para o funcionamento de todos os outros módulos.
+O modulo `config.sh` e responsavel pela **configuracao completa e validacao** do **Sistema SAV (Script de Atualizacao Modular)**. Este modulo centraliza todas as variaveis de configuracao, valida o ambiente do sistema e estabelece as bases para o funcionamento de todos os outros modulos.
 
 ## Funcionalidades Principais
 
-### 1. Gestão de Variáveis Globais
+### 1. Gestao de Variaveis Globais
 
 - **Arrays organizados** por categoria funcional
-- **Variáveis de sistema** com valores padrão
-- **Configurações de ambiente** personalizáveis
-- **Herança de variáveis** entre módulos
+- **Variaveis de sistema** com valores padrao
+- **Configuracoes de ambiente** personalizaveis
+- **Heranca de variaveis** entre modulos
 
-### 2. Sistema de Cores Avançado
+### 2. Sistema de Cores Avancado
 
-- **Detecção automática** de suporte a cores no terminal
-- **Definição de paleta** completa (RED, GREEN, YELLOW, BLUE, PURPLE, CYAN)
-- **Configuração responsiva** baseada no terminal
-- **Fallback automático** para terminais sem suporte
+- **Deteccao automatica** de suporte a cores no terminal
+- **Definicao de paleta** completa (RED, GREEN, YELLOW, BLUE, PURPLE, CYAN)
+- **Configuracao responsiva** baseada no terminal
+- **Fallback automatico** para terminais sem suporte
 
-### 3. Validação de Ambiente
+### 3. Validacao de Ambiente
 
-- **Verificação de comandos** externos necessários
-- **Criação automática** de estrutura de diretórios
-- **Validação de permissões** e acessos
+- **Verificacao de comandos** externos necessarios
+- **Criacao automatica** de estrutura de diretorios
+- **Validacao de permissoes** e acessos
 - **Teste de conectividade** com servidores
 
-### 4. Carregamento de Configurações
+### 4. Carregamento de Configuracoes
 
-- **Arquivo `.atualizac`** como fonte de configuração
-- **Validação de existência** e permissões
+- **Arquivo `.atualizac`** como fonte de configuracao
+- **Validacao de existência** e permissoes
 - **Carregamento seguro** com shellcheck
-- **Configuração específica** por empresa
+- **Configuracao especifica** por empresa
 
-## Estrutura do Código
+## Estrutura do Codigo
 
-### Arrays de Organização
+### Arrays de Organizacao
 
 ```bash
-# Organização lógica das variáveis
+# Organizacao logica das variaveis
 declare -a cores=(RED GREEN YELLOW BLUE PURPLE CYAN NORM)
-declare -a caminhos_base=(BASE1 BASE2 BASE3 tools DIR destino pasta base base2 base3 logs exec class telas xml olds progs backup sistema TEMPS UMADATA DIRB ENVIABACK ENVBASE SERACESOFF E_EXEC T_TELAS X_XML)
+declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR DIR destino pasta base base2 base3 logs exec class telas xml olds progs backup sistema TEMPS UMADATA DIRB ENVIABACK ENVBASE SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who)
 declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC)
 ```
 
-### Variáveis Essenciais do Sistema
+### Variaveis Essenciais do Sistema
 
 ```bash
-# Diretórios principais
+# Diretorios principais
 destino="${destino:-}"       # Raiz do sistema
-pasta="${pasta:-}"           # Diretório de ferramentas
+pasta="${pasta:-}"           # Diretorio de ferramentas
 base="${base:-}"             # Base de dados principal
-exec="${exec:-}"             # Executáveis compilados
+exec="${exec:-}"             # Executaveis compilados
 telas="${telas:-}"           # Arquivos de interface
 
-# Configurações de compilação
-class="${class:-}"           # Extensão normal
-mclass="${mclass:-}"         # Extensão debug
-verclass="${verclass:-}"     # Ano da versão
+# Configuracoes de compilacao
+class="${class:-}"           # Extensao normal
+mclass="${mclass:-}"         # Extensao debug
+verclass="${verclass:-}"     # Ano da versao
 
-# Configurações de rede
+# Configuracoes de rede
 PORTA="${PORTA:-}"           # Porta SSH/SFTP
-USUARIO="${USUARIO:-}"       # Usuário remoto
+USUARIO="${USUARIO:-}"       # Usuario remoto
 IPSERVER="${IPSERVER:-}"     # IP do servidor
 ```
 
-## Sistema de Cores Avançado
+## Sistema de Cores Avancado
 
 ### `_definir_cores()`
 
-Configuração inteligente de cores baseada no terminal.
+Configuracao inteligente de cores baseada no terminal.
 
-**Características:**
+**Caracteristicas:**
 
-- **Detecção automática** de suporte a cores (`tput`)
-- **Configuração responsiva** baseada na largura do terminal
+- **Deteccao automatica** de suporte a cores (`tput`)
+- **Configuracao responsiva** baseada na largura do terminal
 - **Fallback seguro** para terminais sem suporte
-- **Variáveis readonly** para proteção
+- **Variaveis readonly** para protecao
 
 ```bash
 # Terminal com suporte a cores
@@ -92,75 +92,75 @@ if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
     tput clear
 else
     # Terminal sem suporte
-    RED="" GREEN="" YELLOW="" # ... variáveis vazias
+    RED="" GREEN="" YELLOW="" # ... variaveis vazias
     COLUMNS=80
 fi
 ```
 
-## Configuração de Comandos
+## Configuracao de Comandos
 
 ### `_configurar_comandos()`
 
-Validação e configuração de comandos externos necessários.
+Validacao e configuracao de comandos externos necessarios.
 
 **Comandos validados:**
 
-- **`cmd_unzip`** - Descompactação de arquivos
-- **`cmd_zip`** - Compactação de arquivos
-- **`cmd_find`** - Busca avançada de arquivos
-- **`cmd_who`** - Verificação de usuários logados
+- **`cmd_unzip`** - Descompactacao de arquivos
+- **`cmd_zip`** - Compactacao de arquivos
+- **`cmd_find`** - Busca avancada de arquivos
+- **`cmd_who`** - Verificacao de usuarios logados
 
-**Lógica de configuração:**
+**Logica de configuracao:**
 
 ```bash
-# Usar padrão se não definido
+# Usar padrao se nao definido
 if [[ -z "${cmd_unzip}" ]]; then
     cmd_unzip="${DEFAULT_UNZIP}"
 fi
 
 # Validar existência do comando
 if ! command -v "$cmd" >/dev/null 2>&1; then
-    printf "Erro: Comando %s não encontrado.\n" "$cmd"
+    printf "Erro: Comando %s nao encontrado.\n" "$cmd"
     exit 1
 fi
 ```
 
-## Sistema de Diretórios
+## Sistema de Diretorios
 
 ### `_configurar_diretorios()`
 
-Criação e configuração da estrutura completa de diretórios.
+Criacao e configuracao da estrutura completa de diretorios.
 
-**Diretórios criados:**
+**Diretorios criados:**
 
 ```bash
-readonly TOOLS="${destino}${pasta}"     # /sav/sav/tools
-readonly backup="${TOOLS}/backup"       # Diretório de backups
-readonly OLDS="${TOOLS}/olds"           # Backups antigos
-readonly PROGS="${TOOLS}/progs"         # Programas processados
-readonly LOGS="${TOOLS}/logs"           # Arquivos de log
-readonly ENVIA="${TOOLS}/envia"         # Arquivos para envio
-readonly RECEBE="${TOOLS}/recebe"       # Arquivos recebidos
-readonly LIBS="${TOOLS}/libs"           # Bibliotecas do sistema
+readonly TOOLS_DIR="${destino}${pasta}"     # /sav/sav/TOOLS_DIR
+readonly backup="${TOOLS_DIR}/backup"       # Diretorio de backups
+readonly OLDS="${TOOLS_DIR}/olds"           # Backups antigos
+readonly PROGS="${TOOLS_DIR}/progs"         # Programas processados
+readonly LOGS="${TOOLS_DIR}/logs"           # Arquivos de log
+readonly ENVIA="${TOOLS_DIR}/envia"         # Arquivos para envio
+readonly RECEBE="${TOOLS_DIR}/recebe"       # Arquivos recebidos
+readonly LIBS="${TOOLS_DIR}/libs"           # Bibliotecas do sistema
 ```
 
-**Características:**
+**Caracteristicas:**
 
-- **Criação automática** se não existirem
-- **Validação de acesso** após criação
-- **Permissões adequadas** para operação
-- **Estrutura hierárquica** bem definida
+- **Criacao automatica** se nao existirem
+- **Validacao de acesso** apos criacao
+- **Permissoes adequadas** para operacao
+- **Estrutura hierarquica** bem definida
 
-## Carregamento de Configurações
+## Carregamento de Configuracoes
 
 ### `_carregar_config_empresa()`
 
-Carregamento seguro do arquivo de configuração da empresa.
+Carregamento seguro do arquivo de configuracao da empresa.
 
 **Processo:**
 
-1. **Verificação de existência** do arquivo `.atualizac`
-2. **Validação de permissões** de leitura
+1. **Verificacao de existência** do arquivo `.atualizac`
+2. **Validacao de permissoes** de leitura
 3. **Carregamento seguro** com `source`/`dot`
 4. **Tratamento de erros** com mensagens claras
 
@@ -172,28 +172,28 @@ Carregamento seguro do arquivo de configuração da empresa.
 
 ### `_carregar_configuracoes()`
 
-Controlador principal de carregamento de configurações.
+Controlador principal de carregamento de configuracoes.
 
-**Sequência de inicialização:**
+**Sequência de inicializacao:**
 
-1. **Definição de cores** do terminal
-2. **Carregamento** do arquivo de configuração da empresa
-3. **Configuração de comandos** externos
-4. **Configuração de diretórios** do sistema
-5. **Configuração de variáveis** do sistema
-6. **Configuração de acesso** offline (se aplicável)
+1. **Definicao de cores** do terminal
+2. **Carregamento** do arquivo de configuracao da empresa
+3. **Configuracao de comandos** externos
+4. **Configuracao de diretorios** do sistema
+5. **Configuracao de variaveis** do sistema
+6. **Configuracao de acesso** offline (se aplicavel)
 
-## Sistema de Validação
+## Sistema de Validacao
 
 ### `_validar_diretorios()`
 
-Validação completa de todos os diretórios essenciais.
+Validacao completa de todos os diretorios essenciais.
 
-**Diretórios validados:**
+**Diretorios validados:**
 
-- **`E_EXEC`** - Diretório de executáveis (obrigatório)
-- **`T_TELAS`** - Diretório de telas (obrigatório)
-- **`X_XML`** - Diretório XML (obrigatório para IsCobol)
+- **`E_EXEC`** - Diretorio de executaveis (obrigatorio)
+- **`T_TELAS`** - Diretorio de telas (obrigatorio)
+- **`X_XML`** - Diretorio XML (obrigatorio para IsCobol)
 - **`BASE1/BASE2/BASE3`** - Bases de dados (se configuradas)
 
 ```bash
@@ -202,7 +202,7 @@ _verifica_diretorio() {
     local mensagem_erro="$2"
 
     if [[ -n "${caminho}" ]] && [[ -d "${caminho}" ]]; then
-        _mensagec "${CYAN}" "Diretório validado: ${caminho}"
+        _mensagec "${CYAN}" "Diretorio validado: ${caminho}"
     else
         _linha "*"
         _mensagec "${RED}" "${mensagem_erro}: ${caminho}"
@@ -213,37 +213,37 @@ _verifica_diretorio() {
 
 ### `_validar_configuracao()`
 
-Validação abrangente de toda a configuração do sistema.
+Validacao abrangente de toda a configuracao do sistema.
 
 **Categorias validadas:**
 
-1. **Arquivos de configuração** (`.atualizac`)
-2. **Variáveis essenciais** (`sistema`, `destino`, `BANCO`)
-3. **Diretórios críticos** (exec, telas, bases)
+1. **Arquivos de configuracao** (`.atualizac`)
+2. **Variaveis essenciais** (`sistema`, `destino`, `BANCO`)
+3. **Diretorios criticos** (exec, telas, bases)
 4. **Conectividade de rede** (se modo online)
 
-**Relatório detalhado:**
+**Relatorio detalhado:**
 
 ```bash
-# Estatísticas finais
+# Estatisticas finais
 _mensagec "${CYAN}" "Resumo:"
 _mensagec "${RED}" "Erros: ${erros}"
 _mensagec "${YELLOW}" "Avisos: ${warnings}"
 
 if (( erros == 0 )); then
-    _mensagec "${GREEN}" "Configuração válida!"
+    _mensagec "${GREEN}" "Configuracao valida!"
 else
-    _mensagec "${RED}" "Configuração com erros!"
+    _mensagec "${RED}" "Configuracao com erros!"
 fi
 ```
 
-## Configuração de Variáveis do Sistema
+## Configuracao de Variaveis do Sistema
 
 ### `_configurar_variaveis_sistema()`
 
-Definição de todas as variáveis derivadas e caminhos completos.
+Definicao de todas as variaveis derivadas e caminhos completos.
 
-**Variáveis configuradas:**
+**Variaveis configuradas:**
 
 ```bash
 # Caminhos completos
@@ -251,11 +251,11 @@ export E_EXEC="${destino}/${exec}"
 export T_TELAS="${destino}/${telas}"
 export X_XML="${destino}/${xml}"
 
-# Utilitários IsCobol
+# Utilitarios IsCobol
 readonly SAVISCC="${destino}/sav/savisc/iscobol/bin/"
 jut="${SAVISC}${JUTIL}"
 
-# Configurações de rede
+# Configuracoes de rede
 PORTA="${PORTA:-${DEFAULT_PORTA}}"      # 41122
 USUARIO="${USUARIO:-${DEFAULT_USUARIO}}" # atualiza
 
@@ -268,18 +268,18 @@ UMADATA=$(date +"%d-%m-%Y_%H%M%S")
 
 ### `_resetando()`
 
-Função de limpeza e reset do ambiente.
+Funcao de limpeza e reset do ambiente.
 
 **Funcionalidades:**
 
-- **Limpeza de arrays** de variáveis
+- **Limpeza de arrays** de variaveis
 - **Reset de cores** do terminal (`tput sgr0`)
-- **Saída controlada** com código de erro
+- **Saida controlada** com codigo de erro
 - **Tratamento seguro** com `|| true` para evitar erros
 
 ```bash
 _resetando() {
-    # Limpeza segura de variáveis
+    # Limpeza segura de variaveis
     unset -v "${cores[@]}" 2>/dev/null || true
     unset -v "${caminhos_base[@]}" 2>/dev/null || true
     unset -v "${biblioteca[@]}" 2>/dev/null || true
@@ -292,69 +292,69 @@ _resetando() {
 }
 ```
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Validações de Segurança
+### Validacoes de Seguranca
 
-- **Verificação de comandos** externos antes do uso
-- **Validação de permissões** em arquivos críticos
-- **Controle de acesso** a diretórios sensíveis
-- **Tratamento seguro** de variáveis de ambiente
+- **Verificacao de comandos** externos antes do uso
+- **Validacao de permissoes** em arquivos criticos
+- **Controle de acesso** a diretorios sensiveis
+- **Tratamento seguro** de variaveis de ambiente
 
-### Tratamento Seguro de Configurações
+### Tratamento Seguro de Configuracoes
 
-- **Carregamento controlado** de arquivos de configuração
-- **Validação de conteúdo** antes da aplicação
-- **Backup implícito** através de validações
+- **Carregamento controlado** de arquivos de configuracao
+- **Validacao de conteúdo** antes da aplicacao
+- **Backup implicito** atraves de validacoes
 - **Logs de auditoria** para rastreabilidade
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização do Código
+### Organizacao do Codigo
 
-- **Arrays lógicos** para agrupamento de variáveis
-- **Funções específicas** por responsabilidade
-- **Comentários detalhados** sobre cada variável
-- **Constantes bem definidas** para valores padrão
+- **Arrays logicos** para agrupamento de variaveis
+- **Funcoes especificas** por responsabilidade
+- **Comentarios detalhados** sobre cada variavel
+- **Constantes bem definidas** para valores padrao
 
 ### Tratamento de Erros
 
-- **Mensagens claras** sobre problemas específicos
-- **Validações em múltiplas camadas**
-- **Códigos de saída** apropriados
-- **Recuperação graceful** quando possível
+- **Mensagens claras** sobre problemas especificos
+- **Validacoes em múltiplas camadas**
+- **Codigos de saida** apropriados
+- **Recuperacao graceful** quando possivel
 
 ### Manutenibilidade
 
-- **Configuração centralizada** de todas as variáveis
-- **Validação automática** da configuração
-- **Documentação inline** clara
+- **Configuracao centralizada** de todas as variaveis
+- **Validacao automatica** da configuracao
+- **Documentacao inline** clara
 - **Estrutura modular** bem definida
 
 ## Arquivos Relacionados
 
-### Arquivo de Configuração Principal
+### Arquivo de Configuracao Principal
 
-- **`.atualizac`** - Configurações específicas da empresa
-- **Localização**: `${LIB_CFG}/.atualizac`
-- **Permissões**: Leitura obrigatória para funcionamento
+- **`.atualizac`** - Configuracoes especificas da empresa
+- **Localizacao**: `${cfg_dir}/.atualizac`
+- **Permissoes**: Leitura obrigatoria para funcionamento
 
-### Diretórios Essenciais
+### Diretorios Essenciais
 
-- **`TOOLS`** - Diretório principal (`/sav/sav/tools`)
-- **`LIBS`** - Bibliotecas do sistema (`/sav/sav/tools/libs`)
-- **`LOGS`** - Arquivos de log (`/sav/sav/tools/logs`)
-- **`backup`** - Backups (`/sav/sav/tools/backup`)
+- **`TOOLS_DIR`** - Diretorio principal (`/sav/sav/TOOLS_DIR`)
+- **`LIBS`** - Bibliotecas do sistema (`/sav/sav/TOOLS_DIR/libs`)
+- **`LOGS`** - Arquivos de log (`/sav/sav/TOOLS_DIR/logs`)
+- **`backup`** - Backups (`/sav/sav/TOOLS_DIR/backup`)
 
 ## Exemplos de Uso
 
-### Carregamento Básico de Configurações
+### Carregamento Basico de Configuracoes
 
 ```bash
-# Carregar todas as configurações
+# Carregar todas as configuracoes
 _carregar_configuracoes
 
-# As seguintes funções são executadas automaticamente:
+# As seguintes funcoes sao executadas automaticamente:
 # _definir_cores
 # _carregar_config_empresa
 # _configurar_comandos
@@ -363,146 +363,146 @@ _carregar_configuracoes
 # _configurar_acesso_servidor
 ```
 
-### Validação de Configuração
+### Validacao de Configuracao
 
 ```bash
-# Validar configuração atual
+# Validar configuracao atual
 _validar_configuracao
 
 # Verifica:
 # - Arquivo .atualizac
-# - Variáveis essenciais
-# - Diretórios críticos
+# - Variaveis essenciais
+# - Diretorios criticos
 # - Conectividade de rede
 ```
 
-### Configuração Manual de Diretórios
+### Configuracao Manual de Diretorios
 
 ```bash
-# Configurar estrutura de diretórios
+# Configurar estrutura de diretorios
 _configurar_diretorios
 
 # Cria automaticamente:
-# /sav/sav/tools/backup
-# /sav/sav/tools/olds
-# /sav/sav/tools/progs
-# /sav/sav/tools/logs
-# /sav/sav/tools/envia
-# /sav/sav/tools/recebe
-# /sav/sav/tools/libs
+# /sav/sav/TOOLS_DIR/backup
+# /sav/sav/TOOLS_DIR/olds
+# /sav/sav/TOOLS_DIR/progs
+# /sav/sav/TOOLS_DIR/logs
+# /sav/sav/TOOLS_DIR/envia
+# /sav/sav/TOOLS_DIR/recebe
+# /sav/sav/TOOLS_DIR/libs
 ```
 
-## Variáveis de Ambiente
+## Variaveis de Ambiente
 
-### Variáveis Suportadas
+### Variaveis Suportadas
 
-- `destino` - Diretório raiz do sistema SAV
+- `destino` - Diretorio raiz do sistema SAV
 - `sistema` - Tipo de sistema (iscobol/cobol)
 - `BANCO` - Uso de banco de dados (s/n)
 - `Offline` - Modo offline (s/n ou caminho)
-- `acessossh` - Método de acesso SSH (s/n)
+- `acessossh` - Metodo de acesso SSH (s/n)
 
 ### Constantes Internas
 
-- `DEFAULT_PORTA` - Porta padrão (41122)
-- `DEFAULT_USUARIO` - Usuário padrão (atualiza)
-- `DEFAULT_*` - Valores padrão para comandos
+- `DEFAULT_PORTA` - Porta padrao (41122)
+- `DEFAULT_USUARIO` - Usuario padrao (atualiza)
+- `DEFAULT_*` - Valores padrao para comandos
 - `DESTINO2*` - Caminhos remotos para bibliotecas
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações Implementadas
+### Otimizacoes Implementadas
 
-- **Validação mínima** durante carregamento
-- **Criação eficiente** de diretórios
-- **Cache de configurações** carregadas
+- **Validacao minima** durante carregamento
+- **Criacao eficiente** de diretorios
+- **Cache de configuracoes** carregadas
 - **Processamento sequencial** controlado
 
 ### Recursos de Sistema
 
-- **I/O otimizado** com verificações eficientes
-- **Memória controlada** com variáveis locais
-- **CPU mínima** durante configuração inicial
+- **I/O otimizado** com verificacoes eficientes
+- **Memoria controlada** com variaveis locais
+- **CPU minima** durante configuracao inicial
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
+### Estrategias para Debug
 
-- **Validação visual** de cada etapa
+- **Validacao visual** de cada etapa
 - **Mensagens claras** sobre problemas encontrados
-- **Logs detalhados** de configuração
-- **Estados intermediários** mostrados durante carregamento
+- **Logs detalhados** de configuracao
+- **Estados intermediarios** mostrados durante carregamento
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 
 ```bash
-# Verificar arquivo de configuração
-ls -la "${LIB_CFG}/.atualizac"
+# Verificar arquivo de configuracao
+ls -la "${cfg_dir}/.atualizac"
 
 # Testar comandos externos
 command -v zip unzip find who
 
-# Verificar estrutura de diretórios
-ls -la "${TOOLS}"
+# Verificar estrutura de diretorios
+ls -la "${TOOLS_DIR}"
 
-# Validar configuração completa
+# Validar configuracao completa
 _validar_configuracao
 ```
 
 ## Casos de Uso Comuns
 
-### Configuração Inicial
+### Configuracao Inicial
 
 ```bash
-# Primeiro uso após instalação
+# Primeiro uso apos instalacao
 _carregar_configuracoes
 
-# Irá configurar:
+# Ira configurar:
 # - Cores do terminal
 # - Comandos externos
-# - Estrutura de diretórios
-# - Variáveis do sistema
-# - Acesso offline (se aplicável)
+# - Estrutura de diretorios
+# - Variaveis do sistema
+# - Acesso offline (se aplicavel)
 ```
 
-### Validação de Ambiente
+### Validacao de Ambiente
 
 ```bash
-# Verificar se tudo está configurado corretamente
+# Verificar se tudo esta configurado corretamente
 _validar_configuracao
 
-# Especialmente útil após:
-# - Modificações na configuração
-# - Migração entre ambientes
-# - Instalação de dependências
+# Especialmente útil apos:
+# - Modificacoes na configuracao
+# - Migracao entre ambientes
+# - Instalacao de dependências
 ```
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 
 ```bash
-# Quando algo não está funcionando
+# Quando algo nao esta funcionando
 _validar_configuracao
 
 # Mostra exatamente:
-# - O que está faltando
-# - O que está com problema
+# - O que esta faltando
+# - O que esta com problema
 # - O que precisa ser corrigido
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Dependências de Módulos
+### Dependências de Modulos
 
-- **Nenhuma dependência externa** - módulo base
+- **Nenhuma dependência externa** - modulo base
 - **Carregado automaticamente** pelo `principal.sh`
-- **Base para todos os outros módulos**
+- **Base para todos os outros modulos**
 
-### Fluxo de Integração
+### Fluxo de Integracao
 
 ```
-config.sh → validação → diretórios → variáveis → sistema operacional
+config.sh → validacao → diretorios → variaveis → sistema operacional
 ```
 
 ---
 
-_Documentação gerada automaticamente com base no código fonte e práticas de bash scripting._
+_Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting._

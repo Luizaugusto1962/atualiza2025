@@ -1,220 +1,220 @@
-# Documentação do Módulo programas.sh
+# Documentacao do Modulo programas.sh
 
-## Visão Geral
-O módulo `programas.sh` é responsável pela gestão completa do ciclo de vida de programas em um sistema SAV (Sistema de Atualização Modular). Este módulo oferece funcionalidades para atualização, instalação e reversão de programas através de diferentes métodos.
+## Visao Geral
+O modulo `programas.sh` e responsavel pela gestao completa do ciclo de vida de programas em um sistema SAV (Sistema de Atualizacao Modular). Este modulo oferece funcionalidades para atualizacao, instalacao e reversao de programas atraves de diferentes metodos.
 
 ## Funcionalidades Principais
 
-### 1. Atualização de Programas
-- **Online**: Atualização via conexão remota (RSYNC/SFTP)
-- **Offline**: Atualização via arquivos locais
-- **Pacotes**: Atualização em lote de múltiplos programas
+### 1. Atualizacao de Programas
+- **Online**: Atualizacao via conexao remota (RSYNC/SFTP)
+- **Offline**: Atualizacao via arquivos locais
+- **Pacotes**: Atualizacao em lote de múltiplos programas
 
-### 2. Sistema de Reversão
-- Restauração de programas para versões anteriores
-- Backup automático antes das atualizações
-- Confirmação interativa para múltiplas reversões
+### 2. Sistema de Reversao
+- Restauracao de programas para versoes anteriores
+- Backup automatico antes das atualizacoes
+- Confirmacao interativa para múltiplas reversoes
 
-### 3. Gestão de Arquivos
+### 3. Gestao de Arquivos
 - Arrays para controle de programas selecionados
-- Validação de nomes de programas
-- Controle de tipos de compilação (Normal/Debug)
+- Validacao de nomes de programas
+- Controle de tipos de compilacao (Normal/Debug)
 
-## Estrutura do Código
+## Estrutura do Codigo
 
-### Variáveis Globais
+### Variaveis Globais
 ```bash
 # Arrays para armazenar programas e arquivos
 declare -a PROGRAMAS_SELECIONADOS=()
 declare -a ARQUIVOS_PROGRAMA=()
 
-# Variáveis de configuração externa
+# Variaveis de configuracao externa
 destino="${destino:-}"
 sistema="${sistema:-}"
 acessossh="${acessossh:-}"
 ```
 
-### Funções de Atualização
+### Funcoes de Atualizacao
 
 #### `_atualizar_programa_online()`
-Realiza atualização de programas via conexão remota.
+Realiza atualizacao de programas via conexao remota.
 
 **Fluxo:**
-1. Verifica se servidor está OFF
-2. Solicita programas para atualização
+1. Verifica se servidor esta OFF
+2. Solicita programas para atualizacao
 3. Baixa arquivos via RSYNC
-4. Processa atualização
+4. Processa atualizacao
 
 #### `_atualizar_programa_offline()`
-Atualização via arquivos locais no diretório TOOLS.
+Atualizacao via arquivos locais no diretorio TOOLS_DIR.
 
 #### `_atualizar_programa_pacote()`
-Atualização de programas em pacotes via conexão remota.
+Atualizacao de programas em pacotes via conexao remota.
 
-### Funções de Reversão
+### Funcoes de Reversao
 
 #### `_reverter_programa()`
-Interface interativa para seleção de programas a reverter.
+Interface interativa para selecao de programas a reverter.
 
-**Características:**
-- Máximo de 6 repetições
-- Validação de nomes de programas
+**Caracteristicas:**
+- Maximo de 6 repeticoes
+- Validacao de nomes de programas
 - Lista visual dos programas selecionados
 
 #### `_processar_reversao_programas()`
-Processa a reversão dos programas selecionados.
+Processa a reversao dos programas selecionados.
 
-### Funções de Solicitação
+### Funcoes de Solicitacao
 
 #### `_solicitar_programas_atualizacao()`
-Coleta programas para atualização com seleção interativa.
+Coleta programas para atualizacao com selecao interativa.
 
 **Funcionalidades:**
-- Loop com máximo 6 tentativas
-- Validação de nomes (letras maiúsculas e números)
-- Seleção de tipo de compilação (1-Normal, 2-Debug)
-- Arrays para armazenar seleções
+- Loop com maximo 6 tentativas
+- Validacao de nomes (letras maiúsculas e números)
+- Selecao de tipo de compilacao (1-Normal, 2-Debug)
+- Arrays para armazenar selecoes
 
 #### `_solicitar_pacotes_atualizacao()`
-Similar à função anterior, mas para pacotes.
+Similar à funcao anterior, mas para pacotes.
 
-### Funções de Download
+### Funcoes de Download
 
 #### `_baixar_programas_rsync()`
 Realiza download via RSYNC ou SFTP.
 
-**Métodos suportados:**
+**Metodos suportados:**
 - SFTP com senha interativa
-- SFTP com chave SSH automática
-- Verificação de integridade dos arquivos
+- SFTP com chave SSH automatica
+- Verificacao de integridade dos arquivos
 
 #### `_baixar_pacotes_rsync()`
-Download de pacotes para diretório específico.
+Download de pacotes para diretorio especifico.
 
-### Funções de Processamento
+### Funcoes de Processamento
 
 #### `_processar_atualizacao_programas()`
-Processa a atualização dos programas baixados.
+Processa a atualizacao dos programas baixados.
 
 **Etapas:**
-1. Verificação de existência dos arquivos
-2. Criação de backups automáticos
-3. Descompactação dos arquivos
-4. Movimentação para diretórios corretos
-5. Renomeação de arquivos .zip para .bkp
+1. Verificacao de existência dos arquivos
+2. Criacao de backups automaticos
+3. Descompactacao dos arquivos
+4. Movimentacao para diretorios corretos
+5. Renomeacao de arquivos .zip para .bkp
 
 #### `_processar_atualizacao_pacotes()`
-Processamento específico para pacotes.
+Processamento especifico para pacotes.
 
-### Funções Auxiliares
+### Funcoes Auxiliares
 
 #### `_obter_data_arquivo()`
-Obtém data de modificação dos arquivos compilados.
+Obtem data de modificacao dos arquivos compilados.
 
 #### `_mensagem_conclusao_reversao()`
-Interface de conclusão com opção de mais reversões.
+Interface de conclusao com opcao de mais reversoes.
 
-## Padrões de Nomenclatura
+## Padroes de Nomenclatura
 
 ### Arquivos Suportados
 - `.class` - Arquivos compilados (Java/COBOL)
 - `.int` - Arquivos interpretados
 - `.TEL` - Arquivos de tela/interface
-- `.zip` - Pacotes de distribuição
+- `.zip` - Pacotes de distribuicao
 
-### Convenções de Backup
-- `{programa}-anterior.zip` - Backup da versão anterior
+### Convencoes de Backup
+- `{programa}-anterior.zip` - Backup da versao anterior
 - `{data}-{programa}-anterior.zip` - Backup com timestamp
-- `.bkp` - Extensão para arquivos processados
+- `.bkp` - Extensao para arquivos processados
 
 ## Tratamento de Erros
 
-### Validações Implementadas
-- Verificação de existência de arquivos
-- Validação de nomes de programas
-- Controle de tipos de compilação
-- Verificação de conectividade
+### Validacoes Implementadas
+- Verificacao de existência de arquivos
+- Validacao de nomes de programas
+- Controle de tipos de compilacao
+- Verificacao de conectividade
 
-### Códigos de Retorno
+### Codigos de Retorno
 - `0` - Sucesso
 - `1` - Erro/Falha
 
 ## Logs e Auditoria
 
 ### Arquivo de Log
-- `${LOG_ATU}` - Arquivo de log das atualizações
-- Registra operações de descompactação
-- Movimentação de arquivos
+- `${LOG_ATU}` - Arquivo de log das atualizacoes
+- Registra operacoes de descompactacao
+- Movimentacao de arquivos
 
 ## Dependências Externas
 
 ### Comandos Utilizados
-- `zip`/`unzip` - Compactação/descompactação
-- `rsync` - Sincronização remota
+- `zip`/`unzip` - Compactacao/descompactacao
+- `rsync` - Sincronizacao remota
 - `sftp` - Transferência segura
 - `find` - Busca de arquivos
-- `stat` - Informações de arquivos
-- `mv`/`cp` - Movimentação/cópia
+- `stat` - Informacoes de arquivos
+- `mv`/`cp` - Movimentacao/copia
 
-### Variáveis de Ambiente
-- `TOOLS` - Diretório de ferramentas
-- `E_EXEC` - Diretório de executáveis
-- `T_TELAS` - Diretório de telas
-- `OLDS` - Diretório de backups
-- `RECEBE` - Diretório de recepção
-- `PROGS` - Diretório de programas
+### Variaveis de Ambiente
+- `TOOLS_DIR` - Diretorio de ferramentas
+- `E_EXEC` - Diretorio de executaveis
+- `T_TELAS` - Diretorio de telas
+- `OLDS` - Diretorio de backups
+- `RECEBE` - Diretorio de recepcao
+- `PROGS` - Diretorio de programas
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização do Código
-- Funções bem documentadas
-- Separação clara de responsabilidades
+### Organizacao do Codigo
+- Funcoes bem documentadas
+- Separacao clara de responsabilidades
 - Tratamento consistente de erros
 
-### Interface do Usuário
+### Interface do Usuario
 - Mensagens coloridas informativas
-- Confirmações interativas
-- Listas visuais de seleção
+- Confirmacoes interativas
+- Listas visuais de selecao
 
 ### Manutenibilidade
 - Arrays para controle de estado
-- Funções reutilizáveis
+- Funcoes reutilizaveis
 - Logs detalhados
 
 ## Exemplos de Uso
 
-### Atualização Online
+### Atualizacao Online
 ```bash
-# Chamar função de atualização online
+# Chamar funcao de atualizacao online
 _atualizar_programa_online
 ```
 
-### Reversão de Programa
+### Reversao de Programa
 ```bash
-# Chamar função de reversão
+# Chamar funcao de reversao
 _reverter_programa
 ```
 
-### Limpeza de Seleção
+### Limpeza de Selecao
 ```bash
-# Limpar arrays de seleção
+# Limpar arrays de selecao
 _limpar_selecao_programas
 ```
 
-## Considerações de Segurança
+## Consideracoes de Seguranca
 
-- Backup automático antes de alterações
-- Validação de nomes de programas
-- Verificação de integridade de downloads
+- Backup automatico antes de alteracoes
+- Validacao de nomes de programas
+- Verificacao de integridade de downloads
 - Logs de auditoria
 
 ## Performance
 
 - Processamento eficiente com arrays
 - Controle de loops para evitar excesso
-- Movimentação otimizada de arquivos
-- Verificações mínimas necessárias
+- Movimentacao otimizada de arquivos
+- Verificacoes minimas necessarias
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

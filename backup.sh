@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 #
 # backup.sh - Modulo do Sistema de Backup
-# Responsavel por backup completo, incremental e restauraçao
+# Responsavel por backup completo, incremental e restauracao
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 # Autor: Luiz Augusto
 
-destino="${destino:-}"
 sistema="${sistema:-}"
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
@@ -16,8 +15,9 @@ cmd_zip="${cmd_zip:-}"
 Offline="${Offline:-}"
 BACKUP="${BACBACKUP:-}"
 backup="${backup:-}"
+raiz="${raiz:-}"
 
-#---------- FUNÇÕES PRINCIPAIS DE backup ----------#
+#---------- FUNcoES PRINCIPAIS DE backup ----------#
 
 # Executa backup do sistema
 _executar_backup() {
@@ -28,7 +28,7 @@ _executar_backup() {
         _menu_escolha_base || return 1
         BASE_TRABALHO="${base_trabalho}"
     else
-        base_trabalho="${destino}${base}"
+        base_trabalho="${raiz}${base}"
     fi
  
 
@@ -55,7 +55,7 @@ _executar_backup() {
     # Verificar backups recentes
     if _verificar_backups_recentes; then
         if ! _confirmar "Ja existe backup recente. Deseja continuar?" "N"; then
-            _mensagec "$RED" "Operaçao cancelada"
+            _mensagec "$RED" "Operacao cancelada"
             _read_sleep 3
             return 1
         fi
@@ -183,7 +183,7 @@ _restaurar_backup() {
             ;;
     esac
 
-    # Escolher tipo de restauraçao
+    # Escolher tipo de restauracao
     if _confirmar "Deseja restaurar TODOS os arquivos do backup?" "N"; then
         _restaurar_backup_completo "$backup_selecionado"
     else
@@ -196,11 +196,11 @@ _enviar_backup_avulso() {
 local backup_selecionado
 shopt -s nullglob
 
-    # Listar backups disponíveis
+    # Listar backups disponiveis
     local backups=()
     backups=( "${BACKUP}/${EMPRESA}"_*.zip )
 
-    # Verificar se há backups disponíveis
+    # Verificar se ha backups disponiveis
     if [[ ! -e "${backups[0]}" ]]; then
         _mensagec "${RED}" "Nenhum backup encontrado"
         _press
@@ -211,7 +211,7 @@ shopt -s nullglob
     ls -lh "${BACKUP}/${EMPRESA}"_*.zip
     _linha
 
-    # Solicitar seleçao
+    # Solicitar selecao
     local nome_backup
     read -rp "${YELLOW}Informe parte do nome do backup: ${NORM}" nome_backup
     if [[ -z "$nome_backup" ]]; then
@@ -255,7 +255,7 @@ shopt -s nullglob
     fi
 }
 
-#---------- FUNÇÕES DE EXECUÇaO DE backup ----------#
+#---------- FUNcoES DE EXECUcaO DE backup ----------#
 
 # Executa backup completo
 _executar_backup_completo() {
@@ -264,14 +264,14 @@ _executar_backup_completo() {
     "$cmd_zip" "$arquivo_destino" ./*.* -x ./*.zip ./*.tar ./*.tar.gz >/dev/null 2>&1
 }
 
-# Executa backup incremental (recebe data como parâmetro)
+# Executa backup incremental (recebe data como parametro)
 _executar_backup_incremental() {
     local arquivo_destino="$1"
     local data_referencia="$2"
 
     # Validar data antes de usar
     if ! date -d "$data_referencia" >/dev/null 2>&1; then
-        _mensagec "${RED}" "Data inválida: $data_referencia"
+        _mensagec "${RED}" "Data invalida: $data_referencia"
         return 1
     fi
 
@@ -283,35 +283,35 @@ _executar_backup_incremental() {
 
         # Verificar se o backup foi criado
     if [[ ! -f "$arquivo_destino" ]]; then
-        _mensagec "${RED}" "Erro: Backup não foi criado"
+        _mensagec "${RED}" "Erro: Backup nao foi criado"
         return 1
     fi    
 }
 
 # Diretorio de trabalho
 _diretorio_trabalho() {
-    local base_trabalho="${BASE_TRABALHO:-${destino}${base}}"
+    local base_trabalho="${BASE_TRABALHO:-${raiz}${base}}"
     cd "$base_trabalho" || {
         _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} nao encontrado"
         return 1 
     } 
 }
 
-#---------- FUNÇÕES DE RESTAURAÇaO ----------#
+#---------- FUNcoES DE RESTAURAcaO ----------#
 
 # Restaura backup completo
 _restaurar_backup_completo() {
     local arquivo_backup="$1"
-    base_trabalho="${destino}${base}"
+    base_trabalho="${raiz}${base}"
     _linha
     _mensagec "${YELLOW}" "Restaurando todos os arquivos..."
     _linha
     if ! "${cmd_unzip:-unzip}" -o "$arquivo_backup" -d "${base_trabalho}" >>"${LOG_ATU}" 2>&1; then
-        _mensagec "${RED}" "Erro na restauraçao completa"
+        _mensagec "${RED}" "Erro na restauracao completa"
         _press
         return 1
     fi
-    _mensagec "${GREEN}" "Restauraçao completa concluida"
+    _mensagec "${GREEN}" "Restauracao completa concluida"
     _press
 }
 
@@ -319,7 +319,7 @@ _restaurar_backup_completo() {
 _restaurar_arquivo_especifico() {
     local arquivo_backup="$1"
     local nome_arquivo
-    base_trabalho="${destino}${base}"
+    base_trabalho="${raiz}${base}"
 #    _diretorio_trabalho
     read -rp "${YELLOW}Nome do arquivo (maiúsculo, sem extensao): ${NORM}" nome_arquivo
     if [[ ! "$nome_arquivo" =~ ^[A-Z0-9]+$ ]]; then
@@ -338,12 +338,12 @@ _restaurar_arquivo_especifico() {
     if ls "${base_trabalho}/${nome_arquivo}"*.* >/dev/null 2>&1; then
         _mensagec "${GREEN}" "Arquivo ${nome_arquivo} restaurado com sucesso"
     else
-        _mensagec "${YELLOW}" "Arquivo ${nome_arquivo} nao encontrado apos restauraçao"
+        _mensagec "${YELLOW}" "Arquivo ${nome_arquivo} nao encontrado apos restauracao"
     fi
     _press
 }
 
-#---------- FUNÇÕES DE ENVIO ----------#
+#---------- FUNcoES DE ENVIO ----------#
 
 # Envia backup para servidor
 _enviar_backup_servidor() {
@@ -433,7 +433,7 @@ _enviar_backup_rede() {
     fi
 }
 
-#---------- FUNÇÕES AUXILIARES ----------#
+#---------- FUNcoES AUXILIARES ----------#
 
 # Verifica backups recentes (últimos 2 dias)
 _verificar_backups_recentes() {
@@ -457,7 +457,7 @@ _finalizar_backup_sucesso() {
     _linha
 }
 
-# Menu de seleçao de backup
+# Menu de selecao de backup
 _selecionar_backup_menu() {
     local backups=("$@")
     local escolha
@@ -467,7 +467,7 @@ _selecionar_backup_menu() {
     select escolha in "${backups[@]}" "Cancelar"; do
         case $REPLY in
             ''|*[!0-9]*)
-                echo "Digite o número da opçao."
+                echo "Digite o número da opcao."
                 continue
                 ;;
         esac

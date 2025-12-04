@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 #
-# Atualiza.sh - Script de Atualizaçao Modular do SISTEMA SAV
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# Atualiza.sh - Script de Atualizacao Modular do SISTEMA SAV
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 # Autor: Luiz Augusto
 
 set -euo pipefail
 export LC_ALL=C
 
-# Verificações básicas
+# Verificacoes basicas
 if [[ ! -t 0 && ! -p /dev/stdin ]]; then
     echo "Este script deve ser executado interativamente" >&2
     exit 1
 fi
-PSCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Diretório do script tools
-PLIBS_DIR="${PSCRIPT_DIR}/libs"
-readonly PLIBS_DIR PSCRIPT_DIR 
+# Diretorio do script TOOLS_DIR
+PLIBS_DIR="${TOOLS_DIR}/libs"
+readonly PLIBS_DIR TOOLS_DIR 
 
-# Verifica se o diretório libs existe
+# Verifica se o diretorio libs existe
 if [[ ! -d "${PLIBS_DIR}" ]]; then
-    echo "ERRO: Diretório ${PLIBS_DIR} nao encontrado."
+    echo "ERRO: Diretorio ${PLIBS_DIR} nao encontrado."
     exit 1
 fi
 

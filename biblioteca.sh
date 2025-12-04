@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# biblioteca.sh - Módulo de Gestão de Biblioteca
-# Responsável pela atualização das bibliotecas do sistema (Transpc, Savatu)
+# biblioteca.sh - Modulo de Gestao de Biblioteca
+# Responsavel pela atualizacao das bibliotecas do sistema (Transpc, Savatu)
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 
-destino="${destino:-}"
+raiz="${raiz:-}"
 sistema="${sistema:-}"
 cmd_zip="${cmd_zip:-}"
 cmd_unzip="${cmd_unzip:-}"
@@ -14,13 +14,14 @@ cmd_find="${cmd_find:-}"
 acessossh="${acessossh:-}"
 Offline="${Offline:-}"
 down_dir="${down_dir:-}"
+cfg_dir="${cfg_dir:-}"
 
 declare -g pids=()  # Array global para rastrear PIDs de background
 
-# Função de cleanup em caso de interrupção
+# Funcao de cleanup em caso de interrupcao
 _limpar_interrupcao() {
     local sinal="$1"
-    _log "Interrupção detectada (sinal: $sinal). Limpando processos..."
+    _log "Interrupcao detectada (sinal: $sinal). Limpando processos..."
     
     # Matar todos os PIDs pendentes
     for pid in "${pids[@]}"; do
@@ -31,13 +32,13 @@ _limpar_interrupcao() {
     done
     pids=()  # Limpar array
     
-    # Limpeza de temporários (ex: zips parciais ou descompactados incompletos)
+    # Limpeza de temporarios (ex: zips parciais ou descompactados incompletos)
     _ir_para_tools
 
     for temp_file in *"${VERSAO}".zip *"${VERSAO}".bkp; do
         if [[ -f "$temp_file" ]]; then
             rm -f "$temp_file" 
-            _log "Arquivo temporário removido: $temp_file"
+            _log "Arquivo temporario removido: $temp_file"
         fi
     done
     
@@ -47,8 +48,8 @@ _limpar_interrupcao() {
         _mensagec "${YELLOW}" "Backup parcial encontrado. Considere reverter manualmente com '_reverter_biblioteca'"
     fi
     
-    _log "Cleanup concluído. Saída forçada."
-    _press  # Pausa para o usuário ver a mensagem
+    _log "Cleanup concluido. Saida forcada."
+    _press  # Pausa para o usuario ver a mensagem
     return 1
 }
 
@@ -56,9 +57,9 @@ _limpar_interrupcao() {
 trap '_limpar_interrupcao INT' INT
 trap '_limpar_interrupcao TERM' TERM
 
-#---------- FUNÇÕES PRINCIPAIS DE ATUALIZAÇÃO ----------#
+#---------- FUNcoES PRINCIPAIS DE ATUALIZAcaO ----------#
 
-# Atualização do Transpc
+# Atualizacao do Transpc
 _atualizar_transpc() {
     clear
     _solicitar_versao_biblioteca
@@ -69,13 +70,13 @@ _atualizar_transpc() {
 
     if [[ "${Offline}" == "s" ]]; then
         _linha
-        _mensagec "${YELLOW}" "Parâmetro de biblioteca do servidor OFF ativo"
+        _mensagec "${YELLOW}" "Parametro de biblioteca do servidor OFF ativo"
         _linha
         _press
         return 1
     fi
     _linha
-    _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
+    _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
     _linha
 
     DESTINO2="${DESTINO2TRANSPC}"
@@ -83,7 +84,7 @@ _atualizar_transpc() {
     _baixar_biblioteca_rsync
 }
 
-# Atualização do Savatu
+# Atualizacao do Savatu
 _atualizar_savatu() {
     clear
     _solicitar_versao_biblioteca
@@ -94,14 +95,14 @@ _atualizar_savatu() {
 
     if [[ "${Offline}" == "s" ]]; then
         _linha
-        _mensagec "${YELLOW}" "Parâmetro de biblioteca do servidor OFF ativo"
+        _mensagec "${YELLOW}" "Parametro de biblioteca do servidor OFF ativo"
         _linha
         _press
         return 1
     fi
 
     _linha
-    _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
+    _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
     _linha
 
     # Selecionar destino baseado no sistema
@@ -114,7 +115,7 @@ _atualizar_savatu() {
     _baixar_biblioteca_rsync
 }
 
-# Atualização offline da biblioteca
+# Atualizacao offline da biblioteca
 _atualizar_biblioteca_offline() {
     clear
     _solicitar_versao_biblioteca
@@ -130,18 +131,18 @@ _atualizar_biblioteca_offline() {
     fi
 }
 
-# Reverter biblioteca para versão anterior
+# Reverter biblioteca para versao anterior
 _reverter_biblioteca() {
     _meiodatela
-    _mensagec "${RED}" "Informe a versão da biblioteca para reverter:"
+    _mensagec "${RED}" "Informe a versao da biblioteca para reverter:"
     _linha
     
     local versao_reverter
-    read -rp "${YELLOW}Versão a reverter: ${NORM}" versao_reverter
+    read -rp "${YELLOW}Versao a reverter: ${NORM}" versao_reverter
     _linha
 
     if [[ -z "${versao_reverter}" ]]; then
-        _mensagec "${RED}" "Versão não informada"
+        _mensagec "${RED}" "Versao nao informada"
         _linha
         _press
         return 1
@@ -150,13 +151,13 @@ _reverter_biblioteca() {
     local arquivo_backup="${OLDS}/backup-${versao_reverter}.zip"
 
     if [[ ! -r "${arquivo_backup}" ]]; then
-        _mensagec "${RED}" "Backup da biblioteca não encontrado: ${arquivo_backup}"
+        _mensagec "${RED}" "Backup da biblioteca nao encontrado: ${arquivo_backup}"
         _linha
         _press
         return 1
     fi
 
-    # Perguntar se é reversão completa ou específica
+    # Perguntar se e reversao completa ou especifica
     if _confirmar "Reverter todos os programas da biblioteca?" "N"; then
         _reverter_biblioteca_completa "${arquivo_backup}"
     else
@@ -164,7 +165,7 @@ _reverter_biblioteca() {
     fi
 }
 
-#---------- FUNÇÕES DE PROCESSAMENTO ----------#
+#---------- FUNcoES DE PROCESSAMENTO ----------#
 
 # Processa biblioteca offline
 _processar_biblioteca_offline() {
@@ -178,7 +179,7 @@ _processar_biblioteca_offline() {
 
     for arquivo in "${arquivos_update[@]}"; do
         if [[ -f "${down_dir}/${arquivo}" ]]; then
-            if mv -f "${down_dir}/${arquivo}" "${TOOLS}"; then
+            if mv -f "${down_dir}/${arquivo}" "${TOOLS_DIR}"; then
                 _mensagec "${GREEN}" "Movendo biblioteca: ${arquivo}"
                 _linha
             else
@@ -186,30 +187,30 @@ _processar_biblioteca_offline() {
                 return 1
             fi
         else
-            _mensagec "${YELLOW}" "Arquivo não encontrado: ${arquivo}"
+            _mensagec "${YELLOW}" "Arquivo nao encontrado: ${arquivo}"
         fi
     done
     _salvar_atualizacao_biblioteca
     _read_sleep 2
 }
 
-# Salva atualização da biblioteca
+# Salva atualizacao da biblioteca
 _salvar_atualizacao_biblioteca() {
     _ir_para_tools
     clear
     _definir_variaveis_biblioteca
 
     _linha
-    _mensagec "${YELLOW}" "A atualização deve estar no diretório ${TOOLS}"
+    _mensagec "${YELLOW}" "A atualizacao deve estar no diretorio ${TOOLS_DIR}"
     _linha
 
-    # Verificar arquivos de atualização
+    # Verificar arquivos de atualizacao
     local -a arquivos_verificar
     read -ra arquivos_verificar <<< "$(_obter_arquivos_atualizacao)"
 
     for arquivo in "${arquivos_verificar[@]}"; do
         if [[ ! -r "${arquivo}" ]]; then
-            _mensagec "${RED}" "Atualização não encontrada ou incompleta: ${arquivo}"
+            _mensagec "${RED}" "Atualizacao nao encontrada ou incompleta: ${arquivo}"
             _linha
             _press
             return 1
@@ -219,25 +220,25 @@ _salvar_atualizacao_biblioteca() {
     _processar_atualizacao_biblioteca
 }
 
-# Processa a atualização da biblioteca
+# Processa a atualizacao da biblioteca
 _processar_atualizacao_biblioteca() {
     local arquivo_backup="backup-${VERSAO}.zip"
     local caminho_backup="${OLDS}/${arquivo_backup}"
 
     # Inicializar contadores para progresso geral (opcional, para log final)
     local contador=0
-    local total_etapas=2 # Para sistemas não-iscobol
+    local total_etapas=2 # Para sistemas nao-iscobol
     if [[ "$sistema" = "iscobol" ]]; then
         total_etapas=3 # Para iscobol inclui XML
     fi
 
     # Exibir mensagem inicial
     _linha
-    _mensagec "${YELLOW}" "Iniciando compactação dos arquivos anteriores para backup..."
+    _mensagec "${YELLOW}" "Iniciando compactacao dos arquivos anteriores para backup..."
     _linha
     _read_sleep 1
 
-    # Compactação em E_EXEC
+    # Compactacao em E_EXEC
     cd "$E_EXEC" || return 1
     {
         "$cmd_find" "$E_EXEC"/ -type f \( -iname "*.class" -o -iname "*.int" -o -iname "*.jpg" -o -iname "*.png" -o -iname "brw*.*" -o -iname "*." -o -iname "*.dll" \) -exec "$cmd_zip" -r -q "${caminho_backup}" {} + >>"${LOG_ATU}" 2>&1
@@ -247,14 +248,14 @@ _processar_atualizacao_biblioteca() {
     _mostrar_progresso_backup "$pid_zip_exec"
     if wait "$pid_zip_exec"; then
         ((contador++))
-        _mensagec "${GREEN}" "Compactação de $E_EXEC concluída [Etapa ${contador}/${total_etapas}]"
+        _mensagec "${GREEN}" "Compactacao de $E_EXEC concluida [Etapa ${contador}/${total_etapas}]"
         _linha
     else
-        _mensagec "${RED}" "Falha na compactação de $E_EXEC"
+        _mensagec "${RED}" "Falha na compactacao de $E_EXEC"
         return 1
     fi
 
-    # Compactação em T_TELAS
+    # Compactacao em T_TELAS
     cd "$T_TELAS" || return 1
     {
         "$cmd_find" "$T_TELAS"/ -type f \( -iname "*.TEL" \) -exec "$cmd_zip" -r -q "${caminho_backup}" {} + >>"${LOG_ATU}" 2>&1
@@ -264,14 +265,14 @@ _processar_atualizacao_biblioteca() {
     _mostrar_progresso_backup "$pid_zip_telas"
     if wait "$pid_zip_telas"; then
         ((contador++))
-        _mensagec "${GREEN}" "Compactação de $T_TELAS concluída [Etapa ${contador}/${total_etapas}]"
+        _mensagec "${GREEN}" "Compactacao de $T_TELAS concluida [Etapa ${contador}/${total_etapas}]"
         _linha
     else
-        _mensagec "${RED}" "Falha na compactação de $T_TELAS"
+        _mensagec "${RED}" "Falha na compactacao de $T_TELAS"
         return 1
     fi
 
-    # Compactação em X_XML (apenas para IsCOBOL)
+    # Compactacao em X_XML (apenas para IsCOBOL)
     if [[ "$sistema" == "iscobol" ]]; then
         cd "$X_XML" || return 1
         {
@@ -282,10 +283,10 @@ _processar_atualizacao_biblioteca() {
         _mostrar_progresso_backup "$pid_zip_xml"
         if wait "$pid_zip_xml"; then
             ((contador++))
-            _mensagec "${GREEN}" "Compactação de $X_XML concluída [Etapa ${contador}/${total_etapas}]"
+            _mensagec "${GREEN}" "Compactacao de $X_XML concluida [Etapa ${contador}/${total_etapas}]"
             _linha
         else
-            _mensagec "${RED}" "Falha na compactação de $X_XML"
+            _mensagec "${RED}" "Falha na compactacao de $X_XML"
             return 1
         fi
     fi
@@ -299,26 +300,27 @@ _processar_atualizacao_biblioteca() {
     # Verificar se backup foi criado
     if [[ ! -r "${caminho_backup}" ]]; then
         _linha
-        _mensagec "${RED}" "Backup não encontrado no diretório ou dados não informados"
+        _mensagec "${RED}" "Backup nao encontrado no diretorio ou dados nao informados"
         _linha
         _read_sleep 2
         
-        if _confirmar "Deseja continuar a atualização?" "S"; then
-            _mensagec "${YELLOW}" "Continuando a atualização..."
+        if _confirmar "Deseja continuar a atualizacao?" "S"; then
+            _mensagec "${YELLOW}" "Continuando a atualizacao..."
         else
             pids=()  # Limpar PIDs se saindo
             return 1
         fi
     fi
 
-    pids=()  # Limpar PIDs após sucesso
+    pids=()  # Limpar PIDs apos sucesso
     _executar_atualizacao_biblioteca
 }
 
-# Executa a atualização da biblioteca
+# Executa a atualizacao da biblioteca
 _executar_atualizacao_biblioteca() {
     _ir_para_tools
     _definir_variaveis_biblioteca
+     
     local -a arquivos_update
     read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
     # Contar arquivos a processar
@@ -326,28 +328,33 @@ _executar_atualizacao_biblioteca() {
     for arquivo in "${arquivos_update[@]}"; do
         [[ -n "${arquivo}" && -r "${arquivo}" ]] && ((total_arquivos++))
     done
-    local contador=0
+    local contador=1
+####
+ # Definir diretorio de configuracao
+    raiz="${TOOLS_DIR%/*}"
+    principal="$(dirname "$raiz")"
 
-    # Processar cada arquivo de atualização
+####
+    # Processar cada arquivo de atualizacao
     for arquivo in "${arquivos_update[@]}"; do
         if [[ -n "${arquivo}" && -r "${arquivo}" ]]; then
             _linha
             _mensagec "${YELLOW}" "Descompactando e atualizando: ${arquivo} [Etapa ${contador}/${total_arquivos}]"
             _linha
-            _mensagec "${GREEN}" "Iniciando descompactação..."
+            _mensagec "${GREEN}" "Iniciando descompactacao..."
 
             # Descompactar arquivo em background
             {
-                "${cmd_unzip}" -o "${arquivo}" -d "/${destino}" >>"${LOG_ATU}" 2>&1
+            "${cmd_unzip}" -o "${arquivo}" -d "${principal}" >>"${LOG_ATU}" 2>&1
             } &
             local pid_unzip=$!
             pids+=("$pid_unzip")  # Registrar PID para trap
             _mostrar_progresso_backup "$pid_unzip"
             if wait "$pid_unzip"; then
-                _mensagec "${GREEN}" "Descompactação de ${arquivo} concluída com sucesso"
+                _mensagec "${GREEN}" "Descompactacao de ${arquivo} concluida com sucesso"
                 ((contador++))
             else
-                _mensagec "${RED}" "Erro na descompactação de ${arquivo} - Verifique o log ${LOG_ATU}"
+                _mensagec "${RED}" "Erro na descompactacao de ${arquivo} - Verifique o log ${LOG_ATU}"
                 return 1
             fi
             _linha
@@ -356,11 +363,11 @@ _executar_atualizacao_biblioteca() {
         fi
     done
 
-    # Finalizar atualização
+    # Finalizar atualizacao
     _linha
-    _mensagec "${YELLOW}" "Atualização concluída com sucesso!"
+    _mensagec "${YELLOW}" "Atualizacao concluida com sucesso!"
     _linha
-
+    _ir_para_tools
     # Mover arquivos .zip para .bkp
     for arquivo_zip in *_"${VERSAO}".zip; do
         if [[ -f "${arquivo_zip}" ]]; then
@@ -368,7 +375,7 @@ _executar_atualizacao_biblioteca() {
         fi
     done
     
-    # Mover backups para diretório
+    # Mover backups para diretorio
     local arquivos=(*_"${VERSAO}".bkp)
     if (( ${#arquivos[@]} )); then
         mv -- "${arquivos[@]}" "${OLDS}" || {
@@ -381,23 +388,23 @@ _executar_atualizacao_biblioteca() {
 
     # Atualizar mensagens finais
     _linha
-    _mensagec "${YELLOW}" "Alterando a extensão da atualização"
+    _mensagec "${YELLOW}" "Alterando a extensao da atualizacao"
     _mensagec "${YELLOW}" "De *.zip para *.bkp"
-    _mensagec "${RED}" "Versão atualizada - ${VERSAO}"
+    _mensagec "${RED}" "Versao atualizada - ${VERSAO}"
     _linha
 
-    # Salvar versão anterior
-    if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> "${LIB_CFG}/.atualizac"; then
-        _mensagec "${RED}" "Erro ao gravar arquivo de versão atualizada"
+    # Salvar versao anterior
+    if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> "${cfg_dir}/.atualizac"; then
+        _mensagec "${RED}" "Erro ao gravar arquivo de versao atualizada"
         _press
         exit
     fi
 
-    pids=()  # Limpar PIDs após sucesso
+    pids=()  # Limpar PIDs apos sucesso
     _press
 }
 
-#---------- FUNÇÕES DE REVERSÃO ----------#
+#---------- FUNcoES DE REVERSaO ----------#
 
 # Reverte biblioteca completa
 _reverter_biblioteca_completa() {
@@ -405,7 +412,7 @@ _reverter_biblioteca_completa() {
     local raiz="/"
 
     if ! cd "${OLDS}"; then
-        _mensagec "${RED}" "Erro: Falha ao acessar o diretório ${OLDS}"
+        _mensagec "${RED}" "Erro: Falha ao acessar o diretorio ${OLDS}"
         _press
         return 1
     fi
@@ -418,31 +425,31 @@ _reverter_biblioteca_completa() {
     _ir_para_tools
     _mensagec "${YELLOW}" "Voltando backup anterior..."
     _linha
-    _mensagec "${YELLOW}" "Volta dos Programas Concluída"
+    _mensagec "${YELLOW}" "Volta dos Programas Concluida"
     _linha
     _press
 }
 
-# Reverte programa específico da biblioteca
+# Reverte programa especifico da biblioteca
 _reverter_programa_especifico_biblioteca() {
     local arquivo_backup="$1"
     local programa_reverter
 
     if ! cd "${OLDS}"; then
-        _mensagec "${RED}" "Erro ao acessar diretório ${OLDS}"
+        _mensagec "${RED}" "Erro ao acessar diretorio ${OLDS}"
         return 1
     fi
 
     read -rp "${YELLOW}Informe o nome do programa em MAIÚSCULO: ${NORM}" programa_reverter
 
     if [[ -z "${programa_reverter}" || ! "${programa_reverter}" =~ ^[A-Z0-9]+$ ]]; then
-        _mensagec "${RED}" "Nome do programa inválido"
+        _mensagec "${RED}" "Nome do programa invalido"
         _press
         return 1
     fi
 
     _linha
-    _mensagec "${YELLOW}" "Voltando versão anterior do programa ${programa_reverter}"
+    _mensagec "${YELLOW}" "Voltando versao anterior do programa ${programa_reverter}"
     _linha
 
     local padrao="*/"
@@ -452,11 +459,11 @@ _reverter_programa_especifico_biblioteca() {
         return 1
     fi
 
-    _mensagec "${YELLOW}" "Volta do Programa Concluída"
+    _mensagec "${YELLOW}" "Volta do Programa Concluida"
     _press
 }
 
-#---------- FUNÇÕES DE DOWNLOAD ----------#
+#---------- FUNcoES DE DOWNLOAD ----------#
 
 # Baixa biblioteca via RSYNC
 _baixar_biblioteca_rsync() {
@@ -492,20 +499,20 @@ EOF
     _salvar_atualizacao_biblioteca
 }
 
-#---------- FUNÇÕES AUXILIARES ----------#
+#---------- FUNcoES AUXILIARES ----------#
 
-# Solicita versão da biblioteca
+# Solicita versao da biblioteca
 _solicitar_versao_biblioteca() {
     _linha
-    _mensagec "${YELLOW}" "Informe versão a da Biblioteca a ser atualizada:"
+    _mensagec "${YELLOW}" "Informe versao a da Biblioteca a ser atualizada:"
     _linha
     printf "\n"
-    read -rp "${GREEN}Informe somente o numeral da versão: ${NORM}" VERSAO
+    read -rp "${GREEN}Informe somente o numeral da versao: ${NORM}" VERSAO
     
     if [[ -z "${VERSAO}" ]]; then
         printf "\n"
         _linha
-        _mensagec "${RED}" "Versão a ser atualizada não foi informada"
+        _mensagec "${RED}" "Versao a ser atualizada nao foi informada"
         _linha
         _press
         return 1
@@ -514,7 +521,7 @@ _solicitar_versao_biblioteca() {
     return 0
 }
 
-# Define variáveis da biblioteca baseado na versão
+# Define variaveis da biblioteca baseado na versao
 _definir_variaveis_biblioteca() {
     ATUALIZA1="${SAVATU1}${VERSAO}.zip"
     ATUALIZA2="${SAVATU2}${VERSAO}.zip"
@@ -530,8 +537,8 @@ _obter_arquivos_atualizacao() {
     fi
 }
 
-#---------- VALIDAÇÕES ----------#
-# Valida se os diretórios de destino estão configurados
+#---------- VALIDAcoES ----------#
+# Valida se os diretorios de destino estao configurados
 _validar_diretorios_biblioteca() {
     local diretorios_validar=(
         "DESTINO2SERVER"
@@ -542,7 +549,7 @@ _validar_diretorios_biblioteca() {
     
     for dir_var in "${diretorios_validar[@]}"; do
         if [[ -z "${!dir_var}" ]]; then
-            _mensagec "${RED}" "Erro: Variável ${dir_var} não configurada"
+            _mensagec "${RED}" "Erro: Variavel ${dir_var} nao configurada"
             return 1
         fi
     done

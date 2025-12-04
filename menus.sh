@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 #
 # menus.sh - Sistema de Menus
-# Responsável pela apresentação e navegação dos menus do sistema
+# Responsavel pela apresentacao e navegacao dos menus do sistema
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 25/11/2025-00
-
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
+raiz="${raiz:-}"             # Diretorio raiz do sistema.
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
+cfg_dir="${cfg_dir:-}"     # Diretorio de configuracao.
 base="${base:-}"
 base2="${base2:-}"
 base3="${base3:-}"
@@ -18,7 +19,7 @@ _principal() {
         tput clear
         printf "\n"
         
-        # Cabeçalho
+        # Cabecalho
         _linha "=" "${GREEN}"
         _mensagec "${RED}" "Menu Principal"
         _linha
@@ -26,10 +27,10 @@ _principal() {
         _linha
         _mensagec "${CYAN}" "_| Sistema: ${sistema} - Versao do Iscobol: ${verclass} |_"
         _linha
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         
-        # Opções do menu
+        # Opcoes do menu
         _mensagec "${GREEN}" "1${NORM} - | Atualizar Programa(s) |"
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} - | Atualizar Biblioteca  |"
@@ -52,7 +53,7 @@ _principal() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _menu_programas ;;
@@ -74,7 +75,7 @@ _principal() {
 
 #---------- MENU DE PROGRAMAS ----------#
 
-# Menu de atualização de programas
+# Menu de atualizacao de programas
 _menu_programas() {
     while true; do
         clear
@@ -83,7 +84,7 @@ _menu_programas() {
         _mensagec "${RED}" "Menu de Programas"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" "Escolha o tipo de Atualização:"
+        _mensagec "${PURPLE}" "Escolha o tipo de Atualizacao:"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - | Programa(s) ON-Line        |"
         printf "\n"
@@ -100,12 +101,12 @@ _menu_programas() {
         
         if [[ -n "${verclass}" ]]; then
             printf "\n"
-            _mensaged "${BLUE}" "Versão do Iscobol - ${verclass}"
+            _mensaged "${BLUE}" "Versao do Iscobol - ${verclass}"
         fi
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _atualizar_programa_online ;;
@@ -123,7 +124,7 @@ _menu_programas() {
 
 #---------- MENU DE BIBLIOTECA ----------#
 
-# Menu de atualização de biblioteca
+# Menu de atualizacao de biblioteca
 _menu_biblioteca() {
     while true; do
         clear
@@ -134,11 +135,11 @@ _menu_biblioteca() {
         printf "\n"
         _mensagec "${PURPLE}" "Escolha o local da Biblioteca:      "
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - | Atualização do Transpc          |"
+        _mensagec "${GREEN}" "1${NORM} - | Atualizacao do Transpc          |"
         printf "\n" 
-        _mensagec "${GREEN}" "2${NORM} - | Atualização do Savatu           |"
+        _mensagec "${GREEN}" "2${NORM} - | Atualizacao do Savatu           |"
         printf "\n"
-        _mensagec "${GREEN}" "3${NORM} - | Atualização OFF-Line            |"
+        _mensagec "${GREEN}" "3${NORM} - | Atualizacao OFF-Line            |"
         printf "\n\n"
         _mensagec "${PURPLE}" "Escolha Desatualizar:               "
         printf "\n"
@@ -149,12 +150,12 @@ _menu_biblioteca() {
         
         if [[ -n "${VERSAOANT}" ]]; then
             printf "\n"
-            _mensaged "${BLUE}" "Versão Anterior - ${VERSAOANT}"
+            _mensaged "${BLUE}" "Versao Anterior - ${VERSAOANT}"
         fi
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _atualizar_transpc ;;
@@ -182,7 +183,7 @@ _menu_ferramentas() {
         _mensagec "${RED}" "Menu das Ferramentas"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         
         # Verificar se sistema tem banco de dados
@@ -223,7 +224,7 @@ _menu_ferramentas() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _menu_temporarios ;;
@@ -257,9 +258,9 @@ _menu_ferramentas() {
     done
 }
 
-#---------- MENU DE TEMPORÁRIOS ----------#
+#---------- MENU DE TEMPORaRIOS ----------#
 
-# Menu de limpeza de arquivos temporários
+# Menu de limpeza de arquivos temporarios
 _menu_temporarios() {
     while true; do
         clear
@@ -268,7 +269,7 @@ _menu_temporarios() {
         _mensagec "${RED}" "Menu de Limpeza"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - | Limpeza dos Arquivos Temporarios |"
         printf "\n"
@@ -281,7 +282,7 @@ _menu_temporarios() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _executar_limpeza_temporarios ;;
@@ -296,18 +297,18 @@ _menu_temporarios() {
     done
 }
 
-#---------- MENU DE RECUPERAÇÃO ----------#
+#---------- MENU DE RECUPERAcaO ----------#
 
-# Menu de recuperação de arquivos
+# Menu de recuperacao de arquivos
 _menu_recuperar_arquivos() {
     while true; do
         clear
         printf "\n"
         _linha "=" "${GREEN}"
-        _mensagec "${RED}" "Menu de Recuperação de Arquivo(s)"
+        _mensagec "${RED}" "Menu de Recuperacao de Arquivo(s)"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - | Um arquivo ou Todos   |"
         printf "\n"
@@ -318,7 +319,7 @@ _menu_recuperar_arquivos() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _recuperar_arquivo_especifico ;;
@@ -343,7 +344,7 @@ _menu_backup() {
         _mensagec "${RED}" "Menu de Backup(s)"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - | Backup da base de dados           |"
         printf "\n"
@@ -356,7 +357,7 @@ _menu_backup() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _executar_backup ;;
@@ -383,7 +384,7 @@ _menu_transferencia_arquivos() {
         _mensagec "${RED}" "Menu de Enviar e Receber Arquivo(s)"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - | Enviar arquivo(s)     |"
         printf "\n"
@@ -394,7 +395,7 @@ _menu_transferencia_arquivos() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _enviar_arquivo_avulso ;;
@@ -417,7 +418,7 @@ _menu_setups() {
         _mensagec "${RED}" "Menu de Setup do Sistema"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - | Consulta de setup    |"
         printf "\n"
@@ -431,7 +432,7 @@ _menu_setups() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) 
@@ -440,11 +441,11 @@ _menu_setups() {
                 ;;
             2) 
                _manutencao_setup
-                # Após a manutenção, recarregar as configurações
-                if [[ -f "${LIB_CFG}/.atualizac" ]]; then
+                # Apos a manutencao, recarregar as configuracoes
+                if [[ -f "${cfg_dir}/.atualizac" ]]; then
                     # shellcheck source=/dev/null
-                    "." "${LIB_CFG}/.atualizac"
-                    _mensagec "${GREEN}" "Configurações recarregadas com sucesso!"
+                    "." "${cfg_dir}/.atualizac"
+                    _mensagec "${GREEN}" "Configuracoes recarregadas com sucesso!"
                     _read_sleep 2
                 fi
                 ;;
@@ -473,7 +474,7 @@ _menu_lembretes() {
         _mensagec "${RED}" " Bloco de Notas "
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - | Escrever nova nota    |"
         printf "\n"
@@ -488,11 +489,11 @@ _menu_lembretes() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) _escrever_nova_nota ;;
-            2) _visualizar_notas_arquivo "${LIB_CFG}/atualizal" ;;
+            2) _visualizar_notas_arquivo "${cfg_dir}/atualizal" ;;
             3) _editar_nota_existente ;;
             4) _apagar_nota_existente ;;
             9) return ;;
@@ -515,15 +516,15 @@ _menu_escolha_base() {
         _mensagec "${RED}" "Escolha a Base"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - | Base em ${destino}${base}"
+        _mensagec "${GREEN}" "1${NORM} - | Base em ${raiz}${base}"
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - | Base em ${destino}${base2}"
+        _mensagec "${GREEN}" "2${NORM} - | Base em ${raiz}${base2}"
         printf "\n"
         
         if [[ -n "${base3}" ]]; then
-            _mensagec "${GREEN}" "3${NORM} - | Base em ${destino}${base3}"
+            _mensagec "${GREEN}" "3${NORM} - | Base em ${raiz}${base3}"
             printf "\n"
         fi
         
@@ -533,7 +534,7 @@ _menu_escolha_base() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) 
@@ -574,7 +575,7 @@ _menu_tipo_backup() {
         _mensagec "${RED}" "Menu de Tipo de Backup(s)"
         _linha
         printf "\n"
-        _mensagec "${PURPLE}" " Escolha a opção:"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} - Backup Completo      "
         printf "\n"
@@ -585,7 +586,7 @@ _menu_tipo_backup() {
         _linha "=" "${GREEN}"
 
         local opcao
-        read -rp "${YELLOW} Digite a opção desejada -> ${NORM}" opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
 
         case "${opcao}" in
             1) 
@@ -607,25 +608,25 @@ _menu_tipo_backup() {
     done
 }
 
-#---------- FUNÇÕES AUXILIARES DE MENU ----------#
+#---------- FUNcoES AUXILIARES DE MENU ----------#
 
 # Define a base de trabalho atual
-# Parâmetros: $1=nome_da_base (base, base2, base3)
+# Parametros: $1=nome_da_base (base, base2, base3)
 _definir_base_trabalho() {
     local base_var="$1"
     local base_dir="${!base_var}"
     
-    if [[ -z "${destino}" ]] || [[ -z "${base_dir}" ]]; then
-        _mensagec "${RED}" "Erro: Variáveis de configuração não definidas"
+    if [[ -z "${raiz}" ]] || [[ -z "${base_dir}" ]]; then
+        _mensagec "${RED}" "Erro: Variaveis de configuracao nao definidas"
         _linha
         _read_sleep 2
         return 1
     fi
     
-    export base_trabalho="${destino}${base_dir}"
+    export base_trabalho="${raiz}${base_dir}"
     
     if [[ ! -d "${base_trabalho}" ]]; then
-        _mensagec "${RED}" "Erro: Diretório ${base_trabalho} não encontrado"
+        _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} nao encontrado"
         _linha
         _read_sleep 2
         return 1
@@ -636,7 +637,7 @@ _definir_base_trabalho() {
 }
 
 # Limpa tela e volta ao menu especificado
-# Parâmetros: $1=nome_da_funcao_menu
+# Parametros: $1=nome_da_funcao_menu
 _voltar_menu() {
     local menu_funcao="${1:-_principal}"
     clear

@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 #
-# sistema.sh - Módulo de Informações do Sistema
-# Responsável por informações do IsCOBOL, Linux, parâmetros e atualizações
+# sistema.sh - Modulo de Informacoes do Sistema
+# Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 
-destino="${destino:-}"
+raiz="${raiz:-}"
+cfg_dir="${cfg_dir:-}"
+lib_dir="${lib_dir:-}"
+err_isc="${err_isc:-}"
 sistema="${sistema:-}"
 acessossh="${acessossh:-}"
 cmd_zip="${cmd_zip:-}"
@@ -28,37 +31,37 @@ xml="${xml:-}"
 olds="${olds:-}"
 Offline="${Offline:-}"
 
-#---------- FUNÇÕES DE VERSÃO ----------#
+#---------- FUNcoES DE VERSaO ----------#
 
-# Mostra versão do IsCOBOL
+# Mostra versao do IsCOBOL
 _mostrar_versao_iscobol() {
     if [[ "${sistema}" == "iscobol" ]]; then
         if [[ -x "${SAVISC}${ISCCLIENT}" ]]; then
             clear
             _linha "=" "${GREEN}"
-            _mensagec "${GREEN}" "Versão do IsCobol"
+            _mensagec "${GREEN}" "Versao do IsCobol"
             _linha "=" "${GREEN}"
             "${SAVISC}${ISCCLIENT}" -v
             _linha "=" "${GREEN}"
             printf "\n\n"
         else
             _linha
-            _mensagec "${RED}" "Erro: ${SAVISC}${ISCCLIENT} não encontrado ou não executável"
+            _mensagec "${RED}" "Erro: ${SAVISC}${ISCCLIENT} nao encontrado ou nao executavel"
             _linha
         fi
     elif [[ -z "${sistema}" ]]; then
         _linha
-        _mensagec "${RED}" "Erro: Variável de sistema não configurada"
+        _mensagec "${RED}" "Erro: Variavel de sistema nao configurada"
         _linha
     else
         _linha
-        _mensagec "${YELLOW}" "Sistema não é IsCOBOL"
+        _mensagec "${YELLOW}" "Sistema nao e IsCOBOL"
         _linha
     fi
     _press
 }
 
-# Mostra informações do Linux
+# Mostra informacoes do Linux
 _mostrar_versao_linux() {
     clear
     printf "\n\n"
@@ -149,28 +152,28 @@ _mostrar_versao_linux() {
     _principal
 }
 
-#---------- FUNÇÕES DE PARÂMETROS ----------#
+#---------- FUNcoES DE PARaMETROS ----------#
 
-# Mostra parâmetros do sistema
+# Mostra parametros do sistema
 _mostrar_parametros() {
     clear
     _linha "=" "${GREEN}"
     printf "${GREEN}Sistema e banco de dados: ${NORM}${BANCO}""%*s\n"
-    printf "${GREEN}Diretório raiz: ${NORM}${destino}""%*s\n"
-    printf "${GREEN}Diretório do atualiza.sh: ${NORM}${destino}${pasta}""%*s\n"
-    printf "${GREEN}Diretório da base principal: ${NORM}${destino}${base}""%*s\n"
-    printf "${GREEN}Diretório da segunda base: ${NORM}${destino}${base2}""%*s\n"
-    printf "${GREEN}Diretório da terceira base: ${NORM}${destino}${base3}""%*s\n"
-    printf "${GREEN}Diretório dos executáveis: ${NORM}${destino}/${exec}""%*s\n"
-    printf "${GREEN}Diretório das telas: ${NORM}${destino}/${telas}""%*s\n"
-    printf "${GREEN}Diretório dos xmls: ${NORM}${destino}/${xml}""%*s\n"
-    printf "${GREEN}Diretório dos logs: ${NORM}${destino}${pasta}${logs}""%*s\n"
-    printf "${GREEN}Diretório dos olds: ${NORM}${destino}${pasta}${olds}""%*s\n"
-    printf "${GREEN}Diretório dos progs: ${NORM}${destino}${pasta}${progs}""%*s\n"
-    printf "${GREEN}Diretório do backup: ${NORM}${destino}${pasta}${backup}""%*s\n"
-    printf "${GREEN}Diretório de configuracoes: ${NORM}${LIB_CFG}""%*s\n"
+    printf "${GREEN}Diretorio raiz: ${NORM}${raiz}""%*s\n"
+    printf "${GREEN}Diretorio do atualiza.sh: ${NORM}${TOOLS_DIR}""%*s\n"
+    printf "${GREEN}Diretorio da base principal: ${NORM}${raiz}${base}""%*s\n"
+    printf "${GREEN}Diretorio da segunda base: ${NORM}${raiz}${base2}""%*s\n"
+    printf "${GREEN}Diretorio da terceira base: ${NORM}${raiz}${base3}""%*s\n"
+    printf "${GREEN}Diretorio dos executaveis: ${NORM}${raiz}${exec}""%*s\n"
+    printf "${GREEN}Diretorio das telas: ${NORM}${raiz}${telas}""%*s\n"
+    printf "${GREEN}Diretorio dos xmls: ${NORM}${raiz}${xml}""%*s\n"
+    printf "${GREEN}Diretorio dos logs: ${NORM}${TOOLS_DIR}${logs}""%*s\n"
+    printf "${GREEN}Diretorio dos olds: ${NORM}${TOOLS_DIR}${olds}""%*s\n"
+    printf "${GREEN}Diretorio dos progs: ${NORM}${TOOLS_DIR}${progs}""%*s\n"
+    printf "${GREEN}Diretorio do backup: ${NORM}${TOOLS_DIR}${backup}""%*s\n"
+    printf "${GREEN}Diretorio de configuracoes: ${NORM}${cfg_dir}""%*s\n"
     printf "${GREEN}Sistema em uso: ${NORM}${sistema}""%*s\n"
-    printf "${GREEN}Versão em uso: ${NORM}${verclass}""%*s\n"
+    printf "${GREEN}Versao em uso: ${NORM}${verclass}""%*s\n"
     printf "${GREEN}Biblioteca 1: ${NORM}${SAVATU1}""%*s\n"
     printf "${GREEN}Biblioteca 2: ${NORM}${SAVATU2}""%*s\n"
     printf "${GREEN}Biblioteca 3: ${NORM}${SAVATU3}""%*s\n"
@@ -179,21 +182,21 @@ _mostrar_parametros() {
     _press
     clear
     _linha "=" "${GREEN}"
-    printf "${GREEN}Diretório para envio de backup: ${NORM}${ENVIABACK}""%*s\n"
+    printf "${GREEN}Diretorio para envio de backup: ${NORM}${ENVIABACK}""%*s\n"
     printf "${GREEN}Servidor OFF: ${NORM}${Offline}""%*s\n"
-    printf "${GREEN}Versão anterior da biblioteca: ${NORM}${VERSAOANT}""%*s\n"
-    printf "${GREEN}Variável da classe: ${NORM}${class}""%*s\n"
-    printf "${GREEN}Variável da mclass: ${NORM}${mclass}""%*s\n"
-    printf "${GREEN}Porta de conexão: ${NORM}${PORTA}""%*s\n"
-    printf "${GREEN}Usuário de conexão: ${NORM}${USUARIO}""%*s\n"
+    printf "${GREEN}Versao anterior da biblioteca: ${NORM}${VERSAOANT}""%*s\n"
+    printf "${GREEN}Variavel da classe: ${NORM}${class}""%*s\n"
+    printf "${GREEN}Variavel da mclass: ${NORM}${mclass}""%*s\n"
+    printf "${GREEN}Porta de conexao: ${NORM}${PORTA}""%*s\n"
+    printf "${GREEN}Usuario de conexao: ${NORM}${USUARIO}""%*s\n"
     printf "${GREEN}Servidor IP: ${NORM}${IPSERVER}""%*s\n"
     _linha "=" "${GREEN}"
     _press
 }
 
-#---------- FUNÇÕES DE ATUALIZAÇÃO ----------#
+#---------- FUNcoES DE ATUALIZAcaO ----------#
 
-# Executa atualização do script
+# Executa atualizacao do script
 _executar_update() {
     local temp_dir="${ENVIA}/temp_update/"
     local zipfile="atualiza.zip"
@@ -210,7 +213,7 @@ _executar_update() {
     _press
 }
 
-# Atualização online via GitHub
+# Atualizacao online via GitHub
 _atualizando() {
     _configurar_diretorios
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
@@ -218,7 +221,7 @@ _atualizando() {
     # Criar backup do arquivo atual
     if [[ ! -d "${backup}" ]]; then
         mkdir -p "${backup}" || {
-            _mensagec "${RED}" "Erro: Não foi possível criar diretório de backup"
+            _mensagec "${RED}" "Erro: Nao foi possivel criar diretorio de backup"
             return 1
         }
     fi
@@ -226,8 +229,8 @@ _atualizando() {
     # Fazer backup dos arquivos atuais
     local backup_sucesso=0
     local backup_erro=0
-    cd "${LIB_DIR}" || {
-        _mensagec "${RED}" "Erro: Diretório de atualização não encontrado"
+    cd "${lib_dir}" || {
+        _mensagec "${RED}" "Erro: Diretorio de atualizacao nao encontrado"
         return 1
     }
     # Processar todos os arquivos .sh para backup
@@ -238,7 +241,7 @@ _atualizando() {
             break
         fi
 
-        # Copiar o arquivo para o diretório de backup
+        # Copiar o arquivo para o diretorio de backup
         if cp -f "$arquivo" "$backup/$arquivo.bak"; then
             _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
             ((backup_sucesso++))
@@ -259,21 +262,21 @@ _atualizando() {
         _mensagec "${GREEN}" "Backup de $backup_sucesso arquivo(s) realizado com sucesso"
     fi
 
-    # Acessar diretório de trabalho
+    # Acessar diretorio de trabalho
     cd "$ENVIA" || {
-        _mensagec "${RED}" "Erro: Diretório $ENVIA não acessível"
+        _mensagec "${RED}" "Erro: Diretorio $ENVIA nao acessivel"
         return 1
     }
 
     # Baixar arquivo
         if ! wget -q -c "$link"; then
-            _mensagec "${RED}" "Erro ao baixar arquivo de atualização"
+            _mensagec "${RED}" "Erro ao baixar arquivo de atualizacao"
         return 1
         fi
     #fi
     # Descompactar
     if ! "${cmd_unzip}" -o -j "$zipfile" >>"$LOG_ATU" 2>&1; then
-        _mensagec "${RED}" "Erro ao descompactar atualização"
+        _mensagec "${RED}" "Erro ao descompactar atualizacao"
         return 1
     fi
 
@@ -293,11 +296,11 @@ _atualizando() {
 
         # Determinar destino
         if [ "$arquivo" = "atualiza.sh" ]; then
-            target="${TOOLS}"
+            target="${TOOLS_DIR}"
         else
-            target="${LIB_DIR}"
+            target="${lib_dir}"
         fi
-        # Mover o arquivo para o diretório de destino
+        # Mover o arquivo para o diretorio de destino
         if mv -f "$arquivo" "$target"; then
             _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
             ((arquivos_instalados++))
@@ -307,9 +310,9 @@ _atualizando() {
         fi
     done
 
-    # Verificar se houve erros na instalação
+    # Verificar se houve erros na instalacao
     if [[ $arquivos_erro -gt 0 ]]; then
-        _mensagec "${RED}" "Falha na instalação de $arquivos_erro arquivo(s)"
+        _mensagec "${RED}" "Falha na instalacao de $arquivos_erro arquivo(s)"
         return 1
     elif [[ $arquivos_instalados -eq 0 ]]; then
         _mensagec "${YELLOW}" "Nenhum arquivo foi instalado"
@@ -320,13 +323,13 @@ _atualizando() {
 
     # Limpeza
     cd "$ENVIA" || {
-        _mensagec "${RED}" "Erro: Diretório $ENVIA não acessível para limpeza"
+        _mensagec "${RED}" "Erro: Diretorio $ENVIA nao acessivel para limpeza"
         return 1
     }
     rm -rf ./*
 
     _linha
-    _mensagec "${GREEN}" "Atualização concluída com sucesso!"
+    _mensagec "${GREEN}" "Atualizacao concluida com sucesso!"
     _mensagec "${GREEN}" "Ao terminar, entre novamente no sistema"
     _linha
 
@@ -334,7 +337,7 @@ _atualizando() {
 }
 _atualizar_online() {
     local link="https://github.com/Luizaugusto1962/Atualiza2025/archive/master/atualiza.zip"
-       # Criar e acessar diretório temporário
+       # Criar e acessar diretorio temporario
     mkdir -p "$temp_dir" || {
         _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
         return 1
@@ -342,39 +345,39 @@ _atualizar_online() {
     _atualizando
 }
 
-# Atualização offline via arquivo local
+# Atualizacao offline via arquivo local
 _atualizar_offline() {
-    # Criar e acessar diretório temporário
+    # Criar e acessar diretorio temporario
     mkdir -p "$temp_dir" || {
         _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
         return 1
     }
 
-    # Acessar diretório offline
+    # Acessar diretorio offline
     cd "$down_dir" || {
-        _mensagec "${RED}" "Erro: Diretório offline $down_dir não acessível"
+        _mensagec "${RED}" "Erro: Diretorio offline $down_dir nao acessivel"
         return 1
     }
 
     # Verificar se o arquivo zip existe
     if [[ ! -f "$zipfile" ]]; then
-        _mensagec "${RED}" "Erro: $zipfile não encontrado em $down_dir"
+        _mensagec "${RED}" "Erro: $zipfile nao encontrado em $down_dir"
         return 1
     fi
     mv "${zipfile}" "${temp_dir}"
     _atualizando
 }
 
-#---------- FUNÇÕES DE MANUTENÇÃO DO SETUP ----------#
+#---------- FUNcoES DE MANUTENcaO DO SETUP ----------#
 # Constantes
 readonly tracejada="#-------------------------------------------------------------------#"
 
-# Variáveis globais
-declare -l sistema base base2 base3 BANCO destino Offline ENVIABACK
+# Variaveis globais
+declare -l sistema base base2 base3 BANCO raiz Offline ENVIABACK
 declare -u EMPRESA
-# Posiciona o script no diretório LIB_CFG.
-cd "${LIB_CFG}" || {
-    _mensagec "${RED}" "Erro: Diretório ${LIB_CFG} não encontrado"
+# Posiciona o script no diretorio cfg_dir.
+cd "${cfg_dir}" || {
+    _mensagec "${RED}" "Erro: Diretorio ${cfg_dir} nao encontrado"
     return 1
 }
 
@@ -382,7 +385,7 @@ editar_variavel() {
     local nome="$1"
     local valor_atual="${!nome}"
 
-    # Função para editar variável com prompt
+    # Funcao para editar variavel com prompt
     read -rp "Deseja alterar ${nome} (valor atual: ${valor_atual})? [s/N] " alterar
     alterar=${alterar,,}
     if [[ "$alterar" =~ ^s$ ]]; then
@@ -456,7 +459,7 @@ editar_variavel() {
 }
 _manutencao_setup() {
 
-# Atualiza as variáveis SAVATU* com base na verclass
+# Atualiza as variaveis SAVATU* com base na verclass
 atualizar_savatu_variaveis() {
     local ano="${verclass}"
     local sufixo="IS${ano}"
@@ -499,7 +502,7 @@ fi
 
 clear
 
-    # Edita as variáveis
+    # Edita as variaveis
     editar_variavel sistema
     editar_variavel verclass
 
@@ -517,7 +520,7 @@ clear
     fi
 
     editar_variavel BANCO
-    editar_variavel destino
+#    editar_variavel destino
     editar_variavel acessossh
     editar_variavel IPSERVER
     editar_variavel Offline
@@ -537,7 +540,6 @@ clear
         [[ -n "$class" ]] && echo "class=${class}"
         [[ -n "$mclass" ]] && echo "mclass=${mclass}"
         [[ -n "$BANCO" ]] && echo "BANCO=${BANCO}"
-        [[ -n "$destino" ]] && echo "destino=${destino}"
         [[ -n "$acessossh" ]] && echo "acessossh=${acessossh}"
         [[ -n "$IPSERVER" ]] && echo "IPSERVER=${IPSERVER}"      
         [[ -n "$Offline" ]] && echo "Offline=${Offline}"
@@ -546,15 +548,14 @@ clear
         [[ -n "$base" ]] && echo "base=${base}"
         [[ -n "$base2" ]] && echo "base2=${base2}"
         [[ -n "$base3" ]] && echo "base3=${base3}"
-        echo "exec=sav/classes"
-        echo "telas=sav/tel_isc"
-        echo "xml=sav/xml"
+        echo "exec=/classes"
+        echo "telas=/tel_isc"
+        echo "xml=/xml"
 #        echo "SAVATU=${SAVATU}"
         echo "SAVATU1=${SAVATU1}"
         echo "SAVATU2=${SAVATU2}"
         echo "SAVATU3=${SAVATU3}"
         echo "SAVATU4=${SAVATU4}"
-        echo "pasta=/sav/tools"
         echo "progs=/progs"
         echo "olds=/olds"
         echo "logs=/logs"
@@ -569,12 +570,12 @@ clear
     
 if [[ "${acessossh}" = "s" ]]; then
 
-# CONFIGURAÇÕES PERSONALIZÁVEIS (ALTERE AQUI OU VIA VARIÁVEIS DE AMBIENTE)
-SERVER_IP="${IPSERVER}"        # IP do servidor (padrão: 177.45.80.10)
-SERVER_PORT="${SERVER_PORT:-41122}"            # Porta SFTP (padrão: 41122)
-SERVER_USER="${SERVER_USER:-atualiza}"         # Usuário SSH (padrão: atualiza)
-CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS}/.ssh/control}"
-# VALIDAÇÃO DAS VARIÁVEIS OBRIGATÓRIAS
+# CONFIGURAcoES PERSONALIZaVEIS (ALTERE AQUI OU VIA VARIaVEIS DE AMBIENTE)
+SERVER_IP="${IPSERVER}"        # IP do servidor (padrao: 177.45.80.10)
+SERVER_PORT="${SERVER_PORT:-41122}"            # Porta SFTP (padrao: 41122)
+SERVER_USER="${SERVER_USER:-atualiza}"         # Usuario SSH (padrao: atualiza)
+CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS_DIR}/.ssh/control}"
+# VALIDAcaO DAS VARIaVEIS OBRIGAToRIAS
     if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
         echo "Erro: Variaveis obrigatorias nao definidas!"
         echo "Defina via ambiente ou edite as configuracoes no inicio do script:"
@@ -584,11 +585,11 @@ CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS}/.ssh/control}"
         exit 1
     fi
 
-# PREPARAÇÃO DOS DIRETÓRIOS
+# PREPARAcaO DOS DIREToRIOS
 SSH_CONFIG_DIR="$(dirname "$CONTROL_PATH_BASE")"
 CONTROL_PATH="$CONTROL_PATH_BASE"
 
-# Verifica/cria diretório base
+# Verifica/cria diretorio base
     if [[ ! -d "$SSH_CONFIG_DIR" ]]; then
         echo "Criando diretorio $SSH_CONFIG_DIR..."
         mkdir -p "$SSH_CONFIG_DIR" || {
@@ -598,7 +599,7 @@ CONTROL_PATH="$CONTROL_PATH_BASE"
         chmod 700 "$SSH_CONFIG_DIR"
     fi
 
-# Verifica/cria diretório de controle
+# Verifica/cria diretorio de controle
     if [[ ! -d "$CONTROL_PATH" ]]; then
         echo "Criando diretorio de controle $CONTROL_PATH..."
         mkdir -p "$CONTROL_PATH" || {
@@ -608,12 +609,12 @@ CONTROL_PATH="$CONTROL_PATH_BASE"
         chmod 700 "$CONTROL_PATH"
     fi
 
-# CONFIGURAÇÃO SSH
+# CONFIGURAcaO SSH
     if [[ ! -f "/root/.ssh/config" ]]; then
     mkdir -p "/root/.ssh"
     chmod 700 "/root/.ssh"
     
-    # Injeta as variáveis diretamente na configuração (sem aspas em EOF para expansão)
+    # Injeta as variaveis diretamente na configuracao (sem aspas em EOF para expansao)
     cat << EOF >> "/root/.ssh/config"
 Host sav_servidor
     HostName $SERVER_IP
@@ -628,9 +629,9 @@ EOF
     else
     echo "Arquivo de configuracao ja existe regravando: /root/.ssh/config"
     
-    # Verifica se a configuração específica já está presente
+    # Verifica se a configuracao especifica ja esta presente
         cat << EOF >> "/root/.ssh/config"
-# Configuração adicionada automaticamente
+# Configuracao adicionada automaticamente
 Host sav_servidor
     HostName $SERVER_IP
     Port $SERVER_PORT
@@ -643,10 +644,10 @@ EOF
     fi
 
 _linha
-# EXIBE OS PARÂMETROS UTILIZADOS
+# EXIBE OS PARaMETROS UTILIZADOS
 echo -e "\n   IP do Servidor:   ${SERVER_IP}"
 echo "   Porta:            ${SERVER_PORT}"
-echo "   Usuário:          ${SERVER_USER}"
+echo "   Usuario:          ${SERVER_USER}"
 echo "   ControlPath:      ${CONTROL_PATH}/%r@%h:%p"
 echo -e "\n Validacao concluida! Teste com:"
 echo "   sftp sav_servidor"

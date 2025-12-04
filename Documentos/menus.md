@@ -1,26 +1,26 @@
-# Documentação do Módulo menus.sh
+# Documentacao do Modulo menus.sh
 
-## Visão Geral
-Módulo responsável pela interface completa de navegação do Sistema SAV, implementando menus hierárquicos interativos.
+## Visao Geral
+Modulo responsavel pela interface completa de navegacao do Sistema SAV, implementando menus hierarquicos interativos.
 
 ## Funcionalidades Principais
 
-### 1. Sistema de Navegação Hierárquica
+### 1. Sistema de Navegacao Hierarquica
 - **Menu principal** com acesso a todas as funcionalidades
 - **Submenus especializados** (programas, bibliotecas, ferramentas)
-- **Navegação bidirecional** entre níveis
-- **Adaptação contextual** baseada no sistema
+- **Navegacao bidirecional** entre niveis
+- **Adaptacao contextual** baseada no sistema
 
 ### 2. Interface Responsiva
-- **Detecção de sistema** (IsCobol vs Micro Focus)
-- **Configuração condicional** baseada em variáveis
-- **Exibição contextual** de informações
-- **Ocultação automática** de opções indisponíveis
+- **Deteccao de sistema** (IsCobol vs Micro Focus)
+- **Configuracao condicional** baseada em variaveis
+- **Exibicao contextual** de informacoes
+- **Ocultacao automatica** de opcoes indisponiveis
 
 ## Estrutura de Menus
 
 ### Menu Principal (`_principal`)
-**Cabeçalho:**
+**Cabecalho:**
 ```
 ============================================================
                     Menu Principal
@@ -30,62 +30,62 @@ _| Sistema: iscobol - Versao do Iscobol: 2024 |_
 ============================================================
 ```
 
-**Opções:**
+**Opcoes:**
 1. **Atualizar Programa(s)** → `_menu_programas`
 2. **Atualizar Biblioteca** → `_menu_biblioteca`
-3. **Versão do IsCobol** (condicional)
-4. **Versão do Linux**
+3. **Versao do IsCobol** (condicional)
+4. **Versao do Linux**
 5. **Ferramentas** → `_menu_ferramentas`
 9. **Sair**
 
 ### Menu de Programas (`_menu_programas`)
-**Atualização:**
+**Atualizacao:**
 1. Programa(s) ON-Line
 2. Programa(s) OFF-Line
 3. Programa(s) em Pacote
 
-**Reversão:**
+**Reversao:**
 4. Voltar programa Atualizado
 
 ### Menu de Biblioteca (`_menu_biblioteca`)
-**Atualização:**
-1. Atualização do Transpc
-2. Atualização do Savatu
-3. Atualização OFF-Line
+**Atualizacao:**
+1. Atualizacao do Transpc
+2. Atualizacao do Savatu
+3. Atualizacao OFF-Line
 
-**Reversão:**
+**Reversao:**
 4. Voltar Programa(s) da Biblioteca
 
 ### Menu de Ferramentas (`_menu_ferramentas`)
-**Opções (variam com configuração de banco):**
-1. Temporários
+**Opcoes (variam com configuracao de banco):**
+1. Temporarios
 2. Recuperar Arquivos (se banco != "s")
 3. Rotinas de Backup (se banco != "s")
 4. Enviar e Receber Arquivos
 5. Expurgador de Arquivos
-6. Parâmetros
+6. Parametros
 7. Update
 8. Lembretes
 
-## Características de Interface
+## Caracteristicas de Interface
 
 ### Sistema de Cores
 ```bash
 # Cores contextuais
 _linha "=" "${GREEN}"           # Separadores verdes
-_mensagec "${RED}" "Título"     # Títulos em vermelho
-_mensagec "${CYAN}" "Info"      # Informações em ciano
-_mensagec "${GREEN}" "1 - Opção" # Opções numeradas
+_mensagec "${RED}" "Titulo"     # Titulos em vermelho
+_mensagec "${CYAN}" "Info"      # Informacoes em ciano
+_mensagec "${GREEN}" "1 - Opcao" # Opcoes numeradas
 ```
 
 ### Elementos Visuais
 - **Separadores**: `=` para linhas principais
-- **Indicadores**: `_|` para informações importantes
+- **Indicadores**: `_|` para informacoes importantes
 - **Layout responsivo** baseado no terminal
 
 ## Tratamento de Entrada
 
-### Validação de Opções
+### Validacao de Opcoes
 ```bash
 case "${opcao}" in
     1) _funcao_correspondente ;;
@@ -98,17 +98,17 @@ case "${opcao}" in
 esac
 ```
 
-### Adaptação Contextual
+### Adaptacao Contextual
 ```bash
-# Sistema adapta opções automaticamente
+# Sistema adapta opcoes automaticamente
 if [[ "${BANCO}" = "s" ]]; then
-    # Sistema com banco - opções específicas
+    # Sistema com banco - opcoes especificas
 else
-    # Sistema sem banco - opções expandidas
+    # Sistema sem banco - opcoes expandidas
 fi
 ```
 
-## Funções Auxiliares
+## Funcoes Auxiliares
 
 ### `_definir_base_trabalho()`
 Define dinamicamente a base de trabalho atual.
@@ -121,69 +121,69 @@ _definir_base_trabalho() {
 ```
 
 ### `_menu_escolha_base()`
-Menu especializado para seleção de base de dados quando múltiplas estão configuradas.
+Menu especializado para selecao de base de dados quando múltiplas estao configuradas.
 
 ### `_menu_tipo_backup()`
-Seleção interativa do tipo de backup (completo/incremental).
+Selecao interativa do tipo de backup (completo/incremental).
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Validações
-- **Verificação de variáveis** essenciais
+### Validacoes
+- **Verificacao de variaveis** essenciais
 - **Controle de fluxo** entre menus
-- **Tratamento seguro** de entrada do usuário
-- **Prevenção de navegação** inválida
+- **Tratamento seguro** de entrada do usuario
+- **Prevencao de navegacao** invalida
 
-## Boas Práticas
+## Boas Praticas
 
-### Interface do Usuário
-- **Hierarquia clara** de navegação
+### Interface do Usuario
+- **Hierarquia clara** de navegacao
 - **Feedback visual** constante
-- **Mensagens informativas** sobre opções
+- **Mensagens informativas** sobre opcoes
 - **Tratamento graceful** de erros
 
-### Organização do Código
-- **Funções modulares** bem definidas
-- **Lógica condicional** estruturada
-- **Comentários claros** sobre cada menu
-- **Reutilização de padrões** visuais
+### Organizacao do Codigo
+- **Funcoes modulares** bem definidas
+- **Logica condicional** estruturada
+- **Comentarios claros** sobre cada menu
+- **Reutilizacao de padroes** visuais
 
 ## Exemplos de Uso
 
-### Navegação Típica
+### Navegacao Tipica
 ```bash
 _principal → 1 (Programas) → 1 (Online) → _atualizar_programa_online
 ```
 
-### Seleção de Base
+### Selecao de Base
 ```bash
 _menu_escolha_base → 2 (Base 2) → Define base_trabalho
 ```
 
-### Configuração Responsiva
+### Configuracao Responsiva
 ```bash
-# Sistema adapta automaticamente baseado em variáveis
+# Sistema adapta automaticamente baseado em variaveis
 if [[ "${sistema}" = "iscobol" ]]; then
-    # Mostra opção específica do IsCobol
+    # Mostra opcao especifica do IsCobol
 else
-    # Mostra alternativa ou oculta opção
+    # Mostra alternativa ou oculta opcao
 fi
 ```
 
-## Variáveis Utilizadas
+## Variaveis Utilizadas
 
-### Variáveis Contextuais
+### Variaveis Contextuais
 - `sistema` - Tipo de sistema
 - `EMPRESA` - Nome da empresa
-- `verclass` - Versão do IsCobol
-- `VERSAOANT` - Versão anterior
-- `BANCO` - Configuração de banco
+- `verclass` - Versao do IsCobol
+- `VERSAOANT` - Versao anterior
+- `BANCO` - Configuracao de banco
 
-### Variáveis de Estado
+### Variaveis de Estado
 - `base_trabalho` - Base selecionada
 - `tipo_backup` - Tipo escolhido
-- `opcao` - Entrada do usuário
+- `opcao` - Entrada do usuario
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# lembrete.sh - Módulo de Lembretes e Notas
-# Versao: 01/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# lembrete.sh - Modulo de Lembretes e Notas
+# Versao: 04/12/2025-00
 # Autor: Luiz Augusto
-# utils.sh - Módulo de Utilitários e Funções Auxiliares  
-# Funções básicas para formatação, mensagens, validação e controle de fluxo
-#---------- FUNÇÕES DE LEMBRETES ----------#
+# utils.sh - Modulo de Utilitarios e Funcoes Auxiliares  
+# Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
+#---------- FUNcoES DE LEMBRETES ----------#
 
+cfg_dir="${cfg_dir:-}" # Caminho do diretorio de configuracao do programa.
+
+# Mostra menu de lembretes
 # Escreve nova nota
 _escrever_nova_nota() {
     clear
@@ -15,7 +18,7 @@ _escrever_nova_nota() {
     _mensagec "${YELLOW}" "Digite sua nota (pressione Ctrl+D para finalizar):"
     _linha
 
-    local arquivo_notas="${LIB_CFG}/atualizal"
+    local arquivo_notas="${cfg_dir}/atualizal"
     if cat >> "$arquivo_notas"; then
         _linha
         _mensagec "${YELLOW}" "Nota gravada com sucesso!"
@@ -28,7 +31,7 @@ _escrever_nova_nota() {
 
 # Mostra notas iniciais se existirem
 _mostrar_notas_iniciais() {
-    local nota_file="${LIB_CFG}/atualizal"
+    local nota_file="${cfg_dir}/atualizal"
     
     if [[ -f "$nota_file" && -s "$nota_file" ]]; then
         _visualizar_notas_arquivo "$nota_file"
@@ -36,7 +39,7 @@ _mostrar_notas_iniciais() {
 }
 
 # Visualiza arquivo de notas formatado
-# Parâmetros: $1=arquivo_de_notas
+# Parametros: $1=arquivo_de_notas
 _visualizar_notas_arquivo() {
     local arquivo="$1"
     local largura_max=0
@@ -51,7 +54,7 @@ _visualizar_notas_arquivo() {
     
     clear
     
-    # Calcular largura máxima
+    # Calcular largura maxima
     while IFS= read -r llinha; do
         if (( ${#llinha} > largura_max )); then
             largura_max=${#llinha}
@@ -80,7 +83,7 @@ _visualizar_notas_arquivo() {
 
 # Edita nota existente
 _editar_nota_existente() {
-    local arquivo_notas="${LIB_CFG}/atualizal"
+    local arquivo_notas="${cfg_dir}/atualizal"
     
     clear
     if [[ -f "$arquivo_notas" ]]; then
@@ -96,7 +99,7 @@ _editar_nota_existente() {
 
 # Apaga nota existente
 _apagar_nota_existente() {
-    local arquivo_notas="${LIB_CFG}/atualizal"
+    local arquivo_notas="${cfg_dir}/atualizal"
     
     if [[ ! -f "$arquivo_notas" ]]; then
         _mensagec "${YELLOW}" "Nenhuma nota encontrada para excluir!"
@@ -106,7 +109,7 @@ _apagar_nota_existente() {
 
     if _confirmar "Tem certeza que deseja apagar todas as notas?" "N"; then
         if rm -f "$arquivo_notas"; then
-            _mensagec "${RED}" "Notas excluídas com sucesso!"
+            _mensagec "${RED}" "Notas excluidas com sucesso!"
         else
             _mensagec "${RED}" "Erro ao excluir notas"
         fi

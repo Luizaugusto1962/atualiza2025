@@ -1,42 +1,42 @@
-# Documentação do Módulo principal.sh
+# Documentacao do Modulo principal.sh
 
-## Visão Geral
-O módulo `principal.sh` é o arquivo principal do **Sistema SAV (Script de Atualização Modular)**. Funciona como um orquestrador central responsável pelo carregamento sequencial de módulos, inicialização do sistema e controle do fluxo principal da aplicação.
+## Visao Geral
+O modulo `principal.sh` e o arquivo principal do **Sistema SAV (Script de Atualizacao Modular)**. Funciona como um orquestrador central responsavel pelo carregamento sequencial de modulos, inicializacao do sistema e controle do fluxo principal da aplicacao.
 
-## Função Principal
-Este arquivo implementa o padrão de design **"Main Guard"** em bash, onde o script pode ser executado diretamente ou incluído como módulo por outros scripts.
+## Funcao Principal
+Este arquivo implementa o padrao de design **"Main Guard"** em bash, onde o script pode ser executado diretamente ou incluido como modulo por outros scripts.
 
 ## Estrutura do Sistema
 
-### Constantes e Configurações
+### Constantes e Configuracoes
 ```bash
-# Versão do sistema
+# Versao do sistema
 UPDATE="15/10/2024-00"
 readonly UPDATE
 
-# Diretórios do sistema
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIB_DIR="${SCRIPT_DIR}/libs"
-LIB_CFG="${SCRIPT_DIR}/cfg"
+# Diretorios do sistema
+TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+lib_dir="${TOOLS_DIR}/libs"
+cfg_dir="${TOOLS_DIR}/cfg"
 ```
 
-### Características dos Diretórios
-- **`SCRIPT_DIR`**: Diretório onde o script está localizado
-- **`LIB_DIR`**: Diretório contendo os módulos do sistema (`libs/`)
-- **`LIB_CFG`**: Diretório de configurações (`cfg/`)
+### Caracteristicas dos Diretorios
+- **`TOOLS_DIR`**: Diretorio onde o script esta localizado
+- **`lib_dir`**: Diretorio contendo os modulos do sistema (`libs/`)
+- **`cfg_dir`**: Diretorio de configuracoes (`cfg/`)
 
-## Sistema de Carregamento de Módulos
+## Sistema de Carregamento de Modulos
 
-### Função `_carregar_modulo()`
-Carrega dinamicamente módulos bash com validações de segurança.
+### Funcao `_carregar_modulo()`
+Carrega dinamicamente modulos bash com validacoes de seguranca.
 
-**Parâmetros:**
-- `$1` - Nome do módulo a ser carregado
+**Parametros:**
+- `$1` - Nome do modulo a ser carregado
 
-**Validações:**
+**Validacoes:**
 - Existência do arquivo
-- Permissões de leitura
-- Tratamento de erros com saída do programa
+- Permissoes de leitura
+- Tratamento de erros com saida do programa
 
 **Sintaxe utilizada:**
 ```bash
@@ -44,45 +44,45 @@ _carregar_modulo "utils.sh"
 ```
 
 ### Ordem de Carregamento
-A ordem de carregamento é crítica para o funcionamento do sistema:
+A ordem de carregamento e critica para o funcionamento do sistema:
 
-1. **`utils.sh`** - Utilitários básicos (funções essenciais)
-2. **`config.sh`** - Configurações do sistema
+1. **`utils.sh`** - Utilitarios basicos (funcoes essenciais)
+2. **`config.sh`** - Configuracoes do sistema
 3. **`lembrete.sh`** - Sistema de lembretes
-4. **`rsync.sh`** - Operações de rede e sincronização
-5. **`sistema.sh`** - Informações do sistema operacional
-6. **`arquivos.sh`** - Gestão e manipulação de arquivos
-7. **`backup.sh`** - Sistema de backup e restauração
-8. **`programas.sh`** - Gestão de programas e atualizações
-9. **`biblioteca.sh`** - Gestão de bibliotecas
+4. **`rsync.sh`** - Operacoes de rede e sincronizacao
+5. **`sistema.sh`** - Informacoes do sistema operacional
+6. **`arquivos.sh`** - Gestao e manipulacao de arquivos
+7. **`backup.sh`** - Sistema de backup e restauracao
+8. **`programas.sh`** - Gestao de programas e atualizacoes
+9. **`biblioteca.sh`** - Gestao de bibliotecas
 10. **`menus.sh`** - Sistema de menus e interface
 
-## Funções de Inicialização
+## Funcoes de Inicializacao
 
 ### `_inicializar_sistema()`
 Inicializa completamente o ambiente do sistema SAV.
 
-**Processo de inicialização:**
-1. **Carregamento de configurações** - `_carregar_configuracoes`
-2. **Verificação de dependências** - `_check_instalado`
-3. **Validação de diretórios** - `_validar_diretorios`
-4. **Configuração do ambiente** - `_configurar_ambiente`
-5. **Limpeza automática** - `_executar_expurgador_diario`
+**Processo de inicializacao:**
+1. **Carregamento de configuracoes** - `_carregar_configuracoes`
+2. **Verificacao de dependências** - `_check_instalado`
+3. **Validacao de diretorios** - `_validar_diretorios`
+4. **Configuracao do ambiente** - `_configurar_ambiente`
+5. **Limpeza automatica** - `_executar_expurgador_diario`
 
 ### `main()`
-Função principal que controla o fluxo da aplicação.
+Funcao principal que controla o fluxo da aplicacao.
 
-**Características:**
+**Caracteristicas:**
 - **Tratamento de sinais** - `trap '_resetando' EXIT INT TERM`
-- **Inicialização sequencial** - Chama `_inicializar_sistema`
+- **Inicializacao sequencial** - Chama `_inicializar_sistema`
 - **Interface inicial** - `_mostrar_notas_iniciais`
 - **Menu principal** - `_principal`
 
-## Padrão Main Guard
+## Padrao Main Guard
 
-### Implementação
+### Implementacao
 ```bash
-# Verificar se está sendo executado diretamente
+# Verificar se esta sendo executado diretamente
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main "$@"
 fi
@@ -90,22 +90,22 @@ fi
 
 **Funcionamento:**
 - Quando executado diretamente: `bash principal.sh` → chama `main()`
-- Quando incluído como módulo: `. principal.sh` → apenas carrega funções
+- Quando incluido como modulo: `. principal.sh` → apenas carrega funcoes
 
 ## Tratamento de Erros
 
-### Estratégias Implementadas
+### Estrategias Implementadas
 
-#### Validação de Diretórios
+#### Validacao de Diretorios
 ```bash
-if [[ ! -d "${LIB_DIR}" ]]; then
-    echo "ERRO: Diretório ${LIB_DIR} nao encontrado."
-    echo "Certifique-se de que todos os módulos estao instalados corretamente."
+if [[ ! -d "${lib_dir}" ]]; then
+    echo "ERRO: Diretorio ${lib_dir} nao encontrado."
+    echo "Certifique-se de que todos os modulos estao instalados corretamente."
     exit 1
 fi
 ```
 
-#### Carregamento Seguro de Módulos
+#### Carregamento Seguro de Modulos
 ```bash
 if [[ ! -f "${caminho}" ]]; then
     echo "ERRO: Modulo ${modulo} nao encontrado em ${caminho}"
@@ -118,56 +118,56 @@ if [[ ! -r "${caminho}" ]]; then
 fi
 ```
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
 ### Imutabilidade
-- Uso de `readonly` para constantes críticas
-- Proteção contra modificação acidental
+- Uso de `readonly` para constantes criticas
+- Protecao contra modificacao acidental
 
 ### Tratamento de Sinais
-- Limpeza automática no término (`trap '_resetando'`)
-- Tratamento de interrupções (Ctrl+C)
+- Limpeza automatica no termino (`trap '_resetando'`)
+- Tratamento de interrupcoes (Ctrl+C)
 
-### Validações de Permissões
-- Verificação de existência de arquivos
-- Controle de permissões de leitura
-- Validação de estrutura de diretórios
+### Validacoes de Permissoes
+- Verificacao de existência de arquivos
+- Controle de permissoes de leitura
+- Validacao de estrutura de diretorios
 
 ## Dependências do Sistema
 
-### Diretórios Obrigatórios
-- `libs/` - Contém todos os módulos do sistema
-- `cfg/` - Arquivos de configuração
+### Diretorios Obrigatorios
+- `libs/` - Contem todos os modulos do sistema
+- `cfg/` - Arquivos de configuracao
 
-### Módulos Essenciais
-Todos os módulos listados na ordem de carregamento são considerados críticos para o funcionamento do sistema.
+### Modulos Essenciais
+Todos os modulos listados na ordem de carregamento sao considerados criticos para o funcionamento do sistema.
 
 ## Logs e Auditoria
 
 ### ShellCheck
 - Uso de `# shellcheck source=/dev/null` para evitar warnings
-- Compatibilidade com análise estática de código
+- Compatibilidade com analise estatica de codigo
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização Modular
-- Separação clara de responsabilidades
+### Organizacao Modular
+- Separacao clara de responsabilidades
 - Carregamento sequencial controlado
 - Dependências bem definidas
 
 ### Tratamento de Erros Robusto
-- Validações em múltiplas camadas
+- Validacoes em múltiplas camadas
 - Mensagens de erro informativas
-- Saída controlada em caso de falhas
+- Saida controlada em caso de falhas
 
 ### Manutenibilidade
-- Código bem documentado
-- Funções com responsabilidades únicas
-- Estrutura clara e lógica
+- Codigo bem documentado
+- Funcoes com responsabilidades únicas
+- Estrutura clara e logica
 
 ## Exemplo de Uso
 
-### Execução Direta
+### Execucao Direta
 ```bash
 # Executar o sistema SAV
 ./principal.sh
@@ -176,51 +176,51 @@ Todos os módulos listados na ordem de carregamento são considerados críticos 
 bash /caminho/para/principal.sh
 ```
 
-### Como Módulo
+### Como Modulo
 ```bash
-# Incluir como módulo em outro script
+# Incluir como modulo em outro script
 source principal.sh
 # ou
 . principal.sh
 
-# Usar funções carregadas
+# Usar funcoes carregadas
 _inicializar_sistema
 ```
 
-## Variáveis de Ambiente
+## Variaveis de Ambiente
 
-### Variáveis Suportadas
-- `UPDATE` - Versão do sistema (sobrescrita internamente)
+### Variaveis Suportadas
+- `UPDATE` - Versao do sistema (sobrescrita internamente)
 
 ### Constantes Internas
-- `SCRIPT_DIR` - Diretório do script (readonly)
-- `LIB_DIR` - Diretório de bibliotecas (readonly)
-- `LIB_CFG` - Diretório de configuração (readonly)
+- `TOOLS_DIR` - Diretorio do script (readonly)
+- `lib_dir` - Diretorio de bibliotecas (readonly)
+- `cfg_dir` - Diretorio de configuracao (readonly)
 
-## Considerações de Performance
+## Consideracoes de Performance
 
 ### Carregamento Otimizado
-- Carregamento único de cada módulo
-- Verificações mínimas necessárias
+- Carregamento único de cada modulo
+- Verificacoes minimas necessarias
 - Tratamento eficiente de erros
 
-### Gerenciamento de Memória
-- Uso adequado de variáveis locais
-- Limpeza automática de recursos
+### Gerenciamento de Memoria
+- Uso adequado de variaveis locais
+- Limpeza automatica de recursos
 - Tratamento de sinais para limpeza
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
+### Estrategias para Debug
 - Mensagens de erro detalhadas
-- Validações em pontos críticos
+- Validacoes em pontos criticos
 - Logs estruturados
 
 ### Testes
-- Verificação de dependências na inicialização
-- Validação de estrutura de diretórios
-- Teste de carregamento de módulos
+- Verificacao de dependências na inicializacao
+- Validacao de estrutura de diretorios
+- Teste de carregamento de modulos
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

@@ -1,32 +1,32 @@
-# Documentação do Módulo setup.sh
+# Documentacao do Modulo setup.sh
 
-## Visão Geral
-Módulo responsável pela configuração inicial e manutenção dos arquivos de configuração do Sistema SAV.
+## Visao Geral
+Modulo responsavel pela configuracao inicial e manutencao dos arquivos de configuracao do Sistema SAV.
 
 ## Funcionalidades Principais
 
-### 1. Configuração Inicial (`_initial_setup`)
+### 1. Configuracao Inicial (`_initial_setup`)
 - Setup interativo para novos sistemas
 - Cria arquivos `.atualizac` e `.atualizac`
-- Configuração específica por sistema (IsCobol/Micro Focus)
-- Criação de atalho global `/usr/local/bin/atualiza`
+- Configuracao especifica por sistema (IsCobol/Micro Focus)
+- Criacao de atalho global `/usr/local/bin/atualiza`
 
-### 2. Edição de Configurações (`_edit_setup`)
-- Modo `--edit` para modificar parâmetros existentes
-- Backup automático antes de alterações
-- Validação interativa de cada parâmetro
+### 2. Edicao de Configuracoes (`_edit_setup`)
+- Modo `--edit` para modificar parametros existentes
+- Backup automatico antes de alteracoes
+- Validacao interativa de cada parametro
 
-### 3. Configuração por Sistema
-- **IsCobol**: Versões 2018-2024 com parâmetros específicos
-- **Micro Focus Cobol**: Configuração alternativa
+### 3. Configuracao por Sistema
+- **IsCobol**: Versoes 2018-2024 com parametros especificos
+- **Micro Focus Cobol**: Configuracao alternativa
 
-## Modos de Operação
+## Modos de Operacao
 
 ```bash
-# Configuração inicial
+# Configuracao inicial
 ./setup.sh
 
-# Edição de configurações existentes
+# Edicao de configuracoes existentes
 ./setup.sh --edit
 ```
 
@@ -52,7 +52,7 @@ exec=sav/classes
 telas=sav/tel_isc
 xml=sav/xml
 SAVATU=tempSAV_IS2024_*_
-pasta=/sav/tools
+pasta=/sav/TOOLS_DIR
 progs=/progs
 olds=/olds
 logs=/logs
@@ -60,52 +60,52 @@ cfg=/cfg
 backup=/backup
 ```
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Controle de Permissões
+### Controle de Permissoes
 ```bash
 chmod 700 "$SSH_CONFIG_DIR"    # rwx para owner apenas
 chmod 600 "/root/.ssh/config"  # rw para owner apenas
-chmod +x /usr/local/bin/atualiza  # Executável global
+chmod +x /usr/local/bin/atualiza  # Executavel global
 ```
 
-### Backup Automático
+### Backup Automatico
 ```bash
-cp .atualizac .atualizac.bak  # Backup antes da edição
+cp .atualizac .atualizac.bak  # Backup antes da edicao
 ```
 
 ## Tratamento de Erros
 
-### Validações
-- Existência de diretórios obrigatórios
-- Permissões de arquivos e diretórios
-- Variáveis obrigatórias para SSH
-- Escolhas válidas nos menus
+### Validacoes
+- Existência de diretorios obrigatorios
+- Permissoes de arquivos e diretorios
+- Variaveis obrigatorias para SSH
+- Escolhas validas nos menus
 
-### Códigos de Retorno
+### Codigos de Retorno
 - `0` - Sucesso
 - `1` - Erro/Falha
 
-## Boas Práticas
+## Boas Praticas
 
-### Interface do Usuário
-- Menus claros com opções numeradas
+### Interface do Usuario
+- Menus claros com opcoes numeradas
 - Separadores visuais (`#-------------------------------------------------------------------#`)
-- Confirmações antes de operações críticas
+- Confirmacoes antes de operacoes criticas
 - Mensagens informativas durante o processo
 
-### Organização do Código
-- Funções específicas por responsabilidade
+### Organizacao do Codigo
+- Funcoes especificas por responsabilidade
 - Tratamento uniforme de erros
-- Comentários claros sobre cada seção
+- Comentarios claros sobre cada secao
 
 ## Exemplos de Uso
 
-### Configuração Inicial
+### Configuracao Inicial
 ```bash
 ./setup.sh
 # Sistema: 1 (IsCobol)
-# Versão: 4 (2024)
+# Versao: 4 (2024)
 # Banco: S
 # Destino: /sav
 # Base: sav/dados
@@ -113,21 +113,21 @@ cp .atualizac .atualizac.bak  # Backup antes da edição
 # IP Servidor: 177.45.80.10
 ```
 
-### Edição de Parâmetros
+### Edicao de Parametros
 ```bash
 ./setup.sh --edit
-# Cada variável é apresentada para edição interativa
+# Cada variavel e apresentada para edicao interativa
 ```
 
-## Variáveis de Ambiente
+## Variaveis de Ambiente
 
-### Variáveis Suportadas
-- `TOOLS` - Diretório de ferramentas
-- `LIB_CFG` - Diretório de configuração
+### Variaveis Suportadas
+- `TOOLS_DIR` - Diretorio de ferramentas
+- `cfg_dir` - Diretorio de configuracao
 - `SERVER_IP` - IP do servidor
-- `SERVER_PORT` - Porta SSH (padrão: 41122)
-- `SERVER_USER` - Usuário SSH (padrão: atualiza)
+- `SERVER_PORT` - Porta SSH (padrao: 41122)
+- `SERVER_USER` - Usuario SSH (padrao: atualiza)
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

@@ -1,43 +1,43 @@
-# Documentação do Módulo utils.sh
+# Documentacao do Modulo utils.sh
 
-## Visão Geral
-O módulo `utils.sh` é responsável pelas **funções utilitárias fundamentais** do **Sistema SAV (Script de Atualização Modular)**. Este módulo centraliza todas as funções básicas de formatação, validação, controle de fluxo e interface que são utilizadas por todos os outros módulos do sistema.
+## Visao Geral
+O modulo `utils.sh` e responsavel pelas **funcoes utilitarias fundamentais** do **Sistema SAV (Script de Atualizacao Modular)**. Este modulo centraliza todas as funcoes basicas de formatacao, validacao, controle de fluxo e interface que sao utilizadas por todos os outros modulos do sistema.
 
 ## Funcionalidades Principais
 
-### 1. Sistema de Formatação de Tela
-- **Posicionamento avançado** de texto no terminal
-- **Sistema de cores responsivo** com detecção automática
-- **Linhas horizontais** personalizáveis
+### 1. Sistema de Formatacao de Tela
+- **Posicionamento avancado** de texto no terminal
+- **Sistema de cores responsivo** com deteccao automatica
+- **Linhas horizontais** personalizaveis
 - **Mensagens centralizadas** e alinhadas
 
 ### 2. Controle de Fluxo
 - **Pausas controladas** com timeout
-- **Tratamento de entrada** do usuário
-- **Validações robustas** de dados
-- **Confirmações interativas** S/N
+- **Tratamento de entrada** do usuario
+- **Validacoes robustas** de dados
+- **Confirmacoes interativas** S/N
 
-### 3. Sistema de Validação
-- **Validação de nomes** de programas
-- **Verificação de diretórios** e arquivos
-- **Validação de formato** de datas e versões
-- **Controle de configuração** do sistema
+### 3. Sistema de Validacao
+- **Validacao de nomes** de programas
+- **Verificacao de diretorios** e arquivos
+- **Validacao de formato** de datas e versoes
+- **Controle de configuracao** do sistema
 
 ### 4. Interface Interativa
-- **Entrada com validação** automática
+- **Entrada com validacao** automatica
 - **Sistema de retry** com limite de tentativas
 - **Barra de progresso** com spinner animado
-- **Feedback visual** durante operações
+- **Feedback visual** durante operacoes
 
 ### 5. Sistema de Logs
 - **Registro estruturado** com timestamp
-- **Logs categorizados** (erro, sucesso, informação)
+- **Logs categorizados** (erro, sucesso, informacao)
 - **Múltiplos arquivos** de log suportados
-- **Integração automática** com operações
+- **Integracao automatica** com operacoes
 
-## Estrutura do Código
+## Estrutura do Codigo
 
-### Funções de Formatação de Tela
+### Funcoes de Formatacao de Tela
 
 #### `_meiodatela()`
 Posiciona cursor no centro da tela.
@@ -74,11 +74,11 @@ _mensaged() {
 ```
 
 #### `_linha()` - Linha Horizontal
-Cria linha horizontal com caractere customizável.
+Cria linha horizontal com caractere customizavel.
 
 ```bash
 _linha() {
-    local Traco=${1:-'-'}  # Caractere padrão: '-'
+    local Traco=${1:-'-'}  # Caractere padrao: '-'
     local CCC="${2:-}"     # Cor opcional
     local Espacos
     
@@ -91,7 +91,7 @@ _linha() {
 ## Controle de Fluxo
 
 ### `_read_sleep()` - Pausa Controlada
-Pausa execução por tempo especificado.
+Pausa execucao por tempo especificado.
 
 ```bash
 _read_sleep() {
@@ -101,7 +101,7 @@ _read_sleep() {
     fi
 
     if ! [[ "${1}" =~ ^[0-9.]+$ ]]; then
-        printf "Erro: Argumento inválido para _read_sleep: %s\n" "${1}"
+        printf "Erro: Argumento invalido para _read_sleep: %s\n" "${1}"
         return 1
     fi
 
@@ -119,20 +119,20 @@ _press() {
 }
 ```
 
-### `_opinvalida()` - Opção Inválida
-Mensagem padronizada para opção inválida.
+### `_opinvalida()` - Opcao Invalida
+Mensagem padronizada para opcao invalida.
 
 ```bash
 _opinvalida() {
     _linha
-    _mensagec "${RED}" "Opção Inválida"
+    _mensagec "${RED}" "Opcao Invalida"
     _linha
 }
 ```
 
-## Sistema de Validação
+## Sistema de Validacao
 
-### Validações Básicas
+### Validacoes Basicas
 
 #### `_validar_nome_programa()`
 Valida nomes de programa (maiúsculas e números).
@@ -145,7 +145,7 @@ _validar_nome_programa() {
 ```
 
 #### `_validar_diretorio()`
-Valida existência e acessibilidade de diretório.
+Valida existência e acessibilidade de diretorio.
 
 ```bash
 _validar_diretorio() {
@@ -175,7 +175,7 @@ _validar_data() {
 ```
 
 #### `_validar_versao()`
-Valida formato de versão numérica.
+Valida formato de versao numerica.
 
 ```bash
 _validar_versao() {
@@ -184,28 +184,28 @@ _validar_versao() {
 }
 ```
 
-### Validação Completa do Sistema
+### Validacao Completa do Sistema
 
 #### `_validar_configuracao_sistema()`
-Validação abrangente da configuração do sistema.
+Validacao abrangente da configuracao do sistema.
 
-**Verificações realizadas:**
-1. **Arquivos de configuração** (`.atualizac`)
-2. **Variáveis essenciais** (`sistema`, `destino`, `pasta`)
-3. **Diretórios críticos** (exec, telas, logs, backup, etc.)
-4. **Contagem de erros** para relatório final
+**Verificacoes realizadas:**
+1. **Arquivos de configuracao** (`.atualizac`)
+2. **Variaveis essenciais** (`sistema`, `destino`, `pasta`)
+3. **Diretorios criticos** (exec, telas, logs, backup, etc.)
+4. **Contagem de erros** para relatorio final
 
 ```bash
 _validar_configuracao_sistema() {
     local erros=0
     
-    # Verificar arquivos de configuração
-    if [[ ! -f "${LIB_CFG}/.atualizac" ]]; then
-        _log_erro "Arquivo .atualizac não encontrado"
+    # Verificar arquivos de configuracao
+    if [[ ! -f "${cfg_dir}/.atualizac" ]]; then
+        _log_erro "Arquivo .atualizac nao encontrado"
         ((erros++))
     fi
     
-    # Verificar variáveis essenciais
+    # Verificar variaveis essenciais
     if [[ -z "${sistema}" ]]; then
         _log_erro "Variavel 'sistema' nao definida"
         ((erros++))
@@ -219,19 +219,19 @@ _validar_configuracao_sistema() {
 ## Sistema de Entrada de Dados
 
 ### `_solicitar_entrada()`
-Entrada interativa com validação automática.
+Entrada interativa com validacao automatica.
 
-**Características:**
-- **Função de validação** customizável
-- **Número máximo de tentativas** (3 por padrão)
-- **Mensagem de erro** personalizável
+**Caracteristicas:**
+- **Funcao de validacao** customizavel
+- **Número maximo de tentativas** (3 por padrao)
+- **Mensagem de erro** personalizavel
 - **Suporte a entrada vazia** (ENTER)
 
 ```bash
 _solicitar_entrada() {
     local prompt="$1"
     local funcao_validacao="$2"
-    local mensagem_erro="${3:-Entrada inválida}"
+    local mensagem_erro="${3:-Entrada invalida}"
     local entrada
     local tentativas=0
     local max_tentativas=3
@@ -239,7 +239,7 @@ _solicitar_entrada() {
     while (( tentativas < max_tentativas )); do
         read -rp "${YELLOW}${prompt}: ${NORM}" entrada
         
-        # Validação usando função fornecida
+        # Validacao usando funcao fornecida
         if [[ -n "$funcao_validacao" ]]; then
             if "$funcao_validacao" "$entrada"; then
                 echo "$entrada"
@@ -259,12 +259,12 @@ _solicitar_entrada() {
 ```
 
 ### `_confirmar()`
-Solicitação de confirmação S/N com padrão configurável.
+Solicitacao de confirmacao S/N com padrao configuravel.
 
-**Características:**
-- **Padrão configurável** (S/N)
-- **Múltiplas formas de resposta** (s/n, sim/não, y/n, yes/no)
-- **Recursão automática** para respostas inválidas
+**Caracteristicas:**
+- **Padrao configuravel** (S/N)
+- **Múltiplas formas de resposta** (s/n, sim/nao, y/n, yes/no)
+- **Recursao automatica** para respostas invalidas
 - **Case insensitive**
 
 ```bash
@@ -284,7 +284,7 @@ _confirmar() {
     
     case "${resposta,,}" in
         s|sim|y|yes) return 0 ;;
-        n|nao|não|no) return 1 ;;
+        n|nao|nao|no) return 1 ;;
         *) _confirmar "$mensagem" "$padrao" ;;
     esac
 }
@@ -312,13 +312,13 @@ _barra_progresso() {
 ```
 
 ### `_mostrar_progresso_backup()`
-Sistema avançado de progresso com spinner animado.
+Sistema avancado de progresso com spinner animado.
 
-**Características:**
+**Caracteristicas:**
 - **Spinner animado** com 10 caracteres diferentes
 - **Contador de tempo** decorrido
 - **Controle de cursor** (ocultar/mostrar)
-- **Detecção automática** de conclusão do processo
+- **Deteccao automatica** de conclusao do processo
 - **Feedback visual** colorido
 
 ```bash
@@ -331,10 +331,10 @@ _mostrar_progresso_backup() {
     
     # Controle de cursor
     tput civis  # Ocultar cursor
-    tput sc     # Salvar posição
+    tput sc     # Salvar posicao
     
     while kill -0 "$pid" 2>/dev/null; do
-        tput rc  # Restaurar posição
+        tput rc  # Restaurar posicao
         printf "${YELLOW}%s... [%3ds] ${NORM}${GREEN}%s${NORM}" \
             "$msg" "$elapsed" "${spin[i]}"
         ((i = (i + 1) % ${#spin[@]}))
@@ -348,7 +348,7 @@ _mostrar_progresso_backup() {
 
 ## Sistema de Logs
 
-### `_log()` - Log Básico
+### `_log()` - Log Basico
 Registro estruturado com timestamp.
 
 ```bash
@@ -361,7 +361,7 @@ _log() {
 ```
 
 ### `_log_erro()` - Log de Erro
-Registro específico de erros.
+Registro especifico de erros.
 
 ```bash
 _log_erro() {
@@ -372,7 +372,7 @@ _log_erro() {
 ```
 
 ### `_log_sucesso()` - Log de Sucesso
-Registro específico de operações bem-sucedidas.
+Registro especifico de operacoes bem-sucedidas.
 
 ```bash
 _log_sucesso() {
@@ -382,10 +382,10 @@ _log_sucesso() {
 }
 ```
 
-## Formatação de Dados
+## Formatacao de Dados
 
 ### `_formatar_tamanho()`
-Converte bytes para formato legível.
+Converte bytes para formato legivel.
 
 ```bash
 _formatar_tamanho() {
@@ -403,7 +403,7 @@ _formatar_tamanho() {
 ```
 
 ### `_formatar_duracao()`
-Converte segundos para formato legível.
+Converte segundos para formato legivel.
 
 ```bash
 _formatar_duracao() {
@@ -422,10 +422,10 @@ _formatar_duracao() {
 }
 ```
 
-## Funções de Sistema
+## Funcoes de Sistema
 
 ### `_info_sistema()`
-Coleta informações básicas do sistema.
+Coleta informacoes basicas do sistema.
 
 ```bash
 _info_sistema() {
@@ -433,13 +433,13 @@ _info_sistema() {
     echo "Versao: $(uname -r)"
     echo "Arquitetura: $(uname -m)"
     echo "Hostname: $(hostname)"
-    echo "Usuário: $(whoami)"
-    echo "Diretório: $(pwd)"
+    echo "Usuario: $(whoami)"
+    echo "Diretorio: $(pwd)"
 }
 ```
 
 ### `_espaco_livre()`
-Verifica espaço disponível em disco.
+Verifica espaco disponivel em disco.
 
 ```bash
 _espaco_livre() {
@@ -449,7 +449,7 @@ _espaco_livre() {
 ```
 
 ### `_verificar_espaco()`
-Valida se há espaço suficiente.
+Valida se ha espaco suficiente.
 
 ```bash
 _verificar_espaco() {
@@ -460,7 +460,7 @@ _verificar_espaco() {
 }
 ```
 
-## Gestão de Arquivos
+## Gestao de Arquivos
 
 ### `_backup_arquivo()`
 Cria backup de arquivo com timestamp.
@@ -473,7 +473,7 @@ _backup_arquivo() {
     local extensao=""
     local timestamp=$(date +"%Y%m%d_%H%M%S")
     
-    # Extrair extensão se existir
+    # Extrair extensao se existir
     if [[ "$nome_base" == *.* ]]; then
         extensao=".${nome_base##*.}"
         nome_base="${nome_base%.*}"
@@ -490,7 +490,7 @@ _backup_arquivo() {
 ```
 
 ### `_limpar_arquivos_antigos()`
-Remove arquivos antigos baseado em critérios.
+Remove arquivos antigos baseado em criterios.
 
 ```bash
 _limpar_arquivos_antigos() {
@@ -499,7 +499,7 @@ _limpar_arquivos_antigos() {
     local padrao="${3:-*}"
     
     if [[ ! -d "$diretorio" ]]; then
-        _log_erro "Diretório não encontrado: $diretorio"
+        _log_erro "Diretorio nao encontrado: $diretorio"
         return 1
     fi
     
@@ -511,41 +511,41 @@ _limpar_arquivos_antigos() {
 }
 ```
 
-## Inicialização Automática
+## Inicializacao Automatica
 
 ### `_executar_expurgador_diario()`
-Limpeza automática diária do sistema.
+Limpeza automatica diaria do sistema.
 
-**Características:**
-- **Controle de flag** para evitar múltiplas execuções
+**Caracteristicas:**
+- **Controle de flag** para evitar múltiplas execucoes
 - **Limpeza de flags antigas** (>3 dias)
-- **Processamento de múltiplos diretórios**
-- **Logs de execução** para auditoria
+- **Processamento de múltiplos diretorios**
+- **Logs de execucao** para auditoria
 
 ```bash
 _executar_expurgador_diario() {
     local flag_file="${LOGS}/.expurgador_$(date +%Y%m%d)"
     
-    # Controle de execução única por dia
+    # Controle de execucao única por dia
     if [[ -f "$flag_file" ]]; then
         return 0
     fi
     
-    # Limpeza de diferentes diretórios
+    # Limpeza de diferentes diretorios
     _limpar_arquivos_antigos "${LOGS}" 30 "*.log"
     _limpar_arquivos_antigos "${backup}" 30 "Temps*"
-    # ... demais diretórios
+    # ... demais diretorios
     
     touch "$flag_file"
 }
 ```
 
 ### `_check_instalado()`
-Verificação de dependências essenciais.
+Verificacao de dependências essenciais.
 
 **Programas verificados:**
-- **zip/unzip** - Compactação de arquivos
-- **rsync** - Sincronização remota
+- **zip/unzip** - Compactacao de arquivos
+- **rsync** - Sincronizacao remota
 - **wget** - Download de arquivos
 
 ```bash
@@ -554,7 +554,7 @@ _check_instalado() {
     for app in zip unzip rsync wget; do
         if ! command -v "$app" &>/dev/null; then
             missing="$missing $app"
-            # Mensagens específicas por aplicativo
+            # Mensagens especificas por aplicativo
             case "$app" in
                 zip | unzip) echo "  Sugestao: Instale o zip, unzip." ;;
                 rsync) echo "  Sugestao: Instale o rsync." ;;
@@ -570,52 +570,52 @@ _check_instalado() {
 }
 ```
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Validações de Segurança
-- **Verificação rigorosa** de entradas do usuário
-- **Validação de caminhos** antes de operações
-- **Controle de permissões** em arquivos e diretórios
-- **Tratamento seguro** de variáveis de ambiente
+### Validacoes de Seguranca
+- **Verificacao rigorosa** de entradas do usuario
+- **Validacao de caminhos** antes de operacoes
+- **Controle de permissoes** em arquivos e diretorios
+- **Tratamento seguro** de variaveis de ambiente
 
 ### Tratamento Seguro de Terminal
-- **Controle de cursor** durante operações longas
-- **Restauração de estado** do terminal
-- **Detecção de suporte** a recursos avançados
-- **Fallback automático** para terminais simples
+- **Controle de cursor** durante operacoes longas
+- **Restauracao de estado** do terminal
+- **Deteccao de suporte** a recursos avancados
+- **Fallback automatico** para terminais simples
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização do Código
-- **Funções atômicas** com responsabilidades únicas
-- **Parâmetros bem documentados** com exemplos
-- **Tratamento uniforme** de erros e validações
-- **Comentários claros** sobre lógica complexa
+### Organizacao do Codigo
+- **Funcoes atômicas** com responsabilidades únicas
+- **Parametros bem documentados** com exemplos
+- **Tratamento uniforme** de erros e validacoes
+- **Comentarios claros** sobre logica complexa
 
 ### Performance
-- **Operações eficientes** com comandos otimizados
-- **Controle mínimo** de recursos durante execução
-- **Processamento assíncrono** quando apropriado
-- **Cache inteligente** de informações do sistema
+- **Operacoes eficientes** com comandos otimizados
+- **Controle minimo** de recursos durante execucao
+- **Processamento assincrono** quando apropriado
+- **Cache inteligente** de informacoes do sistema
 
 ### Manutenibilidade
-- **Funções reutilizáveis** em todos os módulos
-- **Interface consistente** em todas as funções
-- **Documentação inline** clara
-- **Tratamento robusto** de diferentes cenários
+- **Funcoes reutilizaveis** em todos os modulos
+- **Interface consistente** em todas as funcoes
+- **Documentacao inline** clara
+- **Tratamento robusto** de diferentes cenarios
 
 ## Exemplos de Uso
 
-### Formatação de Tela
+### Formatacao de Tela
 ```bash
 # Mensagem centralizada
-_mensagec "${RED}" "Erro crítico"
+_mensagec "${RED}" "Erro critico"
 
 # Linha horizontal
 _linha "=" "${GREEN}"
 
 # Mensagem à direita
-_mensaged "${BLUE}" "Versão 2024"
+_mensaged "${BLUE}" "Versao 2024"
 ```
 
 ### Controle de Fluxo
@@ -626,22 +626,22 @@ _read_sleep 3
 # Aguardar tecla
 _press
 
-# Confirmação
+# Confirmacao
 if _confirmar "Deseja continuar?" "S"; then
     echo "Continuando..."
 fi
 ```
 
-### Validação de Dados
+### Validacao de Dados
 ```bash
 # Validar nome de programa
 if _validar_nome_programa "PROGRAMA01"; then
-    echo "Nome válido"
+    echo "Nome valido"
 fi
 
-# Validar diretório
+# Validar diretorio
 if _validar_diretorio "/sav/dados"; then
-    echo "Diretório válido"
+    echo "Diretorio valido"
 fi
 ```
 
@@ -650,157 +650,157 @@ fi
 # Barra de progresso simples
 _barra_progresso 50 100 20
 
-# Progresso avançado com spinner
+# Progresso avancado com spinner
 _mostrar_progresso_backup $pid_processo
 ```
 
 ### Sistema de Logs
 ```bash
 # Logs categorizados
-_log "Operação iniciada"
-_log_erro "Falha na operação"
-_log_sucesso "Operação concluída"
+_log "Operacao iniciada"
+_log_erro "Falha na operacao"
+_log_sucesso "Operacao concluida"
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Dependências de Módulos
-- **Nenhuma dependência externa** - módulo base
-- **Utilizado por todos os módulos** do sistema
+### Dependências de Modulos
+- **Nenhuma dependência externa** - modulo base
+- **Utilizado por todos os modulos** do sistema
 - **Carregado automaticamente** pelo `principal.sh`
 
-### Variáveis de Ambiente Utilizadas
+### Variaveis de Ambiente Utilizadas
 - `COLUMNS` - Largura do terminal
-- `LOG_ATU` - Arquivo de log padrão
-- `backup` - Diretório de backup
-- `LOGS` - Diretório de logs
-- `TOOLS` - Diretório de ferramentas
+- `LOG_ATU` - Arquivo de log padrao
+- `backup` - Diretorio de backup
+- `LOGS` - Diretorio de logs
+- `TOOLS_DIR` - Diretorio de ferramentas
 
-## Características Avançadas
+## Caracteristicas Avancadas
 
 ### Terminal Responsivo
 ```bash
-# Detecção automática de recursos
+# Deteccao automatica de recursos
 if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
-    # Terminal avançado - usar recursos completos
+    # Terminal avancado - usar recursos completos
     RED=$(tput bold)$(tput setaf 1)
     COLUMNS=$(tput cols)
 else
-    # Terminal básico - variáveis vazias
+    # Terminal basico - variaveis vazias
     RED="" COLUMNS=80
 fi
 ```
 
 ### Controle Inteligente de Cursor
 ```bash
-# Durante operações longas
+# Durante operacoes longas
 tput civis  # Ocultar cursor
-# ... operação ...
+# ... operacao ...
 tput cnorm  # Mostrar cursor
 tput sgr0   # Reset terminal
 ```
 
-### Formatação Dinâmica
+### Formatacao Dinamica
 ```bash
-# Centralização baseada na largura do terminal
+# Centralizacao baseada na largura do terminal
 printf "%s%*s%s\n" "${color}" $(((${#message} + $(tput cols)) / 2)) "${message}" "${NORM}"
 ```
 
 ## Tratamento de Erros
 
-### Estratégias Implementadas
-- **Validação prévia** de todos os parâmetros
-- **Mensagens específicas** para diferentes tipos de erro
-- **Recuperação automática** quando possível
+### Estrategias Implementadas
+- **Validacao previa** de todos os parametros
+- **Mensagens especificas** para diferentes tipos de erro
+- **Recuperacao automatica** quando possivel
 - **Logs detalhados** para auditoria
 
-### Códigos de Retorno
+### Codigos de Retorno
 - `0` - Sucesso
-- `1` - Erro de parâmetro ou validação
-- `1` - Falha na operação
+- `1` - Erro de parametro ou validacao
+- `1` - Falha na operacao
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações
-- **Cálculos eficientes** de posicionamento
-- **Controle mínimo** de I/O durante formatação
-- **Cache de informações** do terminal
-- **Processamento direto** sem loops desnecessários
+### Otimizacoes
+- **Calculos eficientes** de posicionamento
+- **Controle minimo** de I/O durante formatacao
+- **Cache de informacoes** do terminal
+- **Processamento direto** sem loops desnecessarios
 
 ### Recursos de Sistema
-- **CPU mínima** durante operações simples
-- **Memória controlada** com variáveis locais
+- **CPU minima** durante operacoes simples
+- **Memoria controlada** com variaveis locais
 - **I/O otimizado** com redirecionamento adequado
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
-- **Teste visual** de formatação em diferentes terminais
-- **Validação de funções** individualmente
+### Estrategias para Debug
+- **Teste visual** de formatacao em diferentes terminais
+- **Validacao de funcoes** individualmente
 - **Logs detalhados** durante desenvolvimento
 - **Teste de edge cases** (terminais pequenos/grandes)
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 ```bash
 # Verificar suporte a cores
-echo "Cores suportadas: $(tput colors 2>/dev/null || echo 'não')"
+echo "Cores suportadas: $(tput colors 2>/dev/null || echo 'nao')"
 
 # Verificar tamanho do terminal
 echo "Terminal: $(tput cols)x$(tput lines)"
 
-# Testar funções específicas
+# Testar funcoes especificas
 _mensagec "${GREEN}" "Teste de mensagem"
 _linha "=" "${BLUE}"
 ```
 
 ## Casos de Uso Comuns
 
-### Interface de Usuário
+### Interface de Usuario
 ```bash
-# Formatação típica de menu
+# Formatacao tipica de menu
 _linha "=" "${GREEN}"
-_mensagec "${RED}" "Título do Menu"
+_mensagec "${RED}" "Titulo do Menu"
 _linha
-_mensagec "${CYAN}" "Opções disponíveis:"
-_mensagec "${GREEN}" "1 - Opção 1"
-_mensagec "${GREEN}" "2 - Opção 2"
+_mensagec "${CYAN}" "Opcoes disponiveis:"
+_mensagec "${GREEN}" "1 - Opcao 1"
+_mensagec "${GREEN}" "2 - Opcao 2"
 _linha "=" "${GREEN}"
 ```
 
-### Controle de Operações Longas
+### Controle de Operacoes Longas
 ```bash
-# Durante backup ou sincronização
+# Durante backup ou sincronizacao
 _mostrar_progresso_backup $pid_processo &
 # Processo em background
 wait $pid_processo
 ```
 
-### Validação de Entrada
+### Validacao de Entrada
 ```bash
-# Solicitar entrada com validação
-versao=$(_solicitar_entrada "Digite a versão" "_validar_versao" "Versão inválida")
+# Solicitar entrada com validacao
+versao=$(_solicitar_entrada "Digite a versao" "_validar_versao" "Versao invalida")
 ```
 
-### Confirmações Importantes
+### Confirmacoes Importantes
 ```bash
-# Antes de operações críticas
+# Antes de operacoes criticas
 if _confirmar "Deseja excluir arquivos antigos?" "N"; then
     _limpar_arquivos_antigos "/caminho" 30
 fi
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Fluxo de Inicialização
+### Fluxo de Inicializacao
 ```
-utils.sh → config.sh → validações → formatação → sistema operacional
+utils.sh → config.sh → validacoes → formatacao → sistema operacional
 ```
 
-### Utilização Universal
-- **Todas as funções** são utilizadas por outros módulos
+### Utilizacao Universal
+- **Todas as funcoes** sao utilizadas por outros modulos
 - **Interface consistente** em todo o sistema
-- **Dependência zero** de módulos externos
+- **Dependência zero** de modulos externos
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

@@ -1,41 +1,39 @@
 #!/usr/bin/env bash
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 # Autor: Luiz Augusto
 # Email: luizaugusto@sav.com.br
 #
-# Versão do sistema
+# Versao do sistema
 readonly UPDATE="24/11/2025-00"
 export UPDATE
 
-cd .. || exit 1
+# Diretorio do script principal
+TOOLS_DIR="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
 
-# Diretório do script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Diretorios dos modulos e configuracoes
+lib_dir="${TOOLS_DIR}/libs"
+cfg_dir="${TOOLS_DIR}/cfg"
+export TOOLS_DIR lib_dir cfg_dir
 
-# Diretórios dos módulos e configurações
-LIB_DIR="${SCRIPT_DIR}/libs"
-LIB_CFG="${SCRIPT_DIR}/cfg"
-readonly SCRIPT_DIR LIB_DIR LIB_CFG
-
-# Verificar se o diretório lib existe
-if [[ ! -d "${LIB_DIR}" ]]; then
-    echo "ERRO: Diretório ${LIB_DIR} nao encontrado."
-    echo "Certifique-se de que todos os módulos estao instalados corretamente."
+# Verificar se o diretorio lib existe
+if [[ ! -d "${lib_dir}" ]]; then
+    echo "ERRO: Diretorio ${lib_dir} nao encontrado."
+    echo "Certifique-se de que todos os modulos estao instalados corretamente."
     exit 1
 fi
-# Verificar se o diretório cfg existe
-if [[ ! -d "${LIB_CFG}" ]]; then
-    echo "ERRO: Diretório ${LIB_CFG} nao encontrado."
+# Verificar se o diretorio cfg existe
+if [[ ! -d "${cfg_dir}" ]]; then
+    echo "ERRO: Diretorio ${cfg_dir} nao encontrado."
     echo "Certifique-se de que todos os arquivos de configuracao estao instalados corretamente."
     exit 1
 fi
 
-# Funçao para carregar módulos com verificaçao
+# Funcao para carregar modulos com verificacao
 _carregar_modulo() {
     local modulo="$1"
-    local caminho="${LIB_DIR}/${modulo}"
+    local caminho="${lib_dir}/${modulo}"
     if [[ ! -f "${caminho}" ]]; then
         echo "ERRO: Modulo ${modulo} nao encontrado em ${caminho}"
         exit 1
@@ -48,42 +46,42 @@ _carregar_modulo() {
     
     # shellcheck source=/dev/null
     if ! source "${caminho}"; then
-        echo "ERRO: Falha ao carregar módulo ${modulo}"
+        echo "ERRO: Falha ao carregar modulo ${modulo}"
         exit 1
     fi
 }
 
-# Carregamento sequencial dos módulos (ordem importante)
-_carregar_modulo "utils.sh"      # Utilitários básicos primeiro
-_carregar_modulo "config.sh"     # Configurações
+# Carregamento sequencial dos modulos (ordem importante)
+_carregar_modulo "utils.sh"      # Utilitarios basicos primeiro
+_carregar_modulo "config.sh"     # Configuracoes
 _carregar_modulo "lembrete.sh"   # Sistema de lembretes
-_carregar_modulo "rsync.sh"      # Operações de rede
-_carregar_modulo "sistema.sh"    # Informações do sistema
+_carregar_modulo "rsync.sh"      # Operacoes de rede
+_carregar_modulo "sistema.sh"    # Informacoes do sistema
 _carregar_modulo "arquivos.sh"   # Gestao de arquivos
 _carregar_modulo "backup.sh"     # Sistema de backup
 _carregar_modulo "programas.sh"  # Gestao de programas
 _carregar_modulo "biblioteca.sh" # Gestao de biblioteca
 _carregar_modulo "menus.sh"      # Sistema de menus por último
 
-# Funçao principal de inicializaçao
+# Funcao principal de inicializacao
 _inicializar_sistema() {
-    # Carregar e validar configurações
+    # Carregar e validar configuracoes
     _carregar_configuracoes
     
     # Verificar dependências
     _check_instalado
 
-    # Validar diretórios
+    # Validar diretorios
     _validar_diretorios
     
     # Configurar ambiente
     _configurar_ambiente
     
-    # Executar limpeza automática diária
+    # Executar limpeza automatica diaria
     _executar_expurgador_diario
 }
 
-# Funçao principal do programa
+# Funcao principal do programa
 main() {
     # Tratamento de sinais para limpeza
     trap '_resetando' EXIT INT TERM
@@ -98,7 +96,7 @@ main() {
     _principal
 }
 
-# Verificar se está sendo executado diretamente
+# Verificar se esta sendo executado diretamente
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main "$@"
 fi

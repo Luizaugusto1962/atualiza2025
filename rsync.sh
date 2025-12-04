@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 #
-# rsync.sh - Módulo de Operações de Sincronização
-# Responsável por operações de download/upload via rsync, sftp e ssh
+# rsync.sh - Modulo de Operacoes de Sincronizacao
+# Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 
-destino="${destino:-}"
+raiz="${raiz:-}"
 sistema="${sistema:-}"
 acessossh="${acessossh:-}"
 cmd_zip="${cmd_zip:-}"
 cmd_unzip="${cmd_unzip:-}"
 cmd_find="${cmd_find:-}"
-#---------- CONFIGURAÇÕES DE CONEXÃO ----------#
+#---------- CONFIGURAcoES DE CONEXaO ----------#
 
-# Configura parâmetros de conexão
+# Configura parametros de conexao
 _configurar_conexao() {
-    # Validar parâmetros essenciais
+    # Validar parametros essenciais
     local parametros_obrigatorios=(
         "PORTA" 
         "USUARIO" 
@@ -25,12 +25,12 @@ _configurar_conexao() {
     
     for param in "${parametros_obrigatorios[@]}"; do
         if [[ -z "${!param}" ]]; then
-            _mensagec "${RED}" "Erro: Parâmetro ${param} não configurado"
+            _mensagec "${RED}" "Erro: Parametro ${param} nao configurado"
             return 1
         fi
     done
     
-    # Configurar destinos se não definidos
+    # Configurar destinos se nao definidos
     if [[ -z "${DESTINO2}" ]]; then
         case "${sistema}" in
             "iscobol") DESTINO2="${DESTINO2SAVATUISC}" ;;
@@ -60,7 +60,7 @@ _testar_conexao() {
     return 1
 }
 
-#---------- FUNÇÕES DE DOWNLOAD ----------#
+#---------- FUNcoES DE DOWNLOAD ----------#
 
 # Download via SFTP
 _download_sftp() {
@@ -71,7 +71,7 @@ _download_sftp() {
     local usuario="${5:-$USUARIO}"
     
     if [[ -z "$arquivo_remoto" ]]; then
-        _mensagec "${RED}" "Erro: Arquivo remoto não especificado"
+        _mensagec "${RED}" "Erro: Arquivo remoto nao especificado"
         return 1
     fi
     
@@ -79,13 +79,13 @@ _download_sftp() {
     
     # Verificar conectividade
     if ! _testar_conexao "$servidor" "$porta"; then
-        _mensagec "${RED}" "Erro: Não foi possível conectar ao servidor ${servidor}:${porta}"
+        _mensagec "${RED}" "Erro: Nao foi possivel conectar ao servidor ${servidor}:${porta}"
         return 1
     fi
     
     # Executar SFTP
     if sftp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
-        _log_sucesso "Download SFTP concluído: ${arquivo_remoto}"
+        _log_sucesso "Download SFTP concluido: ${arquivo_remoto}"
         return 0
     else
         _log_erro "Falha no download SFTP: ${arquivo_remoto}"
@@ -107,7 +107,7 @@ EOF
     
     local status=$?
     if (( status == 0 )); then
-        _log_sucesso "Download SFTP SSH concluído: ${arquivo_remoto}"
+        _log_sucesso "Download SFTP SSH concluido: ${arquivo_remoto}"
     else
         _log_erro "Falha no download SFTP SSH: ${arquivo_remoto}"
     fi
@@ -124,7 +124,7 @@ _download_rsync() {
     local usuario="${5:-$USUARIO}"
     
     if [[ -z "$origem_remota" ]]; then
-        _mensagec "${RED}" "Erro: Origem remota não especificada"
+        _mensagec "${RED}" "Erro: Origem remota nao especificada"
         return 1
     fi
     
@@ -133,7 +133,7 @@ _download_rsync() {
     local origem_completa="${usuario}@${servidor}:${origem_remota}"
     
     if rsync -avzP -e "ssh -p ${porta}" "$origem_completa" "$destino_local"; then
-        _log_sucesso "Download RSYNC concluído: ${origem_remota}"
+        _log_sucesso "Download RSYNC concluido: ${origem_remota}"
         return 0
     else
         _log_erro "Falha no download RSYNC: ${origem_remota}"
@@ -141,7 +141,7 @@ _download_rsync() {
     fi
 }
 
-#---------- FUNÇÕES DE UPLOAD ----------#
+#---------- FUNcoES DE UPLOAD ----------#
 
 # Upload via SFTP
 _upload_sftp() {
@@ -152,12 +152,12 @@ _upload_sftp() {
     local usuario="${5:-$USUARIO}"
     
     if [[ ! -f "$arquivo_local" ]]; then
-        _mensagec "${RED}" "Erro: Arquivo local não encontrado: ${arquivo_local}"
+        _mensagec "${RED}" "Erro: Arquivo local nao encontrado: ${arquivo_local}"
         return 1
     fi
     
     if [[ -z "$destino_remoto" ]]; then
-        _mensagec "${RED}" "Erro: Destino remoto não especificado"
+        _mensagec "${RED}" "Erro: Destino remoto nao especificado"
         return 1
     fi
     
@@ -165,7 +165,7 @@ _upload_sftp() {
     
     # Verificar conectividade
     if ! _testar_conexao "$servidor" "$porta"; then
-        _mensagec "${RED}" "Erro: Não foi possível conectar ao servidor"
+        _mensagec "${RED}" "Erro: Nao foi possivel conectar ao servidor"
         return 1
     fi
     
@@ -174,7 +174,7 @@ put "${arquivo_local}" "${destino_remoto}"
 quit
 EOF
     then
-        _log_sucesso "Upload SFTP concluído: ${arquivo_local}"
+        _log_sucesso "Upload SFTP concluido: ${arquivo_local}"
         return 0
     else
         _log_erro "Falha no upload SFTP: ${arquivo_local}"
@@ -191,7 +191,7 @@ _upload_rsync() {
     local usuario="${5:-$USUARIO}"
     
     if [[ ! -f "$arquivo_local" ]]; then
-        _mensagec "${RED}" "Erro: Arquivo local não encontrado: ${arquivo_local}"
+        _mensagec "${RED}" "Erro: Arquivo local nao encontrado: ${arquivo_local}"
         return 1
     fi
     
@@ -200,7 +200,7 @@ _upload_rsync() {
     local destino_completo="${usuario}@${servidor}:${destino_remoto}"
     
     if rsync -avzP -e "ssh -p ${porta}" "$arquivo_local" "$destino_completo"; then
-        _log_sucesso "Upload RSYNC concluído: ${arquivo_local}"
+        _log_sucesso "Upload RSYNC concluido: ${arquivo_local}"
         return 0
     else
         _log_erro "Falha no upload RSYNC: ${arquivo_local}"
@@ -208,7 +208,7 @@ _upload_rsync() {
     fi
 }
 
-#---------- FUNÇÕES DE SINCRONIZAÇÃO DE BIBLIOTECA ----------#
+#---------- FUNcoES DE SINCRONIZAcaO DE BIBLIOTECA ----------#
 
 # Sincroniza biblioteca completa
 _sincronizar_biblioteca() {
@@ -216,7 +216,7 @@ _sincronizar_biblioteca() {
     local tipo_sistema="${2:-$sistema}"
     
     if [[ -z "$versao" ]]; then
-        _mensagec "${RED}" "Erro: Versão não especificada"
+        _mensagec "${RED}" "Erro: Versao nao especificada"
         return 1
     fi
     
@@ -231,7 +231,7 @@ _sincronizar_biblioteca() {
         arquivos_sync=("${SYNC_ATUALIZA1}" "${SYNC_ATUALIZA2}" "${SYNC_ATUALIZA3}")
     fi
     
-    _mensagec "${YELLOW}" "Sincronizando biblioteca versão ${versao}..."
+    _mensagec "${YELLOW}" "Sincronizando biblioteca versao ${versao}..."
     _linha
     
     local falhas=0
@@ -250,20 +250,20 @@ _sincronizar_biblioteca() {
             fi
         fi
         
-        _mensagec "${GREEN}" "Concluído: $(basename "$arquivo")"
+        _mensagec "${GREEN}" "Concluido: $(basename "$arquivo")"
         _linha
     done
     
     if (( falhas > 0 )); then
-        _mensagec "${YELLOW}" "Sincronização concluída com ${falhas} falha(s)"
+        _mensagec "${YELLOW}" "Sincronizacao concluida com ${falhas} falha(s)"
         return 1
     else
-        _mensagec "${GREEN}" "Sincronização concluída com sucesso!"
+        _mensagec "${GREEN}" "Sincronizacao concluida com sucesso!"
         return 0
     fi
 }
 
-# Define variáveis de arquivos para sincronização
+# Define variaveis de arquivos para sincronizacao
 _definir_variaveis_biblioteca_rsync() {
     local versao="$1"
     
@@ -289,15 +289,15 @@ _definir_variaveis_biblioteca_rsync() {
     esac
 }
 
-#---------- FUNÇÕES DE VERIFICAÇÃO ----------#
+#---------- FUNcoES DE VERIFICAcaO ----------#
 
 # Verifica integridade do arquivo baixado
 _verificar_integridade() {
     local arquivo="$1"
-    local tamanho_minimo="${2:-1024}" # 1KB por padrão
+    local tamanho_minimo="${2:-1024}" # 1KB por padrao
     
     if [[ ! -f "$arquivo" ]]; then
-        _log_erro "Arquivo não existe: $arquivo"
+        _log_erro "Arquivo nao existe: $arquivo"
         return 1
     fi
     
@@ -314,7 +314,7 @@ _verificar_integridade() {
         return 1
     fi
     
-    # Verificar se é arquivo ZIP válido
+    # Verificar se e arquivo ZIP valido
     if [[ "$arquivo" == *.zip ]]; then
         if ! "${cmd_unzip}" -t "$arquivo" >/dev/null 2>&1; then
             _log_erro "Arquivo ZIP corrompido: $arquivo"
@@ -334,7 +334,7 @@ _listar_arquivos_remotos() {
     local usuario="${4:-$USUARIO}"
     
     if [[ -z "$diretorio_remoto" ]]; then
-        _mensagec "${RED}" "Erro: Diretório remoto não especificado"
+        _mensagec "${RED}" "Erro: Diretorio remoto nao especificado"
         return 1
     fi
     
@@ -347,55 +347,55 @@ quit
 EOF
 }
 
-#---------- FUNÇÕES DE LIMPEZA ----------#
+#---------- FUNcoES DE LIMPEZA ----------#
 
-# Remove arquivos temporários de sincronização
+# Remove arquivos temporarios de sincronizacao
 _limpar_temporarios_sync() {
     local diretorios_temp=(
-        "${TOOLS}/temp_sync"
+        "${TOOLS_DIR}/temp_sync"
         "${ENVIA}/temp_update"
         "${RECEBE}/temp_download"
     )
     
     for dir in "${diretorios_temp[@]}"; do
         if [[ -d "$dir" ]]; then
-            _log "Removendo diretório temporário: $dir"
+            _log "Removendo diretorio temporario: $dir"
             rm -rf "$dir"
         fi
     done
     
     # Remover arquivos .part (downloads incompletos)
-    find "${TOOLS}" "${ENVIA}" "${RECEBE}" -name "*.part" -type f -delete 2>/dev/null || true
+    find "${TOOLS_DIR}" "${ENVIA}" "${RECEBE}" -name "*.part" -type f -delete 2>/dev/null || true
     
-    _log "Limpeza de temporários de sincronização concluída"
+    _log "Limpeza de temporarios de sincronizacao concluida"
 }
 
-#---------- FUNÇÕES DE CONFIGURAÇÃO SSH ----------#
+#---------- FUNcoES DE CONFIGURAcaO SSH ----------#
 
-# Configura chaves SSH se necessário
+# Configura chaves SSH se necessario
 _configurar_ssh() {
     local ssh_dir="$HOME/.ssh"
     local config_ssh="$ssh_dir/config"
     
-    # Criar diretório .ssh se não existir
+    # Criar diretorio .ssh se nao existir
     if [[ ! -d "$ssh_dir" ]]; then
         mkdir -p "$ssh_dir"
         chmod 700 "$ssh_dir"
     fi
     
-    # Verificar se existe configuração para sav_servidor
+    # Verificar se existe configuracao para sav_servidor
     if [[ -f "$config_ssh" ]] && grep -q "Host sav_servidor" "$config_ssh"; then
-        _log "Configuração SSH já existe para sav_servidor"
+        _log "Configuracao SSH ja existe para sav_servidor"
         return 0
     fi
     
-    _log "Configuração SSH não encontrada - usando método padrão"
+    _log "Configuracao SSH nao encontrada - usando metodo padrao"
     return 1
 }
 
-#---------- FUNÇÕES DE RETRY ----------#
+#---------- FUNcoES DE RETRY ----------#
 
-# Executa comando com retry automático
+# Executa comando com retry automatico
 _executar_com_retry() {
     local comando="$1"
     local max_tentativas="${2:-3}"
@@ -411,13 +411,13 @@ _executar_com_retry() {
         else
             _log_erro "Falha na tentativa ${tentativa}"
             if (( tentativa < max_tentativas )); then
-                _log "Aguardando ${intervalo}s antes da próxima tentativa..."
+                _log "Aguardando ${intervalo}s antes da proxima tentativa..."
                 sleep "$intervalo"
             fi
             ((tentativa++))
         fi
     done
     
-    _log_erro "Comando falhou após ${max_tentativas} tentativas: ${comando}"
+    _log_erro "Comando falhou apos ${max_tentativas} tentativas: ${comando}"
     return 1
 }

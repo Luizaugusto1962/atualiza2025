@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# programas.sh - Módulo de Gestão de Programas
-# Responsável pela atualização, instalação e reversão de programas
+# programas.sh - Modulo de Gestao de Programas
+# Responsavel pela atualizacao, instalacao e reversao de programas
 #
-# SISTEMA SAV - Script de Atualizaçao Modular
-# Versao: 01/11/2025-00
+# SISTEMA SAV - Script de Atualizacao Modular
+# Versao: 04/12/2025-00
 
-destino="${destino:-}"
+raiz="${raiz:-}"
 sistema="${sistema:-}"
 acessossh="${acessossh:-}"
 cmd_zip="${cmd_zip:-}"
@@ -16,19 +16,19 @@ class="${class:-}"
 mclass="${mclass:-}"
 Offline="${Offline:-}"
 down_dir="${down_dir:-}"
-#---------- VARIÁVEIS GLOBAIS DO MÓDULO ----------#
+#---------- VARIaVEIS GLOBAIS DO MoDULO ----------#
 
 # Arrays para armazenar programas e arquivos
 declare -a PROGRAMAS_SELECIONADOS=()
 declare -a ARQUIVOS_PROGRAMA=()
 
-#---------- FUNÇÕES DE ATUALIZAÇÃO ONLINE ----------#
+#---------- FUNcoES DE ATUALIZAcaO ONLINE ----------#
 
-# Atualização de programas via conexão online
+# Atualizacao de programas via conexao online
 _atualizar_programa_online() {
     if [[ "${Offline}" == "s" ]]; then
         _linha
-        _mensagec "${YELLOW}" "Parâmetro do servidor OFF ativo"
+        _mensagec "${YELLOW}" "Parametro do servidor OFF ativo"
         _linha
         _press
         return 1
@@ -52,7 +52,7 @@ _atualizar_programa_online() {
     _press
 }
 
-# Atualização de programas via arquivos offline
+# Atualizacao de programas via arquivos offline
 _atualizar_programa_offline() {
     # Solicitar programas a serem atualizados
     _solicitar_programas_atualizacao
@@ -64,7 +64,7 @@ _atualizar_programa_offline() {
     fi
     
     _linha
-    _mensagec "${YELLOW}" "Os programas devem estar no diretório ${down_dir}"
+    _mensagec "${YELLOW}" "Os programas devem estar no diretorio ${down_dir}"
     _linha
     _read_sleep 1
     
@@ -77,12 +77,12 @@ _atualizar_programa_offline() {
     _press
 }
 
-# Atualização de programas em pacotes
+# Atualizacao de programas em pacotes
 _atualizar_programa_pacote() {
         _solicitar_pacotes_atualizacao
     if [[ "${Offline}" == "s" ]]; then
         _linha
-        _mensagec "${YELLOW}" "Parâmetro do servidor OFF ativo"
+        _mensagec "${YELLOW}" "Parametro do servidor OFF ativo"
         _mover_arquivos_offline
     else 
         _baixar_pacotes_rsync
@@ -91,9 +91,9 @@ _atualizar_programa_pacote() {
         _press
 }
 
-#---------- FUNÇÕES DE REVERSÃO ----------#
+#---------- FUNcoES DE REVERSaO ----------#
 
-# Reverter programas para versão anterior
+# Reverter programas para versao anterior
 _reverter_programa() {
     local MAX_REPETICOES=6
     local contador=0
@@ -119,7 +119,7 @@ _reverter_programa() {
 
         # Validar nome do programa
         if ! _validar_nome_programa "$programa"; then
-            _mensagec "${RED}" "Erro: Nome inválido. Use apenas letras maiúsculas e números."
+            _mensagec "${RED}" "Erro: Nome invalido. Use apenas letras maiúsculas e números."
             continue
         fi
 
@@ -139,19 +139,19 @@ _reverter_programa() {
         done
     done
 
-    # Processar reversão
+    # Processar reversao
     if (( ${#PROGRAMAS_SELECIONADOS[@]} > 0 )); then
         _processar_reversao_programas
         _mensagem_conclusao_reversao
     else
-        _mensagec "${RED}" "Nenhum programa foi selecionado para reversão"
+        _mensagec "${RED}" "Nenhum programa foi selecionado para reversao"
         _press
     fi
 }
 
-#---------- FUNÇÕES DE SOLICITAÇÃO DE DADOS ----------#
+#---------- FUNcoES DE SOLICITAcaO DE DADOS ----------#
 
-# Solicita programas para atualização
+# Solicita programas para atualizacao
 _solicitar_programas_atualizacao() {
     local MAX_REPETICOES=6
     local contador=0
@@ -174,22 +174,22 @@ _solicitar_programas_atualizacao() {
 
         # Verificar se foi digitado ENTER
         if [[ -z "${programa}" ]]; then
-            _mensagec "${YELLOW}" "Finalizando seleção de programas..."
+            _mensagec "${YELLOW}" "Finalizando selecao de programas..."
             _linha
             break
         fi
 
         # Validar nome do programa
         if ! _validar_nome_programa "$programa"; then
-            _mensagec "${RED}" "Erro: Nome inválido. Use apenas letras maiúsculas e números."
+            _mensagec "${RED}" "Erro: Nome invalido. Use apenas letras maiúsculas e números."
             continue
         fi
 
-        # Solicitar tipo de compilação
-        _mensagec "${RED}" "Informe o tipo de compilação (1 - Normal, 2 - Depuração):"
+        # Solicitar tipo de compilacao
+        _mensagec "${RED}" "Informe o tipo de compilacao (1 - Normal, 2 - Depuracao):"
         _linha
 
-        read -rp "${YELLOW}Tipo de compilação: ${NORM}" -n1 tipo_compilacao
+        read -rp "${YELLOW}Tipo de compilacao: ${NORM}" -n1 tipo_compilacao
         printf "\n"
 
         case "$tipo_compilacao" in
@@ -200,7 +200,7 @@ _solicitar_programas_atualizacao() {
                 arquivo_compilado="${programa}${mclass}.zip"
                 ;;
             *)
-                _mensagec "${RED}" "Erro: Opção inválida. Digite 1 ou 2."
+                _mensagec "${RED}" "Erro: Opcao invalida. Digite 1 ou 2."
                 continue
                 ;;
         esac
@@ -221,7 +221,7 @@ _solicitar_programas_atualizacao() {
     done
 }
 
-# Solicita pacotes para atualização
+# Solicita pacotes para atualizacao
 _solicitar_pacotes_atualizacao() {
     local MAX_REPETICOES=6
     local contador=0
@@ -243,27 +243,27 @@ _solicitar_pacotes_atualizacao() {
         _linha
 
         if [[ -z "${programa}" ]]; then
-            _mensagec "${YELLOW}" "Finalizando seleção de pacotes..."
+            _mensagec "${YELLOW}" "Finalizando selecao de pacotes..."
             break
         fi
 
         if ! _validar_nome_programa "$programa"; then
-            _mensagec "${RED}" "Erro: Nome inválido. Use apenas letras maiúsculas e números."
+            _mensagec "${RED}" "Erro: Nome invalido. Use apenas letras maiúsculas e números."
             continue
         fi
 
-        # Solicitar tipo de compilação
-        _mensagec "${RED}" "Informe o tipo de compilação (1 - Normal, 2 - Depuração):"
+        # Solicitar tipo de compilacao
+        _mensagec "${RED}" "Informe o tipo de compilacao (1 - Normal, 2 - Depuracao):"
         _linha
 
-        read -rp "${YELLOW}Tipo de compilação: ${NORM}" -n1 tipo_compilacao
+        read -rp "${YELLOW}Tipo de compilacao: ${NORM}" -n1 tipo_compilacao
         printf "\n"
 
         case "$tipo_compilacao" in
             1) arquivo_compilado="${programa}${class}.zip" ;;
             2) arquivo_compilado="${programa}${mclass}.zip" ;;
             *)
-                _mensagec "${RED}" "Erro: Opção inválida."
+                _mensagec "${RED}" "Erro: Opcao invalida."
                 continue
                 ;;
         esac
@@ -276,7 +276,7 @@ _solicitar_pacotes_atualizacao() {
     done
 }
 
-#---------- FUNÇÕES DE DOWNLOAD ----------#
+#---------- FUNcoES DE DOWNLOAD ----------#
 
 # Baixa programas via RSYNC/SFTP
 _baixar_programas_rsync() {
@@ -287,7 +287,7 @@ _baixar_programas_rsync() {
     fi
 
     _linha
-    _mensagec "${YELLOW}" "Realizando sincronização dos arquivos..."
+    _mensagec "${YELLOW}" "Realizando sincronizacao dos arquivos..."
 
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
         _linha
@@ -295,7 +295,7 @@ _baixar_programas_rsync() {
         _linha
 
         if [[ "${acessossh}" == "n" ]]; then
-            _mensagec "${YELLOW}" "Informe a senha para o usuário remoto:"
+            _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
             _linha
             echo "Transferindo: $arquivo"
 #            _press
@@ -315,23 +315,23 @@ EOF
             continue
         fi
         
-        _mensagec "${GREEN}" "Download concluído: $arquivo"
+        _mensagec "${GREEN}" "Download concluido: $arquivo"
     done
 }
 
-# Baixa pacotes para diretório específico
+# Baixa pacotes para diretorio especifico
 _baixar_pacotes_rsync() {
     _configurar_acessos
 
     cd "${down_dir}" || {
-        _mensagec "${RED}" "Erro: Diretório $down_dir não encontrado"
+        _mensagec "${RED}" "Erro: Diretorio $down_dir nao encontrado"
         return 1
     }
 
     _baixar_programas_rsync
 }
 
-#---------- FUNÇÕES DE PROCESSAMENTO ----------#
+#---------- FUNcoES DE PROCESSAMENTO ----------#
 
 # Move arquivos do servidor offline
 _mover_arquivos_offline() {
@@ -341,31 +341,31 @@ _mover_arquivos_offline() {
     if [[ "${Offline}" == "s" ]]; then
         for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
             if [[ -f "${down_dir}/${arquivo}" ]]; then
-                if ! mv -f "${down_dir}/${arquivo}" "${TOOLS}"; then
+                if ! mv -f "${down_dir}/${arquivo}" "${TOOLS_DIR}"; then
                     _mensagec "${RED}" "Erro ao mover: ${arquivo}"
                     continue
                 fi
                 _mensagec "${GREEN}" "Arquivo movido: ${arquivo}"
             else
-                _mensagec "${RED}" "Arquivo não encontrado: ${arquivo}"
+                _mensagec "${RED}" "Arquivo nao encontrado: ${arquivo}"
             fi
         done
     fi
 }
 
-# Processa atualização dos programas
+# Processa atualizacao dos programas
 _processar_atualizacao_programas() {
     _ir_para_tools
     local arquivo         # Nome do arquivo
-    local extensao        # Extensão do arquivo
+    local extensao        # Extensao do arquivo
     local backup_file     # Nome do arquivo de backup
-    local programa_idx=0  # Índice do programa no array
+    local programa_idx=0  # indice do programa no array
 #    _configurar_acessos
      
     # Verificar se arquivos existem
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
         if [[ ! -f "${arquivo}" ]]; then
-            _mensagec "${RED}" "Arquivo não encontrado: ${arquivo}"
+            _mensagec "${RED}" "Arquivo nao encontrado: ${arquivo}"
             return 1
         fi
     done
@@ -375,7 +375,7 @@ _processar_atualizacao_programas() {
         local programa="${PROGRAMAS_SELECIONADOS[$programa_idx]}"
         local arquivo_backup="${OLDS}/${programa}-anterior.zip"
         
-        # Verificar se já existe backup
+        # Verificar se ja existe backup
         if [[ -f "$arquivo_backup" ]]; then
             mv -f "$arquivo_backup" "${OLDS}/${UMADATA}-${programa}-anterior.zip"
         fi
@@ -411,7 +411,7 @@ _processar_atualizacao_programas() {
         fi
     done
 
-    # Mover arquivos para diretórios corretos
+    # Mover arquivos para diretorios corretos
     for extensao in ".class" ".int" ".TEL"; do
         if compgen -G "*${extensao}" >/dev/null; then
             for arquivo in *"${extensao}"; do
@@ -436,19 +436,19 @@ _processar_atualizacao_programas() {
         fi
     done
 
-    _mensagec "${GREEN}" "Alterando extensão da atualização"
+    _mensagec "${GREEN}" "Alterando extensao da atualizacao"
     _linha
-    _mensagec "${YELLOW}" "Atualização concluída com sucesso!"
+    _mensagec "${YELLOW}" "Atualizacao concluida com sucesso!"
 }
 
-# Processa atualização de pacotes
+# Processa atualizacao de pacotes
 _processar_atualizacao_pacotes() {
 #    cd "${down_dir}" || return 1
     _configurar_acessos
     # Descompactar pacotes
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
         if [[ ! -f "${arquivo}" ]]; then
-            _mensagec "${RED}" "Arquivo não encontrado: ${arquivo}"
+            _mensagec "${RED}" "Arquivo nao encontrado: ${arquivo}"
             continue
         fi
 
@@ -469,7 +469,7 @@ _processar_atualizacao_pacotes() {
     # Processar arquivos .class encontrados
     find . -type f -name "*.class" | while read -r classfile; do
         local progname="${classfile##*/}" # Extrair nome do arquivo
-        progname="${progname%%.class}"    # Remover extensão
+        progname="${progname%%.class}"    # Remover extensao
 
         # Backup dos arquivos antigos
         if [[ "${sistema}" == "iscobol" ]]; then
@@ -491,28 +491,28 @@ _processar_atualizacao_pacotes() {
     done
 }
 
-# Processa reversão de programas
+# Processa reversao de programas
 _processar_reversao_programas() {
     for programa_idx in "${!PROGRAMAS_SELECIONADOS[@]}"; do
         local programa="${PROGRAMAS_SELECIONADOS[$programa_idx]}"
         local arquivo_anterior="${OLDS}/${programa}-anterior.zip"
         
         if [[ -f "$arquivo_anterior" ]]; then
-            mv -f "$arquivo_anterior" "${TOOLS}/${programa}${class}.zip"
+            mv -f "$arquivo_anterior" "${TOOLS_DIR}/${programa}${class}.zip"
             _mensagec "${GREEN}" "Programa revertido: ${programa}"
         else
-            _mensagec "${RED}" "Backup não encontrado para: ${programa}"
+            _mensagec "${RED}" "Backup nao encontrado para: ${programa}"
         fi
     done
 
-    # Processar atualização com os arquivos revertidos
+    # Processar atualizacao com os arquivos revertidos
     _ir_para_tools
     _processar_atualizacao_programas
 }
 
-#---------- FUNÇÕES AUXILIARES ----------#
+#---------- FUNcoES AUXILIARES ----------#
 
-# Obtém data de modificação do arquivo
+# Obtem data de modificacao do arquivo
 _obter_data_arquivo() {
     local arquivo="$1" # Nome do arquivo
     if [[ -f "${E_EXEC}/${arquivo}" ]]; then
@@ -527,10 +527,10 @@ _obter_data_arquivo() {
     fi
 }
 
-# Mensagem de conclusão da reversão
+# Mensagem de conclusao da reversao
 _mensagem_conclusao_reversao() {
     _linha
-    _mensagec "${YELLOW}" "Volta do(s) Programa(s) Concluída(s)"
+    _mensagec "${YELLOW}" "Volta do(s) Programa(s) Concluida(s)"
     _linha
     _press
 
@@ -540,7 +540,7 @@ _mensagem_conclusao_reversao() {
     fi
 }
 
-#---------- FUNÇÕES DE INTERFACE ----------#
+#---------- FUNcoES DE INTERFACE ----------#
 
 # Limpa arrays de programas
 _limpar_selecao_programas() {

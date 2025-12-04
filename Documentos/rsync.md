@@ -1,32 +1,32 @@
-# Documentação do Módulo rsync.sh
+# Documentacao do Modulo rsync.sh
 
-## Visão Geral
-O módulo `rsync.sh` é responsável pelas **operações de sincronização e transferência de arquivos** via rede no **Sistema SAV (Script de Atualização Modular)**. Este módulo oferece funcionalidades avançadas para download, upload e sincronização usando múltiplos protocolos com tratamento robusto de erros.
+## Visao Geral
+O modulo `rsync.sh` e responsavel pelas **operacoes de sincronizacao e transferência de arquivos** via rede no **Sistema SAV (Script de Atualizacao Modular)**. Este modulo oferece funcionalidades avancadas para download, upload e sincronizacao usando múltiplos protocolos com tratamento robusto de erros.
 
 ## Funcionalidades Principais
 
 ### 1. Protocolos Suportados
 - **SFTP** (Secure File Transfer Protocol)
 - **RSYNC** (Remote Synchronization)
-- **SSH** (Secure Shell) para conexões autenticadas
+- **SSH** (Secure Shell) para conexoes autenticadas
 
-### 2. Operações de Rede
+### 2. Operacoes de Rede
 - **Download** de arquivos individuais ou bibliotecas completas
 - **Upload** de arquivos locais para servidor remoto
-- **Sincronização** de bibliotecas do sistema SAV
+- **Sincronizacao** de bibliotecas do sistema SAV
 - **Listagem** de arquivos remotos
 
-### 3. Recursos Avançados
-- **Verificação de conectividade** antes das operações
-- **Sistema de retry** automático com configuração personalizável
-- **Verificação de integridade** de arquivos transferidos
-- **Limpeza automática** de arquivos temporários
+### 3. Recursos Avancados
+- **Verificacao de conectividade** antes das operacoes
+- **Sistema de retry** automatico com configuracao personalizavel
+- **Verificacao de integridade** de arquivos transferidos
+- **Limpeza automatica** de arquivos temporarios
 
-## Estrutura do Código
+## Estrutura do Codigo
 
-### Variáveis Essenciais
+### Variaveis Essenciais
 ```bash
-# Configurações de conexão
+# Configuracoes de conexao
 destino="${destino:-}"
 sistema="${sistema:-}"
 acessossh="${acessossh:-}"
@@ -37,9 +37,9 @@ cmd_unzip="${cmd_unzip:-}"
 cmd_find="${cmd_find:-}"
 ```
 
-### Parâmetros Obrigatórios
+### Parametros Obrigatorios
 ```bash
-# Validação de parâmetros essenciais
+# Validacao de parametros essenciais
 local parametros_obrigatorios=(
     "PORTA"
     "USUARIO"
@@ -47,18 +47,18 @@ local parametros_obrigatorios=(
 )
 ```
 
-## Funções de Configuração
+## Funcoes de Configuracao
 
 ### `_configurar_conexao()`
-Configura parâmetros de conexão e valida dependências.
+Configura parametros de conexao e valida dependências.
 
 **Funcionalidades:**
-- **Validação de parâmetros** obrigatórios (PORTA, USUARIO, IPSERVER)
-- **Configuração automática** de destinos baseada no sistema
-- **Definição de caminhos** específicos para IsCobol/Micro Focus
+- **Validacao de parametros** obrigatorios (PORTA, USUARIO, IPSERVER)
+- **Configuracao automatica** de destinos baseada no sistema
+- **Definicao de caminhos** especificos para IsCobol/Micro Focus
 
 ```bash
-# Configuração baseada no sistema
+# Configuracao baseada no sistema
 case "${sistema}" in
     "iscobol") DESTINO2="${DESTINO2SAVATUISC}" ;;
     *) DESTINO2="${DESTINO2SAVATUMF}" ;;
@@ -68,9 +68,9 @@ esac
 ### `_testar_conexao()`
 Testa conectividade com servidor remoto.
 
-**Métodos utilizados:**
-1. **netcat (nc)** - Método preferencial
-2. **telnet** - Método alternativo
+**Metodos utilizados:**
+1. **netcat (nc)** - Metodo preferencial
+2. **telnet** - Metodo alternativo
 3. **timeout** - Controle de tempo limite
 
 ```bash
@@ -81,29 +81,29 @@ nc -z -w"$timeout" "$servidor" "$porta"
 timeout "$timeout" telnet "$servidor" "$porta"
 ```
 
-## Funções de Download
+## Funcoes de Download
 
 ### `_download_sftp()`
-Download via SFTP com autenticação interativa.
+Download via SFTP com autenticacao interativa.
 
-**Características:**
-- **Verificação de conectividade** antes do download
-- **Logs detalhados** de todas as operações
-- **Tratamento de erros** específico
-- **Parâmetros configuráveis** (servidor, porta, usuário)
+**Caracteristicas:**
+- **Verificacao de conectividade** antes do download
+- **Logs detalhados** de todas as operacoes
+- **Tratamento de erros** especifico
+- **Parametros configuraveis** (servidor, porta, usuario)
 
 ```bash
-# Execução SFTP
+# Execucao SFTP
 sftp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"
 ```
 
 ### `_download_sftp_ssh()`
-Download via SFTP usando configuração SSH existente.
+Download via SFTP usando configuracao SSH existente.
 
-**Características:**
-- **Uso de configuração** `sav_servidor` existente
+**Caracteristicas:**
+- **Uso de configuracao** `sav_servidor` existente
 - **Here document** para comandos automatizados
-- **Controle de status** de saída
+- **Controle de status** de saida
 
 ```bash
 sftp sav_servidor <<EOF
@@ -113,47 +113,47 @@ EOF
 ```
 
 ### `_download_rsync()`
-Download via RSYNC com sincronização avançada.
+Download via RSYNC com sincronizacao avancada.
 
-**Características:**
-- **Sincronização incremental** automática
-- **Preservação de permissões** e timestamps
+**Caracteristicas:**
+- **Sincronizacao incremental** automatica
+- **Preservacao de permissoes** e timestamps
 - **Progresso detalhado** com `-P`
-- **Compressão** durante transferência com `-z`
+- **Compressao** durante transferência com `-z`
 
 ```bash
 rsync -avzP -e "ssh -p ${porta}" "$origem_completa" "$destino_local"
 ```
 
-## Funções de Upload
+## Funcoes de Upload
 
 ### `_upload_sftp()`
 Upload via SFTP para servidor remoto.
 
-**Características:**
-- **Validação de existência** do arquivo local
-- **Verificação de conectividade** antes do upload
+**Caracteristicas:**
+- **Validacao de existência** do arquivo local
+- **Verificacao de conectividade** antes do upload
 - **Here document** para comandos automatizados
 - **Logs detalhados** do processo
 
 ### `_upload_rsync()`
-Upload via RSYNC com recursos avançados.
+Upload via RSYNC com recursos avancados.
 
-**Características:**
-- **Sincronização bidirecional** possível
-- **Compressão automática** durante transferência
-- **Preservação completa** de atributos de arquivo
-- **Relatório de progresso** detalhado
+**Caracteristicas:**
+- **Sincronizacao bidirecional** possivel
+- **Compressao automatica** durante transferência
+- **Preservacao completa** de atributos de arquivo
+- **Relatorio de progresso** detalhado
 
-## Sistema de Sincronização de Biblioteca
+## Sistema de Sincronizacao de Biblioteca
 
 ### `_sincronizar_biblioteca()`
-Sincronização completa de bibliotecas SAV.
+Sincronizacao completa de bibliotecas SAV.
 
 **Processo:**
-1. **Configuração de conexão** e validação
-2. **Definição de variáveis** específicas da biblioteca
-3. **Sincronização sequencial** de todos os arquivos
+1. **Configuracao de conexao** e validacao
+2. **Definicao de variaveis** especificas da biblioteca
+3. **Sincronizacao sequencial** de todos os arquivos
 4. **Controle de falhas** com contador
 5. **Feedback visual** durante o processo
 
@@ -169,26 +169,26 @@ arquivos_sync=(
 ```
 
 ### `_definir_variaveis_biblioteca_rsync()`
-Define variáveis específicas para sincronização baseada na versão e sistema.
+Define variaveis especificas para sincronizacao baseada na versao e sistema.
 
-**Lógica de definição:**
-- **trans_pc**: Caminho específico para transferência PC
-- **ISCobol**: Caminho padrão IsCobol
-- **Padrão**: Caminho alternativo para outros sistemas
+**Logica de definicao:**
+- **trans_pc**: Caminho especifico para transferência PC
+- **ISCobol**: Caminho padrao IsCobol
+- **Padrao**: Caminho alternativo para outros sistemas
 
-## Funções de Verificação
+## Funcoes de Verificacao
 
 ### `_verificar_integridade()`
-Verificação completa de integridade de arquivos baixados.
+Verificacao completa de integridade de arquivos baixados.
 
-**Verificações realizadas:**
+**Verificacoes realizadas:**
 1. **Existência do arquivo**
-2. **Tamanho não-zero**
-3. **Tamanho mínimo** (1KB por padrão)
-4. **Validade do ZIP** (se aplicável)
+2. **Tamanho nao-zero**
+3. **Tamanho minimo** (1KB por padrao)
+4. **Validade do ZIP** (se aplicavel)
 
 ```bash
-# Verificações de tamanho
+# Verificacoes de tamanho
 local tamanho_arquivo
 tamanho_arquivo=$(stat -c%s "$arquivo" 2>/dev/null || echo "0")
 
@@ -197,51 +197,51 @@ tamanho_arquivo=$(stat -c%s "$arquivo" 2>/dev/null || echo "0")
 ```
 
 ### `_listar_arquivos_remotos()`
-Lista arquivos em diretório remoto via SFTP.
+Lista arquivos em diretorio remoto via SFTP.
 
-**Características:**
+**Caracteristicas:**
 - **Comandos interativos** via here document
-- **Formatação detalhada** (`ls -la`)
-- **Navegação remota** (`cd` remoto)
+- **Formatacao detalhada** (`ls -la`)
+- **Navegacao remota** (`cd` remoto)
 
-## Funções de Limpeza
+## Funcoes de Limpeza
 
 ### `_limpar_temporarios_sync()`
-Remove arquivos e diretórios temporários de sincronização.
+Remove arquivos e diretorios temporarios de sincronizacao.
 
-**Diretórios limpos:**
-- `${TOOLS}/temp_sync`
+**Diretorios limpos:**
+- `${TOOLS_DIR}/temp_sync`
 - `${ENVIA}/temp_update`
 - `${RECEBE}/temp_download`
 
 **Arquivos removidos:**
 - **Arquivos `.part`** (downloads incompletos)
-- **Diretórios temporários** criados durante operações
+- **Diretorios temporarios** criados durante operacoes
 
-## Sistema de Configuração SSH
+## Sistema de Configuracao SSH
 
 ### `_configurar_ssh()`
-Verifica e configura chaves SSH se necessário.
+Verifica e configura chaves SSH se necessario.
 
 **Funcionalidades:**
-- **Criação automática** de diretório `.ssh`
-- **Verificação de configuração** existente
-- **Permissões adequadas** (700 para diretórios, 600 para arquivos)
-- **Detecção automática** de configuração `sav_servidor`
+- **Criacao automatica** de diretorio `.ssh`
+- **Verificacao de configuracao** existente
+- **Permissoes adequadas** (700 para diretorios, 600 para arquivos)
+- **Deteccao automatica** de configuracao `sav_servidor`
 
 ## Sistema de Retry
 
 ### `_executar_com_retry()`
-Executa comandos com tentativas automáticas de recuperação.
+Executa comandos com tentativas automaticas de recuperacao.
 
-**Características:**
-- **Configuração personalizável** de tentativas e intervalos
+**Caracteristicas:**
+- **Configuracao personalizavel** de tentativas e intervalos
 - **Logs detalhados** de cada tentativa
 - **Pausa progressiva** entre tentativas
 - **Controle de sucesso/falha** preciso
 
 ```bash
-# Configuração padrão: 3 tentativas, 5 segundos de intervalo
+# Configuracao padrao: 3 tentativas, 5 segundos de intervalo
 local max_tentativas="${2:-3}"
 local intervalo="${3:-5}"
 ```
@@ -249,16 +249,16 @@ local intervalo="${3:-5}"
 ## Tratamento de Logs
 
 ### Sistema de Logging
-O módulo implementa três níveis de logging:
+O modulo implementa três niveis de logging:
 
-#### `_log()` - Informação geral
+#### `_log()` - Informacao geral
 ```bash
 _log "Iniciando download RSYNC: ${origem_remota}"
 ```
 
-#### `_log_sucesso()` - Operações bem-sucedidas
+#### `_log_sucesso()` - Operacoes bem-sucedidas
 ```bash
-_log_sucesso "Download RSYNC concluído: ${origem_remota}"
+_log_sucesso "Download RSYNC concluido: ${origem_remota}"
 ```
 
 #### `_log_erro()` - Erros e falhas
@@ -266,56 +266,56 @@ _log_sucesso "Download RSYNC concluído: ${origem_remota}"
 _log_erro "Falha no download RSYNC: ${origem_remota}"
 ```
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Validações de Segurança
-- **Verificação de conectividade** antes de operações
-- **Validação de parâmetros** obrigatórios
-- **Controle de permissões** em arquivos SSH
-- **Sanitização de caminhos** de arquivo
+### Validacoes de Seguranca
+- **Verificacao de conectividade** antes de operacoes
+- **Validacao de parametros** obrigatorios
+- **Controle de permissoes** em arquivos SSH
+- **Sanitizacao de caminhos** de arquivo
 
-### Tratamento Seguro de Conexões
+### Tratamento Seguro de Conexoes
 - **Teste de conectividade** antes de transferências
-- **Configuração segura** de SSH
-- **Controle de timeout** em operações de rede
+- **Configuracao segura** de SSH
+- **Controle de timeout** em operacoes de rede
 - **Logs de auditoria** para rastreabilidade
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
-### Organização do Código
-- **Funções específicas** por protocolo/método
-- **Validações centralizadas** na configuração
+### Organizacao do Codigo
+- **Funcoes especificas** por protocolo/metodo
+- **Validacoes centralizadas** na configuracao
 - **Tratamento uniforme** de erros
 - **Logs estruturados** para auditoria
 
 ### Performance
-- **Múltiplos protocolos** para diferentes cenários
-- **Sistema de retry** para redes instáveis
-- **Limpeza automática** de temporários
-- **Verificação eficiente** de integridade
+- **Múltiplos protocolos** para diferentes cenarios
+- **Sistema de retry** para redes instaveis
+- **Limpeza automatica** de temporarios
+- **Verificacao eficiente** de integridade
 
 ### Manutenibilidade
-- **Comentários claros** sobre cada função
-- **Parâmetros bem documentados**
-- **Tratamento robusto** de diferentes cenários
-- **Configuração flexível** baseada em variáveis
+- **Comentarios claros** sobre cada funcao
+- **Parametros bem documentados**
+- **Tratamento robusto** de diferentes cenarios
+- **Configuracao flexivel** baseada em variaveis
 
 ## Dependências Externas
 
 ### Comandos Utilizados
-- `rsync` - Sincronização remota de arquivos
+- `rsync` - Sincronizacao remota de arquivos
 - `sftp` - Transferência segura de arquivos
-- `ssh` - Conexões seguras (via rsync -e)
+- `ssh` - Conexoes seguras (via rsync -e)
 - `nc`/`telnet` - Teste de conectividade
-- `stat` - Informações de arquivos
-- `find` - Busca avançada (em outros módulos)
+- `stat` - Informacoes de arquivos
+- `find` - Busca avancada (em outros modulos)
 
-### Variáveis de Ambiente
-- `IPSERVER` - Endereço do servidor remoto
-- `PORTA` - Porta para conexão
-- `USUARIO` - Usuário para autenticação
+### Variaveis de Ambiente
+- `IPSERVER` - Endereco do servidor remoto
+- `PORTA` - Porta para conexao
+- `USUARIO` - Usuario para autenticacao
 - `DESTINO2` - Caminho remoto base
-- `SAVATU*` - Variáveis específicas da biblioteca
+- `SAVATU*` - Variaveis especificas da biblioteca
 
 ## Exemplos de Uso
 
@@ -340,29 +340,29 @@ _upload_sftp "arquivo_local.zip" "destino/remoto/"
 _upload_rsync "arquivo_local.zip" "destino/remoto/"
 ```
 
-### Sincronização de Biblioteca
+### Sincronizacao de Biblioteca
 ```bash
-# Sincronizar biblioteca versão 2024
+# Sincronizar biblioteca versao 2024
 _sincronizar_biblioteca "2024"
 
-# Para sistema específico
+# Para sistema especifico
 _sincronizar_biblioteca "2024" "iscobol"
 ```
 
-### Verificação de Conectividade
+### Verificacao de Conectividade
 ```bash
-# Teste básico
+# Teste basico
 _testar_conexao "$IPSERVER" "$PORTA"
 
 # Teste com timeout personalizado
 _testar_conexao "$IPSERVER" "$PORTA" "10"
 ```
 
-## Características Avançadas
+## Caracteristicas Avancadas
 
-### Configuração Dinâmica de Destinos
+### Configuracao Dinamica de Destinos
 ```bash
-# Definição baseada no caminho remoto
+# Definicao baseada no caminho remoto
 case "${DESTINO2}" in
     *"trans_pc"*)
         SYNC_ATUALIZA1="${DESTINO2TRANSPC}${SAVATU1}${versao}.zip"
@@ -376,67 +376,67 @@ case "${DESTINO2}" in
 esac
 ```
 
-### Controle de Método de Acesso
+### Controle de Metodo de Acesso
 ```bash
-# Escolha automática baseada na configuração
+# Escolha automatica baseada na configuracao
 if [[ "${acessossh}" == "n" ]]; then
-    _download_sftp "$arquivo"    # Método interativo
+    _download_sftp "$arquivo"    # Metodo interativo
 else
-    _download_sftp_ssh "$arquivo" # Método com chave SSH
+    _download_sftp_ssh "$arquivo" # Metodo com chave SSH
 fi
 ```
 
 ### Sistema de Logs Estruturado
 ```bash
-# Cada operação gera logs detalhados
-_log "Iniciando operação..."
-_log_sucesso "Operação concluída com sucesso"
-_log_erro "Falha na operação: motivo"
+# Cada operacao gera logs detalhados
+_log "Iniciando operacao..."
+_log_sucesso "Operacao concluida com sucesso"
+_log_erro "Falha na operacao: motivo"
 ```
 
 ## Tratamento de Erros
 
-### Estratégias Implementadas
-- **Validação prévia** de todos os parâmetros
-- **Teste de conectividade** antes de operações
-- **Sistema de retry** para falhas temporárias
-- **Mensagens específicas** para diferentes tipos de erro
+### Estrategias Implementadas
+- **Validacao previa** de todos os parametros
+- **Teste de conectividade** antes de operacoes
+- **Sistema de retry** para falhas temporarias
+- **Mensagens especificas** para diferentes tipos de erro
 - **Logs detalhados** para auditoria e debug
 
-### Códigos de Retorno
+### Codigos de Retorno
 - `0` - Sucesso
-- `1` - Erro de parâmetro ou conectividade
+- `1` - Erro de parametro ou conectividade
 - `1` - Falha na transferência
-- `1` - Arquivo não encontrado ou corrompido
+- `1` - Arquivo nao encontrado ou corrompido
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações
-- **RSYNC eficiente** com compressão e progresso
+### Otimizacoes
+- **RSYNC eficiente** com compressao e progresso
 - **SFTP direto** para arquivos individuais
-- **Sistema de retry** para redes instáveis
-- **Limpeza automática** de arquivos temporários
+- **Sistema de retry** para redes instaveis
+- **Limpeza automatica** de arquivos temporarios
 
 ### Recursos de Rede
-- **Teste de conectividade** antes de operações longas
-- **Timeout controlado** em operações de rede
-- **Múltiplos protocolos** para diferentes cenários
-- **Relatório de progresso** para operações longas
+- **Teste de conectividade** antes de operacoes longas
+- **Timeout controlado** em operacoes de rede
+- **Múltiplos protocolos** para diferentes cenarios
+- **Relatorio de progresso** para operacoes longas
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
-- **Logs detalhados** de todas as operações
+### Estrategias para Debug
+- **Logs detalhados** de todas as operacoes
 - **Teste de conectividade** independente
-- **Validação de parâmetros** em pontos críticos
-- **Mensagens claras** sobre falhas específicas
+- **Validacao de parametros** em pontos criticos
+- **Mensagens claras** sobre falhas especificas
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 ```bash
 # Testar conectividade
 _testar_conexao "$IPSERVER" "$PORTA"
 
-# Verificar configuração SSH
+# Verificar configuracao SSH
 _configurar_ssh
 
 # Listar arquivos remotos
@@ -446,18 +446,18 @@ _listar_arquivos_remotos "caminho/remoto/"
 _verificar_integridade "arquivo.zip"
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Dependências de Módulos
-- **`config.sh`** - Configurações de conexão
-- **`utils.sh`** - Funções utilitárias (logs, mensagens)
-- **Sistema de arquivos** - Validação de caminhos locais
+### Dependências de Modulos
+- **`config.sh`** - Configuracoes de conexao
+- **`utils.sh`** - Funcoes utilitarias (logs, mensagens)
+- **Sistema de arquivos** - Validacao de caminhos locais
 
-### Fluxo de Integração
+### Fluxo de Integracao
 ```
-rsync.sh → config.sh → validação → protocolos (SFTP/RSYNC) → servidor remoto
+rsync.sh → config.sh → validacao → protocolos (SFTP/RSYNC) → servidor remoto
 ```
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*

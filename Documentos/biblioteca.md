@@ -1,37 +1,37 @@
-# Documentação do Módulo biblioteca.sh
+# Documentacao do Modulo biblioteca.sh
 
-## Visão Geral
-O módulo `biblioteca.sh` é responsável pela **gestão completa de bibliotecas** do **Sistema SAV (Script de Atualização Modular)**. Este módulo oferece funcionalidades avançadas para atualização, backup e reversão de bibliotecas Transpc e Savatu com tratamento robusto de interrupções e processamento paralelo.
+## Visao Geral
+O modulo `biblioteca.sh` e responsavel pela **gestao completa de bibliotecas** do **Sistema SAV (Script de Atualizacao Modular)**. Este modulo oferece funcionalidades avancadas para atualizacao, backup e reversao de bibliotecas Transpc e Savatu com tratamento robusto de interrupcoes e processamento paralelo.
 
 ## Funcionalidades Principais
 
-### 1. Gestão de Bibliotecas
+### 1. Gestao de Bibliotecas
 - **Transpc**: Biblioteca de transporte de dados
 - **Savatu**: Biblioteca principal do sistema SAV
 - **Múltiplos sistemas**: IsCobol e Micro Focus Cobol
-- **Controle de versões**: Gestão específica por versão
+- **Controle de versoes**: Gestao especifica por versao
 
-### 2. Modos de Atualização
-- **Online**: Download via SFTP com autenticação
+### 2. Modos de Atualizacao
+- **Online**: Download via SFTP com autenticacao
 - **Offline**: Processamento de arquivos locais
-- **Interativo**: Interface completa com validações
+- **Interativo**: Interface completa com validacoes
 
 ### 3. Sistema de Backup
-- **Backup automático**: Antes de qualquer atualização
-- **Compactação paralela**: Processamento em background
-- **Múltiplos diretórios**: E_EXEC, T_TELAS, X_XML
-- **Controle de progresso**: Feedback visual durante operações
+- **Backup automatico**: Antes de qualquer atualizacao
+- **Compactacao paralela**: Processamento em background
+- **Múltiplos diretorios**: E_EXEC, T_TELAS, X_XML
+- **Controle de progresso**: Feedback visual durante operacoes
 
-### 4. Reversão Avançada
-- **Reversão completa**: Todos os programas da biblioteca
-- **Reversão seletiva**: Programa específico por nome
-- **Validação de backup**: Verificação antes da reversão
+### 4. Reversao Avancada
+- **Reversao completa**: Todos os programas da biblioteca
+- **Reversao seletiva**: Programa especifico por nome
+- **Validacao de backup**: Verificacao antes da reversao
 
-## Sistema de Tratamento de Interrupções
+## Sistema de Tratamento de Interrupcoes
 
 ### Traps Configurados
 ```bash
-# Tratamento de sinais críticos
+# Tratamento de sinais criticos
 trap '_limpar_interrupcao INT' INT    # Ctrl+C
 trap '_limpar_interrupcao TERM' TERM  # kill
 ```
@@ -41,18 +41,18 @@ trap '_limpar_interrupcao TERM' TERM  # kill
 declare -g pids=()  # Rastreamento de processos em background
 ```
 
-### Função de Limpeza `_limpar_interrupcao()`
+### Funcao de Limpeza `_limpar_interrupcao()`
 **Funcionalidades:**
-1. **Interrupção de processos** pendentes
-2. **Limpeza de arquivos** temporários
-3. **Verificação de backups** parciais
-4. **Sugestão de rollback** se necessário
+1. **Interrupcao de processos** pendentes
+2. **Limpeza de arquivos** temporarios
+3. **Verificacao de backups** parciais
+4. **Sugestao de rollback** se necessario
 
-## Estrutura do Código
+## Estrutura do Codigo
 
-### Variáveis Essenciais
+### Variaveis Essenciais
 ```bash
-# Diretórios e configurações
+# Diretorios e configuracoes
 destino="${destino:-}"
 sistema="${sistema:-}"
 cmd_zip="${cmd_zip:-}"
@@ -62,23 +62,23 @@ cmd_unzip="${cmd_unzip:-}"
 declare -g pids=()
 ```
 
-## Funções Principais de Atualização
+## Funcoes Principais de Atualizacao
 
 ### `_atualizar_transpc()`
-Atualização específica da biblioteca Transpc.
+Atualizacao especifica da biblioteca Transpc.
 
 **Processo:**
-1. **Solicitação de versão** interativa
-2. **Configuração de destino** remoto
-3. **Download via SFTP** com autenticação
-4. **Processamento automático** da biblioteca
+1. **Solicitacao de versao** interativa
+2. **Configuracao de destino** remoto
+3. **Download via SFTP** com autenticacao
+4. **Processamento automatico** da biblioteca
 
 ### `_atualizar_savatu()`
-Atualização da biblioteca Savatu baseada no sistema.
+Atualizacao da biblioteca Savatu baseada no sistema.
 
-**Lógica de seleção:**
+**Logica de selecao:**
 ```bash
-# Seleção baseada no sistema
+# Selecao baseada no sistema
 if [[ "${sistema}" = "iscobol" ]]; then
     DESTINO2="${DESTINO2SAVATUISC}"
 else
@@ -89,10 +89,10 @@ fi
 ### `_atualizar_biblioteca_offline()`
 Processamento de biblioteca em modo offline.
 
-**Características:**
-- **Validação de modo** offline ativo
-- **Movimentação de arquivos** do diretório offline
-- **Processamento automático** após transferência
+**Caracteristicas:**
+- **Validacao de modo** offline ativo
+- **Movimentacao de arquivos** do diretorio offline
+- **Processamento automatico** apos transferência
 
 ## Sistema de Processamento
 
@@ -118,32 +118,32 @@ arquivos_update=(
 ```
 
 ### `_salvar_atualizacao_biblioteca()`
-Controlador de salvamento e validação de bibliotecas.
+Controlador de salvamento e validacao de bibliotecas.
 
-**Validações:**
-- **Existência de arquivos** de atualização
-- **Permissões de leitura** adequadas
+**Validacoes:**
+- **Existência de arquivos** de atualizacao
+- **Permissoes de leitura** adequadas
 - **Integridade dos arquivos** ZIP
 
 ## Sistema de Backup Paralelo
 
 ### `_processar_atualizacao_biblioteca()`
-Processamento avançado com compactação paralela.
+Processamento avancado com compactacao paralela.
 
 **Etapas por sistema:**
 1. **E_EXEC**: Arquivos `.class`, `.int`, `.jpg`, `.png`, etc.
 2. **T_TELAS**: Arquivos `.TEL` (telas/interface)
 3. **X_XML**: Arquivos `.xml` (apenas IsCobol)
 
-**Características técnicas:**
+**Caracteristicas tecnicas:**
 ```bash
-# Execução em background com controle de PID
+# Execucao em background com controle de PID
 {
     "$cmd_find" "$E_EXEC"/ -type f \( -iname "*.class" -o -iname "*.int" \) \
     -exec "$cmd_zip" -r -q "${caminho_backup}" {} +
 } &
 pid_zip_exec=$!
-pids+=("$pid_zip_exec")  # Registro para tratamento de interrupção
+pids+=("$pid_zip_exec")  # Registro para tratamento de interrupcao
 ```
 
 ### Controle de Progresso
@@ -151,42 +151,42 @@ pids+=("$pid_zip_exec")  # Registro para tratamento de interrupção
 # Monitoramento de cada processo
 _mostrar_progresso_backup "$pid_zip_exec"
 if wait "$pid_zip_exec"; then
-    _mensagec "${GREEN}" "Compactação de $E_EXEC concluída [Etapa ${contador}/${total_etapas}]"
+    _mensagec "${GREEN}" "Compactacao de $E_EXEC concluida [Etapa ${contador}/${total_etapas}]"
 fi
 ```
 
-## Sistema de Reversão
+## Sistema de Reversao
 
 ### `_reverter_biblioteca()`
-Interface principal para reversão de bibliotecas.
+Interface principal para reversao de bibliotecas.
 
 **Funcionalidades:**
-- **Solicitação interativa** da versão
-- **Validação de existência** do backup
-- **Escolha entre reversão** completa ou seletiva
+- **Solicitacao interativa** da versao
+- **Validacao de existência** do backup
+- **Escolha entre reversao** completa ou seletiva
 
-### Reversão Completa (`_reverter_biblioteca_completa`)
+### Reversao Completa (`_reverter_biblioteca_completa`)
 ```bash
-# Restauração de todos os arquivos
+# Restauracao de todos os arquivos
 "${cmd_unzip}" -o "${arquivo_backup}" -d "${raiz}"
 ```
 
-### Reversão Seletiva (`_reverter_programa_especifico_biblioteca`)
+### Reversao Seletiva (`_reverter_programa_especifico_biblioteca`)
 ```bash
-# Extração específica por programa
+# Extracao especifica por programa
 "${cmd_unzip}" -o "${arquivo_backup}" "${padrao}${programa_reverter}*" -d "/"
 ```
 
 ## Sistema de Download
 
 ### `_baixar_biblioteca_rsync()`
-Download via SFTP com métodos alternativos.
+Download via SFTP com metodos alternativos.
 
-**Métodos suportados:**
+**Metodos suportados:**
 1. **SFTP interativo** (acessossh="n")
 2. **SFTP com chave SSH** (acessossh="s")
 
-**Lógica de processamento:**
+**Logica de processamento:**
 ```bash
 # Para IsCobol - arquivo único
 sftp -P "$PORTA" "${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip" "."
@@ -197,20 +197,20 @@ for arquivo in "${arquivos_update[@]}"; do
 done
 ```
 
-## Funções Auxiliares
+## Funcoes Auxiliares
 
 ### `_solicitar_versao_biblioteca()`
-Solicitação interativa da versão da biblioteca.
+Solicitacao interativa da versao da biblioteca.
 
-**Características:**
-- **Validação de entrada** obrigatória
+**Caracteristicas:**
+- **Validacao de entrada** obrigatoria
 - **Mensagens informativas** claras
 - **Tratamento de entrada vazia**
 
 ### `_definir_variaveis_biblioteca()`
-Definição dinâmica de variáveis baseada na versão.
+Definicao dinamica de variaveis baseada na versao.
 
-**Padrão de nomenclatura:**
+**Padrao de nomenclatura:**
 ```bash
 ATUALIZA1="${SAVATU1}${VERSAO}.zip"
 ATUALIZA2="${SAVATU2}${VERSAO}.zip"
@@ -218,9 +218,9 @@ ATUALIZA3="${SAVATU3}${VERSAO}.zip"
 ATUALIZA4="${SAVATU4}${VERSAO}.zip"
 ```
 
-## Características de Segurança
+## Caracteristicas de Seguranca
 
-### Tratamento de Interrupções
+### Tratamento de Interrupcoes
 ```bash
 _limpar_interrupcao() {
     # Mata todos os processos pendentes
@@ -230,81 +230,81 @@ _limpar_interrupcao() {
         fi
     done
 
-    # Limpeza de arquivos temporários
+    # Limpeza de arquivos temporarios
     for temp_file in *"${VERSAO}".zip *"${VERSAO}".bkp; do
         [[ -f "$temp_file" ]] && rm -f "$temp_file"
     done
 }
 ```
 
-### Validações de Segurança
-- **Verificação de existência** de arquivos críticos
-- **Controle de permissões** em operações de arquivo
-- **Validação de versões** antes do processamento
-- **Backup automático** antes de alterações
+### Validacoes de Seguranca
+- **Verificacao de existência** de arquivos criticos
+- **Controle de permissoes** em operacoes de arquivo
+- **Validacao de versoes** antes do processamento
+- **Backup automatico** antes de alteracoes
 
-## Boas Práticas Implementadas
+## Boas Praticas Implementadas
 
 ### Processamento Paralelo
-- **Compactação simultânea** de múltiplos diretórios
+- **Compactacao simultanea** de múltiplos diretorios
 - **Controle de PIDs** para limpeza adequada
 - **Monitoramento individual** de cada processo
-- **Tratamento de falhas** específico por etapa
+- **Tratamento de falhas** especifico por etapa
 
-### Interface do Usuário
-- **Feedback visual** durante operações longas
+### Interface do Usuario
+- **Feedback visual** durante operacoes longas
 - **Controle de progresso** com etapas claras
-- **Confirmações importantes** antes de ações críticas
+- **Confirmacoes importantes** antes de acoes criticas
 - **Mensagens informativas** sobre o estado atual
 
 ### Manutenibilidade
-- **Funções bem definidas** por responsabilidade
-- **Tratamento robusto** de diferentes cenários
+- **Funcoes bem definidas** por responsabilidade
+- **Tratamento robusto** de diferentes cenarios
 - **Logs detalhados** para auditoria
-- **Comentários claros** sobre lógica complexa
+- **Comentarios claros** sobre logica complexa
 
 ## Dependências Externas
 
 ### Comandos Utilizados
-- `zip`/`unzip` - Compactação e descompactação
-- `find` - Busca avançada de arquivos
+- `zip`/`unzip` - Compactacao e descompactacao
+- `find` - Busca avancada de arquivos
 - `sftp` - Transferência segura via SSH
-- `mv`/`rm` - Movimentação e remoção de arquivos
-- `cd` - Navegação entre diretórios
+- `mv`/`rm` - Movimentacao e remocao de arquivos
+- `cd` - Navegacao entre diretorios
 
-### Variáveis de Ambiente
-- `SAVATU*` - Variáveis específicas da biblioteca
+### Variaveis de Ambiente
+- `SAVATU*` - Variaveis especificas da biblioteca
 - `DESTINO2*` - Caminhos remotos para diferentes sistemas
-- `E_EXEC` - Diretório de executáveis
-- `T_TELAS` - Diretório de telas
-- `X_XML` - Diretório XML (IsCobol)
-- `OLDS` - Diretório de backups
+- `E_EXEC` - Diretorio de executaveis
+- `T_TELAS` - Diretorio de telas
+- `X_XML` - Diretorio XML (IsCobol)
+- `OLDS` - Diretorio de backups
 
 ## Exemplos de Uso
 
-### Atualização Transpc
+### Atualizacao Transpc
 ```bash
-# Atualização interativa
+# Atualizacao interativa
 _atualizar_transpc
-# Versão: 2024
+# Versao: 2024
 # Sistema: Transpc
-# Método: SFTP com autenticação
+# Metodo: SFTP com autenticacao
 ```
 
-### Atualização Savatu IsCobol
+### Atualizacao Savatu IsCobol
 ```bash
-# Atualização para IsCobol
+# Atualizacao para IsCobol
 _atualizar_savatu
 # Sistema: IsCobol
-# Versão: 2024
+# Versao: 2024
 # Destino: DESTINO2SAVATUISC
 ```
 
-### Reversão de Biblioteca
+### Reversao de Biblioteca
 ```bash
-# Reversão interativa
+# Reversao interativa
 _reverter_biblioteca
-# Versão: 2024
+# Versao: 2024
 # Tipo: completa
 # Backup: /olds/backup-2024.zip
 ```
@@ -314,30 +314,30 @@ _reverter_biblioteca
 # Processamento offline
 _atualizar_biblioteca_offline
 # Fonte: /sav/portalsav/Atualiza
-# Destino: /sav/tools
+# Destino: /sav/TOOLS_DIR
 ```
 
-## Características Avançadas
+## Caracteristicas Avancadas
 
 ### Processamento em Background
 ```bash
-# Controle avançado de processos
+# Controle avancado de processos
 {
     "$cmd_find" "$E_EXEC"/ -type f -exec "$cmd_zip" -r -q "${caminho_backup}" {} +
 } &
 pid_zip_exec=$!
-pids+=("$pid_zip_exec")  # Registro para interrupção
+pids+=("$pid_zip_exec")  # Registro para interrupcao
 ```
 
 ### Sistema de Logs
 ```bash
-# Logs detalhados de todas as operações
->>"${LOG_ATU}" 2>&1  # Captura saída e erro
+# Logs detalhados de todas as operacoes
+>>"${LOG_ATU}" 2>&1  # Captura saida e erro
 ```
 
-### Controle de Diretórios
+### Controle de Diretorios
 ```bash
-# Validação de múltiplos caminhos
+# Validacao de múltiplos caminhos
 local diretorios_validar=(
     "DESTINO2SERVER"
     "DESTINO2SAVATUISC"
@@ -348,46 +348,46 @@ local diretorios_validar=(
 
 ## Tratamento de Erros
 
-### Estratégias Implementadas
-- **Validação prévia** de todos os parâmetros
-- **Tratamento de interrupções** com cleanup
-- **Controle de PIDs** para processos órfãos
-- **Mensagens específicas** para diferentes tipos de erro
-- **Recuperação automática** quando possível
+### Estrategias Implementadas
+- **Validacao previa** de todos os parametros
+- **Tratamento de interrupcoes** com cleanup
+- **Controle de PIDs** para processos orfaos
+- **Mensagens especificas** para diferentes tipos de erro
+- **Recuperacao automatica** quando possivel
 
-### Códigos de Retorno
+### Codigos de Retorno
 - `0` - Sucesso
-- `1` - Erro de parâmetro ou arquivo
+- `1` - Erro de parametro ou arquivo
 - `1` - Falha na transferência ou processamento
 
-## Considerações de Performance
+## Consideracoes de Performance
 
-### Otimizações
-- **Processamento paralelo** de múltiplos diretórios
-- **Find otimizado** com padrões específicos
-- **Compactação eficiente** com `-r -q`
-- **Controle mínimo** de progresso durante operações
+### Otimizacoes
+- **Processamento paralelo** de múltiplos diretorios
+- **Find otimizado** com padroes especificos
+- **Compactacao eficiente** com `-r -q`
+- **Controle minimo** de progresso durante operacoes
 
 ### Recursos de Sistema
-- **Memória controlada** com arrays locais
-- **CPU distribuída** entre processos paralelos
+- **Memoria controlada** com arrays locais
+- **CPU distribuida** entre processos paralelos
 - **I/O eficiente** com redirecionamento adequado
-- **Limpeza automática** de recursos temporários
+- **Limpeza automatica** de recursos temporarios
 
 ## Debugging e Desenvolvimento
 
-### Estratégias para Debug
-- **Controle de PIDs** visível durante execução
-- **Logs detalhados** de todas as operações
-- **Validações em pontos críticos** com mensagens claras
+### Estrategias para Debug
+- **Controle de PIDs** visivel durante execucao
+- **Logs detalhados** de todas as operacoes
+- **Validacoes em pontos criticos** com mensagens claras
 - **Estado dos processos** monitorado continuamente
 
-### Diagnóstico de Problemas
+### Diagnostico de Problemas
 ```bash
 # Verificar processos ativos
 ps aux | grep -E "(zip|unzip|find)"
 
-# Verificar arquivos temporários
+# Verificar arquivos temporarios
 ls -la *"${VERSAO}".zip *"${VERSAO}".bkp
 
 # Verificar logs
@@ -399,54 +399,54 @@ ls -la "${OLDS}/"
 
 ## Casos de Uso Comuns
 
-### Atualização de Produção
+### Atualizacao de Producao
 ```bash
-# Atualização completa com backup
+# Atualizacao completa com backup
 _atualizar_savatu
 # Sistema: IsCobol
-# Versão: 2024
-# Backup: automático antes da atualização
+# Versao: 2024
+# Backup: automatico antes da atualizacao
 # Processos: paralelo em background
 ```
 
-### Recuperação de Emergência
+### Recuperacao de Emergência
 ```bash
-# Reversão rápida de biblioteca
+# Reversao rapida de biblioteca
 _reverter_biblioteca
-# Versão: 2024
+# Versao: 2024
 # Tipo: completa
-# Restauração: todos os arquivos automaticamente
+# Restauracao: todos os arquivos automaticamente
 ```
 
-### Manutenção Offline
+### Manutencao Offline
 ```bash
-# Processamento sem conexão
+# Processamento sem conexao
 _atualizar_biblioteca_offline
 # Fonte: servidor offline local
-# Processo: automático após movimentação
+# Processo: automatico apos movimentacao
 ```
 
 ### Desenvolvimento/Testes
 ```bash
-# Teste de nova versão
+# Teste de nova versao
 _atualizar_transpc
-# Versão: teste
+# Versao: teste
 # Sistema: desenvolvimento
 # Backup: preservado para rollback
 ```
 
-## Integração com o Sistema
+## Integracao com o Sistema
 
-### Dependências de Módulos
-- **`config.sh`** - Configurações de conexão e caminhos
-- **`utils.sh`** - Funções utilitárias (mensagens, progresso)
-- **`rsync.sh`** - Funcionalidades de rede (se necessário)
+### Dependências de Modulos
+- **`config.sh`** - Configuracoes de conexao e caminhos
+- **`utils.sh`** - Funcoes utilitarias (mensagens, progresso)
+- **`rsync.sh`** - Funcionalidades de rede (se necessario)
 
-### Fluxo de Integração
+### Fluxo de Integracao
 ```
-biblioteca.sh → config.sh → validação → processamento paralelo → backup → atualização
+biblioteca.sh → config.sh → validacao → processamento paralelo → backup → atualizacao
 ```
 
 ---
 
-*Documentação gerada automaticamente com base no código fonte e práticas de bash scripting.*
+*Documentacao gerada automaticamente com base no codigo fonte e praticas de bash scripting.*
