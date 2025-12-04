@@ -13,7 +13,7 @@ base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 cmd_zip="${cmd_zip:-}"
 Offline="${Offline:-}"
-BACKUP="${BACBACKUP:-}"
+BACKUP="${BACKUP:-}"
 backup="${backup:-}"
 raiz="${raiz:-}"
 

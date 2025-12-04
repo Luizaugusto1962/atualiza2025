@@ -561,6 +561,9 @@ clear
         echo "logs=/logs"
         echo "cfg=/cfg"
         echo "backup=/backup"
+        echo "envia=/envia"
+        echo "recebe=/recebe"
+        echo "libs=/libs"
     } >.atualizac
 
     echo

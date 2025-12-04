@@ -63,6 +63,9 @@ _initial_setup() {
         echo "logs=/logs"
         echo "cfg=/cfg"
         echo "backup=/backup"
+        echo "envia=/envia"
+        echo "recebe=/recebe"
+        echo "libs=/libs"
         echo "$tracejada"
     } >> .atualizac
 
@@ -396,6 +399,9 @@ _recreate_config_files() {
         echo "logs=/logs"
         echo "cfg=/cfg"
         echo "backup=/backup"
+        echo "envia=/envia"
+        echo "recebe=/recebe"
+        echo "libs=/libs"
     } >> .atualizac
 
     echo "$tracejada"

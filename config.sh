@@ -202,7 +202,6 @@ _configurar_diretorios() {
     
     # Exportar variaveis de diretorio
     export OLDS PROGS LOGS ENVIA RECEBE LIBS BACKUP raiz
-#    export OLDS PROGS LOGS ENVIA RECEBE LIBS BACKUP TOOLS_DIR cfg_dir
 }
 
 # Configurar variaveis do sistema

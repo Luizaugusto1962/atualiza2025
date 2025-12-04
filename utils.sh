@@ -509,7 +509,7 @@ _executar_expurgador_diario() {
     
     # Executar limpeza basica
     _limpar_arquivos_antigos "${LOGS}" 30 "*.log"
-    _limpar_arquivos_antigos "${backup}" 30 "Temps*"
+    _limpar_arquivos_antigos "${BACKUP}" 30 "Temps*"
     _limpar_arquivos_antigos "${OLDS}" 30 "Temps*"
     _limpar_arquivos_antigos "${savlog}" 30 "Temps*"
     _limpar_arquivos_antigos "${err_isc}" 30 "Temps*"
