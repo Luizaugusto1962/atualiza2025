@@ -94,7 +94,7 @@ export DESTINO2SERVER="/u/varejo/man/"                                   # Diret
 export DESTINO2SAVATUISC="/home/savatu/biblioteca/temp/ISCobol/sav-5.0/" # Diretorio da biblioteca IsCOBOL
 export DESTINO2SAVATUMF="/home/savatu/biblioteca/temp/Isam/sav-3.1"      # Diretorio da biblioteca Isam
 export DESTINO2TRANSPC="/u/varejo/trans_pc/"                             # Diretorio de transporte PC
-export SERACESOFF="/sav/portalsav/Atualiza"                              # Diretorio do servidor offline
+export SERACESOFF="/portalsav/Atualiza"                              # Diretorio do servidor offline
 #---------- FUNcoES DE CONFIGURAcaO ----------#
 
 # Funcao para definir cores do terminal
