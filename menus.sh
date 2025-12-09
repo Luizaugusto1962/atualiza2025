@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 09/12/2025-00
 raiz="${raiz:-}"             # Diretorio raiz do sistema.
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
 cfg_dir="${cfg_dir:-}"     # Diretorio de configuracao.
@@ -48,7 +48,6 @@ _principal() {
         printf "\n\n"
         _mensagec "${GREEN}" "9 ${RED}- | Sair             |"
         printf "\n"
-        
         _mensaged "${BLUE}" "${UPDATE}"
         _linha "=" "${GREEN}"
 

@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 09/12/2025-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"   # Tipo de sistema (ex: iscobol, outros).
@@ -65,8 +65,9 @@ _limpar_base_especifica() {
     mapfile -t arquivos_temp < "$arquivo_lista"
     
     _mensagec "${YELLOW}" "Limpando arquivos temporarios do diretorio: ${caminho_base}"
+    _read_sleep 1
     _linha
-
+    
     for padrao_arquivo in "${arquivos_temp[@]}"; do
         if [[ -n "$padrao_arquivo" ]]; then
             _mensagec "${GREEN}" "Processando padrao: ${YELLOW}${padrao_arquivo}${NORM}"
@@ -78,7 +79,7 @@ _limpar_base_especifica() {
             fi
         fi
     done
-    
+        
     _linha
 }
 
