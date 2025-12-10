@@ -26,7 +26,10 @@ _executar_backup() {
     # Escolher base se necessario
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
-        BASE_TRABALHO="${base_trabalho}"
+        if [[ -z "${base_trabalho}" ]]; then
+           _mensagec "${RED}" "Erro: Base de trabalho nao foi selecionada"
+        return 1
+       fi
     else
         base_trabalho="${raiz}${base}"
     fi

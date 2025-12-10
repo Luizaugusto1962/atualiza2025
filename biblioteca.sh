@@ -7,6 +7,7 @@
 # Versao: 04/12/2025-00
 
 raiz="${raiz:-}"
+principal="${principal:-}"
 sistema="${sistema:-}"
 cmd_zip="${cmd_zip:-}"
 cmd_unzip="${cmd_unzip:-}"
@@ -247,6 +248,7 @@ _processar_atualizacao_biblioteca() {
     pids+=("$pid_zip_exec")  # Registrar PID para trap
     _mostrar_progresso_backup "$pid_zip_exec"
     if wait "$pid_zip_exec"; then
+        pids=("${pids[@]/$pid_zip_exec}")  # Remover PID apos concluido
         ((contador++))
         _mensagec "${GREEN}" "Compactacao de $E_EXEC concluida [Etapa ${contador}/${total_etapas}]"
         _linha

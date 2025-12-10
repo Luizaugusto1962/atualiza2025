@@ -321,13 +321,38 @@ _atualizando() {
         _mensagec "${GREEN}" "Instalados $arquivos_instalados arquivo(s) com sucesso"
     fi
 
-    # Limpeza
-    cd "$ENVIA" || {
-        _mensagec "${RED}" "Erro: Diretorio $ENVIA nao acessivel para limpeza"
-        return 1
-    }
-    rm -rf ./*
+# Limpar diretorio de trabalho
+# Verificar se o diretório ENVIA existe
+if [[ ! -d "${ENVIA}" ]]; then
+    _mensagec "${RED}" "ERRO: Diretorio '${ENVIA}' nao encontrado."
+    exit 1
+fi
 
+# Mudar para o diretório ENVIA com verificação
+if ! cd "${ENVIA}"; then
+   _mensagec "${RED}" "ERRO: Nao foi possível acessar o diretorio '${ENVIA}'."
+    exit 1
+fi
+
+# Confirmar que estamos no diretório correto antes de deletar
+if [[ "$(pwd)" != "${ENVIA}" ]]; then
+    _mensagec "${RED}" "ERRO: Falha na verificacao de seguranca do diretcrio."
+    exit 1
+fi
+
+# Verificar se há arquivos para remover
+if [[ -n "$(ls -A 2>/dev/null)" ]]; then
+    _mensagec "${YELLOW}" "Limpando conteudo do diretorio: ${ENVIA}"
+    
+    # Remover apenas o conteúdo, não o próprio diretório
+    if rm -rf ./* ./.[!.]* 2>/dev/null; then
+        _mensagec "${GREEN}" "Diretorio limpo com sucesso."
+    else
+        _mensagec "${YELLOW}" "AVISO: Alguns arquivos podem nao ter sido removidos."
+    fi
+else
+    _mensagec "${GREEN}" "Diretorio ja esta vazio."
+fi
     _linha
     _mensagec "${GREEN}" "Atualizacao concluida com sucesso!"
     _mensagec "${GREEN}" "Ao terminar, entre novamente no sistema"

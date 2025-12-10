@@ -246,9 +246,15 @@ _confirmar() {
         s|sim|y|yes) return 0 ;;
         n|nao|no) return 1 ;;
         *) 
-            _mensagec "${RED}" "Resposta invalida"
-            _confirmar "$mensagem" "$padrao"
-            ;;
+#            _mensagec "${RED}" "Resposta invalida"
+#            _confirmar "$mensagem" "$padrao"
+        if (( tentativas > 1 )); then
+            _confirmar "$mensagem" "$padrao" $((tentativas - 1))
+        else
+            _mensagec "${RED}" "Maximo de tentativas excedido"
+            return 1
+        fi
+        ;;
     esac
 }
 

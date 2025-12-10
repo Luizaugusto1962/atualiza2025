@@ -314,7 +314,12 @@ EOF
             _mensagec "${RED}" "ERRO: Falha ao baixar '$arquivo'"
             continue
         fi
-        
+
+        if ! unzip -t "$arquivo" >/dev/null 2>&1; then
+           _mensagec "${RED}" "ERRO: Arquivo corrompido: $arquivo"
+           rm -f "$arquivo"
+           continue
+        fi
         _mensagec "${GREEN}" "Download concluido: $arquivo"
     done
 }
