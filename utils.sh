@@ -228,6 +228,8 @@ _confirmar() {
     local padrao="${2:-N}"
     local opcoes
     local resposta
+    local tentativas=0
+    local max_tentativas=3
     
     case "$padrao" in
         [Ss]) opcoes="[S/n]" ;;
@@ -235,27 +237,26 @@ _confirmar() {
         *) opcoes="[S/N]" ;;
     esac
     
-    read -rp "${YELLOW}${mensagem} ${opcoes}: ${NORM}" resposta
-    
-    # Se resposta vazia, usar padrao
-    if [[ -z "$resposta" ]]; then
-        resposta="$padrao"
-    fi
-    
-    case "${resposta,,}" in
-        s|sim|y|yes) return 0 ;;
-        n|nao|no) return 1 ;;
-        *) 
-#            _mensagec "${RED}" "Resposta invalida"
-#            _confirmar "$mensagem" "$padrao"
-        if (( tentativas > 1 )); then
-            _confirmar "$mensagem" "$padrao" $((tentativas - 1))
-        else
-            _mensagec "${RED}" "Maximo de tentativas excedido"
-            return 1
+    while (( tentativas < max_tentativas )); do
+        read -rp "${YELLOW}${mensagem} ${opcoes}: ${NORM}" resposta
+        
+        # Se resposta vazia, usar padrao
+        if [[ -z "$resposta" ]]; then
+            resposta="$padrao"
         fi
-        ;;
-    esac
+        
+        case "${resposta,,}" in
+            s|sim|y|yes) return 0 ;;
+            n|nao|no) return 1 ;;
+            *)
+                _mensagec "${RED}" "Resposta invalida"
+                ((tentativas++))
+                ;;
+        esac
+    done
+
+    _mensagec "${RED}" "Maximo de tentativas excedido"
+    return 1
 }
 
 #---------- FUNcoES DE PROGRESSO ----------#
@@ -290,7 +291,7 @@ _barra_progresso() {
 _mostrar_progresso_backup() {
     local pid="$1"
     local delay=0.2
-    local spin=( '⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏' )
+    local spin=( "|" "/" "-" "\\" )
     local i=0
     local elapsed=0
     local msg="Processo em andamento"
@@ -324,9 +325,9 @@ _mostrar_progresso_backup() {
 
     # Mensagem final
     if wait "$pid" 2>/dev/null; then
-        printf "\r${YELLOW}%s... [Concluido] ✓${NORM}\n" "$msg"
+        printf "\r${GREEN}%s... [Concluido] ${NORM}\n" "$msg"
     else
-        printf "\r${YELLOW}%s... [Falhou] ✗${NORM}\n" "$msg"
+        printf "\r${RED}%s... [Falhou] ${NORM}\n" "$msg"
     fi
 }
 
@@ -511,7 +512,7 @@ _executar_expurgador_diario() {
     fi
     
     # Remover flags antigas (mais de 3 dias)
-    find "${LOGS}" -name ".expurgador_*" -mtime +3-delete 2>/dev/null || true
+    find "${LOGS}" -name ".expurgador_*" -mtime +3 -delete 2>/dev/null || true
     
     # Executar limpeza basica
     _limpar_arquivos_antigos "${LOGS}" 30 "*.log"
