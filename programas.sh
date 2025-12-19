@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao, instalacao e reversao de programas
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 19/12/2025-00
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -39,6 +39,7 @@ _atualizar_programa_online() {
     
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
         _mensagec "${YELLOW}" "Nenhum programa selecionado"
+        _linha
         _press
         return 1
     fi
@@ -48,7 +49,7 @@ _atualizar_programa_online() {
     
     # Atualizar programas baixados
     _processar_atualizacao_programas
-    
+    _linha
     _press
 }
 
@@ -59,6 +60,7 @@ _atualizar_programa_offline() {
     
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
         _mensagec "${YELLOW}" "Nenhum programa selecionado"
+        _linha
         _press
         return 1
     fi
@@ -73,7 +75,7 @@ _atualizar_programa_offline() {
     
     # Atualizar programas
     _processar_atualizacao_programas
-    
+    _linha
     _press
 }
 
@@ -88,6 +90,7 @@ _atualizar_programa_pacote() {
         _baixar_pacotes_rsync
     fi
         _processar_atualizacao_pacotes
+        _linha
         _press
 }
 
@@ -145,6 +148,7 @@ _reverter_programa() {
         _mensagem_conclusao_reversao
     else
         _mensagec "${RED}" "Nenhum programa foi selecionado para reversao"
+        _linha
         _press
     fi
 }
@@ -298,7 +302,7 @@ _baixar_programas_rsync() {
             _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
             _linha
             echo "Transferindo: $arquivo"
-#            _press
+
             if ! sftp -P "$PORTA" "$USUARIO"@"${IPSERVER}":"${DESTINO2SERVER}${arquivo}" .; then
                 _mensagec "${RED}" "Falha no download: $arquivo"
                 continue
@@ -354,6 +358,7 @@ _mover_arquivos_offline() {
             else
                 _mensagec "${RED}" "Arquivo nao encontrado: ${arquivo}"
             fi
+            _traco
         done
     fi
 }
@@ -365,8 +370,7 @@ _processar_atualizacao_programas() {
     local extensao        # Extensao do arquivo
     local backup_file     # Nome do arquivo de backup
     local programa_idx=0  # indice do programa no array
-#    _configurar_acessos
-     
+
     # Verificar se arquivos existem
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
         if [[ ! -f "${arquivo}" ]]; then
@@ -538,8 +542,9 @@ _mensagem_conclusao_reversao() {
     _mensagec "${YELLOW}" "Volta do(s) Programa(s) Concluida(s)"
     _linha
     _press
-
+    _linha
     # Perguntar se deseja reverter mais programas
+    printf "\n"
     if _confirmar "Deseja reverter mais algum programa?" "N"; then
         _reverter_programa
     fi
