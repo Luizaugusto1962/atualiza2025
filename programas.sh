@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao, instalacao e reversao de programas
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 19/12/2025-00
+# Versao: 26/12/2025-00
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -312,7 +312,7 @@ _baixar_programas_rsync() {
 get "${DESTINO2SERVER}${arquivo}"
 EOF
         fi
-
+       _linha 
         # Verificar se arquivo foi baixado
         if [[ ! -f "$arquivo" || ! -s "$arquivo" ]]; then
             _mensagec "${RED}" "ERRO: Falha ao baixar '$arquivo'"
