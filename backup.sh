@@ -22,6 +22,8 @@ raiz="${raiz:-}"
 # Executa backup do sistema
 _executar_backup() {
     local base_trabalho
+    local ano_agora
+    ano_agora=$(date +%Y)
 
     # Escolher base se necessario
     if [[ -n "${base2}" ]]; then
@@ -79,7 +81,7 @@ _executar_backup() {
         local mes ano data_referencia
 
         _linha
-        _mensagec "$YELLOW" "Digite o mes (01-12) e ano (ex: 2025) para o backup incremental:"
+        _mensagec "$YELLOW" "Digite o mes (01-12) e ano (Ex: $ano_agora) para o backup incremental:"
         _linha
 
         read -rp "${YELLOW}Mes (MM): ${NORM}" mes
