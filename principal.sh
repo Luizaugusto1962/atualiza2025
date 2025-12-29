@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 29/12/2025-00
 # Autor: Luiz Augusto
 # Email: luizaugusto@sav.com.br
 #
@@ -17,36 +17,37 @@ lib_dir="${TOOLS_DIR}/libs"
 cfg_dir="${TOOLS_DIR}/cfg"
 export TOOLS_DIR lib_dir cfg_dir
 
-# Verificar se o diretorio lib existe
-if [[ ! -d "${lib_dir}" ]]; then
-    echo "ERRO: Diretorio ${lib_dir} nao encontrado."
-    echo "Certifique-se de que todos os modulos estao instalados corretamente."
-    exit 1
-fi
-# Verificar se o diretorio cfg existe
-if [[ ! -d "${cfg_dir}" ]]; then
-    echo "ERRO: Diretorio ${cfg_dir} nao encontrado."
-    echo "Certifique-se de que todos os arquivos de configuracao estao instalados corretamente."
-    exit 1
-fi
+# Diretórios obrigatórios
+aux_dirs=("${lib_dir}" "${cfg_dir}")
+
+for dir in "${aux_dirs[@]}"; do
+    [[ -z "${dir}" ]] && { printf "ERRO: Variavel de diretorio nao definida.\n"; exit 1; }
+    [[ -d "${dir}" ]] || {
+        printf "ERRO: O diretorio %s nao foi encontrado.\n" "${dir}"
+        printf "Certifique-se de que os arquivos/modulos correspondentes estao instalados corretamente.\n"
+        exit 1
+    }
+done
+
+printf "Todos os diretórios estão presentes.\n"
 
 # Funcao para carregar modulos com verificacao
 _carregar_modulo() {
     local modulo="$1"
     local caminho="${lib_dir}/${modulo}"
     if [[ ! -f "${caminho}" ]]; then
-        echo "ERRO: Modulo ${modulo} nao encontrado em ${caminho}"
+        printf "%s\n" "ERRO: Modulo ${modulo} nao encontrado em ${caminho}"
         exit 1
     fi
     
     if [[ ! -r "${caminho}" ]]; then
-        echo "ERRO: Modulo ${modulo} nao pode ser lido"
+        printf "%s\n" "ERRO: Modulo ${modulo} nao pode ser lido"
         exit 1
     fi
     
     # shellcheck source=/dev/null
     if ! source "${caminho}"; then
-        echo "ERRO: Falha ao carregar modulo ${modulo}"
+        printf "%s\n" "ERRO: Falha ao carregar modulo ${modulo}"
         exit 1
     fi
 }

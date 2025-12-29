@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 09/12/2025-00
+# Versao: 29/12/2025-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"   # Tipo de sistema (ex: iscobol, outros).
@@ -106,7 +106,7 @@ _adicionar_arquivo_lixo() {
     fi
 
     # Adicionar arquivo à lista
-    echo "$novo_arquivo" >> atualizat
+    _mensagec "${CYAN}" "$novo_arquivo" >> atualizat
     _mensagec "${CYAN}" "Arquivo '${novo_arquivo}' adicionado com sucesso ao 'atualizat'"
     _linha
     

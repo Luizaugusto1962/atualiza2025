@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao das bibliotecas do sistema (Transpc, Savatu)
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 29/12/2025-00
 
 raiz="${raiz:-}"
 principal="${principal:-}"
@@ -471,33 +471,20 @@ _reverter_programa_especifico_biblioteca() {
 _baixar_biblioteca_rsync() {
     _ir_para_tools
 
-    if [[ "${acessossh}" == "n" ]]; then
-        if [[ "${sistema}" == "iscobol" ]]; then
+    if [[ "${acessossh}" == "s" ]]; then
+#        if [[ "${sistema}" == "iscobol" ]]; then
             local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
             sftp -P "$PORTA" "${src}" "."
-        else
-            _definir_variaveis_biblioteca
-            local arquivos_update
-            read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
-
-            for arquivo in "${arquivos_update[@]}"; do
-                local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
-                sftp -P "$PORTA" "${src}" "."
-            done
-        fi
     else
-        _definir_variaveis_biblioteca
-        local arquivos_update
-        read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
+          _definir_variaveis_biblioteca
+          local arquivos_update
+          read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
 
         for arquivo in "${arquivos_update[@]}"; do
-            local src="${DESTINO2}${arquivo}"
-            sftp sav_servidor <<EOF
-get "${src}" "."
-EOF
+            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
+            sftp -P "$PORTA" "${src}" "."
         done
     fi
-
     _salvar_atualizacao_biblioteca
 }
 
@@ -535,7 +522,7 @@ _obter_arquivos_atualizacao() {
     if [[ "${sistema}" == "iscobol" ]]; then
         echo "${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" "${ATUALIZA4}"
     else
-        echo "${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}"
+        echo "${ATUALIZA1}" "${ATUALIZA2}" "${ATUALIZA3}" 
     fi
 }
 

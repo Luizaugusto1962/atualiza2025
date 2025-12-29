@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 29/12/2025-00
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -423,7 +423,7 @@ editar_variavel() {
             case "$opcao" in
             1) sistema="iscobol" ;;
             2) sistema="cobol" ;;
-            *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
+            *) printf "%s\n" "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
         elif [[ "$nome" == "BANCO" ]]; then
@@ -436,7 +436,7 @@ editar_variavel() {
             case "$opcao" in
             1) BANCO="s" ;;
             2) BANCO="n" ;;
-            *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
+            *) printf "%s\n" "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
         elif [[ "$nome" == "acessossh" ]]; then
@@ -449,7 +449,7 @@ editar_variavel() {
             case "$opcao" in
             1) acessossh="s" ;;
             2) acessossh="n" ;;
-            *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
+            *) printf "%s\n" "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
         elif [[ "$nome" == "IPSERVER" ]]; then
@@ -460,7 +460,7 @@ editar_variavel() {
             IPSERVER="$novo_ip"
         else
             IPSERVER="$valor_atual"
-            echo "Mantendo valor anterior: $valor_atual"
+            printf "%s\n" "Mantendo valor anterior: $valor_atual"
         fi    
 
         elif [[ "$nome" == "Offline" ]]; then

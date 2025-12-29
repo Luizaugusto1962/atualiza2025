@@ -4,7 +4,7 @@
 # Responsavel por backup completo, incremental e restauracao
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 29/12/2025-00
 # Autor: Luiz Augusto
 
 sistema="${sistema:-}"
@@ -464,21 +464,22 @@ _finalizar_backup_sucesso() {
 _selecionar_backup_menu() {
     local backups=("$@")
     local escolha
+
     _linha
     _mensagec "${RED}" "Varios backups encontrados. Escolha um:"
     _linha
     select escolha in "${backups[@]}" "Cancelar"; do
         case $REPLY in
             ''|*[!0-9]*)
-                echo "Digite o número da opcao."
+                printf "Digite o número da opcao.\n"
                 continue
                 ;;
         esac
         if (( REPLY >= 1 && REPLY <= ${#backups[@]} )); then
-            echo "$escolha"
+            printf "%s\n" "$escolha"
             return 0
         else
-            echo ""
+           printf "\n"
             return 1
         fi
     done

@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao, instalacao e reversao de programas
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 26/12/2025-00
+# Versao: 29/12/2025-00
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -301,7 +301,7 @@ _baixar_programas_rsync() {
         if [[ "${acessossh}" == "n" ]]; then
             _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
             _linha
-            echo "Transferindo: $arquivo"
+            _mensagec "${GREEN}" "Transferindo: $arquivo"
 
             if ! sftp -P "$PORTA" "$USUARIO"@"${IPSERVER}":"${DESTINO2SERVER}${arquivo}" .; then
                 _mensagec "${RED}" "Falha no download: $arquivo"

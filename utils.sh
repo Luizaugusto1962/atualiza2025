@@ -4,7 +4,7 @@
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 29/12/2025-00
 
 #---------- FUNcoES DE FORMATAcaO DE TELA ----------#
 
@@ -197,21 +197,21 @@ _solicitar_entrada() {
         
         # Permite saida com ENTER vazio
         if [[ -z "$entrada" ]]; then
-            echo ""
+            eprintf "\n"
             return 0
         fi
         
         # Valida entrada se funcao fornecida
         if [[ -n "$funcao_validacao" ]]; then
             if "$funcao_validacao" "$entrada"; then
-                echo "$entrada"
+                printf "%s\n" "$entrada"
                 return 0
             else
                 _mensagec "${RED}" "$mensagem_erro"
                 ((tentativas++))
             fi
         else
-            echo "$entrada"
+            printf "%s\n" "$entrada"
             return 0
         fi
     done
@@ -341,7 +341,7 @@ _log() {
     local timestamp
     
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-    echo "[$timestamp] $mensagem" >> "$arquivo_log" 2>/dev/null
+    printf "[%s] %s\n" "$timestamp" "$mensagem" >> "$arquivo_log" 2>/dev/null
 }
 
 # Registra erro no log
@@ -396,38 +396,6 @@ _formatar_duracao() {
     fi
 }
 
-#---------- FUNcoES DE SISTEMA ----------#
-
-# Obtem informacoes basicas do sistema
-_info_sistema() {
-    echo "OS: $(uname -s)"
-    echo "Versao: $(uname -r)"
-    echo "Arquitetura: $(uname -m)"
-    echo "Hostname: $(hostname)"
-    echo "Usuario: $(whoami)"
-    echo "Diretorio: $(pwd)"
-}
-
-# Verifica espaco em disco disponivel
-# Parametros: $1=caminho
-# Retorna: espaco_livre_em_MB
-_espaco_livre() {
-    local caminho="${1:-.}"
-    df -m "$caminho" | awk 'NR==2 {print $4}'
-}
-
-# Verifica se ha espaco suficiente
-# Parametros: $1=caminho $2=espaco_necessario_MB
-# Retorna: 0=suficiente 1=insuficiente
-_verificar_espaco() {
-    local caminho="$1"
-    local necessario="$2"
-    local livre
-    
-    livre=$(_espaco_livre "$caminho")
-    (( livre >= necessario ))
-}
-
 #---------- FUNcoES DE ARQUIVO ----------#
 
 # Cria backup de arquivo com timestamp
@@ -462,7 +430,7 @@ _backup_arquivo() {
     
     if cp "$arquivo" "$arquivo_backup"; then
         _log_sucesso "Backup criado: $arquivo_backup"
-        echo "$arquivo_backup"
+        printf "%s\n" "$arquivo_backup"
         return 0
     else
         _log_erro "Falha ao criar backup: $arquivo"
@@ -533,26 +501,41 @@ _executar_expurgador_diario() {
 # Se o programa nao for encontrado, exibe uma mensagem de erro e sai do programa.
 _check_instalado() {
     local app
-    local missing=""
+    local missing=()
+
+
     for app in zip unzip rsync wget; do
-        if ! command -v "$app" &>/dev/null; then
-            missing="$missing $app"
+        if ! command -v "$app" >/dev/null 2>&1; then
+            missing+=("$app")
+
+            # Mensagem de erro principal
             printf "\n"
-            printf "%*s""${RED}"
+            printf "%*s${RED}" ""
             printf "%*s\n" $(((${#Z1} + COLUMNS) / 2)) "${Z1}"
-            printf "%*s""${NORM}"
-            printf "%*s""${YELLOW}" " O programa nao foi encontrado ->> " "${NORM}" "${app}"
-            printf "\n"
+            printf "%*s${NORM}" ""
+
+            printf "${YELLOW} O programa nao foi encontrado ->> ${NORM}%s\n" "$app"
+
+            # Sugestao específica
             case "$app" in
-            zip | unzip) echo "  Sugestao: Instale o zip, unzip." ;;
-            rsync) echo "  Sugestao: Instale o rsync." ;;
-            wget) echo "  Sugestao: Instale o wget." ;;
+                zip|unzip)
+                    printf "  ${YELLOW}Sugestao:${NORM} Instale o zip e unzip.%s\n"
+                    ;;
+                rsync)
+                    printf "  ${YELLOW}Sugestao:${NORM} Instale o rsync.%s\n"
+                    ;;
+                wget)
+                    printf "  ${YELLOW}Sugestao:${NORM} Instale o wget.%s\n"
+                    ;;
             esac
         fi
     done
-    if [ -n "$missing" ]; then
-        _mensagec "${YELLOW}" "Instale os programas ausentes ($missing) e tente novamente."
+
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        # Lista os programas ausentes sem espaço inicial indesejado
+        printf -v missing_list "%s" "${missing[*]}"
+
+        printf "${YELLOW}Instale os programas ausentes (%s) e tente novamente.${NORM}\n" "$missing_list"
         exit 1
     fi
 }
- 
