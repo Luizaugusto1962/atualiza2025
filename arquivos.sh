@@ -106,7 +106,7 @@ _adicionar_arquivo_lixo() {
     fi
 
     # Adicionar arquivo à lista
-    _mensagec "${CYAN}" "$novo_arquivo" >> atualizat
+    echo "$novo_arquivo" >> atualizat
     _mensagec "${CYAN}" "Arquivo '${novo_arquivo}' adicionado com sucesso ao 'atualizat'"
     _linha
     
