@@ -4,7 +4,7 @@
 # Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 06/01/2026-00
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -374,7 +374,7 @@ _limpar_temporarios_sync() {
 
 # Configura chaves SSH se necessario
 _configurar_ssh() {
-    local ssh_dir="$HOME/.ssh"
+    local ssh_dir="/root/.ssh"
     local config_ssh="$ssh_dir/config"
     
     # Criar diretorio .ssh se nao existir

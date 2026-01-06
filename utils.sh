@@ -4,7 +4,7 @@
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 29/12/2025-00
+# Versao: 06/01/2026-00
 
 #---------- FUNcoES DE FORMATAcaO DE TELA ----------#
 
@@ -412,10 +412,13 @@ _backup_arquivo() {
         _log_erro "Arquivo nao encontrado para backup: $arquivo"
         return 1
     fi
-	
-    # Criar diretorio de backup se necessario
-    mkdir -p "$dir_backup"
-    
+
+    # Verificar se o diretorio de backup existir
+    if [[ ! -d "$backup" ]]; then
+        _mensagec "$YELLOW" "Diretorio de backups em $backup, nao enconrado ..."
+        return 1
+    fi	
+
     # Extrair nome e extensao
     nome_base=$(basename "$arquivo")
     if [[ "$nome_base" == *.* ]]; then

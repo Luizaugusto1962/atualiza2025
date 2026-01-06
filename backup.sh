@@ -4,7 +4,7 @@
 # Responsavel por backup completo, incremental e restauracao
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 29/12/2025-00
+# Versao: 06/01/2026-00
 # Autor: Luiz Augusto
 
 sistema="${sistema:-}"
@@ -37,13 +37,10 @@ _executar_backup() {
     fi
  
 
-    # Criar diretorio de backup se nao existir
+    # Verificar se o diretorio de backup existir
     if [[ ! -d "$backup" ]]; then
-        _mensagec "$YELLOW" "Criando diretorio de backups em $backup..."
-        mkdir -p "$backup" || {
-            _mensagec "$RED" "Erro ao criar diretorio de backup"
-            return 1
-        }
+        _mensagec "$YELLOW" "Diretorio de backups em $backup, nao enconrado ..."
+        return 1
     fi
 
     # Escolher tipo de backup
