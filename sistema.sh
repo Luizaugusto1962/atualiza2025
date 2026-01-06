@@ -218,14 +218,6 @@ _atualizando() {
     _configurar_diretorios
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
 
-    # Criar backup do arquivo atual
-    if [[ ! -d "${backup}" ]]; then
-        mkdir -p "${backup}" || {
-            _mensagec "${RED}" "Erro: Nao foi possivel criar diretorio de backup"
-            return 1
-        }
-    fi
-
     # Fazer backup dos arquivos atuais
     local backup_sucesso=0
     local backup_erro=0
