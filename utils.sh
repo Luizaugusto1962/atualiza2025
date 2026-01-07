@@ -54,6 +54,21 @@ _linha() {
     printf "%s" "${NORM}"
 }
 
+_meia_linha() {
+    local Traco="${1:--}"
+    local CCC="${2:-}"
+    local Espacos
+    local linhas
+    local largura=40
+    local cols
+    cols=$(tput cols)
+    
+    printf -v Espacos "%${largura}s" ""
+    linhas=${Espacos// /$Traco}
+    printf "%s" "${CCC}"
+    printf "%*s\n" $(((cols + largura) / 2)) "$linhas"
+    printf "%s" "${NORM}"
+}
 #---------- FUNcoES DE CONTROLE DE FLUXO ----------#
 
 # Pausa a execucao por tempo especificado
