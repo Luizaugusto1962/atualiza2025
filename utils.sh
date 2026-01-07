@@ -402,7 +402,6 @@ _formatar_duracao() {
 # Parametros: $1=arquivo_original $2=diretorio_backup(opcional)
 _backup_arquivo() {
     local arquivo="$1"
-    local dir_backup="${2:-${backup:-./backup}}"
     local nome_base
     local extensao
     local timestamp
@@ -414,8 +413,8 @@ _backup_arquivo() {
     fi
 
     # Verificar se o diretorio de backup existir
-    if [[ ! -d "$backup" ]]; then
-        _mensagec "$YELLOW" "Diretorio de backups em $backup, nao enconrado ..."
+    if [[ ! -d "$BACKUP" ]]; then
+        _mensagec "$YELLOW" "Diretorio de backups em $BACKUP, nao enconrado ..."
         return 1
     fi	
 
@@ -429,7 +428,7 @@ _backup_arquivo() {
     fi
     
     timestamp=$(date +"%Y%m%d_%H%M%S")
-    arquivo_backup="${dir_backup}/${nome_base}_${timestamp}${extensao}"
+    arquivo_backup="${BACKUP}/${nome_base}_${timestamp}${extensao}"
     
     if cp "$arquivo" "$arquivo_backup"; then
         _log_sucesso "Backup criado: $arquivo_backup"

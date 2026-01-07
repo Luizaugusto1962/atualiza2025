@@ -80,7 +80,7 @@ Processa limpeza de uma base especifica.
 # Processamento de cada padrao
 for padrao_arquivo in "${arquivos_temp[@]}"; do
     find "$caminho_base" -type f -iname "$padrao_arquivo" \
-        -exec "$cmd_zip" -m "${backup}/${zip_temporarios}" {} +
+        -exec "$cmd_zip" -m "${BACKUP}/${zip_temporarios}" {} +
 done
 ```
 

@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 29/12/2025-00
+# Versao: 06/01/2026-00
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -225,23 +225,67 @@ _atualizando() {
         _mensagec "${RED}" "Erro: Diretorio de atualizacao nao encontrado"
         return 1
     }
-    # Processar todos os arquivos .sh para backup
-    for arquivo in *.sh; do
-        # Verificar se o arquivo existe
-        if [[ ! -f "$arquivo" ]]; then
-            _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
-            break
-        fi
 
-        # Copiar o arquivo para o diretorio de backup
-        if cp -f "$arquivo" "$backup/$arquivo.bak"; then
-            _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
-            ((backup_sucesso++))
-        else
-            _mensagec "${RED}" "Erro ao fazer backup de $arquivo"
+# Processar todos os arquivos .sh para backup
+arquivos_encontrados=false
+
+# Diretório de backup completo (usa TOOLS_DIR + caminho relativo em 'backup')
+local BACKUP="${TOOLS_DIR}${backup}"
+
+for arquivo in *.sh; do
+    # Verificar se o arquivo existe (proteção contra glob vazio)
+    if [[ ! -f "$arquivo" ]]; then
+        _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
+        break
+    fi
+    
+    arquivos_encontrados=true
+    
+    # Criar diretório de backup se não existir
+    if [[ ! -d "$BACKUP" ]]; then
+        mkdir -p "$BACKUP" || {
+            _mensagec "${RED}" "Erro ao criar diretorio de backup"
             ((backup_erro++))
-        fi
-    done
+            continue
+        }
+    fi
+
+    # Nome do arquivo de backup (remover .sh e adicionar .bak)
+    nome_base="${arquivo%.sh}"
+    arquivo_backup="$BACKUP/${nome_base}.bak"
+
+    # Copiar o arquivo para o diretório de backup
+    if cp -f "$arquivo" "$arquivo_backup"; then
+        _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
+        ((backup_sucesso++))
+    else
+        _mensagec "${RED}" "Erro ao fazer backup de $arquivo"
+        ((backup_erro++))
+    fi
+done
+
+# Resumo ao final (opcional)
+if $arquivos_encontrados; then
+    _mensagec "${BLUE}" "Resumo: $backup_sucesso sucessos, $backup_erro erros"
+fi    
+
+#    # Processar todos os arquivos .sh para backup
+#    for arquivo in *.sh; do
+#        # Verificar se o arquivo existe
+#        if [[ ! -f "$arquivo" ]]; then
+#            _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
+#            break
+#        fi
+#
+#        # Copiar o arquivo para o diretorio de backup
+#        if cp -f "$arquivo" "$backup/$arquivo.bak"; then
+#            _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
+#            ((backup_sucesso++))
+#        else
+#            _mensagec "${RED}" "Erro ao fazer backup de $arquivo"
+#            ((backup_erro++))
+#        fi
+#    done
 
     # Verificar se houve erros no backup
     if [[ $backup_erro -gt 0 ]]; then

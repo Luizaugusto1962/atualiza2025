@@ -14,7 +14,6 @@ base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 cmd_zip="${cmd_zip:-}"
 Offline="${Offline:-}"
 BACKUP="${BACKUP:-}"
-backup="${backup:-}"
 raiz="${raiz:-}"
 
 #---------- FUNcoES PRINCIPAIS DE backup ----------#
@@ -38,8 +37,8 @@ _executar_backup() {
  
 
     # Verificar se o diretorio de backup existir
-    if [[ ! -d "$backup" ]]; then
-        _mensagec "$YELLOW" "Diretorio de backups em $backup, nao enconrado ..."
+    if [[ ! -d "$BACKUP" ]]; then
+        _mensagec "$YELLOW" "Diretorio de backups em $BACKUP, nao enconrado ..."
         return 1
     fi
 
@@ -441,7 +440,7 @@ _enviar_backup_rede() {
 _verificar_backups_recentes() {
     if find "${BACKUP}" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
         _linha
-        _mensagec "$CYAN" "Ja existe backup recente em $backup:"
+        _mensagec "$CYAN" "Ja existe backup recente em $BACKUP:"
         _linha
         ls -ltrh "${BACKUP}/${EMPRESA}"_*.zip
         _linha
@@ -453,7 +452,7 @@ _verificar_backups_recentes() {
 # Finaliza backup com sucesso
 _finalizar_backup_sucesso() {
     local nome_backup="$1"
-    _mensagec "$YELLOW" "O backup $nome_backup foi criado em $backup"
+    _mensagec "$YELLOW" "O backup $nome_backup foi criado em ${BACKUP}"
     _linha
     _mensagec "$YELLOW" "Backup Concluido!"
     _linha

@@ -140,9 +140,9 @@ mv -f "${backup}/${nome_backup}" "$destino_offline"
 ### Verificacao de Backups Recentes
 ```bash
 _verificar_backups_recentes() {
-    if find "$backup" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
+    if find "$BACKUP" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
         # Mostra backups dos últimos 2 dias
-        ls -ltrh "${backup}/${EMPRESA}"_*.zip
+        ls -ltrh "${BACKUP}/${EMPRESA}"_*.zip
         return 0
     fi
     return 1

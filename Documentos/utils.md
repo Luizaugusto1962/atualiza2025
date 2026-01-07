@@ -479,7 +479,7 @@ _backup_arquivo() {
         nome_base="${nome_base%.*}"
     fi
     
-    local arquivo_backup="${dir_backup}/${nome_base}_${timestamp}${extensao}"
+    local arquivo_backup="${BACKUP}/${nome_base}_${timestamp}${extensao}"
     
     if cp "$arquivo" "$arquivo_backup"; then
         _log_sucesso "Backup criado: $arquivo_backup"
