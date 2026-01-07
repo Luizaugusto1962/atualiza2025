@@ -269,24 +269,6 @@ if $arquivos_encontrados; then
     _mensagec "${BLUE}" "Resumo: $backup_sucesso sucessos, $backup_erro erros"
 fi    
 
-#    # Processar todos os arquivos .sh para backup
-#    for arquivo in *.sh; do
-#        # Verificar se o arquivo existe
-#        if [[ ! -f "$arquivo" ]]; then
-#            _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
-#            break
-#        fi
-#
-#        # Copiar o arquivo para o diretorio de backup
-#        if cp -f "$arquivo" "$backup/$arquivo.bak"; then
-#            _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
-#            ((backup_sucesso++))
-#        else
-#            _mensagec "${RED}" "Erro ao fazer backup de $arquivo"
-#            ((backup_erro++))
-#        fi
-#    done
-
     # Verificar se houve erros no backup
     if [[ $backup_erro -gt 0 ]]; then
         _mensagec "${RED}" "Falha no backup de $backup_erro arquivo(s)"
@@ -295,7 +277,7 @@ fi
         _mensagec "${YELLOW}" "Nenhum arquivo foi copiado para backup"
         return 1
     else
-        _mensagec "${GREEN}" "Backup de $backup_sucesso arquivo(s) realizado com sucesso"
+        _mensagec "${BLUE}" "Backup de $backup_sucesso arquivo(s) realizado com sucesso"
     fi
 
     # Acessar diretorio de trabalho
