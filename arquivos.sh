@@ -452,7 +452,7 @@ _receber_arquivo_avulso() {
     fi
 }
 
-#---------- FUNcoES DE EXPURGO ----------#
+#---------- FUNCOES DE EXPURGO ----------#
 
 # Executa expurgador de arquivos antigos
 _executar_expurgador() {

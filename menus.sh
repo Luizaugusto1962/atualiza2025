@@ -29,7 +29,7 @@ _principal() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}" "-" "${YELLOW}"
         printf "\n"
         # Opcoes do menu
         _mensagec "${GREEN}" "1${NORM} -|: Atualizar Programa(s) "
@@ -48,9 +48,9 @@ _principal() {
         _mensagec "${GREEN}" "5${NORM} -|: Ferramentas           "
 #        printf "\n\n"
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}" "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9 ${RED}-|: Sair            "
+        _mensagec "${GREEN}" "9 ${RED}-|: Sair do Sistema "
         printf "\n"
         _mensaged "${BLUE}" "${UPDATE}"
         _linha "=" "${GREEN}"
@@ -88,7 +88,7 @@ _menu_programas() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" "Escolha o tipo de Atualizacao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}" 
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Programa(s) ON-Line       "
         printf "\n"
@@ -97,11 +97,11 @@ _menu_programas() {
         _mensagec "${GREEN}" "3${NORM} -|: Programa(s) em Pacote     "
         printf "\n\n"
         _mensagec "${PURPLE}" "Escolha Desatualizar:         "
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "4${NORM} -|: Voltar programa Atualizado"
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n" 
         _mensagec "${GREEN}" "9 ${RED}-|: Menu Anterior "
         printf "\n"
@@ -141,8 +141,8 @@ _menu_biblioteca() {
         _linha "="
         printf "\n"
         _mensagec "${PURPLE}" "Escolha o local da Biblioteca:      "
-        _meia_linha 
-        printf "\n"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n" 
         _mensagec "${GREEN}" "1${NORM} -|: Atualizacao do Transpc      "
         printf "\n" 
         _mensagec "${GREEN}" "2${NORM} -|: Atualizacao do Savatu       "
@@ -150,11 +150,11 @@ _menu_biblioteca() {
         _mensagec "${GREEN}" "3${NORM} -|: Atualizacao OFF-Line        "
         printf "\n\n"
         _mensagec "${PURPLE}" "Escolha Desatualizar:               "
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "4${NORM} -|: Voltar Programa(s) da Biblioteca"
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -195,7 +195,7 @@ _menu_ferramentas() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         
         # Verificar se sistema tem banco de dados
@@ -230,7 +230,7 @@ _menu_ferramentas() {
             _mensagec "${GREEN}" "8${NORM} -|: Lembretes                 "
             printf "\n"
         fi
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -283,7 +283,7 @@ _menu_temporarios() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Limpeza dos Arquivos Temporarios "
         printf "\n"
@@ -291,7 +291,7 @@ _menu_temporarios() {
         printf "\n"
         _mensagec "${GREEN}" "3${NORM} -|: Listar Arquivos do ATUALIZAT     "
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -313,7 +313,7 @@ _menu_temporarios() {
     done
 }
 
-#---------- MENU DE RECUPERAcaO ----------#
+#---------- MENU DE RECUPERACAO ----------#
 
 # Menu de recuperacao de arquivos
 _menu_recuperar_arquivos() {
@@ -325,13 +325,13 @@ _menu_recuperar_arquivos() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Um arquivo ou Todos   "
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} -|: Arquivos Principais   "
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -364,7 +364,7 @@ _menu_backup() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Backup da base de dados  "
         printf "\n"
@@ -372,7 +372,7 @@ _menu_backup() {
         printf "\n"
         _mensagec "${GREEN}" "3${NORM} -|: Enviar Backup            "
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -407,13 +407,13 @@ _menu_transferencia_arquivos() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Enviar arquivo(s)     "
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} -|: Receber arquivo(s)    "
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -444,7 +444,7 @@ _menu_setups() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Consulta de setup    "
         printf "\n"
@@ -452,7 +452,7 @@ _menu_setups() {
         printf "\n"
         _mensagec "${GREEN}" "3${NORM} -|: Validar configuracao "
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -502,7 +502,7 @@ _menu_lembretes() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Escrever nova nota    "
         printf "\n"
@@ -512,7 +512,7 @@ _menu_lembretes() {
         printf "\n"
         _mensagec "${GREEN}" "4${NORM} -|: Apagar nota           "
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"9
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -559,7 +559,7 @@ _menu_escolha_base() {
         fi
         
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
@@ -608,13 +608,13 @@ _menu_tipo_backup() {
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Backup Completo      "
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} -|: Backup Incremental   "
         printf "\n"
-        _meia_linha
+        _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"

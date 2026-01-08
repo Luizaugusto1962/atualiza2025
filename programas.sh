@@ -420,21 +420,30 @@ _processar_atualizacao_programas() {
         fi
     done
 
-    # Mover arquivos para diretorios corretos
-    for extensao in ".class" ".int" ".TEL"; do
-        if compgen -G "*${extensao}" >/dev/null; then
-            for arquivo in *"${extensao}"; do
-                if [[ "${extensao}" == ".TEL" ]]; then
-                    mv -f "${arquivo}" "${T_TELAS}/" >>"${LOG_ATU}"
+# Mover arquivos para diretorios corretos
+for extensao in ".class" ".int" ".TEL"; do
+    if compgen -G "*${extensao}" >/dev/null; then
+        for arquivo in *"${extensao}"; do
+            if [[ "${extensao}" == ".TEL" ]]; then
+                mv -f "${arquivo}" "${T_TELAS}/" >>"${LOG_ATU}" 2>&1
+            else
+                mv -f "${arquivo}" "${E_EXEC}/" >>"${LOG_ATU}" 2>&1
+                # Verificar se o arquivo foi movido com sucesso
+                if [[ ! -f "${E_EXEC}/${arquivo}" ]]; then
+                    echo "ERRO: Falha ao mover ${arquivo} para ${E_EXEC}/" | tee -a "${LOG_ATU}"
+                    echo "ERRO: Arquivo ${arquivo} nao encontrado no diretorio de destino" >&2
+                    _mensagec "${RED}" "Arquivo ${arquivo} nao encontrado no diretorio de destino"
                 else
-                    mv -f "${arquivo}" "${E_EXEC}/" >>"${LOG_ATU}"
+                    echo "Arquivo ${arquivo} movido com sucesso para ${E_EXEC}/" >>"${LOG_ATU}"
+                    _mensagec "${GREEN}" "Arquivo ${arquivo} movido com sucesso para ${E_EXEC}/"
                     _obter_data_arquivo "${arquivo}"
                 fi
-            done
-        fi
-    done
-
-    _mensagec "${GREEN}" "Atualizando os programas..."
+            fi
+        done
+    fi
+done
+    _linha
+    _mensagec "${GREEN}" "Atualizando o(s) programa(s)..."
     _linha
 
     # Mover arquivos .zip para .bkp

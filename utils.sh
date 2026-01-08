@@ -53,13 +53,14 @@ _linha() {
     printf "%*s\n" $(((${#linhas} + COLUMNS) / 2)) "$linhas"
     printf "%s" "${NORM}"
 }
-
+# Cria meia linha horizontal com caractere especificado
+# Parametros: $1=caractere (opcional, padrao='-') $2=cor (opcional)
 _meia_linha() {
     local Traco="${1:--}"
     local CCC="${2:-}"
     local Espacos
     local linhas
-    local largura=40
+    local largura=45
     local cols
     cols=$(tput cols)
     
