@@ -433,6 +433,8 @@ for extensao in ".class" ".int" ".TEL"; do
                     echo "ERRO: Falha ao mover ${arquivo} para ${E_EXEC}/" | tee -a "${LOG_ATU}"
                     echo "ERRO: Arquivo ${arquivo} nao encontrado no diretorio de destino" >&2
                     _mensagec "${RED}" "Arquivo ${arquivo} nao encontrado no diretorio de destino"
+                    _mensagec "${YELLOW}" "Verifique o log de atualizacao em ${LOG_ATU} para mais detalhes."
+                    _mensagec "${YELLOW}" "Use a opcao 4 de reversao para restaurar o programa anterior."
                 else
                     echo "Arquivo ${arquivo} movido com sucesso para ${E_EXEC}/" >>"${LOG_ATU}"
                     _mensagec "${GREEN}" "Arquivo ${arquivo} movido com sucesso para ${E_EXEC}/"

@@ -62,7 +62,8 @@ _carregar_modulo "arquivos.sh"   # Gestao de arquivos
 _carregar_modulo "backup.sh"     # Sistema de backup
 _carregar_modulo "programas.sh"  # Gestao de programas
 _carregar_modulo "biblioteca.sh" # Gestao de biblioteca
-_carregar_modulo "menus.sh"      # Sistema de menus por último
+_carregar_modulo "help.sh"       # Sistema de ajuda
+_carregar_modulo "menus.sh"       # Menu principal
 
 # Funcao principal de inicializacao
 _inicializar_sistema() {
@@ -80,6 +81,8 @@ _inicializar_sistema() {
     
     # Executar limpeza automatica diaria
     _executar_expurgador_diario
+    # Exibir mensagem de boas-vindas
+    _exibir_boas_vindas
 }
 
 # Funcao principal do programa

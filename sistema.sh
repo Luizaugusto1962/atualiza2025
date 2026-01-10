@@ -233,7 +233,7 @@ arquivos_encontrados=false
 local BACKUP="${TOOLS_DIR}${backup}"
 
 for arquivo in *.sh; do
-    # Verificar se o arquivo existe (proteção contra glob vazio)
+    # Verificar se o arquivo existe (protecao contra glob vazio)
     if [[ ! -f "$arquivo" ]]; then
         _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
         break
@@ -346,7 +346,7 @@ if [[ ! -d "${ENVIA}" ]]; then
     exit 1
 fi
 
-# Mudar para o diretório ENVIA com verificação
+# Mudar para o diretório ENVIA com verificacao
 if ! cd "${ENVIA}"; then
    _mensagec "${RED}" "ERRO: Nao foi possível acessar o diretorio '${ENVIA}'."
     exit 1
