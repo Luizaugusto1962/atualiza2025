@@ -58,7 +58,7 @@ _principal() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -136,7 +136,7 @@ _menu_programas() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -210,7 +210,7 @@ _menu_biblioteca() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -304,7 +304,7 @@ _menu_ferramentas() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -387,7 +387,7 @@ _menu_temporarios() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -448,7 +448,7 @@ _menu_recuperar_arquivos() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -510,7 +510,7 @@ _menu_backup() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -572,7 +572,7 @@ _menu_transferencia_arquivos() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -632,7 +632,7 @@ _menu_setups() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao
@@ -712,7 +712,7 @@ _menu_lembretes() {
         
         # Linha de ajuda
         _linha "-" "${BLUE}"
-        printf "${BLUE}Ajuda: Digite ${YELLOW}?${BLUE} (contextual) | ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}\n"
+        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
         _linha "-" "${BLUE}"
 
         local opcao

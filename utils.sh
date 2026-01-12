@@ -514,30 +514,6 @@ _executar_expurgador_diario() {
     _log "Limpeza automatica diaria executada"
 }
 
-# Funcao para exibir mensagem de boas-vindas
-_exibir_boas_vindas() {
-    clear
-    _linha "=" "${CYAN}"
-    _mensagec "${CYAN}" "BEM-VINDO AO SISTEMA SAV"
-    _linha "=" "${CYAN}"
-    printf "\n"
-    _mensagec "${GREEN}" "Sistema de Atualizacao Modular"
-    _mensagec "${GREEN}" "Versao: ${UPDATE}"
-    printf "\n"
-    _linha "-" "${YELLOW}"
-    _mensagec "${YELLOW}" "COMANDOS DE AJUDA DISPONIVEIS:"
-    printf "\n"
-    _mensagec "${BLUE}" "Digite ${YELLOW}?${BLUE} em qualquer menu = Ajuda contextual"
-    _mensagec "${BLUE}" "Digite ${YELLOW}M${BLUE} em qualquer menu = Manual completo"
-    _mensagec "${BLUE}" "Digite ${YELLOW}H${BLUE} ou ${YELLOW}help${BLUE} = Ajuda contextual"
-    printf "\n"
-    _mensagec "${CYAN}" "Ou acesse: Menu Principal > 5 (Ferramentas) > 0 (Sistema de Ajuda)"
-    _linha "-" "${YELLOW}"
-    printf "\n"
-    _mensagec "${GREEN}" "Pressione qualquer tecla para continuar..."
-    read -rsn1
-}
-
 # Funcao para checar se o zip esta instalado
 # Checa se os programas necessarios para o atualiza.sh estao instalados no sistema.
 # Se o programa nao for encontrado, exibe uma mensagem de erro e sai do programa.

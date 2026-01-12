@@ -20,15 +20,16 @@ base="${base:-}"
 base2="${base2:-}"
 base3="${base3:-}"
 telas="${telas:-}"
-logs="${logs:-}"
-progs="${progs:-}"
+LOGS="${LOGS:-}"
+PROGS="${PROGS:-}"
+OLDS="${OLDS:-}"
+BACKUP="${BACKUP:-}"
 verclass="${verclass:-}"
-backup="${backup:-}"
 class="${class:-}"
 mclass="${mclass:-}"
 exec="${exec:-}"
 xml="${xml:-}"
-olds="${olds:-}"
+
 Offline="${Offline:-}"
 
 #---------- FUNcoES DE VERSaO ----------#
@@ -167,10 +168,10 @@ _mostrar_parametros() {
     printf "${GREEN}Diretorio dos executaveis: ${NORM}${raiz}${exec}""%*s\n"
     printf "${GREEN}Diretorio das telas: ${NORM}${raiz}${telas}""%*s\n"
     printf "${GREEN}Diretorio dos xmls: ${NORM}${raiz}${xml}""%*s\n"
-    printf "${GREEN}Diretorio dos logs: ${NORM}${TOOLS_DIR}${logs}""%*s\n"
-    printf "${GREEN}Diretorio dos olds: ${NORM}${TOOLS_DIR}${olds}""%*s\n"
-    printf "${GREEN}Diretorio dos progs: ${NORM}${TOOLS_DIR}${progs}""%*s\n"
-    printf "${GREEN}Diretorio do backup: ${NORM}${TOOLS_DIR}${backup}""%*s\n"
+    printf "${GREEN}Diretorio dos logs: ${NORM}${LOGS}""%*s\n"
+    printf "${GREEN}Diretorio dos olds: ${NORM}${OLDS}""%*s\n"
+    printf "${GREEN}Diretorio dos progs: ${NORM}${PROGS}""%*s\n"
+    printf "${GREEN}Diretorio do backup: ${NORM}${BACKUP}""%*s\n"
     printf "${GREEN}Diretorio de configuracoes: ${NORM}${cfg_dir}""%*s\n"
     printf "${GREEN}Sistema em uso: ${NORM}${sistema}""%*s\n"
     printf "${GREEN}Versao em uso: ${NORM}${verclass}""%*s\n"
@@ -230,7 +231,7 @@ _atualizando() {
 arquivos_encontrados=false
 
 # Diretório de backup completo (usa TOOLS_DIR + caminho relativo em 'backup')
-local BACKUP="${TOOLS_DIR}${backup}"
+local BACKUP="${BACKUP}"
 
 for arquivo in *.sh; do
     # Verificar se o arquivo existe (protecao contra glob vazio)

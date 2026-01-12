@@ -81,8 +81,6 @@ _inicializar_sistema() {
     
     # Executar limpeza automatica diaria
     _executar_expurgador_diario
-    # Exibir mensagem de boas-vindas
-    _exibir_boas_vindas
 }
 
 # Funcao principal do programa

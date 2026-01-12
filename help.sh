@@ -14,15 +14,69 @@ TOOLS_DIR="${TOOLS_DIR:-}"
 # Arquivo de manual principal
 MANUAL_FILE="${cfg_dir}/manual.txt"
 
-# Cores para o sistema de ajuda
-#readonly CYAN="${CYAN}"      # Títulos principais
-#readonly GREEN="${GREEN}"   # Seções e subtítulos
-#readonly NORM="${NORM}"       # Texto normal do corpo
-#readonly YELLOW="${YELLOW}"  # Comandos e exemplos
-#readonly RED="${RED}"     # Avisos e alertas importantes
+# Exibe conteúdo com paginação automática
+# Parâmetros: 
+#   $1 = conteúdo para exibir
+#   $2 = linhas por página (opcional, padrão: 25)
+_exibir_paginado() {
+    local conteudo="$1"
+    local linhas_por_pagina="${2:-25}"
+    local linha_atual=1
+    local total_linhas
+    
+    # Se conteúdo vazio, lê do stdin
+    if [[ -z "$conteudo" ]]; then
+        conteudo=$(cat)
+    fi
+    
+    total_linhas=$(echo "$conteudo" | wc -l)
+    
+    # Se conteúdo cabe em uma página, exibe direto
+    if [[ $total_linhas -le $linhas_por_pagina ]]; then
+        echo "$conteudo"
+        return 0
+    fi
+    
+    # Loop de paginação
+    while [[ $linha_atual -le $total_linhas ]]; do
+        # Exibe página atual
+        echo "$conteudo" | sed -n "${linha_atual},$((linha_atual + linhas_por_pagina - 1))p"
+        
+        linha_atual=$((linha_atual + linhas_por_pagina))
+        
+        # Se ainda há mais conteúdo, solicita continuação
+        if [[ $linha_atual -le $total_linhas ]]; then
+            printf "\n"
+            _linha "=" "${CYAN}"
+            printf "%s" "${YELLOW}Pressione ENTER para continuar, 'q' para sair, 'a' para ver tudo: ${NORM}"
+            read -rsn1 resposta
+            
+            case "${resposta,,}" in
+                q)
+                    echo ""
+                    echo "${GREEN}Exibição interrompida${NORM}"
+                    return 0
+                    ;;
+                a)
+                    # Exibe todo o resto sem pausa
+                    echo ""
+                    echo "$conteudo" | sed -n "${linha_atual},\$p"
+                    return 0
+                    ;;
+                *)
+                    # ENTER ou qualquer outra tecla continua
+                    clear
+                    ;;
+            esac
+        fi
+    done
+    
+    return 0
+}
 
 #---------- FUNCOES DE NAVEGACAO DO MANUAL ----------#
 
+# Cria um manual padrão se o arquivo não existir
 # Exibe o manual completo
 _exibir_manual_completo() {
     if [[ ! -f "$MANUAL_FILE" ]]; then
@@ -43,10 +97,23 @@ _exibir_manual_completo() {
         linha_atual=$((linha_atual + linhas_por_pagina))
         
         if [[ $linha_atual -le $total_linhas ]]; then
-            echo ""
-            echo "--- Pressione ENTER para continuar ou 'q' para sair ---"
+            printf "\n"
+            printf "%s\n" "--- Pressione ENTER para continuar ou 'q' para sair ---"
             read -r resposta
-            [[ "$resposta" == "q" ]] && break
+            
+            case "${resposta,,}" in
+                q)
+                    break
+                    ;;
+                a)
+                    clear
+                    sed -n "${linha_atual},\$p" "$MANUAL_FILE"
+                    break
+                    ;;
+                *)
+                    # Continua
+                    ;;
+            esac  
         fi
     done
     
@@ -56,6 +123,7 @@ _exibir_manual_completo() {
 # Exibe ajuda contextual baseada no menu atual
 # Parametros: $1=contexto (principal, programas, biblioteca, etc)
 _exibir_ajuda_contextual() {
+    local conteudo=""
     local contexto="${1:-principal}"
     
     clear
@@ -114,12 +182,14 @@ _exibir_ajuda_contextual() {
 #---------- CONTEUDO DE AJUDA POR MENU ----------#
 
 _help_menu_principal() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
+
 MENU PRINCIPAL
 ═══════════════════════════════════════════════════════════════════
 
-O Menu Principal é o ponto de entrada do sistema SAV. A partir dele
-você pode acessar todas as funcionalidades disponíveis.
+O Menu Principal e o ponto de entrada do sistema SAV. A partir dele
+voce pode acessar todas as funcionalidades disponiveis.
 
 OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────────
@@ -127,64 +197,63 @@ OPCOES DISPONIVEIS:
 1 - ATUALIZAR PROGRAMA(S)
     Permite baixar e instalar programas individuais ou em pacote.
     
-    • Use esta opcao quando precisar atualizar programas específicos
-    • Suporta atualizações online (via servidor) ou offline (via arquivo)
+    • Use esta opcao quando precisar atualizar programas especificos
+    • Suporta atualizacoes online (via servidor) ou offline (via arquivo)
     • Permite compilacao normal ou em modo de depuracao
-    • Cria backup automático antes de atualizar
+    • Cria backup automatico antes de atualizar
     
     QUANDO USAR:
-    - Correcao de bugs em programas específicos
+    - Correcao de bugs em programas especificos
     - Instalacao de novos recursos
-    - Atualizacao de módulos individuais
+    - Atualizacao de modulos individuais
 
 2 - ATUALIZAR BIBLIOTECA
     Atualiza o conjunto completo de bibliotecas do sistema.
     
-    • Transpc: Biblioteca de transporte entre sistemas
-    • Savatu: Biblioteca principal do SAV
-    • Modo Offline: Para ambientes sem conexao
+    • Transpc: Biblioteca do diretorio /u/varejo/transpc
+    • Savatu: Biblioteca do diretorio /home/savatu/biblioteca
+    • Modo Offline: Para ambientes sem conexao os arquivos .zip devem estar
+      no diretorio configurado para offline (geralmente /portalsav/Atualiza)
     
     QUANDO USAR:
     - Atualizacao em massa de programas
-    - Mudança de versao do sistema
+    - Mudanca de versao do sistema
     - Sincronizacao com versao do servidor
-EOF
-    
-    printf "\n"
-    printf "%s\n" "${RED}    IMPORTANTE: Esta operacao e mais abrangente e pode levar"
-    printf "%s\n" "    mais tempo que a atualizacao de programas individuais.${NORM}"
-    cat << 'EOF'
+
+
+   <<<  IMPORTANTE: Esta operacao e mais abrangente e pode levar"
+        mais tempo que a atualizacao de programas individuais.  >>>
 
 3 - VERSAO DO ISCOBOL
-    Exibe informações sobre a versao do IsCOBOL instalada.
+    Exibe informacoes sobre a versao do IsCOBOL instalada.
     
-    • Mostra número da versao
+    • Mostra numero da versao
     • Exibe data de compilacao
-    • Lista recursos disponíveis
+    • Lista recursos disponiveis
     
-    Nota: Disponível apenas para sistemas IsCOBOL.
+    Nota: Disponivel apenas para sistemas IsCOBOL.
 
 4 - VERSAO DO LINUX
-    Mostra informações detalhadas do sistema operacional.
+    Mostra informacoes detalhadas do sistema operacional.
     
     INFORMACOES EXIBIDAS:
     • Distribuicao e versao do Linux
     • Hostname do servidor
     • IP interno e externo
-    • Usuários logados
-    • Uso de memória RAM e SWAP
+    • Usuarios logados
+    • Uso de memoria RAM e SWAP
     • Uso de disco
     • Tempo de atividade (uptime)
 
 5 - FERRAMENTAS
     Acesso ao menu de ferramentas administrativas.
     
-    • Limpeza de arquivos temporários
+    • Limpeza de arquivos temporarios
     • Recuperacao de arquivos de dados
     • Rotinas de backup
-    • Transferência de arquivos
-    • Expurgador automático
-    • Configurações do sistema
+    • Transferencia de arquivos
+    • Expurgador automatico
+    • Configuracoes do sistema
     • Sistema de lembretes
 
 9 - SAIR DO SISTEMA
@@ -193,24 +262,29 @@ EOF
 DICAS:
 ─────────────────────────────────────────────────────────────────
 EOF
+)
+    _exibir_paginado "$conteudo" 25
+
     printf "\n"
     printf "%s\n" "${YELLOW}• Use as setas do teclado para navegar (se disponivel)"
-    printf "%s\n" "• Digite o número da opcao desejada"
+    printf "%s\n" "• Digite o numero da opcao desejada"
     printf "%s\n" "• Pressione ? a qualquer momento para ajuda contextual"
-    printf "%s\n" "• Use Ctrl+C para cancelar operações em andamento${NORM}"
-    
-    cat << 'EOF'
+    printf "%s\n" "• Use Ctrl+C para cancelar operacoes em andamento${NORM}"
 
+    conteudo=$(cat << 'EOF'
 ATALHOS:
 ─────────────────────────────────────────────────────────────────
 • ? = Ajuda contextual
 • 9 = Sair/Voltar
 • Ctrl+C = Cancelar operacao
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_programas() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DE PROGRAMAS
 ═══════════════════════════════════════════════════════════════════
 
@@ -224,24 +298,30 @@ OPCOES DISPONIVEIS:
     
     PROCESSO:
 EOF
+)
+    _exibir_paginado "$conteudo" 25
+
     printf "\n"
-    printf '%s\n' "${GREEN}    1. Informe o nome do programa (em MAIÚSCULAS)"
+    printf '%s\n' "${GREEN}    1. Informe o nome do programa (em MAIUSCULAS)"
     printf '%s\n' "${GREEN}    2. Escolha o tipo de compilacao:"
     printf '%s\n' "${YELLOW}       • 1 = Normal (producao)"
-    printf '%s\n' "       • 2 = Depuracao (debug, com símbolos)${NORM}"
-    printf '%s\n' "${GREEN}    3. Repita para até 6 programas"
+    printf '%s\n' "       • 2 = Depuracao (debug, com simbolos)${NORM}"
+    printf '%s\n' "${GREEN}    3. Repita para ate 6 programas"
     printf '%s\n' "    4. Pressione ENTER para finalizar selecao"
     printf '%s\n' "    5. Aguarde o download e instalacao${NORM}"
-    
-    cat << 'EOF'
-    
+    printf "\n"
+
+    conteudo=$(cat << 'EOF'
+
     EXEMPLO:
-    Nome do programa: CADCLI
+    Nome do programa: ADV000
     Tipo de compilacao: 1
-    
-    Nome do programa: CADFOR
-    Tipo de compilacao: 1
-    
+    ( Exemplo do nome do programa ADV000-class(versao) )
+
+    Nome do programa: ADV000
+    Tipo de compilacao: 2
+    ( Exemplo do nome do programa ADV000-mclass(versao) )
+
     Nome do programa: [ENTER para finalizar]
 
 2 - PROGRAMA(S) OFF-LINE
@@ -251,60 +331,55 @@ EOF
     - Servidor sem acesso à internet
     - Instalacao em ambiente isolado
     - Uso de arquivos previamente baixados
-EOF
-    printf "\n"
-    printf "%s\n" "${RED}    PREREQUISITO:"
-    printf "%s\n" "    Os arquivos .zip dos programas devem estar no diretório"
-    printf "%s\n" "    configurado para modo offline (geralmente /portalsav/Atualiza)${NORM}"
-    
-    cat << 'EOF'
 
+    
+    <<  PREREQUISITO: >>
+     Os arquivos .zip dos programas devem estar no diretorio
+     configurado para modo offline (geralmente /portalsav/Atualiza)${NORM}
+    
 3 - PROGRAMA(S) EM PACOTE
-    Instala múltiplos programas de uma vez através de pacotes.
+    Instala multiplos programas de uma vez atraves de pacotes.
     
     VANTAGENS:
-    • Mais rápido para múltiplas atualizações
+    • Mais rapido para multiplas atualizacoes
     • Garante compatibilidade entre programas relacionados
-    • Menor chance de erros de dependência
-    
+    • Menor chance de erros de dependencia
+
     EXEMPLO DE PACOTE:
-    - VENDAS (contém: PEDVEN, ORCVEN, NOTVEN, etc)
-    - ESTOQUE (contém: MOVES, INVES, PROEST, etc)
+    - PACK-class(versao) (contem: ADVA000, ADC001, TRS002, etc)
 
 4 - VOLTAR PROGRAMA ATUALIZADO
     Reverte programa para versao anterior.
     
     PROCESSO:
     1. Informe o nome do programa a reverter
-    2. Sistema busca backup automático
+    2. Sistema busca backup automatico
     3. Restaura versao anterior
-EOF
-    printf "\n"
-    printf "%s\n" "${RED}    IMPORTANTE:"
-    printf "%s\n" "    • Apenas programas com backup podem ser revertidos"
-    printf "%s\n" "    • Backup é criado automaticamente em cada atualizacao"
-    printf "%s\n" "    • Backup fica em: tools/olds/[PROGRAMA]-anterior.zip${NORM}"
-    
-    cat << 'EOF'
+
+
+    << IMPORTANTE: >>
+   • Apenas programas com backup podem ser revertidos
+   • Backup e criado automaticamente em cada atualizacao
+   • Backup fica em: tools/olds/[PROGRAMA]-anterior.zip
 
 INFORMACOES IMPORTANTES:
 ───────────────────────────────────────────────────────────────────
 
 NOMES DE PROGRAMAS:
-EOF
-
-    printf "%s\n" "${NORM}• Sempre em MAIÚSCULAS (ex: CADCLI, nao cadcli)"
-    printf "%s\n" "• Apenas letras e números"
-    printf "%s\n" "• Sem espaços ou caracteres especiais${NORM}"
     
-    cat << 'EOF'
+#    printf "%s\n" "${NORM}• Sempre em MAIUSCULAS (ex: ADVA00, nao adva00)"
+#    printf "%s\n" "• Apenas letras e numeros"
+#    printf "%s\n" "• Sem espacos ou caracteres especiais${NORM}"
+#    printf "\n"  
+• Sempre em MAIÚSCULAS (ex: ADVA00, não adva00)
+• Apenas letras e números
+• Sem espaços ou caracteres especiais
 
 TIPOS DE COMPILACAO:
 • Normal (1): Para uso em producao
+  - [PROGRAMA]-class
 • Depuracao (2): Para desenvolvimento/testes
-  - Inclui símbolos de debug
-  - Permite rastreamento de erros
-  - Arquivos maiores
+  - [PROGRAMA]-mclass
 
 BACKUP AUTOMATICO:
 • Criado antes de cada atualizacao
@@ -312,76 +387,89 @@ BACKUP AUTOMATICO:
 • Localizacao: tools/olds/
 • Formato: [PROGRAMA]-anterior.zip
 
-TROUBLESHOOTING:
+SOLUCAO DE PROBLEMAS:
 ───────────────────────────────────────────────────────────────────
 
 PROBLEMA: "Arquivo nao encontrado"
-SOLUCAO: Verifique se o nome está correto e em MAIÚSCULAS
+SOLUCAO: Verifique se o nome esta correto e em MAIUSCULAS
 
 PROBLEMA: "Erro ao descompactar"
 SOLUCAO: Arquivo pode estar corrompido, baixe novamente
 
 PROBLEMA: "Falha no backup"
-SOLUCAO: Verifique espaço em disco no diretório tools/olds/
+SOLUCAO: Verifique espaco ou permissao no disco no diretorio tools/olds/
 
 PROBLEMA: "Programa nao encontrado no servidor"
-SOLUCAO: Verifique com suporte se programa está disponível
+SOLUCAO: Verifique com suporte se programa esta disponivel
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_biblioteca() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DA BIBLIOTECA
 ═══════════════════════════════════════════════════════════════════
 
 Bibliotecas sao conjuntos completos de programas que formam o
-sistema SAV. Atualizar a biblioteca é uma operacao mais ampla que
+sistema SAV. Atualizar a biblioteca e uma operacao mais ampla que
 atualizar programas individuais.
 
 OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────────
 
 1 - ATUALIZACAO DO TRANSPC
-    Atualiza a biblioteca de transporte PC.
+    Atualiza a biblioteca de TRANSPC.
     
     O QUE E:
-    Biblioteca responsável pela comunicacao e transporte de dados
-    entre diferentes módulos do sistema.
+    Biblioteca responsavel pela atualizacao programas
+    entre diferentes modulos do sistema.
     
     CONTEUDO:
     • Programas de interface
-    • Drivers de comunicacao
     • Rotinas de conversao
-    
+    • Classes compiladas (.class)
+    • Telas de interface (.TEL)
+    • Arquivos XML de configuracao
+    • Programas para o sistema em MIcroFocus (.int)
+
+    VERSOES DISPONIVEIS:
+    • IsCOBOL 2018, 2020, 2023, 2024
+    • MicroFocus COBOL
+
     QUANDO ATUALIZAR:
-    - Mudança de versao principal
+    - Mudanca de versao principal
     - Problemas de comunicacao
-    - Orientacao do suporte técnico
+    - Orientacao do suporte tecnico
+
+    IMPORTANTE:
+    Esta e a atualizacao mais usado e completa do sistema.    
 
 2 - ATUALIZACAO DO SAVATU
     Atualiza a biblioteca principal do SAV.
     
     O QUE E:
-    Conjunto completo de programas que compõem o sistema SAV.
+    Conjunto completo de programas que compoem o sistema SAV.
     
     CONTEUDO:
     • Classes compiladas (.class)
     • Telas de interface (.TEL)
     • Arquivos XML de configuracao
-    • Programas intermediários (.int)
+    • Programas para o sistema em MIcroFocus (.int)
     
     VERSOES DISPONIVEIS:
     • IsCOBOL 2018, 2020, 2023, 2024
     • MicroFocus COBOL
     
     IMPORTANTE:
-    Esta é a atualizacao mais comum e completa do sistema.
+    Esta e a atualizacao que pouco se usa ultimamente.
 
 3 - ATUALIZACAO OFF-LINE
     Instala biblioteca a partir de arquivos locais.
     
     PROCESSO:
-    1. Copie os arquivos de atualizacao para o diretório offline
+    1. Copie os arquivos de atualizacao para o diretorio offline
     2. Informe a versao da biblioteca
     3. Sistema localiza e instala os arquivos
     
@@ -405,24 +493,24 @@ OPCOES DISPONIVEIS:
     2. Sistema busca backup dessa versao
     3. Escolha entre:
        • Reverter todos os programas
-       • Reverter programa específico
+       • Reverter programa especifico
     
     BACKUP DA BIBLIOTECA:
     • Local: tools/olds/backup-[VERSAO].zip
     • Criado automaticamente antes de atualizar
-    • Contém todos os arquivos antigos
+    • Contem todos os arquivos antigos
 
 PROCESSO DE ATUALIZACAO DA BIBLIOTECA:
 ───────────────────────────────────────────────────────────────────
 
 PASSO 1: INFORMAR VERSAO
-Digite apenas o número da versao (ex: 0601, 0105, etc)
+Digite apenas o numero da versao (ex: 0601, 0105, etc)
 
 PASSO 2: VALIDACAO
 Sistema verifica:
 • Conectividade (modo online)
 • Disponibilidade dos arquivos
-• Espaço em disco
+• Espaco em disco
 
 PASSO 3: BACKUP AUTOMATICO
 Sistema cria backup completo:
@@ -439,21 +527,21 @@ Baixa arquivos do servidor:
 
 PASSO 5: INSTALACAO
 • Descompacta arquivos
-• Move para diretórios corretos
+• Move para diretorios corretos
 • Atualiza registros de versao
-• Remove temporários
+• Remove temporarios
 
 PASSO 6: VERIFICACAO
 Sistema verifica:
 • Arquivos instalados corretamente
-• Permissões adequadas
+• Permissoes adequadas
 • Integridade dos dados
 
 INFORMACOES IMPORTANTES:
 ───────────────────────────────────────────────────────────────────
 
 VERSAO:
-• Use apenas números (ex: 0601, 0105, etc)
+• Use apenas numeros (ex: 0601, 0105, etc)
 • Nao use pontos ou espacos
 • Confirme versao com o suporte
 
@@ -480,11 +568,11 @@ POS-ATUALIZACAO:
 • Confirme acesso aos modulos
 • Em caso de problemas, reverta
 
-TROUBLESHOOTING:
+SOLUCAO DE PROBLEMAS:
 ───────────────────────────────────────────────────────────────────
 
 PROBLEMA: "Erro na compactacao de backup"
-SOLUCAO: Verifique espaço em disco, pode estar cheio
+SOLUCAO: Verifique espaco em disco, pode estar cheio
 
 PROBLEMA: "Falha no download"
 SOLUCAO: Verifique conexao internet e firewall
@@ -498,29 +586,32 @@ SOLUCAO: Normal nos primeiros acessos (cache)
 PROBLEMA: "Programa nao inicia apos atualizacao"
 SOLUCAO: Reverta para versao anterior e contate suporte
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_ferramentas() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DE FERRAMENTAS
 ═══════════════════════════════════════════════════════════════════
 
-O menu de Ferramentas fornece utilitários administrativos para
+O menu de Ferramentas fornece utilitarios administrativos para
 manutencao e gestao do sistema SAV.
 
 OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────────
 
 1 - TEMPORARIOS
-    Gerencia arquivos temporários do sistema.
+    Gerencia arquivos temporarios do sistema.
     
     FUNCOES:
-    • Limpeza automática de arquivos antigos
+    • Limpeza automatica de arquivos antigos
     • Compactacao antes de remover
-    • Manutencao da lista de temporários
+    • Manutencao da lista de temporarios
     
     BENEFICIOS:
-    - Libera espaço em disco
+    - Libera espaco em disco
     - Melhora performance
     - Organiza base de dados
 
@@ -528,11 +619,11 @@ OPCOES DISPONIVEIS:
     Executa rebuild em arquivos de dados.
     
     O QUE FAZ:
-    Reconstrói índices e reorganiza arquivos de dados,
-    corrigindo possíveis inconsistências.
+    Reconstroi indices e reorganiza arquivos de dados,
+    corrigindo possiveis inconsistencias.
     
     QUANDO USAR:
-    - Após queda de sistema
+    - Apos queda de sistema
     - Erros de "arquivo corrompido"
     - Performance degradada
     - Manutencao preventiva
@@ -544,7 +635,7 @@ OPCOES DISPONIVEIS:
     
     TIPOS:
     • Completo: Todos os arquivos
-    • Incremental: Apenas alterações
+    • Incremental: Apenas alteracoes
     
     OPCOES:
     - Criar novo backup
@@ -555,10 +646,10 @@ OPCOES DISPONIVEIS:
     Transfere arquivos entre cliente e servidor.
     
     USOS:
-    • Envio de relatórios
-    • Recebimento de atualizações
+    • Envio de relatorios
+    • Recebimento de atualizacoes
     • Compartilhamento de dados
-    • Transferência de logs
+    • Transferencia de logs
     
     PROTOCOLOS: SFTP, RSYNC
 
@@ -574,22 +665,22 @@ OPCOES DISPONIVEIS:
     
     EXECUCAO:
     • Manual: Via menu
-    • Automática: Diária (primeira execucao)
+    • Automatica: Diaria (primeira execucao)
 
 6 - PARAMETROS
-    Visualiza e edita configurações do sistema.
+    Visualiza e edita configuracoes do sistema.
     
     ACESSO:
     • Consulta: Visualizacao apenas
     • Manutencao: Edicao de valores
-    • Validacao: Testa configurações
+    • Validacao: Testa configuracoes
 
 7 - UPDATE
-    Atualiza o próprio sistema de atualizacao.
+    Atualiza o proprio sistema de atualizacao.
     
     O QUE ATUALIZA:
     • Scripts do atualiza.sh
-    • Módulos de biblioteca
+    • Modulos de biblioteca
     • Arquivos de configuracao
     • Sistema de ajuda
     
@@ -607,55 +698,58 @@ OPCOES DISPONIVEIS:
     • Apagar notas
     
     USO:
-    - Registrar pendências
-    - Anotações de manutencao
-    - Lembretes de atualizações
+    - Registrar pendencias
+    - Anotacoes de manutencao
+    - Lembretes de atualizacoes
 
 DICAS DE USO:
 ───────────────────────────────────────────────────────────────────
 
 MANUTENCAO REGULAR:
 1. Execute expurgador semanalmente
-2. Faça backup antes de atualizações
-3. Limpe temporários mensalmente
-4. Recupere arquivos após problemas
+2. Faca backup antes de atualizacoes
+3. Limpe temporarios mensalmente
+4. Recupere arquivos apos problemas
 
 ORGANIZACAO:
 • Use lembretes para agendar tarefas
-• Documente alterações importantes
+• Documente alteracoes importantes
 • Mantenha logs organizados
 
 PERFORMANCE:
 • Limpeza regular melhora velocidade
-• Recuperacao de arquivos otimiza índices
+• Recuperacao de arquivos otimiza indices
 • Expurgador libera recursos
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_temporarios() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DE LIMPEZA - TEMPORARIOS
 ═══════════════════════════════════════════════════════════════════
 
-Gerencia arquivos temporários criados durante operacao do sistema.
+Gerencia arquivos temporarios criados durante operacao do sistema.
 
 OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────────
 
 1 - LIMPEZA DOS ARQUIVOS TEMPORARIOS
-    Remove arquivos temporários de todas as bases.
+    Remove arquivos temporarios de todas as bases.
     
     PROCESSO:
-    1. Lê lista de padrões (arquivo atualizat)
+    1. Le lista de padroes (arquivo atualizat)
     2. Busca arquivos correspondentes
     3. Compacta arquivos encontrados
     4. Move para backup
     5. Remove originais
     
     ARQUIVOS PROCESSADOS:
-    • Relatórios temporários
+    • Relatorios temporarios
     • Arquivos de trabalho
-    • Impressões antigas
+    • Impressoes antigas
     • Cache de sistema
     
     DESTINO:
@@ -671,19 +765,19 @@ OPCOES DISPONIVEIS:
     
     EXEMPLOS:
     • REL*.TMP = Todos arquivos REL com extensao .TMP
-    • TEMP* = Todos arquivos começando com TEMP
+    • TEMP* = Todos arquivos comecando com TEMP
     • *.BAK = Todos arquivos .BAK
     
     ARQUIVO:
-    Padrões sao salvos em: cfg/atualizat
+    Padroes sao salvos em: cfg/atualizat
 
 3 - LISTAR ARQUIVOS DO ATUALIZAT
-    Exibe lista de padrões configurados.
+    Exibe lista de padroes configurados.
     
     VISUALIZACAO:
-    • Numerada para referência
+    • Numerada para referencia
     • Um padrao por linha
-    • Formato legível
+    • Formato legivel
 
 ARQUIVO ATUALIZAT:
 ───────────────────────────────────────────────────────────────────
@@ -692,7 +786,7 @@ LOCALIZACAO:
 cfg/atualizat
 
 FORMATO:
-Um padrao por linha, sem comentários
+Um padrao por linha, sem comentarios
 Exemplo:
 REL*.TMP
 TEMP*
@@ -700,9 +794,9 @@ TEMP*
 WORK*.DAT
 
 PADROES COMUNS:
-• REL*.TMP - Relatórios temporários
+• REL*.TMP - Relatorios temporarios
 • TEMP* - Arquivos de trabalho
-• *.BAK - Backups automáticos
+• *.BAK - Backups automaticos
 • WORK* - Arquivos de processamento
 • PRINT*.SPL - Filas de impressao
 
@@ -712,33 +806,36 @@ INFORMACOES IMPORTANTES:
 SEGURANCA:
 • Arquivos sao compactados antes de remover
 • Backup mantido por 10 dias
-• Pode recuperar se necessário
+• Pode recuperar se necessario
 
 PERFORMANCE:
 • Execute regularmente (mensal)
-• Libera espaço em disco
+• Libera espaco em disco
 • Melhora velocidade de acesso
 • Reduz fragmentacao
 
 MULTIPLAS BASES:
-Se configurado com múltiplas bases (base2, base3),
+Se configurado com multiplas bases (base2, base3),
 a limpeza processa todas automaticamente.
 
 RECUPERACAO:
 Para recuperar arquivo removido:
 1. Localize backup: tools/backup/Temps-[DATA].zip
-2. Descompacte o arquivo necessário
+2. Descompacte o arquivo necessario
 3. Restaure para local original
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_recuperacao() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DE RECUPERACAO DE ARQUIVO(S)
 ═══════════════════════════════════════════════════════════════════
 
 Executa rebuild (reconstrucao) em arquivos de dados IsCOBOL,
-corrigindo índices e reorganizando registros.
+corrigindo indices e reorganizando registros.
 
 DISPONIVEL APENAS PARA: Sistemas IsCOBOL
 
@@ -746,53 +843,53 @@ OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────────
 
 1 - UM ARQUIVO OU TODOS
-    Recupera arquivo específico ou todos.
+    Recupera arquivo especifico ou todos.
     
     PROCESSO:
-    • Nome específico: Digite nome do arquivo (ex: CADCLI)
+    • Nome especifico: Digite nome do arquivo (ex: CADCLI)
     • Todos: Pressione ENTER sem digitar nada
     
     ARQUIVOS PROCESSADOS (todos):
     • *.ARQ.dat - Arquivos de dados
     • *.DAT.dat - Arquivos de dados
     • *.LOG.dat - Logs do sistema
-    • *.PAN.dat - Painéis/Telas
+    • *.PAN.dat - Paineis/Telas
     
     COMANDO UTILIZADO:
     jutil -rebuild [ARQUIVO] -a -f
     
     PARAMETROS:
-    • -rebuild: Reconstrói arquivo
-    • -a: Modo automático
-    • -f: Força reconstrucao
+    • -rebuild: Reconstroi arquivo
+    • -a: Modo automatico
+    • -f: Forca reconstrucao
 
 2 - ARQUIVOS PRINCIPAIS
     Recupera conjunto de arquivos principais.
     
     CRITERIOS:
     • Arquivos do ano atual (ATE[AA]*.dat)
-    • Notas fiscais eletrônicas do ano (NFE?[AAAA].*.dat)
+    • Notas fiscais eletronicas do ano (NFE?[AAAA].*.dat)
     • Arquivos da lista atualizaj
     
     LISTA ATUALIZAJ:
     Local: cfg/atualizaj
-    Contém: Nomes de arquivos críticos do sistema
+    Contem: Nomes de arquivos criticos do sistema
 
 O QUE E REBUILD:
 ───────────────────────────────────────────────────────────────────
 
 DEFINICAO:
-Rebuild (reconstrucao) é o processo de reorganizar um arquivo
-de dados indexed, reconstruindo seus índices e corrigindo
-possíveis inconsistências.
+Rebuild (reconstrucao) e o processo de reorganizar um arquivo
+de dados indexed, reconstruindo seus indices e corrigindo
+possiveis inconsistencias.
 
 O QUE FAZ:
-1. Lê todos os registros do arquivo
+1. Le todos os registros do arquivo
 2. Verifica integridade de cada registro
-3. Reconstrói índices do zero
+3. Reconstroi indices do zero
 4. Reorganiza dados no disco
 5. Remove registros marcados para exclusao
-6. Otimiza espaço físico
+6. Otimiza espaco fisico
 
 QUANDO USAR:
 ───────────────────────────────────────────────────────────────────
@@ -801,20 +898,20 @@ OBRIGATORIO:
 • Erro "File is locked" persistente
 • Erro "Invalid key" ao acessar dados
 • Mensagem "Corrupt index"
-• Após queda abrupta do sistema
-• Após falha de disco ou energia
+• Apos queda abrupta do sistema
+• Apos falha de disco ou energia
 
 RECOMENDADO:
 • Performance degradada
 • Arquivo cresceu muito sem reorganizacao
 • Manutencao preventiva mensal
-• Após importacao em massa de dados
+• Apos importacao em massa de dados
 • Antes de backup importante
 
 PREVENCAO:
 • Semanalmente nos arquivos principais
 • Mensalmente em todos os arquivos
-• Sempre após erros de acesso
+• Sempre apos erros de acesso
 
 PROCESSO DE RECUPERACAO:
 ───────────────────────────────────────────────────────────────────
@@ -823,10 +920,10 @@ PASSO 1: IDENTIFICACAO
 Sistema identifica arquivos a processar
 
 PASSO 2: VALIDACAO
-Verifica se arquivo existe e nao está vazio
+Verifica se arquivo existe e nao esta vazio
 
 PASSO 3: VERIFICACAO JUTIL
-Confirma disponibilidade do utilitário jutil
+Confirma disponibilidade do utilitario jutil
 
 PASSO 4: EXECUCAO
 Executa rebuild com progress indicator
@@ -848,37 +945,37 @@ FATORES:
 
 ESTIMATIVAS:
 • Arquivo pequeno (<10MB): Segundos
-• Arquivo médio (10-100MB): 1-5 minutos
+• Arquivo medio (10-100MB): 1-5 minutos
 • Arquivo grande (100MB-1GB): 5-30 minutos
 • Arquivo muito grande (>1GB): 30+ minutos
 
 MULTIPLAS BASES:
-Se sistema possui múltiplas bases (base2, base3),
-será solicitado escolher qual base processar.
+Se sistema possui multiplas bases (base2, base3),
+sera solicitado escolher qual base processar.
 
 INFORMACOES IMPORTANTES:
 ───────────────────────────────────────────────────────────────────
 
 USUARIOS:
-• Sistema deve estar sem usuários
-• Ou pelo menos sem usar arquivo específico
+• Sistema deve estar sem usuarios
+• Ou pelo menos sem usar arquivo especifico
 • Rebuild em arquivo em uso pode falhar
 
 BACKUP:
 • Recomenda-se backup antes de rebuild
-• Principalmente em arquivos críticos
+• Principalmente em arquivos criticos
 • Pode usar: Menu Ferramentas > Backup
 
 ESPACO EM DISCO:
-• Necessário espaço = tamanho do arquivo
-• Rebuild cria arquivo temporário
+• Necessario espaco = tamanho do arquivo
+• Rebuild cria arquivo temporario
 • Depois substitui o original
 
 LOGS:
-Operações registradas em:
+Operacoes registradas em:
 tools/logs/atualiza.[DATA].log
 
-TROUBLESHOOTING:
+SOLUCAO DE PROBLEMAS:
 ───────────────────────────────────────────────────────────────────
 
 PROBLEMA: "jutil not found"
@@ -888,18 +985,21 @@ PROBLEMA: "File is locked"
 SOLUCAO: Fechar sistema e tentar novamente
 
 PROBLEMA: "Permission denied"
-SOLUCAO: Verificar permissões do arquivo
+SOLUCAO: Verificar permissoes do arquivo
 
 PROBLEMA: "No space left on device"
-SOLUCAO: Liberar espaço em disco
+SOLUCAO: Liberar espaco em disco
 
 PROBLEMA: Rebuild travou
-SOLUCAO: Aguardar ou verificar se processo está ativo
+SOLUCAO: Aguardar ou verificar se processo esta ativo
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_backup() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DE BACKUP(S)
 ═══════════════════════════════════════════════════════════════════
 
@@ -922,11 +1022,11 @@ OPCOES DISPONIVEIS:
     
     INCREMENTAL:
     • Apenas arquivos modificados
-    • Baseado em data de referência
+    • Baseado em data de referencia
     • Formato: [EMPRESA]_incremental_[DATA_HORA].zip
     
     PROCESSO:
-    1. Escolher base (se múltiplas)
+    1. Escolher base (se multiplas)
     2. Escolher tipo de backup
     3. Verificar backups recentes
     4. Criar backup com progresso
@@ -940,16 +1040,16 @@ OPCOES DISPONIVEIS:
     
     OPCOES:
     • Restauracao completa (todos arquivos)
-    • Restauracao específica (um arquivo)
+    • Restauracao especifica (um arquivo)
     
     PROCESSO COMPLETO:
-    1. Listar backups disponíveis
+    1. Listar backups disponiveis
     2. Selecionar backup
     3. Confirmar operacao
     4. Descompactar para base
     
     PROCESSO ESPECIFICO:
-    1. Listar backups disponíveis
+    1. Listar backups disponiveis
     2. Selecionar backup
     3. Informar nome do arquivo
     4. Extrair apenas esse arquivo
@@ -972,39 +1072,39 @@ BACKUP COMPLETO:
 
 O QUE INCLUI:
 • Todos arquivos de dados (.dat)
-• Arquivos de índice (.idx, .key)
+• Arquivos de indice (.idx, .key)
 • Arquivos de configuracao (.cfg)
 • Logs importantes
 
 O QUE EXCLUI:
-• Arquivos já compactados (.zip, .tar)
+• Arquivos ja compactados (.zip, .tar)
 • Backups antigos (*.bak)
-• Temporários do sistema
+• Temporarios do sistema
 
 QUANDO FAZER:
-• Antes de atualizações importantes
+• Antes de atualizacoes importantes
 • Diariamente (final do dia)
-• Antes de manutenções
-• Semanalmente (mínimo)
+• Antes de manutencoes
+• Semanalmente (minimo)
 
 BACKUP INCREMENTAL:
 ───────────────────────────────────────────────────────────────────
 
 O QUE INCLUI:
-Apenas arquivos modificados após data especificada
+Apenas arquivos modificados apos data especificada
 
 VANTAGENS:
-• Mais rápido
-• Menor espaço
-• Backup frequente viável
+• Mais rapido
+• Menor espaco
+• Backup frequente viavel
 
 QUANDO FAZER:
-• Durante o dia (várias vezes)
+• Durante o dia (varias vezes)
 • Entre backups completos
-• Para dados em constante mudança
+• Para dados em constante mudanca
 
 ESTRATEGIA RECOMENDADA:
-• Completo: Diário (noite)
+• Completo: Diario (noite)
 • Incremental: A cada 2-4 horas
 
 FORMATO DOS ARQUIVOS:
@@ -1020,25 +1120,25 @@ MINHAEMP_incremental_20260108150000.zip
 COMPONENTES:
 • EMPRESA: Nome configurado no setup
 • TIPO: completo ou incremental
-• DATA: Ano, mês, dia, hora, minuto, segundo
+• DATA: Ano, mes, dia, hora, minuto, segundo
 
 LOCALIZACAO:
 tools/backup/
 
 RETENCAO:
 • Local: 30 dias (expurgador)
-• Servidor: Conforme política empresa
+• Servidor: Conforme politica empresa
 
 PROCESSO DE BACKUP:
 ───────────────────────────────────────────────────────────────────
 
 PASSO 1: VERIFICACAO PREVIA
-• Verifica backups recentes (últimos 2 dias)
-• Alerta se já existe
+• Verifica backups recentes (ultimos 2 dias)
+• Alerta se ja existe
 • Permite criar adicional
 
 PASSO 2: PREPARACAO
-• Muda para diretório da base
+• Muda para diretorio da base
 • Define nome do arquivo
 • Prepara comando de compactacao
 
@@ -1050,18 +1150,18 @@ PASSO 3: COMPACTACAO
 PASSO 4: VERIFICACAO
 • Confirma criacao do arquivo
 • Verifica integridade do ZIP
-• Valida tamanho mínimo
+• Valida tamanho minimo
 
 PASSO 5: ENVIO (opcional)
 • Oferece enviar para servidor
 • Usa rsync ou sftp
-• Mantém ou remove local
+• Mantem ou remove local
 
 PROCESSO DE RESTAURACAO:
 ───────────────────────────────────────────────────────────────────
 
 PASSO 1: SELECAO
-• Lista backups disponíveis
+• Lista backups disponiveis
 • Mostra data/hora e tamanho
 • Permite filtrar por nome
 
@@ -1086,7 +1186,7 @@ INFORMACOES IMPORTANTES:
 ESPACO NECESSARIO:
 • Backup: ~igual ao tamanho da base
 • Compactacao reduz para 30-50%
-• Manter espaço livre mínimo: 5GB
+• Manter espaco livre minimo: 5GB
 
 TEMPO DE PROCESSAMENTO:
 • Completo: 5-30 minutos
@@ -1094,21 +1194,21 @@ TEMPO DE PROCESSAMENTO:
 • Depende: tamanho, velocidade disco
 
 MULTIPLAS BASES:
-Se configurado múltiplas bases:
+Se configurado multiplas bases:
 • Sistema solicita escolher qual
 • Pode fazer backup de cada uma
 • Nome do arquivo inclui identificacao
 
 SEGURANCA:
 • Backups nao criptografados
-• Proteja com permissões adequadas
+• Proteja com permissoes adequadas
 • Servidor remoto deve ser seguro
 
 AUTOMACAO:
-Para backup automático, use cron:
+Para backup automatico, use cron:
 0 22 * * * /caminho/atualiza.sh --backup-auto
 
-TROUBLESHOOTING:
+SOLUCAO DE PROBLEMAS:
 ───────────────────────────────────────────────────────────────────
 
 PROBLEMA: "Backup muito lento"
@@ -1123,14 +1223,17 @@ SOLUCAO: Backup pode ter falhado, use anterior
 PROBLEMA: "Erro ao enviar para servidor"
 SOLUCAO: Verifique conectividade e credenciais
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_transferencia() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DE ENVIAR E RECEBER ARQUIVO(S)
 ═══════════════════════════════════════════════════════════════════
 
-Sistema de transferência de arquivos entre cliente e servidor.
+Sistema de transferencia de arquivos entre cliente e servidor.
 
 OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────────
@@ -1139,7 +1242,7 @@ OPCOES DISPONIVEIS:
     Envia arquivo para servidor remoto.
     
     PROCESSO:
-    1. Informar diretório de origem
+    1. Informar diretorio de origem
        • Caminho completo ou
        • ENTER para usar padrao (tools/envia)
     
@@ -1147,27 +1250,27 @@ OPCOES DISPONIVEIS:
        • Nome completo com extensao
        • Ex: relatorio.pdf
     
-    3. Informar diretório destino no servidor
+    3. Informar diretorio destino no servidor
        • Caminho completo no servidor
        • Ex: /home/usuario/documentos
     
-    4. Fornecer senha do usuário remoto
+    4. Fornecer senha do usuario remoto
     
-    5. Transferência via rsync
+    5. Transferencia via rsync
        • Mostra progresso
-       • Mantém permissões
-       • Compressao automática
+       • Mantem permissoes
+       • Compressao automatica
     
     PROTOCOLOS:
-    • RSYNC: Transferência eficiente
-    • SSH: Segurança na conexao
-    • Porta: Configurável (padrao 41122)
+    • RSYNC: Transferencia eficiente
+    • SSH: Seguranca na conexao
+    • Porta: Configuravel (padrao 41122)
 
 2 - RECEBER ARQUIVO(S)
     Baixa arquivo do servidor.
     
     PROCESSO:
-    1. Informar diretório de origem (servidor)
+    1. Informar diretorio de origem (servidor)
        • Caminho completo no servidor
        • Ex: /home/usuario/backup
     
@@ -1175,40 +1278,40 @@ OPCOES DISPONIVEIS:
        • Nome completo com extensao
        • Ex: dados.zip
     
-    3. Informar diretório destino (local)
+    3. Informar diretorio destino (local)
        • Caminho completo ou
        • ENTER para usar padrao (tools/recebe)
     
-    4. Fornecer senha do usuário remoto
+    4. Fornecer senha do usuario remoto
     
-    5. Transferência via sftp
+    5. Transferencia via sftp
        • Mostra progresso
        • Verifica integridade
     
     PROTOCOLOS:
     • SFTP: Protocolo seguro
     • SSH: Criptografia
-    • Porta: Configurável
+    • Porta: Configuravel
 
 USO DE DIRETORIOS PADRAO:
 ───────────────────────────────────────────────────────────────────
 
 ENVIO:
 Origem padrao: tools/envia/
-• Coloque arquivo neste diretório
+• Coloque arquivo neste diretorio
 • Pressione ENTER ao solicitar origem
 • Sistema usa automaticamente
 
 RECEBIMENTO:
 Destino padrao: tools/recebe/
-• Arquivo baixado neste diretório
+• Arquivo baixado neste diretorio
 • Pressione ENTER ao solicitar destino
 • Facilita localizacao
 
 VANTAGENS:
 • Organizacao centralizada
-• Fácil localizacao de arquivos
-• Limpeza automática (expurgador)
+• Facil localizacao de arquivos
+• Limpeza automatica (expurgador)
 
 CONFIGURACOES DE CONEXAO:
 ───────────────────────────────────────────────────────────────────
@@ -1216,11 +1319,11 @@ CONFIGURACOES DE CONEXAO:
 SERVIDOR:
 • IP: Configurado no setup
 • Porta: Padrao 41122 (SSH)
-• Usuário: Configurado no setup
+• Usuario: Configurado no setup
 
 CREDENCIAIS:
 • Senha solicitada em cada operacao
-• Por segurança, nao é armazenada
+• Por seguranca, nao e armazenada
 • Ou use SSH keys (modo facilitado)
 
 MODO FACILITADO:
@@ -1228,7 +1331,7 @@ Se configurado acessossh=s:
 • Usa chaves SSH
 • Sem solicitacao de senha
 • Conexao persistente
-• Mais rápido e seguro
+• Mais rapido e seguro
 
 TIPOS DE ARQUIVO:
 ───────────────────────────────────────────────────────────────────
@@ -1241,32 +1344,32 @@ SUPORTADOS:
 • Backups: .bak, .backup
 • Dados: .dat, .db
 • Logs: .log
-• Executáveis: .sh, .exe
+• Executaveis: .sh, .exe
 • Todos os demais formatos
 
 LIMITACOES:
 • Tamanho: Limitado por disco
-• Permissões: Requer acesso adequado
+• Permissoes: Requer acesso adequado
 • Rede: Depende de conectividade
 
 CASOS DE USO:
 ───────────────────────────────────────────────────────────────────
 
 ENVIAR:
-• Relatórios para análise
-• Logs para suporte técnico
+• Relatorios para analise
+• Logs para suporte tecnico
 • Backups para servidor
 • Documentacao atualizada
 • Arquivos de configuracao
 • Exports de dados
 
 RECEBER:
-• Atualizações do sistema
+• Atualizacoes do sistema
 • Arquivos de configuracao
 • Manuais e documentacao
 • Templates e modelos
 • Imports de dados
-• Patches e correções
+• Patches e correcoes
 
 SEGURANCA:
 ───────────────────────────────────────────────────────────────────
@@ -1277,67 +1380,70 @@ CRIPTOGRAFIA:
 • Conexao: Protocolo seguro
 
 VALIDACAO:
-• Integridade: Checksums automáticos
-• Permissões: Preservadas na transferência
+• Integridade: Checksums automaticos
+• Permissoes: Preservadas na transferencia
 • Sobrescrita: Confirmacao requerida
 
 AUDITORIA:
-• Logs: Todas operações registradas
+• Logs: Todas operacoes registradas
 • Data/Hora: Timestamp completo
-• Usuário: Identificacao preservada
+• Usuario: Identificacao preservada
 
-TROUBLESHOOTING:
+SOLUCAO DE PROBLEMAS:
 ───────────────────────────────────────────────────────────────────
 
 PROBLEMA: "Connection refused"
 SOLUCAO: Verificar IP, porta e firewall
 
 PROBLEMA: "Permission denied"
-SOLUCAO: Verificar credenciais e permissões
+SOLUCAO: Verificar credenciais e permissoes
 
 PROBLEMA: "No such file or directory"
 SOLUCAO: Confirmar caminho completo e correto
 
 PROBLEMA: "Disk quota exceeded"
-SOLUCAO: Liberar espaço no destino
+SOLUCAO: Liberar espaco no destino
 
-PROBLEMA: Transferência muito lenta
+PROBLEMA: Transferencia muito lenta
 SOLUCAO: Verificar velocidade da rede
 
 PROBLEMA: "Host key verification failed"
 SOLUCAO: Limpar ~/.ssh/known_hosts ou aceitar novo
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_setups() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DE SETUP DO SISTEMA
 ═══════════════════════════════════════════════════════════════════
 
-Gerenciamento de configurações do sistema SAV.
+Gerenciamento de configuracoes do sistema SAV.
 
 OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────────
 
 1 - CONSULTA DE SETUP
-    Visualiza todas as configurações atuais.
+    Visualiza todas as configuracoes atuais.
     
     INFORMACOES EXIBIDAS:
     • Sistema e versao
-    • Diretórios configurados
+    • Diretorios configurados
     • Bibliotecas em uso
     • Conexao de rede
     • Modo online/offline
-    • Parâmetros de backup
+    • Parametros de backup
     
     USO:
     • Verificar configuracao atual
     • Documentar instalacao
-    • Troubleshooting
+    • SOLUCAO DE PROBLEMAS
     • Auditoria
 
 2 - MANUTENCAO DE SETUP
-    Permite editar configurações existentes.
+    Permite editar configuracoes existentes.
     
     PARAMETROS EDITAVEIS:
     • sistema: iscobol ou cobol
@@ -1346,39 +1452,39 @@ OPCOES DISPONIVEIS:
     • acessossh: Modo facilitado (s/n)
     • IPSERVER: IP do servidor
     • Offline: Modo offline (s/n)
-    • ENVIABACK: Diretório backup servidor
+    • ENVIABACK: Diretorio backup servidor
     • EMPRESA: Nome da empresa
-    • base, base2, base3: Diretórios dados
+    • base, base2, base3: Diretorios dados
     
     PROCESSO:
     1. Sistema carrega valores atuais
-    2. Para cada parâmetro:
+    2. Para cada parametro:
        • Mostra valor atual
        • Pergunta se deseja alterar
        • Solicita novo valor
     3. Recria arquivos de configuracao
-    4. Recarrega configurações
+    4. Recarrega configuracoes
     
     BACKUP AUTOMATICO:
     Sistema cria .atualizac.bak antes de editar
 
 3 - VALIDAR CONFIGURACAO
-    Testa todas as configurações.
+    Testa todas as configuracoes.
     
     VALIDACOES:
     • Arquivos de configuracao existem
-    • Variáveis obrigatórias definidas
-    • Diretórios existem e acessíveis
-    • Comandos disponíveis
+    • Variaveis obrigatorias definidas
+    • Diretorios existem e acessiveis
+    • Comandos disponiveis
     • Conectividade (modo online)
     
     RESULTADO:
-    • Erros: Problemas críticos
-    • Avisos: Problemas nao críticos
+    • Erros: Problemas criticos
+    • Avisos: Problemas nao criticos
     • OK: Tudo correto
     
     RECOMENDACAO:
-    Execute após alterações ou problemas
+    Execute apos alteracoes ou problemas
 
 ARQUIVO DE CONFIGURACAO:
 ───────────────────────────────────────────────────────────────────
@@ -1399,10 +1505,10 @@ IPSERVER=192.168.1.100
 Offline=n
 
 IMPORTANTE:
-• Nao adicionar espaços em volta do =
-• Valores sensíveis a maiúsculas/minúsculas
+• Nao adicionar espacos em volta do =
+• Valores sensiveis a maiusculas/minusculas
 • Sem aspas nos valores
-• Comentários com #
+• Comentarios com #
 
 PARAMETROS PRINCIPAIS:
 ───────────────────────────────────────────────────────────────────
@@ -1410,7 +1516,7 @@ PARAMETROS PRINCIPAIS:
 sistema:
 • iscobol: Sistema IsCOBOL
 • cobol: Micro Focus COBOL
-• Determina módulos a usar
+• Determina modulos a usar
 
 verclass:
 • 2018, 2020, 2023, 2024
@@ -1420,33 +1526,33 @@ verclass:
 BANCO:
 • s: Sistema usa banco de dados
 • n: Sistema file-based
-• Afeta menus disponíveis
+• Afeta menus disponiveis
 
 base:
-• Diretório principal de dados
+• Diretorio principal de dados
 • Caminho relativo à raiz
 • Ex: /dados_jisam
 
 EMPRESA:
-• Nome da empresa (sem espaços)
+• Nome da empresa (sem espacos)
 • Usado em backups
 • Identificacao de instalacao
 
 IPSERVER:
 • IP do servidor SAV
-• Para atualizações e backups
+• Para atualizacoes e backups
 • Ex: 192.168.1.100
 
 Offline:
 • s: Modo offline (sem servidor)
 • n: Modo online (com servidor)
-• Determina fonte de atualizações
+• Determina fonte de atualizacoes
 
 BIBLIOTECAS:
 ───────────────────────────────────────────────────────────────────
 
 SAVATU1, SAVATU2, SAVATU3, SAVATU4:
-Padrões de nome dos arquivos de biblioteca
+Padroes de nome dos arquivos de biblioteca
 
 FORMATO:
 tempSAV_IS[ANO]_[TIPO]_
@@ -1467,13 +1573,13 @@ Definidos automaticamente em tools/:
 • /progs - Programas atualizados
 • /olds - Backups de reversao
 • /logs - Arquivos de log
-• /cfg - Configurações
+• /cfg - Configuracoes
 • /backup - Backups da base
 • /envia - Arquivos para enviar
 • /recebe - Arquivos recebidos
 • /libs - Bibliotecas do sistema
 
-NAO MODIFICAR estes diretórios!
+NAO MODIFICAR estes diretorios!
 
 CONFIGURACAO INICIAL:
 ───────────────────────────────────────────────────────────────────
@@ -1485,40 +1591,43 @@ WIZARD INTERATIVO:
 1. Escolhe sistema (IsCOBOL/Cobol)
 2. Define versao
 3. Configura banco de dados
-4. Define diretórios
+4. Define diretorios
 5. Configura rede
 6. Define backup
-7. Informações empresa
-8. Cria configurações
+7. Informacoes empresa
+8. Cria configuracoes
 9. Configura SSH (opcional)
 
 RECONFIGURACAO:
 Para modificar instalacao existente:
 ./libs/setup.sh --edit
 
-TROUBLESHOOTING:
+SOLUCAO DE PROBLEMAS:
 ───────────────────────────────────────────────────────────────────
 
 PROBLEMA: "Arquivo .atualizac nao encontrado"
 SOLUCAO: Execute ./libs/setup.sh
 
-PROBLEMA: "Variável nao definida"
+PROBLEMA: "Variavel nao definida"
 SOLUCAO: Execute manutencao de setup
 
-PROBLEMA: "Diretório nao encontrado"
+PROBLEMA: "Diretorio nao encontrado"
 SOLUCAO: Verifique paths no .atualizac
 
-PROBLEMA: Alterações nao surtem efeito
+PROBLEMA: Alteracoes nao surtem efeito
 SOLUCAO: Saia e entre novamente no sistema
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_menu_lembretes() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 MENU DE LEMBRETES - BLOCO DE NOTAS
 ═══════════════════════════════════════════════════════════════════
 
-Sistema simples de anotações e lembretes.
+Sistema simples de anotacoes e lembretes.
 
 OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────────
@@ -1527,17 +1636,17 @@ OPCOES DISPONIVEIS:
     Cria nova anotacao.
     
     PROCESSO:
-    1. Digite o conteúdo da nota
-    2. Pode ser múltiplas linhas
+    1. Digite o conteudo da nota
+    2. Pode ser multiplas linhas
     3. Pressione Ctrl+D para finalizar
-    4. Nota é salva automaticamente
+    4. Nota e salva automaticamente
     
     FORMATO:
     Texto livre, sem formatacao especial
     
     EXEMPLO:
     Atualizar sistema dia 15/01
-    Pendente: Testar módulo vendas
+    Pendente: Testar modulo vendas
     Lembrar: Backup completo sexta
 
 2 - VISUALIZAR NOTA
@@ -1546,10 +1655,10 @@ OPCOES DISPONIVEIS:
     APRESENTACAO:
     • Moldura ao redor do texto
     • Formatacao preservada
-    • Fácil leitura
+    • Facil leitura
     
     USO:
-    Consultar anotações e lembretes
+    Consultar anotacoes e lembretes
 
 3 - EDITAR NOTA
     Modifica nota existente.
@@ -1578,7 +1687,7 @@ OPCOES DISPONIVEIS:
     3. Se negar (N), cancela
     
     IMPORTANTE:
-    Acao irreversível! Notas sao perdidas.
+    Acao irreversivel! Notas sao perdidas.
 
 ARQUIVO DE NOTAS:
 ───────────────────────────────────────────────────────────────────
@@ -1590,35 +1699,35 @@ FORMATO:
 Arquivo texto simples
 
 CONTEUDO:
-Todas as notas em sequência
+Todas as notas em sequencia
 
 PERSISTENCIA:
-Notas sao mantidas entre sessões
+Notas sao mantidas entre sessoes
 
 CASOS DE USO:
 ───────────────────────────────────────────────────────────────────
 
 TAREFAS PENDENTES:
 [ ] Atualizar biblioteca versao 5280
-[ ] Verificar espaço em disco
+[ ] Verificar espaco em disco
 [ ] Testar recuperacao de arquivos
 
 HISTORICO DE MANUTENCAO:
-10/01 - Atualizado programa CADCLI
+10/01 - Atualizado programa ADV000 
 11/01 - Backup completo realizado
-12/01 - Limpeza de temporários
+12/01 - Limpeza de temporarios
 
 PROBLEMAS CONHECIDOS:
-- Programa RELVEN lento (investigar)
-- Erro esporádico no CADFOR
+- Programa ADV000 lento (investigar)
+- Erro esporadico no ADV000
 - Aguardando correcao do suporte
 
 CONTATOS IMPORTANTES:
 Email: suporte@sav.com.br
-Horário: 8h às 18h
+Horario: 8h às 18h
 
 SENHAS E ACESSOS:
-(Nao recomendado para informações sensíveis!)
+(Nao recomendado para informacoes sensiveis!)
 
 INFORMACOES IMPORTANTES:
 ───────────────────────────────────────────────────────────────────
@@ -1626,8 +1735,8 @@ INFORMACOES IMPORTANTES:
 SEGURANCA:
 • Notas em texto simples
 • Sem criptografia
-• Evite dados sensíveis
-• Qualquer usuário pode ler
+• Evite dados sensiveis
+• Qualquer usuario pode ler
 
 TAMANHO:
 • Sem limite de caracteres
@@ -1635,12 +1744,12 @@ TAMANHO:
 • Cuidado com arquivo muito grande
 
 BACKUP:
-• Arquivo nao é automaticamente backupado
-• Inclua em backup manual se necessário
+• Arquivo nao e automaticamente backupado
+• Inclua em backup manual se necessario
 • Ou copie manualmente
 
 ALTERNATIVAS:
-Para anotações mais complexas:
+Para anotacoes mais complexas:
 • Use sistema externo de notas
 • Software de gestao de tarefas
 • Wiki ou documentacao colaborativa
@@ -1649,20 +1758,20 @@ EXIBICAO AUTOMATICA:
 Na inicializacao do sistema:
 • Se arquivo existe
 • Notas sao exibidas automaticamente
-• Útil para lembretes importantes
+• util para lembretes importantes
 • Configure para nao exibir se preferir
 
 DICAS:
 ───────────────────────────────────────────────────────────────────
 
 ORGANIZACAO:
-Use marcadores e seções:
+Use marcadores e secoes:
 === PENDENCIAS ===
 === HISTORICO ===
 === CONTATOS ===
 
 DATAS:
-Sempre inclua data nas anotações:
+Sempre inclua data nas anotacoes:
 [10/01/2026] Descricao do evento
 
 PRIORIDADES:
@@ -1671,18 +1780,16 @@ Use marcadores:
 !! Importante
 ! Normal
 
-CHECKBOX:
-Para listas de tarefas:
-[ ] Tarefa pendente
-[X] Tarefa concluída
-
 LIMPEZA:
-Remova informações antigas periodicamente
+Remova informacoes antigas periodicamente
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 _help_generico() {
-    cat << 'EOF'
+    local conteudo
+    conteudo=$(cat << 'EOF'
 AJUDA GERAL - SISTEMA SAV
 ═══════════════════════════════════════════════════════════════════
 
@@ -1693,7 +1800,7 @@ NAVEGACAO:
 ───────────────────────────────────────────────────────────────────
 
 MENUS:
-• Digite o número da opcao desejada
+• Digite o numero da opcao desejada
 • Pressione ENTER para confirmar
 • 9 = Voltar ao menu anterior
 • Ctrl+C = Cancelar operacao
@@ -1709,11 +1816,11 @@ COMANDOS GERAIS:
 CONFIRMACOES:
 • S ou s = Sim
 • N ou n = Nao
-• ENTER = Usa valor padrao [maiúsculo]
+• ENTER = Usa valor padrao [maiusculo]
 
 ENTRADA DE DADOS:
 • ENTER vazio = Cancelar ou usar padrao
-• ESC = Cancelar (quando disponível)
+• ESC = Cancelar (quando disponivel)
 • Ctrl+C = Interromper processo
 
 ESTRUTURA DO SISTEMA:
@@ -1723,12 +1830,12 @@ DIRETORIOS PRINCIPAIS:
 /raiz/
   classes/      - Programas compilados
   tel_isc/      - Telas do sistema
-  xml/          - Configurações XML
+  xml/          - Configuracoes XML
   dados_jisam/  - Base de dados
   
 tools/
   libs/         - Bibliotecas do atualiza
-  cfg/          - Configurações
+  cfg/          - Configuracoes
   logs/         - Arquivos de log
   backup/       - Backups da base
   olds/         - Backups de programas
@@ -1740,23 +1847,23 @@ ARQUIVOS IMPORTANTES:
 ───────────────────────────────────────────────────────────────────
 
 cfg/.atualizac        - Configuracao principal
-cfg/atualizat         - Lista de temporários
-cfg/atualizaj         - Arquivos principais
+cfg/atualizat         - Lista de temporarios
+cfg/atualizaj         - Arquivos principais para o rodar e rebuild
 cfg/atualizal         - Notas/lembretes
-logs/atualiza.log     - Log de operações
+logs/atualiza.log     - Log de operacoes
 logs/limpando.log     - Log de limpeza
 
 CONCEITOS IMPORTANTES:
 ───────────────────────────────────────────────────────────────────
 
 PROGRAMA:
-Arquivo executável individual (.class ou .int)
+Arquivo executavel individual (.class ou .int)
 
 BIBLIOTECA:
 Conjunto completo de programas do sistema
 
 BACKUP:
-Cópia de segurança de dados
+Copia de seguranca de dados
 
 REBUILD:
 Reorganizacao de arquivo de dados
@@ -1765,16 +1872,18 @@ TEMPORARIOS:
 Arquivos gerados durante operacao
 
 EXPURGADOR:
-Limpeza automática de arquivos antigos
+Limpeza automatica de arquivos antigos
 
 PARA MAIS INFORMACOES:
 ───────────────────────────────────────────────────────────────────
 
 • Pressione M para manual completo
-• Use ? em cada menu para ajuda específica
+• Use ? em cada menu para ajuda especifica
 • Consulte documentacao online
 • Entre em contato com suporte SAV
 EOF
+)
+    _exibir_paginado "$conteudo" 25
 }
 
 #---------- CRIACAO DO MANUAL PADRAO ----------#
@@ -1790,7 +1899,7 @@ INDICE:
 3. Atualizacao de Programas
 4. Atualizacao de Biblioteca
 5. Ferramentas
-6. Configurações
+6. Configuracoes
 7. Resolucao de Problemas
 8. Contatos e Suporte
 
@@ -1798,7 +1907,7 @@ INDICE:
 1. INTRODUCAO
 ═══════════════════════════════════════════════════════════════════
 
-O Sistema SAV é uma ferramenta completa para gerenciamento,
+O Sistema SAV e uma ferramenta completa para gerenciamento,
 atualizacao e manutencao de sistemas de gestao empresarial.
 
 
@@ -1807,15 +1916,15 @@ PRINCIPAIS FUNCIONALIDADES:
 • Atualizacao completa de bibliotecas
 • Backup e restauracao de dados
 • Recuperacao de arquivos corrompidos
-• Limpeza de arquivos temporários
-• Transferência de arquivos cliente/servidor
-• Gestao de configurações
+• Limpeza de arquivos temporarios
+• Transferencia de arquivos cliente/servidor
+• Gestao de configuracoes
 
 REQUISITOS DO SISTEMA:
 • Linux (qualquer distribuicao moderna)
 • Bash 4.0 ou superior
-• Utilitários: zip, unzip, rsync, ssh
-• Espaço em disco: mínimo 5GB livres
+• Utilitarios: zip, unzip, rsync, ssh
+• Espaco em disco: minimo 5GB livres
 • IsCOBOL ou Micro Focus COBOL (conforme instalacao)
 
 
@@ -1829,7 +1938,7 @@ Ponto de entrada do sistema com acesso a todas funcionalidades.
 
 2.1 OPCOES DO MENU PRINCIPAL
 
-[Para conteúdo detalhado, use ? no menu]
+[Para conteudo detalhado, use ? no menu]
 
 1 - Atualizar Programa(s)
 2 - Atualizar Biblioteca
@@ -1850,7 +1959,7 @@ PASSO A PASSO:
 1. Menu Principal > 1 > 1
 2. Informe nome do programa (MAIUSCULAS)
 3. Escolha tipo compilacao (1=Normal, 2=Debug)
-4. Repita para até 6 programas
+4. Repita para ate 6 programas
 5. ENTER para finalizar
 6. Aguarde download e instalacao
 
@@ -1866,21 +1975,21 @@ Nome do programa: [ENTER - finaliza]
 Para ambientes sem conexao com servidor.
 
 PREPARACAO:
-1. Copie arquivos .zip para diretório offline
+1. Copie arquivos .zip para diretorio offline
 2. Arquivos devem seguir padrao: [PROG]-class[VER].zip
 
 PROCESSO:
 1. Menu Principal > 1 > 2
 2. Informe programas (igual modo online)
-3. Sistema busca em diretório offline
+3. Sistema busca em diretorio offline
 4. Instala programas encontrados
 
 3.3 PROGRAMAS EM PACOTE
 
-Atualizacao em massa através de pacotes pré-definidos.
+Atualizacao em massa atraves de pacotes pre-definidos.
 
 VANTAGENS:
-• Mais rápido
+• Mais rapido
 • Garante compatibilidade
 • Menos propenso a erros
 
@@ -1889,37 +1998,37 @@ Similar ao online/offline, mas usa nome do pacote.
 
 3.4 REVERTER PROGRAMA
 
-Volta programa para versao anterior usando backup automático.
+Volta programa para versao anterior usando backup automatico.
 
 QUANDO USAR:
-• Problema após atualizacao
+• Problema apos atualizacao
 • Incompatibilidade detectada
-• Necessidade de versao específica
+• Necessidade de versao especifica
 
 LIMITACAO:
-Apenas último backup disponível (última atualizacao).
+Apenas ultimo backup disponivel (ultima atualizacao).
 
 ═══════════════════════════════════════════════════════════════════
 4. ATUALIZACAO DE BIBLIOTECA
 ═══════════════════════════════════════════════════════════════════
 
 Atualizacao completa do sistema, incluindo todos programas,
-telas, configurações XML e componentes auxiliares.
+telas, configuracoes XML e componentes auxiliares.
 
 4.1 QUANDO ATUALIZAR BIBLIOTECA
 
 OBRIGATORIO:
-• Mudança de versao principal do sistema
-• Orientacao do suporte técnico
-• Correções críticas de segurança
+• Mudanca de versao principal do sistema
+• Orientacao do suporte tecnico
+• Correcoes criticas de seguranca
 
 RECOMENDADO:
-• Atualizações mensais
-• Novos recursos disponíveis
+• Atualizacoes mensais
+• Novos recursos disponiveis
 • Performance degradada
 
 EVITAR:
-• Horário comercial (usar noite/fim de semana)
+• Horario comercial (usar noite/fim de semana)
 • Sem backup recente
 • Problemas nao resolvidos
 
@@ -1932,14 +2041,14 @@ SAVATU:
 Biblioteca principal do sistema SAV
 • Mais comum
 • Mais abrangente
-• Usado na maioria das atualizações
+• Usado na maioria das atualizacoes
 
 4.3 PROCESSO DE ATUALIZACAO
 
 PREPARACAO:
 1. Fazer backup completo
-2. Verificar espaço em disco (5GB mínimo)
-3. Avisar usuários (sistema ficará indisponível)
+2. Verificar espaco em disco (5GB minimo)
+3. Avisar usuarios (sistema ficara indisponivel)
 MANUAL_EOF
 
 _mensagec "${GREEN}" "Manual padrao criado em: $MANUAL_FILE"
@@ -1947,7 +2056,7 @@ _mensagec "${GREEN}" "Manual padrao criado em: $MANUAL_FILE"
 
 #---------- ATALHO RAPIDO DE AJUDA ----------#
 
-# Exibe menu rápido de ajuda
+# Exibe menu rapido de ajuda
 _ajuda_rapida() {
     clear
     _linha "=" "${CYAN}"
@@ -1955,7 +2064,8 @@ _ajuda_rapida() {
     _linha "=" "${CYAN}"
     printf "\n"
     
-    cat << EOF 
+   local conteudo
+   local conteudo=$(cat << EOF 
 COMANDOS DE AJUDA:
 ───────────────────────────────────────────────────────────────────
 ? ou help    = Ajuda contextual do menu atual
@@ -1972,21 +2082,23 @@ CONFIRMACOES:
 ───────────────────────────────────────────────────────────────────
 S ou s       = Sim
 N ou n       = Nao
-ENTER vazio  = Usa valor padrao [indicado em maiúscula]
+ENTER vazio  = Usa valor padrao [indicado em maiuscula]
 
 DICAS:
 ───────────────────────────────────────────────────────────────────
-• Nomes de programas sempre em MAIÚSCULAS
+• Nomes de programas sempre em MAIuSCULAS
 • Leia mensagens com atencao
-• Faça backup antes de atualizações importantes
-• Em caso de dúvida, consulte o manual completo
+• Faca backup antes de atualizacoes importantes
+• Em caso de duvida, consulte o manual completo
 
 SUPORTE:
 ───────────────────────────────────────────────────────────────────
 Email: suporte@sav.com.br
-Horário: Segunda a Sexta, 8h às 18h
+Horario: Segunda a Sexta, 8h às 18h
 EOF
-    
+)
+    _exibir_paginado "$conteudo" 25
+
     printf "\n"
     _press
 }
@@ -2018,7 +2130,7 @@ _buscar_manual() {
     # Buscar e destacar resultados
     if grep -in "$termo" "$MANUAL_FILE"; then
         printf "\n"
-        _mensagec "${GREEN}" "Busca concluída"
+        _mensagec "${GREEN}" "Busca concluida"
     else
         _mensagec "${YELLOW}" "Nenhum resultado encontrado para: $termo"
     fi
@@ -2060,7 +2172,7 @@ _menu_ajuda_principal() {
         printf "\n"
         
         printf "%s\n" "${GREEN}1${NORM} - Manual Completo"
-        printf "%s\n" "${GREEN}2${NORM} - Ajuda Rápida"
+        printf "%s\n" "${GREEN}2${NORM} - Ajuda Rapida"
         printf "%s\n" "${GREEN}3${NORM} - Buscar no Manual"
         printf "%s\n" "${GREEN}4${NORM} - Exportar Manual"
         printf "%s\n" "${GREEN}5${NORM} - Ajuda por Contexto"
@@ -2080,7 +2192,7 @@ _menu_ajuda_principal() {
             5) _menu_selecao_contexto ;;
             9) return ;;
             *)
-                _mensagec "${RED}" "Opcao inválida"
+                _mensagec "${RED}" "Opcao invalida"
                 sleep 1
                 ;;
         esac
@@ -2122,6 +2234,6 @@ _menu_selecao_contexto() {
         8) _exibir_ajuda_contextual "transferencia" ;;
         9) _exibir_ajuda_contextual "setups" ;;
         10) _exibir_ajuda_contextual "lembretes" ;;
-        *) _mensagec "${RED}" "Opcao inválida" ; sleep 1 ;;
+        *) _mensagec "${RED}" "Opcao invalida" ; sleep 1 ;;
     esac
 }
