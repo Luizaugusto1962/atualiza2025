@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 13/01/2025-00
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
