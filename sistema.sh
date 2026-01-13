@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 06/01/2026-00
+# Versao: 13/01/2026-00
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -327,7 +327,9 @@ fi
             _mensagec "${RED}" "Erro ao instalar $arquivo"
             ((arquivos_erro++))
         fi
-               if [ "$arquivo" = "manual.txt" ]; then
+
+        # Define diretório destino para manual.txt
+        if [ "$arquivo" = "manual.txt" ]; then
             target="${cfg_dir}"
         fi
         
@@ -335,6 +337,11 @@ fi
         if mv -f "$arquivo" "$target"; then
             _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
             ((arquivos_instalados++))
+            
+        # Verifica se o arquivo foi realmente movido
+            if [[ ! -f "$arquivo" && -f "$target/$arquivo" ]]; then
+                _mensagec "${BLUE}" "  (Verificado: arquivo movido corretamente)"
+            fi    
         else
             _mensagec "${RED}" "Erro ao instalar $arquivo"
             ((arquivos_erro++))

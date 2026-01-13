@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 09/01/2026-00
+# Versao: 13/01/2026-00
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
