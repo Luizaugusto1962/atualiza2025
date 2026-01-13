@@ -299,7 +299,7 @@ _atualizando() {
 
         # Verifica se o arquivo foi realmente movido
             if [[ ! -f "$arquivo" && -f "$target/$arquivo" ]]; then
-            _mensagec "${BLUE}" "  (Verificado: arquivo movido corretamente)"
+            _mensagec "${GREEN}" "Verificado: arquivo movido corretamente"
             fi
         else
             _mensagec "${RED}" "Erro ao instalar $arquivo"
