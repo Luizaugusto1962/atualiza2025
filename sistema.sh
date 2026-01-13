@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 13/01/2026-00
+# Versao: 06/01/2026-00
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -302,8 +302,7 @@ fi
     # Verificar e instalar arquivos
     local arquivos_instalados=0
     local arquivos_erro=0
-    local manual="manual.txt"
-    
+
     # Processar todos os arquivos .sh encontrados
     for arquivo in *.sh; do
         # Verificar se o arquivo existe
@@ -328,26 +327,19 @@ fi
             _mensagec "${RED}" "Erro ao instalar $arquivo"
             ((arquivos_erro++))
         fi
-    done
-
-    # Define diretório destino para manual.txt
-    if [ "$manual" = "manual.txt" ]; then
-        target="${cfg_dir}"
-    fi
+               if [ "$arquivo" = "manual.txt" ]; then
+            target="${cfg_dir}"
+        fi
         
-    # Mover o manual para o diretorio de destino
-    if mv -f "$manual" "$target"; then
-        _mensagec "${GREEN}" "Arquivo $manual instalado com sucesso"
-        ((arquivos_instalados++))
-            
-    # Verifica se o arquivo foi realmente movido
-        if [[ ! -f "$manual" && -f "$target/$manual" ]]; then
-            _mensagec "${BLUE}" "  (Verificado: arquivo movido corretamente)"
-        fi    
-    else
-        _mensagec "${RED}" "Erro ao instalar $manual"
-        ((arquivos_erro++))
-    fi
+        # Mover o manual para o diretorio de destino
+        if mv -f "$arquivo" "$target"; then
+            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
+            ((arquivos_instalados++))
+        else
+            _mensagec "${RED}" "Erro ao instalar $arquivo"
+            ((arquivos_erro++))
+        fi
+    done
 
     # Verificar se houve erros na instalacao
     if [[ $arquivos_erro -gt 0 ]]; then
