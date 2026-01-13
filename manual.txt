@@ -1,10 +1,10 @@
-╔═══════════════════════════════════════════════════════════════╗
-║                    MANUAL DO SISTEMA SAV                      ║
-║              Sistema de Atualizacao e Manutencao              ║
-╚═══════════════════════════════════════════════════════════════╝
+---------------------------------------------------------------
+                    MANUAL DO SISTEMA SAV                      
+              Sistema de Atualizacao e Manutencao              
+---------------------------------------------------------------
 
 INDICE:
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 1. Introducao
 2. Menu Principal
 3. Atualizacao de Programas
@@ -18,16 +18,16 @@ INDICE:
 11. Lembretes
 12. Resolucao de Problemas
 
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 [MENU_PRINCIPAL]
 MENU PRINCIPAL
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 
 O Menu Principal e o ponto de entrada do sistema SAV. A partir dele
 voce pode acessar todas as funcionalidades disponiveis.
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 1 - ATUALIZAR PROGRAMA(S)
     Permite baixar e instalar programas individuais ou em pacote.
@@ -94,27 +94,27 @@ OPCOES DISPONIVEIS:
     Encerra o sistema SAV de forma segura.
 
 DICAS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 • Use as setas do teclado para navegar (se disponivel)
 • Digite o numero da opcao desejada
 • Pressione ? a qualquer momento para ajuda contextual
 • Use Ctrl+C para cancelar operacoes em andamento
 
 ATALHOS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 • ? = Ajuda contextual
 • 9 = Sair/Voltar
 • Ctrl+C = Cancelar operacao
 
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 [MENU_PROGRAMAS]
 MENU DE PROGRAMAS
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 
 Este menu permite atualizar programas individuais do sistema SAV.
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 1 - PROGRAMA(S) ON-LINE
     Baixa e instala programas diretamente do servidor.
@@ -176,7 +176,7 @@ OPCOES DISPONIVEIS:
     • Backup fica em: tools/olds/[PROGRAMA]-anterior.zip
 
 INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 NOMES DE PROGRAMAS:
 • Sempre em MAIUSCULAS (ex: ADVA00, nao adva00)
@@ -196,7 +196,7 @@ BACKUP AUTOMATICO:
 • Formato: [PROGRAMA]-anterior.zip
 
 SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 PROBLEMA: "Arquivo nao encontrado"
 SOLUCAO: Verifique se o nome esta correto e em MAIUSCULAS
@@ -210,17 +210,17 @@ SOLUCAO: Verifique espaco ou permissao no disco no diretorio tools/olds/
 PROBLEMA: "Programa nao encontrado no servidor"
 SOLUCAO: Verifique com suporte se programa esta disponivel
 
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 [MENU_BIBLIOTECA]
 MENU DA BIBLIOTECA
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 
 Bibliotecas sao conjuntos completos de programas que formam o
 sistema SAV. Atualizar a biblioteca e uma operacao mais ampla que
 atualizar programas individuais.
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 1 - ATUALIZACAO DO TRANSPC
     Atualiza a biblioteca de TRANSPC.
@@ -304,7 +304,7 @@ OPCOES DISPONIVEIS:
     • Contem todos os arquivos antigos
 
 PROCESSO DE ATUALIZACAO DA BIBLIOTECA:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 PASSO 1: INFORMAR VERSAO
 Digite apenas o numero da versao (ex: 0601, 0105, etc)
@@ -341,7 +341,7 @@ Sistema verifica:
 • Integridade dos dados
 
 INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 VERSAO:
 • Use apenas numeros (ex: 0601, 0105, etc)
@@ -372,7 +372,7 @@ POS-ATUALIZACAO:
 • Em caso de problemas, reverta
 
 SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 PROBLEMA: "Erro na compactacao de backup"
 SOLUCAO: Verifique espaco em disco, pode estar cheio
@@ -389,16 +389,16 @@ SOLUCAO: Normal nos primeiros acessos (cache)
 PROBLEMA: "Programa nao inicia apos atualizacao"
 SOLUCAO: Reverta para versao anterior e contate suporte
 
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 [MENU_FERRAMENTAS]
 MENU DE FERRAMENTAS
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 
 O menu de Ferramentas fornece utilitarios administrativos para
 manutencao e gestao do sistema SAV.
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 1 - TEMPORARIOS
     Gerencia arquivos temporarios do sistema.
@@ -501,7 +501,7 @@ OPCOES DISPONIVEIS:
     - Lembretes de atualizacoes
 
 DICAS DE USO:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 MANUTENCAO REGULAR:
 1. Execute expurgador semanalmente
@@ -519,15 +519,15 @@ PERFORMANCE:
 • Recuperacao de arquivos otimiza indices
 • Expurgador libera recursos
 
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 [MENU_TEMPORARIOS]
 MENU DE LIMPEZA - TEMPORARIOS
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 
 Gerencia arquivos temporarios criados durante operacao do sistema.
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 1 - LIMPEZA DOS ARQUIVOS TEMPORARIOS
     Remove arquivos temporarios de todas as bases.
@@ -573,7 +573,7 @@ OPCOES DISPONIVEIS:
     • Formato legivel
 
 ARQUIVO ATUALIZAT:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 LOCALIZACAO:
 cfg/atualizat
@@ -594,7 +594,7 @@ PADROES COMUNS:
 • PRINT*.SPL - Filas de impressao
 
 INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 SEGURANCA:
 • Arquivos sao compactados antes de remover
@@ -617,10 +617,10 @@ Para recuperar arquivo removido:
 2. Descompacte o arquivo necessario
 3. Restaure para local original
 
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 [MENU_RECUPERACAO]
 MENU DE RECUPERACAO DE ARQUIVO(S)
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 
 Executa rebuild (reconstrucao) em arquivos de dados IsCOBOL,
 corrigindo indices e reorganizando registros.
@@ -628,7 +628,7 @@ corrigindo indices e reorganizando registros.
 DISPONIVEL APENAS PARA: Sistemas IsCOBOL
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 1 - UM ARQUIVO OU TODOS
     Recupera arquivo especifico ou todos.
@@ -664,7 +664,7 @@ OPCOES DISPONIVEIS:
     Contem: Nomes de arquivos criticos do sistema
 
 O QUE E REBUILD:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 DEFINICAO:
 Rebuild (reconstrucao) e o processo de reorganizar um arquivo
@@ -680,7 +680,7 @@ O QUE FAZ:
 6. Otimiza espaco fisico
 
 QUANDO USAR:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 OBRIGATORIO:
 • Erro "File is locked" persistente
@@ -702,7 +702,7 @@ PREVENCAO:
 • Sempre apos erros de acesso
 
 PROCESSO DE RECUPERACAO:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 PASSO 1: IDENTIFICACAO
 Sistema identifica arquivos a processar
@@ -723,7 +723,7 @@ PASSO 6: LOG
 Registra operacao em arquivo de log
 
 TEMPO DE PROCESSAMENTO:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 FATORES:
 • Tamanho do arquivo
@@ -742,7 +742,7 @@ Se sistema possui multiplas bases (base2, base3),
 sera solicitado escolher qual base processar.
 
 INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 USUARIOS:
 • Sistema deve estar sem usuarios
@@ -764,7 +764,7 @@ Operacoes registradas em:
 tools/logs/atualiza.[DATA].log
 
 SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 PROBLEMA: "jutil not found"
 SOLUCAO: Verificar instalacao IsCOBOL
@@ -781,17 +781,17 @@ SOLUCAO: Liberar espaco em disco
 PROBLEMA: Rebuild travou
 SOLUCAO: Aguardar ou verificar se processo esta ativo
 
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 [MENU_BACKUP]
 MENU DE BACKUP(S)
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 
 Sistema completo de backup e restauracao da base de dados.
 
 DISPONIVEL PARA: Sistemas sem banco de dados (BANCO=n)
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 1 - BACKUP DA BASE DE DADOS
     Cria backup completo ou incremental.
@@ -851,7 +851,7 @@ OPCOES DISPONIVEIS:
     5. Opcionalmente remover local
 
 BACKUP COMPLETO:
-───────────────────────────────────────────────────────────────
+---------------------------------------------------------------
 
 O QUE INCLUI:
 • Todos arquivos de dados (.dat)
@@ -871,7 +871,7 @@ QUANDO FAZER:
 • Semanalmente (minimo)
 
 BACKUP INCREMENTAL:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 O QUE INCLUI:
 Apenas arquivos modificados apos data especificada
@@ -891,7 +891,7 @@ ESTRATEGIA RECOMENDADA:
 • Incremental: A cada 2-4 horas
 
 FORMATO DOS ARQUIVOS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 NOMENCLATURA:
 [EMPRESA]_[TIPO]_[AAAAMMDDHHMMSS].zip
@@ -913,7 +913,7 @@ RETENCAO:
 • Servidor: Conforme politica empresa
 
 PROCESSO DE BACKUP:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 PASSO 1: VERIFICACAO PREVIA
 • Verifica backups recentes (ultimos 2 dias)
@@ -941,7 +941,7 @@ PASSO 5: ENVIO (opcional)
 • Mantem ou remove local
 
 PROCESSO DE RESTAURACAO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 PASSO 1: SELECAO
 • Lista backups disponiveis
@@ -964,7 +964,7 @@ PASSO 4: VERIFICACAO
 • Registra em log
 
 INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 ESPACO NECESSARIO:
 • Backup: igual ao tamanho da base
@@ -992,7 +992,7 @@ Para backup automatico, use cron:
 0 22 * * * /caminho/atualiza.sh --backup-auto
 
 SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 PROBLEMA: "Backup muito lento"
 SOLUCAO: Base muito grande, considere incremental
@@ -1006,15 +1006,15 @@ SOLUCAO: Backup pode ter falhado, use anterior
 PROBLEMA: "Erro ao enviar para servidor"
 SOLUCAO: Verifique conectividade e credenciais
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 [MENU_TRANSFERENCIA]
 MENU DE ENVIAR E RECEBER ARQUIVO(S)
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 
 Sistema de transferencia de arquivos entre cliente e servidor.
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 1 - ENVIAR ARQUIVO(S)
     Envia arquivo para servidor remoto.
@@ -1072,7 +1072,7 @@ OPCOES DISPONIVEIS:
     • Porta: Configuravel
 
 USO DE DIRETORIOS PADRAO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 ENVIO:
 Origem padrao: tools/envia/
@@ -1092,7 +1092,7 @@ VANTAGENS:
 • Limpeza automatica (expurgador)
 
 CONFIGURACOES DE CONEXAO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 SERVIDOR:
 • IP: Configurado no setup
@@ -1112,7 +1112,7 @@ Se configurado acessossh=s:
 • Mais rapido e seguro
 
 TIPOS DE ARQUIVO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 SUPORTADOS:
 • Documentos: .pdf, .doc, .docx, .txt
@@ -1130,7 +1130,7 @@ LIMITACOES:
 • Rede: Depende de conectividade
 
 CASOS DE USO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 ENVIAR:
 • Relatorios para analise
@@ -1149,7 +1149,7 @@ RECEBER:
 • Patches e correcoes
 
 SEGURANCA:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 CRIPTOGRAFIA:
 • SSH: Todos dados criptografados
@@ -1167,7 +1167,7 @@ AUDITORIA:
 • Usuario: Identificacao preservada
 
 SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 PROBLEMA: "Connection refused"
 SOLUCAO: Verificar IP, porta e firewall
@@ -1187,15 +1187,15 @@ SOLUCAO: Verificar velocidade da rede
 PROBLEMA: "Host key verification failed"
 SOLUCAO: Limpar ~/.ssh/known_hosts ou aceitar novo
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 [MENU_SETUPS]
 MENU DE SETUP DO SISTEMA
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 
 Gerenciamento de configuracoes do sistema SAV.
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 1 - CONSULTA DE SETUP
     Visualiza todas as configuracoes atuais.
@@ -1259,7 +1259,7 @@ OPCOES DISPONIVEIS:
     Execute apos alteracoes ou problemas
 
 ARQUIVO DE CONFIGURACAO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 LOCALIZACAO:
 cfg/.atualizac
@@ -1283,7 +1283,7 @@ IMPORTANTE:
 • Comentarios com #
 
 PARAMETROS PRINCIPAIS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 sistema:
 • iscobol: Sistema IsCOBOL
@@ -1321,7 +1321,7 @@ Offline:
 • Determina fonte de atualizacoes
 
 BIBLIOTECAS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 SAVATU1, SAVATU2, SAVATU3, SAVATU4:
 Padroes de nome dos arquivos de biblioteca
@@ -1339,7 +1339,7 @@ ATUALIZACAO AUTOMATICA:
 Ao mudar verclass, SAVATUs sao atualizados
 
 DIRETORIOS FIXOS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 Definidos automaticamente em tools/:
 • /progs - Programas atualizados
@@ -1354,7 +1354,7 @@ Definidos automaticamente em tools/:
 NAO MODIFICAR estes diretorios!
 
 CONFIGURACAO INICIAL:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 Para nova instalacao, use:
 ./libs/setup.sh
@@ -1375,7 +1375,7 @@ Para modificar instalacao existente:
 ./libs/setup.sh --edit
 
 SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 PROBLEMA: "Arquivo .atualizac nao encontrado"
 SOLUCAO: Execute ./libs/setup.sh
@@ -1389,15 +1389,15 @@ SOLUCAO: Verifique paths no .atualizac
 PROBLEMA: Alteracoes nao surtem efeito
 SOLUCAO: Saia e entre novamente no sistema
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 [MENU_LEMBRETES]
 MENU DE LEMBRETES - BLOCO DE NOTAS
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 
 Sistema simples de anotacoes e lembretes.
 
 OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 1 - ESCREVER NOVA NOTA
     Cria nova anotacao.
@@ -1457,7 +1457,7 @@ OPCOES DISPONIVEIS:
     Acao irreversivel! Notas sao perdidas.
 
 ARQUIVO DE NOTAS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 LOCALIZACAO:
 cfg/atualizal
@@ -1472,7 +1472,7 @@ PERSISTENCIA:
 Notas sao mantidas entre sessoes
 
 CASOS DE USO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 HISTORICO DE MANUTENCAO:
 10/01 - Atualizado programa ADV000 
@@ -1492,7 +1492,7 @@ SENHAS E ACESSOS:
 (Nao recomendado para informacoes sensiveis!)
 
 INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 SEGURANCA:
 • Notas em texto simples
@@ -1524,7 +1524,7 @@ Na inicializacao do sistema:
 • Configure para nao exibir se preferir
 
 DICAS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 ORGANIZACAO:
 Use marcadores e secoes:
@@ -1545,16 +1545,16 @@ Use marcadores:
 LIMPEZA:
 Remova informacoes antigas periodicamente
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 [AJUDA_NO_GERAL]
 AJUDA GERAL - SISTEMA SAV
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 
 Sistema de Atualizacao SAV - Gerenciamento completo de programas,
 bibliotecas e manutencao do sistema.
 
 NAVEGACAO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 MENUS:
 • Digite o numero da opcao desejada
@@ -1568,7 +1568,7 @@ AJUDA CONTEXTUAL:
 • M = Manual completo
 
 COMANDOS GERAIS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 CONFIRMACOES:
 • S ou s = Sim
@@ -1581,7 +1581,7 @@ ENTRADA DE DADOS:
 • Ctrl+C = Interromper processo
 
 ESTRUTURA DO SISTEMA:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 DIRETORIOS PRINCIPAIS:
 /raiz/
@@ -1601,7 +1601,7 @@ tools/
   recebe/       - Recebidos
 
 ARQUIVOS IMPORTANTES:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 cfg/.atualizac        - Configuracao principal
 cfg/atualizat         - Lista de temporarios
@@ -1611,7 +1611,7 @@ logs/atualiza.log     - Log de operacoes
 logs/limpando.log     - Log de limpeza
 
 CONCEITOS IMPORTANTES:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 PROGRAMA:
 Arquivo executavel individual (.class ou .int)
@@ -1632,7 +1632,7 @@ EXPURGADOR:
 Limpeza automatica de arquivos antigos
 
 PARA MAIS INFORMACOES:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 
 • Pressione M para manual completo
 • Use H em cada menu para ajuda especifica
@@ -1640,10 +1640,10 @@ PARA MAIS INFORMACOES:
 • Entre em contato com suporte SAV
 
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 
 INDICE:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 1. Introducao
 2. Menu Principal
 3. Atualizacao de Programas
@@ -1653,9 +1653,9 @@ INDICE:
 7. Resolucao de Problemas
 8. Contatos e Suporte
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 1. INTRODUCAO
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 
 O Sistema SAV e uma ferramenta completa para gerenciamento,
 atualizacao e manutencao de sistemas de gestao empresarial.
@@ -1677,9 +1677,9 @@ REQUISITOS DO SISTEMA:
 • Espaco em disco: minimo 5GB livres
 • IsCOBOL ou Micro Focus COBOL (conforme instalacao)
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 2. MENU PRINCIPAL
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 
 Ponto de entrada do sistema com acesso a todas funcionalidades.
 
@@ -1694,9 +1694,9 @@ Para conteudo detalhado, use ? no menu
 5 - Ferramentas
 9 - Sair do Sistema
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 3. ATUALIZACAO DE PROGRAMAS
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 
 3.1 PROGRAMAS ONLINE
 
@@ -1755,9 +1755,10 @@ QUANDO USAR:
 LIMITACAO:
 Apenas ultimo backup disponivel (ultima atualizacao).
 
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
 4. ATUALIZACAO DE BIBLIOTECA
-═══════════════════════════════════════════════════════════════════
+-------------------------------------------------------------------
+-------------------------------------------------------------------
 
 Atualizacao completa do sistema, incluindo todos programas,
 telas, configuracoes XML e componentes auxiliares.
@@ -1802,34 +1803,34 @@ PREPARACAO:
 
 [AJUDA_RAPIDA]
 AJUDA RAPIDA
-═══════════════════════════════════════════════════════════════
+---------------------------------------------------------------
 
 COMANDOS DE AJUDA:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 ? ou help    = Ajuda contextual do menu atual
 M ou manual  = Manual completo do sistema
 
 NAVEGACAO:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 [Numero]     = Selecionar opcao
 9            = Voltar ao menu anterior
 Ctrl+C       = Cancelar operacao
 ENTER        = Confirmar ou usar padrao
 
 CONFIRMACOES:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 S ou s       = Sim
 N ou n       = Nao
 ENTER vazio  = Usa valor padrao [indicado em maiuscula]
 
 DICAS:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 • Nomes de programas sempre em MAIUSCULAS
 • Leia mensagens com atencao
 • Faca backup antes de atualizacoes importantes
 • Em caso de duvida, consulte o manual completo
 
 SUPORTE:
-───────────────────────────────────────────────────────────────────
+-------------------------------------------------------------------
 Email: suporte@sav.com.br
 Horario: Segunda a Sexta, 8h as 18h
