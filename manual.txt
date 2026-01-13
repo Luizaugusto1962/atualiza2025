@@ -32,10 +32,10 @@ OPCOES DISPONIVEIS:
 1 - ATUALIZAR PROGRAMA(S)
     Permite baixar e instalar programas individuais ou em pacote.
     
-    • Use esta opcao quando precisar atualizar programas especificos
-    • Suporta atualizacoes online (via servidor) ou offline (via arquivo)
-    • Permite compilacao normal ou em modo de depuracao
-    • Cria backup automatico antes de atualizar
+    * Use esta opcao quando precisar atualizar programas especificos
+    * Suporta atualizacoes online (via servidor) ou offline (via arquivo)
+    * Permite compilacao normal ou em modo de depuracao
+    * Cria backup automatico antes de atualizar
     
     QUANDO USAR:
     - Correcao de bugs em programas especificos
@@ -45,9 +45,9 @@ OPCOES DISPONIVEIS:
 2 - ATUALIZAR BIBLIOTECA
     Atualiza o conjunto completo de bibliotecas do sistema.
     
-    • Transpc: Biblioteca do diretorio /u/varejo/transpc
-    • Savatu: Biblioteca do diretorio /home/savatu/biblioteca
-    • Modo Offline: Para ambientes sem conexao os arquivos .zip devem estar
+    * Transpc: Biblioteca do diretorio /u/varejo/transpc
+    * Savatu: Biblioteca do diretorio /home/savatu/biblioteca
+    * Modo Offline: Para ambientes sem conexao os arquivos .zip devem estar
       no diretorio configurado para offline (geralmente /portalsav/Atualiza)
     
     QUANDO USAR:
@@ -61,9 +61,9 @@ OPCOES DISPONIVEIS:
 3 - VERSAO DO ISCOBOL
     Exibe informacoes sobre a versao do IsCOBOL instalada.
     
-    • Mostra numero da versao
-    • Exibe data de compilacao
-    • Lista recursos disponiveis
+    * Mostra numero da versao
+    * Exibe data de compilacao
+    * Lista recursos disponiveis
     
     Nota: Disponivel apenas para sistemas IsCOBOL.
 
@@ -71,40 +71,40 @@ OPCOES DISPONIVEIS:
     Mostra informacoes detalhadas do sistema operacional.
     
     INFORMACOES EXIBIDAS:
-    • Distribuicao e versao do Linux
-    • Hostname do servidor
-    • IP interno e externo
-    • Usuarios logados
-    • Uso de memoria RAM e SWAP
-    • Uso de disco
-    • Tempo de atividade (uptime)
+    * Distribuicao e versao do Linux
+    * Hostname do servidor
+    * IP interno e externo
+    * Usuarios logados
+    * Uso de memoria RAM e SWAP
+    * Uso de disco
+    * Tempo de atividade (uptime)
 
 5 - FERRAMENTAS
     Acesso ao menu de ferramentas administrativas.
     
-    • Limpeza de arquivos temporarios
-    • Recuperacao de arquivos de dados
-    • Rotinas de backup
-    • Transferencia de arquivos
-    • Expurgador automatico
-    • Configuracoes do sistema
-    • Sistema de lembretes
+    * Limpeza de arquivos temporarios
+    * Recuperacao de arquivos de dados
+    * Rotinas de backup
+    * Transferencia de arquivos
+    * Expurgador automatico
+    * Configuracoes do sistema
+    * Sistema de lembretes
 
 9 - SAIR DO SISTEMA
     Encerra o sistema SAV de forma segura.
 
 DICAS:
 ---------------------------------------------------------------
-• Use as setas do teclado para navegar (se disponivel)
-• Digite o numero da opcao desejada
-• Pressione ? a qualquer momento para ajuda contextual
-• Use Ctrl+C para cancelar operacoes em andamento
+* Use as setas do teclado para navegar (se disponivel)
+* Digite o numero da opcao desejada
+* Pressione ? a qualquer momento para ajuda contextual
+* Use Ctrl+C para cancelar operacoes em andamento
 
 ATALHOS:
 ---------------------------------------------------------------
-• ? = Ajuda contextual
-• 9 = Sair/Voltar
-• Ctrl+C = Cancelar operacao
+* ? = Ajuda contextual
+* 9 = Sair/Voltar
+* Ctrl+C = Cancelar operacao
 
 ---------------------------------------------------------------
 [MENU_PROGRAMAS]
@@ -122,8 +122,8 @@ OPCOES DISPONIVEIS:
     PROCESSO:
     1. Informe o nome do programa (em MAIUSCULAS)
     2. Escolha o tipo de compilacao:
-       • 1 = Normal (producao)
-       • 2 = Depuracao (debug, com simbolos)
+       * 1 = Normal (producao)
+       * 2 = Depuracao (debug, com simbolos)
     3. Repita para ate 6 programas
     4. Pressione ENTER para finalizar selecao
     5. Aguarde o download e instalacao
@@ -155,9 +155,9 @@ OPCOES DISPONIVEIS:
     Instala multiplos programas de uma vez atraves de pacotes.
     
     VANTAGENS:
-    • Mais rapido para multiplas atualizacoes
-    • Garante compatibilidade entre programas relacionados
-    • Menor chance de erros de dependencia
+    * Mais rapido para multiplas atualizacoes
+    * Garante compatibilidade entre programas relacionados
+    * Menor chance de erros de dependencia
 
     EXEMPLO DE PACOTE:
     - PACK-class(versao) (contem: ADVA000, ADC001, TRS002, etc)
@@ -171,29 +171,29 @@ OPCOES DISPONIVEIS:
     3. Restaura versao anterior
 
     << IMPORTANTE: >>
-    • Apenas programas com backup podem ser revertidos
-    • Backup e criado automaticamente em cada atualizacao
-    • Backup fica em: tools/olds/[PROGRAMA]-anterior.zip
+    * Apenas programas com backup podem ser revertidos
+    * Backup e criado automaticamente em cada atualizacao
+    * Backup fica em: tools/olds/[PROGRAMA]-anterior.zip
 
 INFORMACOES IMPORTANTES:
 ---------------------------------------------------------------
 
 NOMES DE PROGRAMAS:
-• Sempre em MAIUSCULAS (ex: ADVA00, nao adva00)
-• Apenas letras e numeros
-• Sem espacos ou caracteres especiais
+* Sempre em MAIUSCULAS (ex: ADVA00, nao adva00)
+* Apenas letras e numeros
+* Sem espacos ou caracteres especiais
 
 TIPOS DE COMPILACAO:
-• Normal (1): Para uso em producao
+* Normal (1): Para uso em producao
   - [PROGRAMA]-class
-• Depuracao (2): Para desenvolvimento/testes
+* Depuracao (2): Para desenvolvimento/testes
   - [PROGRAMA]-mclass
 
 BACKUP AUTOMATICO:
-• Criado antes de cada atualizacao
-• Inclui: .class, .int, .TEL
-• Localizacao: tools/olds/
-• Formato: [PROGRAMA]-anterior.zip
+* Criado antes de cada atualizacao
+* Inclui: .class, .int, .TEL
+* Localizacao: tools/olds/
+* Formato: [PROGRAMA]-anterior.zip
 
 SOLUCAO DE PROBLEMAS:
 ---------------------------------------------------------------
@@ -230,16 +230,16 @@ OPCOES DISPONIVEIS:
     entre diferentes modulos do sistema.
     
     CONTEUDO:
-    • Programas de interface
-    • Rotinas de conversao
-    • Classes compiladas (.class)
-    • Telas de interface (.TEL)
-    • Arquivos XML de configuracao
-    • Programas para o sistema em MicroFocus (.int)
+    * Programas de interface
+    * Rotinas de conversao
+    * Classes compiladas (.class)
+    * Telas de interface (.TEL)
+    * Arquivos XML de configuracao
+    * Programas para o sistema em MicroFocus (.int)
 
     VERSOES DISPONIVEIS:
-    • IsCOBOL 2018, 2020, 2023, 2024
-    • MicroFocus COBOL
+    * IsCOBOL 2018, 2020, 2023, 2024
+    * MicroFocus COBOL
 
     QUANDO ATUALIZAR:
     - Mudanca de versao principal
@@ -256,14 +256,14 @@ OPCOES DISPONIVEIS:
     Conjunto completo de programas que compoem o sistema SAV.
     
     CONTEUDO:
-    • Classes compiladas (.class)
-    • Telas de interface (.TEL)
-    • Arquivos XML de configuracao
-    • Programas para o sistema em MicroFocus (.int)
+    * Classes compiladas (.class)
+    * Telas de interface (.TEL)
+    * Arquivos XML de configuracao
+    * Programas para o sistema em MicroFocus (.int)
     
     VERSOES DISPONIVEIS:
-    • IsCOBOL 2018, 2020, 2023, 2024
-    • MicroFocus COBOL
+    * IsCOBOL 2018, 2020, 2023, 2024
+    * MicroFocus COBOL
     
     IMPORTANTE:
     Esta e a atualizacao que pouco se usa ultimamente.
@@ -277,16 +277,16 @@ OPCOES DISPONIVEIS:
     3. Sistema localiza e instala os arquivos
     
     ARQUIVOS NECESSARIOS (IsCOBOL):
-    • tempSAV_IS[ANO]_classA_[VERSAO].zip
-    • tempSAV_IS[ANO]_classB_[VERSAO].zip
-    • tempSAV_IS[ANO]_tel_isc_[VERSAO].zip
-    • tempSAV_IS[ANO]_xml_[VERSAO].zip
+    * tempSAV_IS[ANO]_classA_[VERSAO].zip
+    * tempSAV_IS[ANO]_classB_[VERSAO].zip
+    * tempSAV_IS[ANO]_tel_isc_[VERSAO].zip
+    * tempSAV_IS[ANO]_xml_[VERSAO].zip
     
     EXEMPLO:
-    • tempSAV_IS2024_classA_5280.zip
-    • tempSAV_IS2024_classB_5280.zip
-    • tempSAV_IS2024_tel_isc_5280.zip
-    • tempSAV_IS2024_xml_5280.zip
+    * tempSAV_IS2024_classA_5280.zip
+    * tempSAV_IS2024_classB_5280.zip
+    * tempSAV_IS2024_tel_isc_5280.zip
+    * tempSAV_IS2024_xml_5280.zip
 
 4 - VOLTAR PROGRAMA(S) DA BIBLIOTECA
     Reverte biblioteca para versao anterior.
@@ -295,13 +295,13 @@ OPCOES DISPONIVEIS:
     1. Informe a versao a reverter
     2. Sistema busca backup dessa versao
     3. Escolha entre:
-       • Reverter todos os programas
-       • Reverter programa especifico
+       * Reverter todos os programas
+       * Reverter programa especifico
     
     BACKUP DA BIBLIOTECA:
-    • Local: tools/olds/backup-[VERSAO].zip
-    • Criado automaticamente antes de atualizar
-    • Contem todos os arquivos antigos
+    * Local: tools/olds/backup-[VERSAO].zip
+    * Criado automaticamente antes de atualizar
+    * Contem todos os arquivos antigos
 
 PROCESSO DE ATUALIZACAO DA BIBLIOTECA:
 ---------------------------------------------------------------
@@ -311,65 +311,65 @@ Digite apenas o numero da versao (ex: 0601, 0105, etc)
 
 PASSO 2: VALIDACAO
 Sistema verifica:
-• Conectividade (modo online)
-• Disponibilidade dos arquivos
-• Espaco em disco
+* Conectividade (modo online)
+* Disponibilidade dos arquivos
+* Espaco em disco
 
 PASSO 3: BACKUP AUTOMATICO
 Sistema cria backup completo:
-• Classes (.class)
-• Telas (.TEL)
-• XML (.xml)
-• MicroFocus (.int)
+* Classes (.class)
+* Telas (.TEL)
+* XML (.xml)
+* MicroFocus (.int)
 
 PASSO 4: DOWNLOAD (modo online)
 Baixa arquivos do servidor:
-• Exibe progresso
-• Valida integridade
-• Verifica checksums
+* Exibe progresso
+* Valida integridade
+* Verifica checksums
 
 PASSO 5: INSTALACAO
-• Descompacta arquivos
-• Move para diretorios corretos
-• Atualiza registros de versao
-• Remove temporarios
+* Descompacta arquivos
+* Move para diretorios corretos
+* Atualiza registros de versao
+* Remove temporarios
 
 PASSO 6: VERIFICACAO
 Sistema verifica:
-• Arquivos instalados corretamente
-• Permissoes adequadas
-• Integridade dos dados
+* Arquivos instalados corretamente
+* Permissoes adequadas
+* Integridade dos dados
 
 INFORMACOES IMPORTANTES:
 ---------------------------------------------------------------
 
 VERSAO:
-• Use apenas numeros (ex: 0601, 0105, etc)
-• Nao use pontos ou espacos
-• Confirme versao com o suporte
+* Use apenas numeros (ex: 0601, 0105, etc)
+* Nao use pontos ou espacos
+* Confirme versao com o suporte
 
 TEMPO DE ATUALIZACAO:
-• Depende do tamanho da biblioteca
-• Conexao de internet (modo online)
-• IsCOBOL: aproximadamente 5-15 minutos
-• MicroFocus: aproximadamente 3-10 minutos
+* Depende do tamanho da biblioteca
+* Conexao de internet (modo online)
+* IsCOBOL: aproximadamente 5-15 minutos
+* MicroFocus: aproximadamente 3-10 minutos
 
 ESPACO NECESSARIO:
-• Backup: ~500MB - 2GB
-• Biblioteca: ~500MB - 2GB
-• Total recomendado: 5GB livres
+* Backup: ~500MB - 2GB
+* Biblioteca: ~500MB - 2GB
+* Total recomendado: 5GB livres
 
 INTERROMPER ATUALIZACAO:
-• Use Ctrl+C com cuidado
-• Sistema tenta fazer cleanup
-• Pode deixar instalacao inconsistente
-• Recomenda-se reverter se interrompido
+* Use Ctrl+C com cuidado
+* Sistema tenta fazer cleanup
+* Pode deixar instalacao inconsistente
+* Recomenda-se reverter se interrompido
 
 POS-ATUALIZACAO:
-• Teste funcionalidades criticas
-• Verifique relatorios
-• Confirme acesso aos modulos
-• Em caso de problemas, reverta
+* Teste funcionalidades criticas
+* Verifique relatorios
+* Confirme acesso aos modulos
+* Em caso de problemas, reverta
 
 SOLUCAO DE PROBLEMAS:
 ---------------------------------------------------------------
@@ -404,9 +404,9 @@ OPCOES DISPONIVEIS:
     Gerencia arquivos temporarios do sistema.
     
     FUNCOES:
-    • Limpeza automatica de arquivos antigos
-    • Compactacao antes de remover
-    • Manutencao da lista de temporarios
+    * Limpeza automatica de arquivos antigos
+    * Compactacao antes de remover
+    * Manutencao da lista de temporarios
     
     BENEFICIOS:
     - Libera espaco em disco
@@ -432,8 +432,8 @@ OPCOES DISPONIVEIS:
     Gerencia backups da base de dados.
     
     TIPOS:
-    • Completo: Todos os arquivos
-    • Incremental: Apenas alteracoes
+    * Completo: Todos os arquivos
+    * Incremental: Apenas alteracoes
     
     OPCOES:
     - Criar novo backup
@@ -444,10 +444,10 @@ OPCOES DISPONIVEIS:
     Transfere arquivos entre cliente e servidor.
     
     USOS:
-    • Envio de relatorios
-    • Recebimento de atualizacoes
-    • Compartilhamento de dados
-    • Transferencia de logs
+    * Envio de relatorios
+    * Recebimento de atualizacoes
+    * Compartilhamento de dados
+    * Transferencia de logs
     
     PROTOCOLOS: SFTP, RSYNC
 
@@ -455,45 +455,45 @@ OPCOES DISPONIVEIS:
     Remove automaticamente arquivos antigos.
     
     DIRETORIOS LIMPOS:
-    • Backups (>30 dias)
-    • Logs (>30 dias)
-    • Programas antigos (>30 dias)
-    • Erros IsCOBOL (>30 dias)
-    • Arquivos ZIP (>15 dias)
+    * Backups (>30 dias)
+    * Logs (>30 dias)
+    * Programas antigos (>30 dias)
+    * Erros IsCOBOL (>30 dias)
+    * Arquivos ZIP (>15 dias)
     
     EXECUCAO:
-    • Manual: Via menu
-    • Automatica: Diaria (primeira execucao)
+    * Manual: Via menu
+    * Automatica: Diaria (primeira execucao)
 
 6 - PARAMETROS
     Visualiza e edita configuracoes do sistema.
     
     ACESSO:
-    • Consulta: Visualizacao apenas
-    • Manutencao: Edicao de valores
-    • Validacao: Testa configuracoes
+    * Consulta: Visualizacao apenas
+    * Manutencao: Edicao de valores
+    * Validacao: Testa configuracoes
 
 7 - UPDATE
     Atualiza o proprio sistema de atualizacao.
     
     O QUE ATUALIZA:
-    • Scripts do atualiza.sh
-    • Modulos de biblioteca
-    • Arquivos de configuracao
-    • Sistema de ajuda
+    * Scripts do atualiza.sh
+    * Modulos de biblioteca
+    * Arquivos de configuracao
+    * Sistema de ajuda
     
     FONTES:
-    • Online: GitHub
-    • Offline: Arquivos locais
+    * Online: GitHub
+    * Offline: Arquivos locais
 
 8 - LEMBRETES
     Sistema de notas e lembretes.
     
     FUNCOES:
-    • Criar novas notas
-    • Visualizar notas
-    • Editar notas existentes
-    • Apagar notas
+    * Criar novas notas
+    * Visualizar notas
+    * Editar notas existentes
+    * Apagar notas
     
     USO:
     - Registrar pendencias
@@ -510,14 +510,14 @@ MANUTENCAO REGULAR:
 4. Recupere arquivos apos problemas
 
 ORGANIZACAO:
-• Use lembretes para agendar tarefas
-• Documente alteracoes importantes
-• Mantenha logs organizados
+* Use lembretes para agendar tarefas
+* Documente alteracoes importantes
+* Mantenha logs organizados
 
 PERFORMANCE:
-• Limpeza regular melhora velocidade
-• Recuperacao de arquivos otimiza indices
-• Expurgador libera recursos
+* Limpeza regular melhora velocidade
+* Recuperacao de arquivos otimiza indices
+* Expurgador libera recursos
 
 ---------------------------------------------------------------
 [MENU_TEMPORARIOS]
@@ -540,10 +540,10 @@ OPCOES DISPONIVEIS:
     5. Remove originais
     
     ARQUIVOS PROCESSADOS:
-    • Relatorios temporarios
-    • Arquivos de trabalho
-    • Impressoes antigas
-    • Cache de sistema
+    * Relatorios temporarios
+    * Arquivos de trabalho
+    * Impressoes antigas
+    * Cache de sistema
     
     DESTINO:
     Arquivos sao compactados em:
@@ -557,9 +557,9 @@ OPCOES DISPONIVEIS:
     2. Use * para coringas
     
     EXEMPLOS:
-    • REL*.TMP = Todos arquivos REL com extensao .TMP
-    • TEMP* = Todos arquivos comecando com TEMP
-    • *.BAK = Todos arquivos .BAK
+    * REL*.TMP = Todos arquivos REL com extensao .TMP
+    * TEMP* = Todos arquivos comecando com TEMP
+    * *.BAK = Todos arquivos .BAK
     
     ARQUIVO:
     Padroes sao salvos em: cfg/atualizat
@@ -568,9 +568,9 @@ OPCOES DISPONIVEIS:
     Exibe lista de padroes configurados.
     
     VISUALIZACAO:
-    • Numerada para referencia
-    • Um padrao por linha
-    • Formato legivel
+    * Numerada para referencia
+    * Um padrao por linha
+    * Formato legivel
 
 ARQUIVO ATUALIZAT:
 ---------------------------------------------------------------
@@ -587,25 +587,25 @@ TEMP*
 WORK*.DAT
 
 PADROES COMUNS:
-• REL*.TMP - Relatorios temporarios
-• TEMP* - Arquivos de trabalho
-• *.BAK - Backups automaticos
-• WORK* - Arquivos de processamento
-• PRINT*.SPL - Filas de impressao
+* REL*.TMP - Relatorios temporarios
+* TEMP* - Arquivos de trabalho
+* *.BAK - Backups automaticos
+* WORK* - Arquivos de processamento
+* PRINT*.SPL - Filas de impressao
 
 INFORMACOES IMPORTANTES:
 ---------------------------------------------------------------
 
 SEGURANCA:
-• Arquivos sao compactados antes de remover
-• Backup mantido por 10 dias
-• Pode recuperar se necessario
+* Arquivos sao compactados antes de remover
+* Backup mantido por 10 dias
+* Pode recuperar se necessario
 
 PERFORMANCE:
-• Execute regularmente (mensal)
-• Libera espaco em disco
-• Melhora velocidade de acesso
-• Reduz fragmentacao
+* Execute regularmente (mensal)
+* Libera espaco em disco
+* Melhora velocidade de acesso
+* Reduz fragmentacao
 
 MULTIPLAS BASES:
 Se configurado com multiplas bases (base2, base3),
@@ -634,30 +634,30 @@ OPCOES DISPONIVEIS:
     Recupera arquivo especifico ou todos.
     
     PROCESSO:
-    • Nome especifico: Digite nome do arquivo (ex: CADCLI)
-    • Todos: Pressione ENTER sem digitar nada
+    * Nome especifico: Digite nome do arquivo (ex: CADCLI)
+    * Todos: Pressione ENTER sem digitar nada
     
     ARQUIVOS PROCESSADOS (todos):
-    • *.ARQ.dat - Arquivos de dados
-    • *.DAT.dat - Arquivos de dados
-    • *.LOG.dat - Logs do sistema
-    • *.PAN.dat - Paineis/Telas
+    * *.ARQ.dat - Arquivos de dados
+    * *.DAT.dat - Arquivos de dados
+    * *.LOG.dat - Logs do sistema
+    * *.PAN.dat - Paineis/Telas
     
     COMANDO UTILIZADO:
     jutil -rebuild [ARQUIVO] -a -f
     
     PARAMETROS:
-    • -rebuild: Reconstroi arquivo
-    • -a: Modo automatico
-    • -f: Forca reconstrucao
+    * -rebuild: Reconstroi arquivo
+    * -a: Modo automatico
+    * -f: Forca reconstrucao
 
 2 - ARQUIVOS PRINCIPAIS
     Recupera conjunto de arquivos principais.
     
     CRITERIOS:
-    • Arquivos do ano atual (ATE[AA]*.dat)
-    • Notas fiscais eletrônicas do ano (NFE?[AAAA].*.dat)
-    • Arquivos da lista atualizaj
+    * Arquivos do ano atual (ATE[AA]*.dat)
+    * Notas fiscais eletrônicas do ano (NFE?[AAAA].*.dat)
+    * Arquivos da lista atualizaj
     
     LISTA ATUALIZAJ:
     Local: cfg/atualizaj
@@ -683,23 +683,23 @@ QUANDO USAR:
 ---------------------------------------------------------------
 
 OBRIGATORIO:
-• Erro "File is locked" persistente
-• Erro "Invalid key" ao acessar dados
-• Mensagem "Corrupt index"
-• Apos queda abrupta do sistema
-• Apos falha de disco ou energia
+* Erro "File is locked" persistente
+* Erro "Invalid key" ao acessar dados
+* Mensagem "Corrupt index"
+* Apos queda abrupta do sistema
+* Apos falha de disco ou energia
 
 RECOMENDADO:
-• Performance degradada
-• Arquivo cresceu muito sem reorganizacao
-• Manutencao preventiva mensal
-• Apos importacao em massa de dados
-• Antes de backup importante
+* Performance degradada
+* Arquivo cresceu muito sem reorganizacao
+* Manutencao preventiva mensal
+* Apos importacao em massa de dados
+* Antes de backup importante
 
 PREVENCAO:
-• Semanalmente nos arquivos principais
-• Mensalmente em todos os arquivos
-• Sempre apos erros de acesso
+* Semanalmente nos arquivos principais
+* Mensalmente em todos os arquivos
+* Sempre apos erros de acesso
 
 PROCESSO DE RECUPERACAO:
 ---------------------------------------------------------------
@@ -726,16 +726,16 @@ TEMPO DE PROCESSAMENTO:
 ---------------------------------------------------------------
 
 FATORES:
-• Tamanho do arquivo
-• Quantidade de registros
-• Estado de fragmentacao
-• Performance do disco
+* Tamanho do arquivo
+* Quantidade de registros
+* Estado de fragmentacao
+* Performance do disco
 
 ESTIMATIVAS:
-• Arquivo pequeno (<10MB): Segundos
-• Arquivo medio (10-100MB): 1-5 minutos
-• Arquivo grande (100MB-1GB): 5-30 minutos
-• Arquivo muito grande (>1GB): 30+ minutos
+* Arquivo pequeno (<10MB): Segundos
+* Arquivo medio (10-100MB): 1-5 minutos
+* Arquivo grande (100MB-1GB): 5-30 minutos
+* Arquivo muito grande (>1GB): 30+ minutos
 
 MULTIPLAS BASES:
 Se sistema possui multiplas bases (base2, base3),
@@ -745,19 +745,19 @@ INFORMACOES IMPORTANTES:
 ---------------------------------------------------------------
 
 USUARIOS:
-• Sistema deve estar sem usuarios
-• Ou pelo menos sem usar arquivo especifico
-• Rebuild em arquivo em uso pode falhar
+* Sistema deve estar sem usuarios
+* Ou pelo menos sem usar arquivo especifico
+* Rebuild em arquivo em uso pode falhar
 
 BACKUP:
-• Recomenda-se backup antes de rebuild
-• Principalmente em arquivos criticos
-• Pode usar: Menu Ferramentas > Backup
+* Recomenda-se backup antes de rebuild
+* Principalmente em arquivos criticos
+* Pode usar: Menu Ferramentas > Backup
 
 ESPACO EM DISCO:
-• Necessario espaco = tamanho do arquivo
-• Rebuild cria arquivo temporario
-• Depois substitui o original
+* Necessario espaco = tamanho do arquivo
+* Rebuild cria arquivo temporario
+* Depois substitui o original
 
 LOGS:
 Operacoes registradas em:
@@ -799,14 +799,14 @@ OPCOES DISPONIVEIS:
     TIPOS:
     
     COMPLETO:
-    • Todos os arquivos da base
-    • Exclui: *.zip, *.tar, *.tar.gz
-    • Formato: [EMPRESA]_completo_[DATA_HORA].zip
+    * Todos os arquivos da base
+    * Exclui: *.zip, *.tar, *.tar.gz
+    * Formato: [EMPRESA]_completo_[DATA_HORA].zip
     
     INCREMENTAL:
-    • Apenas arquivos modificados
-    • Baseado em data de referencia
-    • Formato: [EMPRESA]_incremental_[DATA_HORA].zip
+    * Apenas arquivos modificados
+    * Baseado em data de referencia
+    * Formato: [EMPRESA]_incremental_[DATA_HORA].zip
     
     PROCESSO:
     1. Escolher base (se multiplas)
@@ -822,8 +822,8 @@ OPCOES DISPONIVEIS:
     Restaura backup anterior.
     
     OPCOES:
-    • Restauracao completa (todos arquivos)
-    • Restauracao especifica (um arquivo)
+    * Restauracao completa (todos arquivos)
+    * Restauracao especifica (um arquivo)
     
     PROCESSO COMPLETO:
     1. Listar backups disponiveis
@@ -854,21 +854,21 @@ BACKUP COMPLETO:
 ---------------------------------------------------------------
 
 O QUE INCLUI:
-• Todos arquivos de dados (.dat)
-• Arquivos de indice (.idx, .key)
-• Arquivos de configuracao (.cfg)
-• Logs importantes
+* Todos arquivos de dados (.dat)
+* Arquivos de indice (.idx, .key)
+* Arquivos de configuracao (.cfg)
+* Logs importantes
 
 O QUE EXCLUI:
-• Arquivos ja compactados (.zip, .tar)
-• Backups antigos (*.bak)
-• Temporarios do sistema
+* Arquivos ja compactados (.zip, .tar)
+* Backups antigos (*.bak)
+* Temporarios do sistema
 
 QUANDO FAZER:
-• Antes de atualizacoes importantes
-• Diariamente (final do dia)
-• Antes de manutencoes
-• Semanalmente (minimo)
+* Antes de atualizacoes importantes
+* Diariamente (final do dia)
+* Antes de manutencoes
+* Semanalmente (minimo)
 
 BACKUP INCREMENTAL:
 -------------------------------------------------------------------
@@ -877,18 +877,18 @@ O QUE INCLUI:
 Apenas arquivos modificados apos data especificada
 
 VANTAGENS:
-• Mais rapido
-• Menor espaco
-• Backup frequente viavel
+* Mais rapido
+* Menor espaco
+* Backup frequente viavel
 
 QUANDO FAZER:
-• Durante o dia (varias vezes)
-• Entre backups completos
-• Para dados em constante mudanca
+* Durante o dia (varias vezes)
+* Entre backups completos
+* Para dados em constante mudanca
 
 ESTRATEGIA RECOMENDADA:
-• Completo: Diario (noite)
-• Incremental: A cada 2-4 horas
+* Completo: Diario (noite)
+* Incremental: A cada 2-4 horas
 
 FORMATO DOS ARQUIVOS:
 -------------------------------------------------------------------
@@ -901,91 +901,91 @@ MINHAEMP_completo_20260108120000.zip
 MINHAEMP_incremental_20260108150000.zip
 
 COMPONENTES:
-• EMPRESA: Nome configurado no setup
-• TIPO: completo ou incremental
-• DATA: Ano, mes, dia, hora, minuto, segundo
+* EMPRESA: Nome configurado no setup
+* TIPO: completo ou incremental
+* DATA: Ano, mes, dia, hora, minuto, segundo
 
 LOCALIZACAO:
 tools/backup/
 
 RETENCAO:
-• Local: 30 dias (expurgador)
-• Servidor: Conforme politica empresa
+* Local: 30 dias (expurgador)
+* Servidor: Conforme politica empresa
 
 PROCESSO DE BACKUP:
 -------------------------------------------------------------------
 
 PASSO 1: VERIFICACAO PREVIA
-• Verifica backups recentes (ultimos 2 dias)
-• Alerta se ja existe
-• Permite criar adicional
+* Verifica backups recentes (ultimos 2 dias)
+* Alerta se ja existe
+* Permite criar adicional
 
 PASSO 2: PREPARACAO
-• Muda para diretorio da base
-• Define nome do arquivo
-• Prepara comando de compactacao
+* Muda para diretorio da base
+* Define nome do arquivo
+* Prepara comando de compactacao
 
 PASSO 3: COMPACTACAO
-• Executa em background
-• Mostra progresso (spinner)
-• Registra em log
+* Executa em background
+* Mostra progresso (spinner)
+* Registra em log
 
 PASSO 4: VERIFICACAO
-• Confirma criacao do arquivo
-• Verifica integridade do ZIP
-• Valida tamanho minimo
+* Confirma criacao do arquivo
+* Verifica integridade do ZIP
+* Valida tamanho minimo
 
 PASSO 5: ENVIO (opcional)
-• Oferece enviar para servidor
-• Usa rsync ou sftp
-• Mantem ou remove local
+* Oferece enviar para servidor
+* Usa rsync ou sftp
+* Mantem ou remove local
 
 PROCESSO DE RESTAURACAO:
 -------------------------------------------------------------------
 
 PASSO 1: SELECAO
-• Lista backups disponiveis
-• Mostra data/hora e tamanho
-• Permite filtrar por nome
+* Lista backups disponiveis
+* Mostra data/hora e tamanho
+* Permite filtrar por nome
 
 PASSO 2: CONFIRMACAO
-• Exibe backup selecionado
-• Alerta sobre sobrescrita
-• Solicita confirmacao
+* Exibe backup selecionado
+* Alerta sobre sobrescrita
+* Solicita confirmacao
 
 PASSO 3: DESCOMPACTACAO
-• Extrai arquivos
-• Mostra progresso
-• Sobrescreve existentes
+* Extrai arquivos
+* Mostra progresso
+* Sobrescreve existentes
 
 PASSO 4: VERIFICACAO
-• Confirma arquivos restaurados
-• Verifica integridade
-• Registra em log
+* Confirma arquivos restaurados
+* Verifica integridade
+* Registra em log
 
 INFORMACOES IMPORTANTES:
 -------------------------------------------------------------------
 
 ESPACO NECESSARIO:
-• Backup: igual ao tamanho da base
-• Compactacao reduz para 30-50%
-• Manter espaco livre minimo: 5GB
+* Backup: igual ao tamanho da base
+* Compactacao reduz para 30-50%
+* Manter espaco livre minimo: 5GB
 
 TEMPO DE PROCESSAMENTO:
-• Completo: 5-30 minutos
-• Incremental: 1-5 minutos
-• Depende: tamanho, velocidade disco
+* Completo: 5-30 minutos
+* Incremental: 1-5 minutos
+* Depende: tamanho, velocidade disco
 
 MULTIPLAS BASES:
 Se configurado multiplas bases:
-• Sistema solicita escolher qual
-• Pode fazer backup de cada uma
-• Nome do arquivo inclui identificacao
+* Sistema solicita escolher qual
+* Pode fazer backup de cada uma
+* Nome do arquivo inclui identificacao
 
 SEGURANCA:
-• Backups nao criptografados
-• Proteja com permissoes adequadas
-• Servidor remoto deve ser seguro
+* Backups nao criptografados
+* Proteja com permissoes adequadas
+* Servidor remoto deve ser seguro
 
 AUTOMACAO:
 Para backup automatico, use cron:
@@ -1021,150 +1021,150 @@ OPCOES DISPONIVEIS:
     
     PROCESSO:
     1. Informar diretorio de origem
-       • Caminho completo ou
-       • ENTER para usar padrao (tools/envia)
+       * Caminho completo ou
+       * ENTER para usar padrao (tools/envia)
     
     2. Informar nome do arquivo
-       • Nome completo com extensao
-       • Ex: relatorio.pdf
+       * Nome completo com extensao
+       * Ex: relatorio.pdf
     
     3. Informar diretorio destino no servidor
-       • Caminho completo no servidor
-       • Ex: /home/usuario/documentos
+       * Caminho completo no servidor
+       * Ex: /home/usuario/documentos
     
     4. Fornecer senha do usuario remoto
     
     5. Transferencia via rsync
-       • Mostra progresso
-       • Mantem permissoes
-       • Compressao automatica
+       * Mostra progresso
+       * Mantem permissoes
+       * Compressao automatica
     
     PROTOCOLOS:
-    • RSYNC: Transferencia eficiente
-    • SSH: Seguranca na conexao
-    • Porta: Configuravel (padrao 41122)
+    * RSYNC: Transferencia eficiente
+    * SSH: Seguranca na conexao
+    * Porta: Configuravel (padrao 41122)
 
 2 - RECEBER ARQUIVO(S)
     Baixa arquivo do servidor.
     
     PROCESSO:
     1. Informar diretorio de origem (servidor)
-       • Caminho completo no servidor
-       • Ex: /home/usuario/backup
+       * Caminho completo no servidor
+       * Ex: /home/usuario/backup
     
     2. Informar nome do arquivo
-       • Nome completo com extensao
-       • Ex: dados.zip
+       * Nome completo com extensao
+       * Ex: dados.zip
     
     3. Informar diretorio destino (local)
-       • Caminho completo ou
-       • ENTER para usar padrao (tools/recebe)
+       * Caminho completo ou
+       * ENTER para usar padrao (tools/recebe)
     
     4. Fornecer senha do usuario remoto
     
     5. Transferencia via sftp
-       • Mostra progresso
-       • Verifica integridade
+       * Mostra progresso
+       * Verifica integridade
     
     PROTOCOLOS:
-    • SFTP: Protocolo seguro
-    • SSH: Criptografia
-    • Porta: Configuravel
+    * SFTP: Protocolo seguro
+    * SSH: Criptografia
+    * Porta: Configuravel
 
 USO DE DIRETORIOS PADRAO:
 -------------------------------------------------------------------
 
 ENVIO:
 Origem padrao: tools/envia/
-• Coloque arquivo neste diretorio
-• Pressione ENTER ao solicitar origem
-• Sistema usa automaticamente
+* Coloque arquivo neste diretorio
+* Pressione ENTER ao solicitar origem
+* Sistema usa automaticamente
 
 RECEBIMENTO:
 Destino padrao: tools/recebe/
-• Arquivo baixado neste diretorio
-• Pressione ENTER ao solicitar destino
-• Facilita localizacao
+* Arquivo baixado neste diretorio
+* Pressione ENTER ao solicitar destino
+* Facilita localizacao
 
 VANTAGENS:
-• Organizacao centralizada
-• Facil localizacao de arquivos
-• Limpeza automatica (expurgador)
+* Organizacao centralizada
+* Facil localizacao de arquivos
+* Limpeza automatica (expurgador)
 
 CONFIGURACOES DE CONEXAO:
 -------------------------------------------------------------------
 
 SERVIDOR:
-• IP: Configurado no setup
-• Porta: Padrao 41122 (SSH)
-• Usuario: Configurado no setup
+* IP: Configurado no setup
+* Porta: Padrao 41122 (SSH)
+* Usuario: Configurado no setup
 
 CREDENCIAIS:
-• Senha solicitada em cada operacao
-• Por seguranca, nao e armazenada
-• Ou use SSH keys (modo facilitado)
+* Senha solicitada em cada operacao
+* Por seguranca, nao e armazenada
+* Ou use SSH keys (modo facilitado)
 
 MODO FACILITADO:
 Se configurado acessossh=s:
-• Usa chaves SSH
-• Sem solicitacao de senha
-• Conexao persistente
-• Mais rapido e seguro
+* Usa chaves SSH
+* Sem solicitacao de senha
+* Conexao persistente
+* Mais rapido e seguro
 
 TIPOS DE ARQUIVO:
 -------------------------------------------------------------------
 
 SUPORTADOS:
-• Documentos: .pdf, .doc, .docx, .txt
-• Planilhas: .xls, .xlsx, .csv
-• Imagens: .jpg, .png, .gif
-• Compactados: .zip, .tar, .gz
-• Backups: .bak, .backup
-• Logs: .log
-• Executaveis: .sh, .exe
-• Todos os demais formatos
+* Documentos: .pdf, .doc, .docx, .txt
+* Planilhas: .xls, .xlsx, .csv
+* Imagens: .jpg, .png, .gif
+* Compactados: .zip, .tar, .gz
+* Backups: .bak, .backup
+* Logs: .log
+* Executaveis: .sh, .exe
+* Todos os demais formatos
 
 LIMITACOES:
-• Tamanho: Limitado por disco
-• Permissoes: Requer acesso adequado
-• Rede: Depende de conectividade
+* Tamanho: Limitado por disco
+* Permissoes: Requer acesso adequado
+* Rede: Depende de conectividade
 
 CASOS DE USO:
 -------------------------------------------------------------------
 
 ENVIAR:
-• Relatorios para analise
-• Logs para suporte tecnico
-• Backups para servidor
-• Documentacao atualizada
-• Arquivos de configuracao
-• Exports de dados
+* Relatorios para analise
+* Logs para suporte tecnico
+* Backups para servidor
+* Documentacao atualizada
+* Arquivos de configuracao
+* Exports de dados
 
 RECEBER:
-• Atualizacoes do sistema
-• Arquivos de configuracao
-• Manuais e documentacao
-• Templates e modelos
-• Imports de dados
-• Patches e correcoes
+* Atualizacoes do sistema
+* Arquivos de configuracao
+* Manuais e documentacao
+* Templates e modelos
+* Imports de dados
+* Patches e correcoes
 
 SEGURANCA:
 -------------------------------------------------------------------
 
 CRIPTOGRAFIA:
-• SSH: Todos dados criptografados
-• Senhas: Nunca em texto claro
-• Conexao: Protocolo seguro
+* SSH: Todos dados criptografados
+* Senhas: Nunca em texto claro
+* Conexao: Protocolo seguro
 
 VALIDACAO:
-• Integridade: Checksums automaticos
-• Permissoes: Preservadas na transferencia
-• Sobrescrita: Confirmacao requerida
+* Integridade: Checksums automaticos
+* Permissoes: Preservadas na transferencia
+* Sobrescrita: Confirmacao requerida
 
 AUDITORIA:
-• Logs: Todas operacoes registradas
-• Data/Hora: Timestamp completo
-• Usuario: Identificacao preservada
+* Logs: Todas operacoes registradas
+* Data/Hora: Timestamp completo
+* Usuario: Identificacao preservada
 
 SOLUCAO DE PROBLEMAS:
 -------------------------------------------------------------------
@@ -1201,39 +1201,39 @@ OPCOES DISPONIVEIS:
     Visualiza todas as configuracoes atuais.
     
     INFORMACOES EXIBIDAS:
-    • Sistema e versao
-    • Diretorios configurados
-    • Bibliotecas em uso
-    • Conexao de rede
-    • Modo online/offline
-    • Parametros de backup
+    * Sistema e versao
+    * Diretorios configurados
+    * Bibliotecas em uso
+    * Conexao de rede
+    * Modo online/offline
+    * Parametros de backup
     
     USO:
-    • Verificar configuracao atual
-    • Documentar instalacao
-    • SOLUCAO DE PROBLEMAS
-    • Auditoria
+    * Verificar configuracao atual
+    * Documentar instalacao
+    * SOLUCAO DE PROBLEMAS
+    * Auditoria
 
 2 - MANUTENCAO DE SETUP
     Permite editar configuracoes existentes.
     
     PARAMETROS EDITAVEIS:
-    • sistema: iscobol ou cobol
-    • verclass: Versao do IsCOBOL
-    • BANCO: Sistema usa banco (s/n)
-    • acessossh: Modo facilitado (s/n)
-    • IPSERVER: IP do servidor
-    • Offline: Modo offline (s/n)
-    • ENVIABACK: Diretorio backup servidor
-    • EMPRESA: Nome da empresa
-    • base, base2, base3: Diretorios dados
+    * sistema: iscobol ou cobol
+    * verclass: Versao do IsCOBOL
+    * BANCO: Sistema usa banco (s/n)
+    * acessossh: Modo facilitado (s/n)
+    * IPSERVER: IP do servidor
+    * Offline: Modo offline (s/n)
+    * ENVIABACK: Diretorio backup servidor
+    * EMPRESA: Nome da empresa
+    * base, base2, base3: Diretorios dados
     
     PROCESSO:
     1. Sistema carrega valores atuais
     2. Para cada parametro:
-       • Mostra valor atual
-       • Pergunta se deseja alterar
-       • Solicita novo valor
+       * Mostra valor atual
+       * Pergunta se deseja alterar
+       * Solicita novo valor
     3. Recria arquivos de configuracao
     4. Recarrega configuracoes
     
@@ -1244,16 +1244,16 @@ OPCOES DISPONIVEIS:
     Testa todas as configuracoes.
     
     VALIDACOES:
-    • Arquivos de configuracao existem
-    • Variaveis obrigatorias definidas
-    • Diretorios existem e acessiveis
-    • Comandos disponiveis
-    • Conectividade (modo online)
+    * Arquivos de configuracao existem
+    * Variaveis obrigatorias definidas
+    * Diretorios existem e acessiveis
+    * Comandos disponiveis
+    * Conectividade (modo online)
     
     RESULTADO:
-    • Erros: Problemas criticos
-    • Avisos: Problemas nao criticos
-    • OK: Tudo correto
+    * Erros: Problemas criticos
+    * Avisos: Problemas nao criticos
+    * OK: Tudo correto
     
     RECOMENDACAO:
     Execute apos alteracoes ou problemas
@@ -1277,48 +1277,48 @@ IPSERVER=192.168.1.100
 Offline=n
 
 IMPORTANTE:
-• Nao adicionar espacos em volta do =
-• Valores sensiveis a maiusculas/minusculas
-• Sem aspas nos valores
-• Comentarios com #
+* Nao adicionar espacos em volta do =
+* Valores sensiveis a maiusculas/minusculas
+* Sem aspas nos valores
+* Comentarios com #
 
 PARAMETROS PRINCIPAIS:
 -------------------------------------------------------------------
 
 sistema:
-• iscobol: Sistema IsCOBOL
-• cobol: Micro Focus COBOL
-• Determina modulos a usar
+* iscobol: Sistema IsCOBOL
+* cobol: Micro Focus COBOL
+* Determina modulos a usar
 
 verclass:
-• 2018, 2020, 2023, 2024
-• Versao do IsCOBOL
-• Define compatibilidade biblioteca
+* 2018, 2020, 2023, 2024
+* Versao do IsCOBOL
+* Define compatibilidade biblioteca
 
 BANCO:
-• s: Sistema usa banco de dados
-• n: Sistema file-based
-• Afeta menus disponiveis
+* s: Sistema usa banco de dados
+* n: Sistema file-based
+* Afeta menus disponiveis
 
 base:
-• Diretorio principal de dados
-• Caminho relativo a raiz
-• Ex: /dados_jisam
+* Diretorio principal de dados
+* Caminho relativo a raiz
+* Ex: /dados_jisam
 
 EMPRESA:
-• Nome da empresa (sem espacos)
-• Usado em backups
-• Identificacao de instalacao
+* Nome da empresa (sem espacos)
+* Usado em backups
+* Identificacao de instalacao
 
 IPSERVER:
-• IP do servidor SAV
-• Para atualizacoes e backups
-• Ex: 192.168.1.100
+* IP do servidor SAV
+* Para atualizacoes e backups
+* Ex: 192.168.1.100
 
 Offline:
-• s: Modo offline (sem servidor)
-• n: Modo online (com servidor)
-• Determina fonte de atualizacoes
+* s: Modo offline (sem servidor)
+* n: Modo online (com servidor)
+* Determina fonte de atualizacoes
 
 BIBLIOTECAS:
 -------------------------------------------------------------------
@@ -1342,14 +1342,14 @@ DIRETORIOS FIXOS:
 -------------------------------------------------------------------
 
 Definidos automaticamente em tools/:
-• /progs - Programas atualizados
-• /olds - Backups de reversao
-• /logs - Arquivos de log
-• /cfg - Configuracoes
-• /backup - Backups da base
-• /envia - Arquivos para enviar
-• /recebe - Arquivos recebidos
-• /libs - Bibliotecas do sistema
+* /progs - Programas atualizados
+* /olds - Backups de reversao
+* /logs - Arquivos de log
+* /cfg - Configuracoes
+* /backup - Backups da base
+* /envia - Arquivos para enviar
+* /recebe - Arquivos recebidos
+* /libs - Bibliotecas do sistema
 
 NAO MODIFICAR estes diretorios!
 
@@ -1420,9 +1420,9 @@ OPCOES DISPONIVEIS:
     Exibe notas salvas.
     
     APRESENTACAO:
-    • Moldura ao redor do texto
-    • Formatacao preservada
-    • Facil leitura
+    * Moldura ao redor do texto
+    * Formatacao preservada
+    * Facil leitura
     
     USO:
     Consultar anotacoes e lembretes
@@ -1431,19 +1431,19 @@ OPCOES DISPONIVEIS:
     Modifica nota existente.
     
     EDITOR:
-    • nano (padrao)
-    • ou editor definido em $EDITOR
+    * nano (padrao)
+    * ou editor definido em $EDITOR
     
     COMANDOS NANO:
-    • Ctrl+O = Salvar
-    • Ctrl+X = Sair
-    • Ctrl+K = Recortar linha
-    • Ctrl+U = Colar
+    * Ctrl+O = Salvar
+    * Ctrl+X = Sair
+    * Ctrl+K = Recortar linha
+    * Ctrl+U = Colar
     
     MODIFICACAO:
-    • Adicionar linhas
-    • Remover linhas
-    • Alterar texto
+    * Adicionar linhas
+    * Remover linhas
+    * Alterar texto
 
 4 - APAGAR NOTA
     Remove todas as notas.
@@ -1495,33 +1495,33 @@ INFORMACOES IMPORTANTES:
 -------------------------------------------------------------------
 
 SEGURANCA:
-• Notas em texto simples
-• Sem criptografia
-• Evite dados sensiveis
-• Qualquer usuario pode ler
+* Notas em texto simples
+* Sem criptografia
+* Evite dados sensiveis
+* Qualquer usuario pode ler
 
 TAMANHO:
-• Sem limite de caracteres
-• Sem limite de linhas
-• Cuidado com arquivo muito grande
+* Sem limite de caracteres
+* Sem limite de linhas
+* Cuidado com arquivo muito grande
 
 BACKUP:
-• Arquivo nao e automaticamente backupado
-• Inclua em backup manual se necessario
-• Ou copie manualmente
+* Arquivo nao e automaticamente backupado
+* Inclua em backup manual se necessario
+* Ou copie manualmente
 
 ALTERNATIVAS:
 Para anotacoes mais complexas:
-• Use sistema externo de notas
-• Software de gestao de tarefas
-• Wiki ou documentacao colaborativa
+* Use sistema externo de notas
+* Software de gestao de tarefas
+* Wiki ou documentacao colaborativa
 
 EXIBICAO AUTOMATICA:
 Na inicializacao do sistema:
-• Se arquivo existe
-• Notas sao exibidas automaticamente
-• util para lembretes importantes
-• Configure para nao exibir se preferir
+* Se arquivo existe
+* Notas sao exibidas automaticamente
+* util para lembretes importantes
+* Configure para nao exibir se preferir
 
 DICAS:
 -------------------------------------------------------------------
@@ -1557,28 +1557,28 @@ NAVEGACAO:
 -------------------------------------------------------------------
 
 MENUS:
-• Digite o numero da opcao desejada
-• Pressione ENTER para confirmar
-• 9 = Voltar ao menu anterior
-• Ctrl+C = Cancelar operacao
+* Digite o numero da opcao desejada
+* Pressione ENTER para confirmar
+* 9 = Voltar ao menu anterior
+* Ctrl+C = Cancelar operacao
 
 AJUDA CONTEXTUAL:
-• Pressione H a qualquer momento
-• Ou digite  para ajuda
-• M = Manual completo
+* Pressione H a qualquer momento
+* Ou digite  para ajuda
+* M = Manual completo
 
 COMANDOS GERAIS:
 -------------------------------------------------------------------
 
 CONFIRMACOES:
-• S ou s = Sim
-• N ou n = Nao
-• ENTER = Usa valor padrao [maiusculo]
+* S ou s = Sim
+* N ou n = Nao
+* ENTER = Usa valor padrao [maiusculo]
 
 ENTRADA DE DADOS:
-• ENTER vazio = Cancelar ou usar padrao
-• ESC = Cancelar (quando disponivel)
-• Ctrl+C = Interromper processo
+* ENTER vazio = Cancelar ou usar padrao
+* ESC = Cancelar (quando disponivel)
+* Ctrl+C = Interromper processo
 
 ESTRUTURA DO SISTEMA:
 -------------------------------------------------------------------
@@ -1634,10 +1634,10 @@ Limpeza automatica de arquivos antigos
 PARA MAIS INFORMACOES:
 -------------------------------------------------------------------
 
-• Pressione M para manual completo
-• Use H em cada menu para ajuda especifica
-• Consulte documentacao online
-• Entre em contato com suporte SAV
+* Pressione M para manual completo
+* Use H em cada menu para ajuda especifica
+* Consulte documentacao online
+* Entre em contato com suporte SAV
 
 
 -------------------------------------------------------------------
@@ -1662,20 +1662,20 @@ atualizacao e manutencao de sistemas de gestao empresarial.
 
 
 PRINCIPAIS FUNCIONALIDADES:
-• Atualizacao de programas individuais ou em pacote
-• Atualizacao completa de bibliotecas
-• Backup e restauracao de dados
-• Recuperacao de arquivos corrompidos
-• Limpeza de arquivos temporarios
-• Transferencia de arquivos cliente/servidor
-• Gestao de configuracoes
+* Atualizacao de programas individuais ou em pacote
+* Atualizacao completa de bibliotecas
+* Backup e restauracao de dados
+* Recuperacao de arquivos corrompidos
+* Limpeza de arquivos temporarios
+* Transferencia de arquivos cliente/servidor
+* Gestao de configuracoes
 
 REQUISITOS DO SISTEMA:
-• Linux (qualquer distribuicao moderna)
-• Bash 4.0 ou superior
-• Utilitarios: zip, unzip, rsync, ssh
-• Espaco em disco: minimo 5GB livres
-• IsCOBOL ou Micro Focus COBOL (conforme instalacao)
+* Linux (qualquer distribuicao moderna)
+* Bash 4.0 ou superior
+* Utilitarios: zip, unzip, rsync, ssh
+* Espaco em disco: minimo 5GB livres
+* IsCOBOL ou Micro Focus COBOL (conforme instalacao)
 
 -------------------------------------------------------------------
 2. MENU PRINCIPAL
@@ -1736,9 +1736,9 @@ PROCESSO:
 Atualizacao em massa atraves de pacotes pre-definidos.
 
 VANTAGENS:
-• Mais rapido
-• Garante compatibilidade
-• Menos propenso a erros
+* Mais rapido
+* Garante compatibilidade
+* Menos propenso a erros
 
 PROCESSO:
 Similar ao online/offline, mas usa nome do pacote.
@@ -1748,9 +1748,9 @@ Similar ao online/offline, mas usa nome do pacote.
 Volta programa para versao anterior usando backup automatico.
 
 QUANDO USAR:
-• Problema apos atualizacao
-• Incompatibilidade detectada
-• Necessidade de versao especifica
+* Problema apos atualizacao
+* Incompatibilidade detectada
+* Necessidade de versao especifica
 
 LIMITACAO:
 Apenas ultimo backup disponivel (ultima atualizacao).
@@ -1766,19 +1766,19 @@ telas, configuracoes XML e componentes auxiliares.
 4.1 QUANDO ATUALIZAR BIBLIOTECA
 
 OBRIGATORIO:
-• Mudanca de versao principal do sistema
-• Orientacao do suporte tecnico
-• Correcoes criticas de seguranca
+* Mudanca de versao principal do sistema
+* Orientacao do suporte tecnico
+* Correcoes criticas de seguranca
 
 RECOMENDADO:
-• Atualizacoes mensais
-• Novos recursos disponiveis
-• Performance degradada
+* Atualizacoes mensais
+* Novos recursos disponiveis
+* Performance degradada
 
 EVITAR:
-• Horario comercial (usar noite/fim de semana)
-• Sem backup recente
-• Problemas nao resolvidos
+* Horario comercial (usar noite/fim de semana)
+* Sem backup recente
+* Problemas nao resolvidos
 
 4.2 TIPOS DE BIBLIOTECA
 
@@ -1787,9 +1787,9 @@ Biblioteca de transporte e comunicacao
 
 SAVATU:
 Biblioteca principal do sistema SAV
-• Mais comum
-• Mais abrangente
-• Usado na maioria das atualizacoes
+* Mais comum
+* Mais abrangente
+* Usado na maioria das atualizacoes
 
 4.3 PROCESSO DE ATUALIZACAO
 
@@ -1825,10 +1825,10 @@ ENTER vazio  = Usa valor padrao [indicado em maiuscula]
 
 DICAS:
 -------------------------------------------------------------------
-• Nomes de programas sempre em MAIUSCULAS
-• Leia mensagens com atencao
-• Faca backup antes de atualizacoes importantes
-• Em caso de duvida, consulte o manual completo
+* Nomes de programas sempre em MAIUSCULAS
+* Leia mensagens com atencao
+* Faca backup antes de atualizacoes importantes
+* Em caso de duvida, consulte o manual completo
 
 SUPORTE:
 -------------------------------------------------------------------
