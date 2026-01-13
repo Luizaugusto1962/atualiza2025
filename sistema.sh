@@ -303,6 +303,7 @@ fi
     local arquivos_instalados=0
     local arquivos_erro=0
     local manual="manual.txt"
+    
     # Processar todos os arquivos .sh encontrados
     for arquivo in *.sh; do
         # Verificar se o arquivo existe
@@ -347,7 +348,7 @@ fi
         _mensagec "${RED}" "Erro ao instalar $manual"
         ((arquivos_erro++))
     fi
-    
+
     # Verificar se houve erros na instalacao
     if [[ $arquivos_erro -gt 0 ]]; then
         _mensagec "${RED}" "Falha na instalacao de $arquivos_erro arquivo(s)"
