@@ -13,7 +13,7 @@ INDICE:
 6. Limpeza de Temporarios
 7. Recuperacao de Arquivos
 8. Backups
-9. Transferência de Arquivos
+9. Transferencia de Arquivos
 10. Configuracoes (Setup)
 11. Lembretes
 12. Resolucao de Problemas
@@ -23,8 +23,8 @@ INDICE:
 MENU PRINCIPAL
 ═══════════════════════════════════════════════════════════════
 
-O Menu Principal é o ponto de entrada do sistema SAV. A partir dele
-você pode acessar todas as funcionalidades disponiveis.
+O Menu Principal e o ponto de entrada do sistema SAV. A partir dele
+voce pode acessar todas as funcionalidades disponiveis.
 
 OPCOES DISPONIVEIS:
 ───────────────────────────────────────────────────────────────
@@ -40,22 +40,22 @@ OPCOES DISPONIVEIS:
     QUANDO USAR:
     - Correcao de bugs em programas especificos
     - Instalacao de novos recursos
-    - Atualizacao de módulos individuais
+    - Atualizacao de modulos individuais
 
 2 - ATUALIZAR BIBLIOTECA
     Atualiza o conjunto completo de bibliotecas do sistema.
     
-    • Transpc: Biblioteca do diretório /u/varejo/transpc
-    • Savatu: Biblioteca do diretório /home/savatu/biblioteca
+    • Transpc: Biblioteca do diretorio /u/varejo/transpc
+    • Savatu: Biblioteca do diretorio /home/savatu/biblioteca
     • Modo Offline: Para ambientes sem conexao os arquivos .zip devem estar
-      no diretório configurado para offline (geralmente /portalsav/Atualiza)
+      no diretorio configurado para offline (geralmente /portalsav/Atualiza)
     
     QUANDO USAR:
     - Atualizacao em massa de programas
     - Mudanca de versao do sistema
     - Sincronizacao com versao do servidor
 
-    <<<  IMPORTANTE: Esta operacao é mais abrangente e pode levar
+    <<<  IMPORTANTE: Esta operacao e mais abrangente e pode levar
          mais tempo que a atualizacao de programas individuais.  >>>
 
 3 - VERSAO DO ISCOBOL
@@ -75,7 +75,7 @@ OPCOES DISPONIVEIS:
     • Hostname do servidor
     • IP interno e externo
     • Usuarios logados
-    • Uso de memória RAM e SWAP
+    • Uso de memoria RAM e SWAP
     • Uso de disco
     • Tempo de atividade (uptime)
 
@@ -85,7 +85,7 @@ OPCOES DISPONIVEIS:
     • Limpeza de arquivos temporarios
     • Recuperacao de arquivos de dados
     • Rotinas de backup
-    • Transferência de arquivos
+    • Transferencia de arquivos
     • Expurgador automatico
     • Configuracoes do sistema
     • Sistema de lembretes
@@ -124,7 +124,7 @@ OPCOES DISPONIVEIS:
     2. Escolha o tipo de compilacao:
        • 1 = Normal (producao)
        • 2 = Depuracao (debug, com simbolos)
-    3. Repita para até 6 programas
+    3. Repita para ate 6 programas
     4. Pressione ENTER para finalizar selecao
     5. Aguarde o download e instalacao
 
@@ -143,24 +143,24 @@ OPCOES DISPONIVEIS:
     Instala programas a partir de arquivos locais.
     
     QUANDO USAR:
-    - Servidor sem acesso à internet
+    - Servidor sem acesso a internet
     - Instalacao em ambiente isolado
     - Uso de arquivos previamente baixados
 
-    <<  PRÉ-REQUISITO: >>
-    Os arquivos .zip dos programas devem estar no diretório
+    <<  PRE-REQUISITO: >>
+    Os arquivos .zip dos programas devem estar no diretorio
     configurado para modo offline (geralmente /portalsav/Atualiza)
     
 3 - PROGRAMA(S) EM PACOTE
-    Instala multiplos programas de uma vez através de pacotes.
+    Instala multiplos programas de uma vez atraves de pacotes.
     
     VANTAGENS:
     • Mais rapido para multiplas atualizacoes
     • Garante compatibilidade entre programas relacionados
-    • Menor chance de erros de dependência
+    • Menor chance de erros de dependencia
 
     EXEMPLO DE PACOTE:
-    - PACK-class(versao) (contém: ADVA000, ADC001, TRS002, etc)
+    - PACK-class(versao) (contem: ADVA000, ADC001, TRS002, etc)
 
 4 - VOLTAR PROGRAMA ATUALIZADO
     Reverte programa para versao anterior.
@@ -172,7 +172,7 @@ OPCOES DISPONIVEIS:
 
     << IMPORTANTE: >>
     • Apenas programas com backup podem ser revertidos
-    • Backup é criado automaticamente em cada atualizacao
+    • Backup e criado automaticamente em cada atualizacao
     • Backup fica em: tools/olds/[PROGRAMA]-anterior.zip
 
 INFORMACOES IMPORTANTES:
@@ -205,7 +205,7 @@ PROBLEMA: "Erro ao descompactar"
 SOLUCAO: Arquivo pode estar corrompido, baixe novamente
 
 PROBLEMA: "Falha no backup"
-SOLUCAO: Verifique espaco ou permissao no disco no diretório tools/olds/
+SOLUCAO: Verifique espaco ou permissao no disco no diretorio tools/olds/
 
 PROBLEMA: "Programa nao encontrado no servidor"
 SOLUCAO: Verifique com suporte se programa esta disponivel
@@ -216,7 +216,7 @@ MENU DA BIBLIOTECA
 ═══════════════════════════════════════════════════════════════
 
 Bibliotecas sao conjuntos completos de programas que formam o
-sistema SAV. Atualizar a biblioteca é uma operacao mais ampla que
+sistema SAV. Atualizar a biblioteca e uma operacao mais ampla que
 atualizar programas individuais.
 
 OPCOES DISPONIVEIS:
@@ -225,9 +225,9 @@ OPCOES DISPONIVEIS:
 1 - ATUALIZACAO DO TRANSPC
     Atualiza a biblioteca de TRANSPC.
     
-    O QUE É:
+    O QUE E:
     Biblioteca responsavel pela atualizacao programas
-    entre diferentes módulos do sistema.
+    entre diferentes modulos do sistema.
     
     CONTEUDO:
     • Programas de interface
@@ -244,15 +244,15 @@ OPCOES DISPONIVEIS:
     QUANDO ATUALIZAR:
     - Mudanca de versao principal
     - Problemas de comunicacao
-    - Orientacao do suporte técnico
+    - Orientacao do suporte tecnico
 
     IMPORTANTE:
-    Esta é a atualizacao mais usada e completa do sistema.
+    Esta e a atualizacao mais usada e completa do sistema.
 
 2 - ATUALIZACAO DO SAVATU
     Atualiza a biblioteca principal do SAV.
     
-    O QUE É:
+    O QUE E:
     Conjunto completo de programas que compoem o sistema SAV.
     
     CONTEUDO:
@@ -266,13 +266,13 @@ OPCOES DISPONIVEIS:
     • MicroFocus COBOL
     
     IMPORTANTE:
-    Esta é a atualizacao que pouco se usa ultimamente.
+    Esta e a atualizacao que pouco se usa ultimamente.
 
 3 - ATUALIZACAO OFF-LINE
     Instala biblioteca a partir de arquivos locais.
     
     PROCESSO:
-    1. Copie os arquivos de atualizacao para o diretório offline
+    1. Copie os arquivos de atualizacao para o diretorio offline
     2. Informe a versao da biblioteca
     3. Sistema localiza e instala os arquivos
     
@@ -301,7 +301,7 @@ OPCOES DISPONIVEIS:
     BACKUP DA BIBLIOTECA:
     • Local: tools/olds/backup-[VERSAO].zip
     • Criado automaticamente antes de atualizar
-    • Contém todos os arquivos antigos
+    • Contem todos os arquivos antigos
 
 PROCESSO DE ATUALIZACAO DA BIBLIOTECA:
 ───────────────────────────────────────────────────────────────
@@ -330,7 +330,7 @@ Baixa arquivos do servidor:
 
 PASSO 5: INSTALACAO
 • Descompacta arquivos
-• Move para diretórios corretos
+• Move para diretorios corretos
 • Atualiza registros de versao
 • Remove temporarios
 
@@ -365,10 +365,10 @@ INTERROMPER ATUALIZACAO:
 • Pode deixar instalacao inconsistente
 • Recomenda-se reverter se interrompido
 
-PÓS-ATUALIZACAO:
+POS-ATUALIZACAO:
 • Teste funcionalidades criticas
-• Verifique relatórios
-• Confirme acesso aos módulos
+• Verifique relatorios
+• Confirme acesso aos modulos
 • Em caso de problemas, reverta
 
 SOLUCAO DE PROBLEMAS:
@@ -383,10 +383,10 @@ SOLUCAO: Verifique conexao internet e firewall
 PROBLEMA: "Erro ao descompactar"
 SOLUCAO: Arquivo corrompido, baixe novamente
 
-PROBLEMA: "Sistema lento após atualizacao"
+PROBLEMA: "Sistema lento apos atualizacao"
 SOLUCAO: Normal nos primeiros acessos (cache)
 
-PROBLEMA: "Programa nao inicia após atualizacao"
+PROBLEMA: "Programa nao inicia apos atualizacao"
 SOLUCAO: Reverta para versao anterior e contate suporte
 
 ═══════════════════════════════════════════════════════════════
@@ -417,11 +417,11 @@ OPCOES DISPONIVEIS:
     Executa rebuild em arquivos de dados.
     
     O QUE FAZ:
-    Reconstrói indices e reorganiza arquivos de dados,
-    corrigindo possiveis inconsistências.
+    Reconstroi indices e reorganiza arquivos de dados,
+    corrigindo possiveis inconsistencias.
     
     QUANDO USAR:
-    - Após queda de sistema
+    - Apos queda de sistema
     - Erros de "arquivo corrompido"
     - Performance degradada
     - Manutencao preventiva
@@ -444,17 +444,17 @@ OPCOES DISPONIVEIS:
     Transfere arquivos entre cliente e servidor.
     
     USOS:
-    • Envio de relatórios
+    • Envio de relatorios
     • Recebimento de atualizacoes
     • Compartilhamento de dados
-    • Transferência de logs
+    • Transferencia de logs
     
     PROTOCOLOS: SFTP, RSYNC
 
 5 - EXPURGADOR DE ARQUIVOS
     Remove automaticamente arquivos antigos.
     
-    DIRETÓRIOS LIMPOS:
+    DIRETORIOS LIMPOS:
     • Backups (>30 dias)
     • Logs (>30 dias)
     • Programas antigos (>30 dias)
@@ -465,7 +465,7 @@ OPCOES DISPONIVEIS:
     • Manual: Via menu
     • Automatica: Diaria (primeira execucao)
 
-6 - PARÂMETROS
+6 - PARAMETROS
     Visualiza e edita configuracoes do sistema.
     
     ACESSO:
@@ -474,11 +474,11 @@ OPCOES DISPONIVEIS:
     • Validacao: Testa configuracoes
 
 7 - UPDATE
-    Atualiza o próprio sistema de atualizacao.
+    Atualiza o proprio sistema de atualizacao.
     
     O QUE ATUALIZA:
     • Scripts do atualiza.sh
-    • Módulos de biblioteca
+    • Modulos de biblioteca
     • Arquivos de configuracao
     • Sistema de ajuda
     
@@ -496,7 +496,7 @@ OPCOES DISPONIVEIS:
     • Apagar notas
     
     USO:
-    - Registrar pendências
+    - Registrar pendencias
     - Anotacoes de manutencao
     - Lembretes de atualizacoes
 
@@ -507,7 +507,7 @@ MANUTENCAO REGULAR:
 1. Execute expurgador semanalmente
 2. Faca backup antes de atualizacoes
 3. Limpe temporarios mensalmente
-4. Recupere arquivos após problemas
+4. Recupere arquivos apos problemas
 
 ORGANIZACAO:
 • Use lembretes para agendar tarefas
@@ -533,14 +533,14 @@ OPCOES DISPONIVEIS:
     Remove arquivos temporarios de todas as bases.
     
     PROCESSO:
-    1. Lê lista de padroes (arquivo atualizat)
+    1. Le lista de padroes (arquivo atualizat)
     2. Busca arquivos correspondentes
     3. Compacta arquivos encontrados
     4. Move para backup
     5. Remove originais
     
     ARQUIVOS PROCESSADOS:
-    • Relatórios temporarios
+    • Relatorios temporarios
     • Arquivos de trabalho
     • Impressoes antigas
     • Cache de sistema
@@ -550,7 +550,7 @@ OPCOES DISPONIVEIS:
     tools/backup/Temps-[DATA].zip
 
 2 - ADICIONAR ARQUIVOS NO ATUALIZAT
-    Adiciona novo padrao à lista de limpeza.
+    Adiciona novo padrao a lista de limpeza.
     
     COMO USAR:
     1. Informe o nome/padrao do arquivo
@@ -568,7 +568,7 @@ OPCOES DISPONIVEIS:
     Exibe lista de padroes configurados.
     
     VISUALIZACAO:
-    • Numerada para referência
+    • Numerada para referencia
     • Um padrao por linha
     • Formato legivel
 
@@ -587,7 +587,7 @@ TEMP*
 WORK*.DAT
 
 PADROES COMUNS:
-• REL*.TMP - Relatórios temporarios
+• REL*.TMP - Relatorios temporarios
 • TEMP* - Arquivos de trabalho
 • *.BAK - Backups automaticos
 • WORK* - Arquivos de processamento
@@ -641,40 +641,40 @@ OPCOES DISPONIVEIS:
     • *.ARQ.dat - Arquivos de dados
     • *.DAT.dat - Arquivos de dados
     • *.LOG.dat - Logs do sistema
-    • *.PAN.dat - Painéis/Telas
+    • *.PAN.dat - Paineis/Telas
     
     COMANDO UTILIZADO:
     jutil -rebuild [ARQUIVO] -a -f
     
-    PARÂMETROS:
-    • -rebuild: Reconstrói arquivo
+    PARAMETROS:
+    • -rebuild: Reconstroi arquivo
     • -a: Modo automatico
     • -f: Forca reconstrucao
 
 2 - ARQUIVOS PRINCIPAIS
     Recupera conjunto de arquivos principais.
     
-    CRITÉRIOS:
+    CRITERIOS:
     • Arquivos do ano atual (ATE[AA]*.dat)
     • Notas fiscais eletrônicas do ano (NFE?[AAAA].*.dat)
     • Arquivos da lista atualizaj
     
     LISTA ATUALIZAJ:
     Local: cfg/atualizaj
-    Contém: Nomes de arquivos criticos do sistema
+    Contem: Nomes de arquivos criticos do sistema
 
-O QUE É REBUILD:
+O QUE E REBUILD:
 ───────────────────────────────────────────────────────────────
 
 DEFINICAO:
-Rebuild (reconstrucao) é o processo de reorganizar um arquivo
+Rebuild (reconstrucao) e o processo de reorganizar um arquivo
 de dados indexed, reconstruindo seus indices e corrigindo
-possiveis inconsistências.
+possiveis inconsistencias.
 
 O QUE FAZ:
-1. Lê todos os registros do arquivo
+1. Le todos os registros do arquivo
 2. Verifica integridade de cada registro
-3. Reconstrói indices do zero
+3. Reconstroi indices do zero
 4. Reorganiza dados no disco
 5. Remove registros marcados para exclusao
 6. Otimiza espaco fisico
@@ -682,24 +682,24 @@ O QUE FAZ:
 QUANDO USAR:
 ───────────────────────────────────────────────────────────────
 
-OBRIGATÓRIO:
+OBRIGATORIO:
 • Erro "File is locked" persistente
 • Erro "Invalid key" ao acessar dados
 • Mensagem "Corrupt index"
-• Após queda abrupta do sistema
-• Após falha de disco ou energia
+• Apos queda abrupta do sistema
+• Apos falha de disco ou energia
 
 RECOMENDADO:
 • Performance degradada
 • Arquivo cresceu muito sem reorganizacao
 • Manutencao preventiva mensal
-• Após importacao em massa de dados
+• Apos importacao em massa de dados
 • Antes de backup importante
 
 PREVENCAO:
 • Semanalmente nos arquivos principais
 • Mensalmente em todos os arquivos
-• Sempre após erros de acesso
+• Sempre apos erros de acesso
 
 PROCESSO DE RECUPERACAO:
 ───────────────────────────────────────────────────────────────
@@ -733,7 +733,7 @@ FATORES:
 
 ESTIMATIVAS:
 • Arquivo pequeno (<10MB): Segundos
-• Arquivo médio (10-100MB): 1-5 minutos
+• Arquivo medio (10-100MB): 1-5 minutos
 • Arquivo grande (100MB-1GB): 5-30 minutos
 • Arquivo muito grande (>1GB): 30+ minutos
 
@@ -805,7 +805,7 @@ OPCOES DISPONIVEIS:
     
     INCREMENTAL:
     • Apenas arquivos modificados
-    • Baseado em data de referência
+    • Baseado em data de referencia
     • Formato: [EMPRESA]_incremental_[DATA_HORA].zip
     
     PROCESSO:
@@ -1302,7 +1302,7 @@ BANCO:
 
 base:
 • Diretorio principal de dados
-• Caminho relativo à raiz
+• Caminho relativo a raiz
 • Ex: /dados_jisam
 
 EMPRESA:
@@ -1486,7 +1486,7 @@ PROBLEMAS CONHECIDOS:
 
 CONTATOS IMPORTANTES:
 Email: suporte@sav.com.br
-Horario: 8h às 18h
+Horario: 8h as 18h
 
 SENHAS E ACESSOS:
 (Nao recomendado para informacoes sensiveis!)
@@ -1832,4 +1832,4 @@ DICAS:
 SUPORTE:
 ───────────────────────────────────────────────────────────────────
 Email: suporte@sav.com.br
-Horario: Segunda a Sexta, 8h às 18h
+Horario: Segunda a Sexta, 8h as 18h
