@@ -14,10 +14,10 @@ TOOLS_DIR="${TOOLS_DIR:-}"
 # Arquivo de manual principal
 MANUAL_FILE="${cfg_dir}/manual.txt"
 
-# Exibe conteúdo com paginação automática
+# Exibe conteúdo com paginaçao automática
 # Parâmetros: 
 #   $1 = conteúdo para exibir
-#   $2 = linhas por página (opcional, padrão: 25)
+#   $2 = linhas por página (opcional, padrao: 25)
 _exibir_paginado() {
     local conteudo="$1"
     local linhas_por_pagina="${2:-25}"
@@ -37,14 +37,14 @@ _exibir_paginado() {
         return 0
     fi
     
-    # Loop de paginação
+    # Loop de paginaçao
     while [[ $linha_atual -le $total_linhas ]]; do
         # Exibe página atual
         echo "$conteudo" | sed -n "${linha_atual},$((linha_atual + linhas_por_pagina - 1))p"
         
         linha_atual=$((linha_atual + linhas_por_pagina))
         
-        # Se ainda há mais conteúdo, solicita continuação
+        # Se ainda há mais conteúdo, solicita continuaçao
         if [[ $linha_atual -le $total_linhas ]]; then
             printf "\n"
             _linha "=" "${CYAN}"
@@ -54,7 +54,7 @@ _exibir_paginado() {
             case "${resposta,,}" in
                 q)
                     echo ""
-                    echo "${GREEN}Exibição interrompida${NORM}"
+                    echo "${GREEN}Exibiçao interrompida${NORM}"
                     return 0
                     ;;
                 a)
@@ -74,13 +74,82 @@ _exibir_paginado() {
     return 0
 }
 
+#---------- FUNCAO PARA LER SECAO DO MANUAL ----------#
+
+# Lê uma seçao específica do arquivo manual.txt
+# Parâmetro: $1 = nome da seçao (ex: MENU_PRINCIPAL, MENU_PROGRAMAS)
+_ler_secao_manual() {
+    local secao="$1"
+    local conteudo=""
+    local linha_inicio
+    local linha_fim
+    
+    if [[ ! -f "$MANUAL_FILE" ]]; then
+        _mensagec "${RED}" "Arquivo manual.txt nao encontrado!"
+        return 1
+    fi
+    
+    # Encontra linha de início da seçao
+    linha_inicio=$(grep -n "^\[${secao}\]$" "$MANUAL_FILE" | cut -d: -f1)
+    
+    if [[ -z "$linha_inicio" ]]; then
+        _mensagec "${YELLOW}" "Seçao [$secao] nao encontrada no manual."
+        return 1
+    fi
+    
+    # Incrementa para pular a linha do marcador
+    linha_inicio=$((linha_inicio + 1))
+    
+    # Encontra a proxima seçao apos a linha de início
+    linha_fim=$(tail -n +${linha_inicio} "$MANUAL_FILE" | grep -n "^\[.*\]$" | head -1 | cut -d: -f1)
+    
+    if [[ -n "$linha_fim" ]]; then
+        # Há outra seçao depois, lê até ela
+        linha_fim=$((linha_inicio + linha_fim - 2))
+        conteudo=$(sed -n "${linha_inicio},${linha_fim}p" "$MANUAL_FILE")
+    else
+        # É a última seçao, lê até o final
+        conteudo=$(tail -n +${linha_inicio} "$MANUAL_FILE")
+    fi
+    
+    echo "$conteudo"
+    return 0
+}
+_ler_secao_manual3() {
+    local secao="$1"
+    local conteudo=""
+    
+    if [[ ! -f "$MANUAL_FILE" ]]; then
+        _mensagec "${RED}" "Arquivo manual.txt nao encontrado!"
+        _mensagec "${YELLOW}" "Execute a criaçao do manual primeiro."
+        return 1
+    fi
+    
+    # Lê a seçao entre [SECAO] e a proxima seçao [*] ou fim do arquivo
+    conteudo=$(awk "/^\[${secao}\]/,/^\[.*\]/ {
+        if (/^\[${secao}\]/) next;
+        if (/^\[.*\]/) exit;
+        print
+    }" "$MANUAL_FILE")
+    
+    if [[ -z "$conteudo" ]]; then
+        _mensagec "${YELLOW}" "Seçao [$secao] nao encontrada no manual."
+        return 1
+    fi
+    
+    echo "$conteudo"
+    return 0
+}
+
 #---------- FUNCOES DE NAVEGACAO DO MANUAL ----------#
 
-# Cria um manual padrão se o arquivo não existir
 # Exibe o manual completo
 _exibir_manual_completo() {
     if [[ ! -f "$MANUAL_FILE" ]]; then
-        _criar_manual_padrao
+        _mensagec "${RED}" "Arquivo manual.txt nao encontrado em: $MANUAL_FILE"
+        _mensagec "${YELLOW}" "Crie o arquivo manual.txt no diretorio cfg/"
+        _press
+        return 1
     fi
     
     clear
@@ -123,8 +192,46 @@ _exibir_manual_completo() {
 # Exibe ajuda contextual baseada no menu atual
 # Parametros: $1=contexto (principal, programas, biblioteca, etc)
 _exibir_ajuda_contextual() {
-    local conteudo=""
     local contexto="${1:-principal}"
+    local secao_nome=""
+    local conteudo=""
+    
+    # Mapeia contexto para nome da seçao no manual.txt
+    case "$contexto" in
+        principal)
+            secao_nome="MENU_PRINCIPAL"
+            ;;
+        programas)
+            secao_nome="MENU_PROGRAMAS"
+            ;;
+        biblioteca)
+            secao_nome="MENU_BIBLIOTECA"
+            ;;
+        ferramentas)
+            secao_nome="MENU_FERRAMENTAS"
+            ;;
+        temporarios)
+            secao_nome="MENU_TEMPORARIOS"
+            ;;
+        recuperacao)
+            secao_nome="MENU_RECUPERACAO"
+            ;;
+        backup)
+            secao_nome="MENU_BACKUP"
+            ;;
+        transferencia)
+            secao_nome="MENU_TRANSFERENCIA"
+            ;;
+        setups)
+            secao_nome="MENU_SETUPS"
+            ;;
+        lembretes)
+            secao_nome="MENU_LEMBRETES"
+            ;;
+        *)
+            secao_nome="MENU_PRINCIPAL"
+            ;;
+    esac
     
     clear
     _linha "=" "${CYAN}"
@@ -132,41 +239,13 @@ _exibir_ajuda_contextual() {
     _linha "=" "${CYAN}"
     printf "\n"
     
-    case "$contexto" in
-        principal)
-            _help_menu_principal
-            ;;
-        programas)
-            _help_menu_programas
-            ;;
-        biblioteca)
-            _help_menu_biblioteca
-            ;;
-        ferramentas)
-            _help_menu_ferramentas
-            ;;
-        temporarios)
-            _help_menu_temporarios
-            ;;
-        recuperacao)
-            _help_menu_recuperacao
-            ;;
-        backup)
-            _help_menu_backup
-            ;;
-        transferencia)
-            _help_menu_transferencia
-            ;;
-        setups)
-            _help_menu_setups
-            ;;
-        lembretes)
-            _help_menu_lembretes
-            ;;
-        *)
-            _help_generico
-            ;;
-    esac
+    # Lê e exibe a seçao do manual
+    if conteudo=$(_ler_secao_manual "$secao_nome"); then
+        _exibir_paginado "$conteudo" 25
+    else
+        _mensagec "${YELLOW}" "Ajuda para '$contexto' nao disponível no momento."
+        _mensagec "${YELLOW}" "Use 'M' para ver o manual completo."
+    fi
     
     printf "\n"
     _linha "-" "${GREEN}"
@@ -179,1946 +258,125 @@ _exibir_ajuda_contextual() {
     fi
 }
 
-#---------- CONTEUDO DE AJUDA POR MENU ----------#
-
-_help_menu_principal() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-
-MENU PRINCIPAL
-═══════════════════════════════════════════════════════════════════
-
-O Menu Principal e o ponto de entrada do sistema SAV. A partir dele
-voce pode acessar todas as funcionalidades disponiveis.
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - ATUALIZAR PROGRAMA(S)
-    Permite baixar e instalar programas individuais ou em pacote.
-    
-    • Use esta opcao quando precisar atualizar programas especificos
-    • Suporta atualizacoes online (via servidor) ou offline (via arquivo)
-    • Permite compilacao normal ou em modo de depuracao
-    • Cria backup automatico antes de atualizar
-    
-    QUANDO USAR:
-    - Correcao de bugs em programas especificos
-    - Instalacao de novos recursos
-    - Atualizacao de modulos individuais
-
-2 - ATUALIZAR BIBLIOTECA
-    Atualiza o conjunto completo de bibliotecas do sistema.
-    
-    • Transpc: Biblioteca do diretorio /u/varejo/transpc
-    • Savatu: Biblioteca do diretorio /home/savatu/biblioteca
-    • Modo Offline: Para ambientes sem conexao os arquivos .zip devem estar
-      no diretorio configurado para offline (geralmente /portalsav/Atualiza)
-    
-    QUANDO USAR:
-    - Atualizacao em massa de programas
-    - Mudanca de versao do sistema
-    - Sincronizacao com versao do servidor
-
-
-   <<<  IMPORTANTE: Esta operacao e mais abrangente e pode levar"
-        mais tempo que a atualizacao de programas individuais.  >>>
-
-3 - VERSAO DO ISCOBOL
-    Exibe informacoes sobre a versao do IsCOBOL instalada.
-    
-    • Mostra numero da versao
-    • Exibe data de compilacao
-    • Lista recursos disponiveis
-    
-    Nota: Disponivel apenas para sistemas IsCOBOL.
-
-4 - VERSAO DO LINUX
-    Mostra informacoes detalhadas do sistema operacional.
-    
-    INFORMACOES EXIBIDAS:
-    • Distribuicao e versao do Linux
-    • Hostname do servidor
-    • IP interno e externo
-    • Usuarios logados
-    • Uso de memoria RAM e SWAP
-    • Uso de disco
-    • Tempo de atividade (uptime)
-
-5 - FERRAMENTAS
-    Acesso ao menu de ferramentas administrativas.
-    
-    • Limpeza de arquivos temporarios
-    • Recuperacao de arquivos de dados
-    • Rotinas de backup
-    • Transferencia de arquivos
-    • Expurgador automatico
-    • Configuracoes do sistema
-    • Sistema de lembretes
-
-9 - SAIR DO SISTEMA
-    Encerra o sistema SAV de forma segura.
-
-DICAS:
-─────────────────────────────────────────────────────────────────
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-
-    printf "\n"
-    printf "%s\n" "${YELLOW}• Use as setas do teclado para navegar (se disponivel)"
-    printf "%s\n" "• Digite o numero da opcao desejada"
-    printf "%s\n" "• Pressione ? a qualquer momento para ajuda contextual"
-    printf "%s\n" "• Use Ctrl+C para cancelar operacoes em andamento${NORM}"
-
-    conteudo=$(cat << 'EOF'
-ATALHOS:
-─────────────────────────────────────────────────────────────────
-• ? = Ajuda contextual
-• 9 = Sair/Voltar
-• Ctrl+C = Cancelar operacao
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_programas() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DE PROGRAMAS
-═══════════════════════════════════════════════════════════════════
-
-Este menu permite atualizar programas individuais do sistema SAV.
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - PROGRAMA(S) ON-LINE
-    Baixa e instala programas diretamente do servidor.
-    
-    PROCESSO:
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-
-    printf "\n"
-    printf '%s\n' "${GREEN}    1. Informe o nome do programa (em MAIUSCULAS)"
-    printf '%s\n' "${GREEN}    2. Escolha o tipo de compilacao:"
-    printf '%s\n' "${YELLOW}       • 1 = Normal (producao)"
-    printf '%s\n' "       • 2 = Depuracao (debug, com simbolos)${NORM}"
-    printf '%s\n' "${GREEN}    3. Repita para ate 6 programas"
-    printf '%s\n' "    4. Pressione ENTER para finalizar selecao"
-    printf '%s\n' "    5. Aguarde o download e instalacao${NORM}"
-    printf "\n"
-
-    conteudo=$(cat << 'EOF'
-
-    EXEMPLO:
-    Nome do programa: ADV000
-    Tipo de compilacao: 1
-    ( Exemplo do nome do programa ADV000-class(versao) )
-
-    Nome do programa: ADV000
-    Tipo de compilacao: 2
-    ( Exemplo do nome do programa ADV000-mclass(versao) )
-
-    Nome do programa: [ENTER para finalizar]
-
-2 - PROGRAMA(S) OFF-LINE
-    Instala programas a partir de arquivos locais.
-    
-    QUANDO USAR:
-    - Servidor sem acesso à internet
-    - Instalacao em ambiente isolado
-    - Uso de arquivos previamente baixados
-
-    
-    <<  PREREQUISITO: >>
-     Os arquivos .zip dos programas devem estar no diretorio
-     configurado para modo offline (geralmente /portalsav/Atualiza)${NORM}
-    
-3 - PROGRAMA(S) EM PACOTE
-    Instala multiplos programas de uma vez atraves de pacotes.
-    
-    VANTAGENS:
-    • Mais rapido para multiplas atualizacoes
-    • Garante compatibilidade entre programas relacionados
-    • Menor chance de erros de dependencia
-
-    EXEMPLO DE PACOTE:
-    - PACK-class(versao) (contem: ADVA000, ADC001, TRS002, etc)
-
-4 - VOLTAR PROGRAMA ATUALIZADO
-    Reverte programa para versao anterior.
-    
-    PROCESSO:
-    1. Informe o nome do programa a reverter
-    2. Sistema busca backup automatico
-    3. Restaura versao anterior
-
-
-    << IMPORTANTE: >>
-   • Apenas programas com backup podem ser revertidos
-   • Backup e criado automaticamente em cada atualizacao
-   • Backup fica em: tools/olds/[PROGRAMA]-anterior.zip
-
-INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────────
-
-NOMES DE PROGRAMAS:
-    
-#    printf "%s\n" "${NORM}• Sempre em MAIUSCULAS (ex: ADVA00, nao adva00)"
-#    printf "%s\n" "• Apenas letras e numeros"
-#    printf "%s\n" "• Sem espacos ou caracteres especiais${NORM}"
-#    printf "\n"  
-• Sempre em MAIÚSCULAS (ex: ADVA00, não adva00)
-• Apenas letras e números
-• Sem espaços ou caracteres especiais
-
-TIPOS DE COMPILACAO:
-• Normal (1): Para uso em producao
-  - [PROGRAMA]-class
-• Depuracao (2): Para desenvolvimento/testes
-  - [PROGRAMA]-mclass
-
-BACKUP AUTOMATICO:
-• Criado antes de cada atualizacao
-• Inclui: .class, .int, .TEL
-• Localizacao: tools/olds/
-• Formato: [PROGRAMA]-anterior.zip
-
-SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
-
-PROBLEMA: "Arquivo nao encontrado"
-SOLUCAO: Verifique se o nome esta correto e em MAIUSCULAS
-
-PROBLEMA: "Erro ao descompactar"
-SOLUCAO: Arquivo pode estar corrompido, baixe novamente
-
-PROBLEMA: "Falha no backup"
-SOLUCAO: Verifique espaco ou permissao no disco no diretorio tools/olds/
-
-PROBLEMA: "Programa nao encontrado no servidor"
-SOLUCAO: Verifique com suporte se programa esta disponivel
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_biblioteca() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DA BIBLIOTECA
-═══════════════════════════════════════════════════════════════════
-
-Bibliotecas sao conjuntos completos de programas que formam o
-sistema SAV. Atualizar a biblioteca e uma operacao mais ampla que
-atualizar programas individuais.
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - ATUALIZACAO DO TRANSPC
-    Atualiza a biblioteca de TRANSPC.
-    
-    O QUE E:
-    Biblioteca responsavel pela atualizacao programas
-    entre diferentes modulos do sistema.
-    
-    CONTEUDO:
-    • Programas de interface
-    • Rotinas de conversao
-    • Classes compiladas (.class)
-    • Telas de interface (.TEL)
-    • Arquivos XML de configuracao
-    • Programas para o sistema em MIcroFocus (.int)
-
-    VERSOES DISPONIVEIS:
-    • IsCOBOL 2018, 2020, 2023, 2024
-    • MicroFocus COBOL
-
-    QUANDO ATUALIZAR:
-    - Mudanca de versao principal
-    - Problemas de comunicacao
-    - Orientacao do suporte tecnico
-
-    IMPORTANTE:
-    Esta e a atualizacao mais usado e completa do sistema.    
-
-2 - ATUALIZACAO DO SAVATU
-    Atualiza a biblioteca principal do SAV.
-    
-    O QUE E:
-    Conjunto completo de programas que compoem o sistema SAV.
-    
-    CONTEUDO:
-    • Classes compiladas (.class)
-    • Telas de interface (.TEL)
-    • Arquivos XML de configuracao
-    • Programas para o sistema em MIcroFocus (.int)
-    
-    VERSOES DISPONIVEIS:
-    • IsCOBOL 2018, 2020, 2023, 2024
-    • MicroFocus COBOL
-    
-    IMPORTANTE:
-    Esta e a atualizacao que pouco se usa ultimamente.
-
-3 - ATUALIZACAO OFF-LINE
-    Instala biblioteca a partir de arquivos locais.
-    
-    PROCESSO:
-    1. Copie os arquivos de atualizacao para o diretorio offline
-    2. Informe a versao da biblioteca
-    3. Sistema localiza e instala os arquivos
-    
-    ARQUIVOS NECESSARIOS (IsCOBOL):
-    • tempSAV_IS[ANO]_classA_[VERSAO].zip
-    • tempSAV_IS[ANO]_classB_[VERSAO].zip
-    • tempSAV_IS[ANO]_tel_isc_[VERSAO].zip
-    • tempSAV_IS[ANO]_xml_[VERSAO].zip
-    
-    EXEMPLO:
-    • tempSAV_IS2024_classA_5280.zip
-    • tempSAV_IS2024_classB_5280.zip
-    • tempSAV_IS2024_tel_isc_5280.zip
-    • tempSAV_IS2024_xml_5280.zip
-
-4 - VOLTAR PROGRAMA(S) DA BIBLIOTECA
-    Reverte biblioteca para versao anterior.
-    
-    PROCESSO:
-    1. Informe a versao a reverter
-    2. Sistema busca backup dessa versao
-    3. Escolha entre:
-       • Reverter todos os programas
-       • Reverter programa especifico
-    
-    BACKUP DA BIBLIOTECA:
-    • Local: tools/olds/backup-[VERSAO].zip
-    • Criado automaticamente antes de atualizar
-    • Contem todos os arquivos antigos
-
-PROCESSO DE ATUALIZACAO DA BIBLIOTECA:
-───────────────────────────────────────────────────────────────────
-
-PASSO 1: INFORMAR VERSAO
-Digite apenas o numero da versao (ex: 0601, 0105, etc)
-
-PASSO 2: VALIDACAO
-Sistema verifica:
-• Conectividade (modo online)
-• Disponibilidade dos arquivos
-• Espaco em disco
-
-PASSO 3: BACKUP AUTOMATICO
-Sistema cria backup completo:
-• Classes (.class)
-• Telas (.TEL)
-• XML (.xml)
-• MicroFocus (.int)
-
-PASSO 4: DOWNLOAD (modo online)
-Baixa arquivos do servidor:
-• Exibe progresso
-• Valida integridade
-• Verifica checksums
-
-PASSO 5: INSTALACAO
-• Descompacta arquivos
-• Move para diretorios corretos
-• Atualiza registros de versao
-• Remove temporarios
-
-PASSO 6: VERIFICACAO
-Sistema verifica:
-• Arquivos instalados corretamente
-• Permissoes adequadas
-• Integridade dos dados
-
-INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────────
-
-VERSAO:
-• Use apenas numeros (ex: 0601, 0105, etc)
-• Nao use pontos ou espacos
-• Confirme versao com o suporte
-
-TEMPO DE ATUALIZACAO:
-• Depende do tamanho da biblioteca
-• Conexao de internet (modo online)
-• IsCOBOL: aproximadamente 5-15 minutos
-• MicroFocus: aproximadamente 3-10 minutos
-
-ESPACO NECESSARIO:
-• Backup: ~500MB - 2GB
-• Biblioteca: ~500MB - 2GB
-• Total recomendado: 5GB livres
-
-INTERROMPER ATUALIZACAO:
-• Use Ctrl+C com cuidado
-• Sistema tenta fazer cleanup
-• Pode deixar instalacao inconsistente
-• Recomenda-se reverter se interrompido
-
-POS-ATUALIZACAO:
-• Teste funcionalidades criticas
-• Verifique relatorios
-• Confirme acesso aos modulos
-• Em caso de problemas, reverta
-
-SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
-
-PROBLEMA: "Erro na compactacao de backup"
-SOLUCAO: Verifique espaco em disco, pode estar cheio
-
-PROBLEMA: "Falha no download"
-SOLUCAO: Verifique conexao internet e firewall
-
-PROBLEMA: "Erro ao descompactar"
-SOLUCAO: Arquivo corrompido, baixe novamente
-
-PROBLEMA: "Sistema lento apos atualizacao"
-SOLUCAO: Normal nos primeiros acessos (cache)
-
-PROBLEMA: "Programa nao inicia apos atualizacao"
-SOLUCAO: Reverta para versao anterior e contate suporte
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_ferramentas() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DE FERRAMENTAS
-═══════════════════════════════════════════════════════════════════
-
-O menu de Ferramentas fornece utilitarios administrativos para
-manutencao e gestao do sistema SAV.
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - TEMPORARIOS
-    Gerencia arquivos temporarios do sistema.
-    
-    FUNCOES:
-    • Limpeza automatica de arquivos antigos
-    • Compactacao antes de remover
-    • Manutencao da lista de temporarios
-    
-    BENEFICIOS:
-    - Libera espaco em disco
-    - Melhora performance
-    - Organiza base de dados
-
-2 - RECUPERAR ARQUIVOS
-    Executa rebuild em arquivos de dados.
-    
-    O QUE FAZ:
-    Reconstroi indices e reorganiza arquivos de dados,
-    corrigindo possiveis inconsistencias.
-    
-    QUANDO USAR:
-    - Apos queda de sistema
-    - Erros de "arquivo corrompido"
-    - Performance degradada
-    - Manutencao preventiva
-    
-    DISPONIVEL APENAS PARA: Sistemas IsCOBOL
-
-3 - ROTINAS DE BACKUP
-    Gerencia backups da base de dados.
-    
-    TIPOS:
-    • Completo: Todos os arquivos
-    • Incremental: Apenas alteracoes
-    
-    OPCOES:
-    - Criar novo backup
-    - Restaurar backup
-    - Enviar para servidor
-
-4 - ENVIAR E RECEBER ARQUIVOS
-    Transfere arquivos entre cliente e servidor.
-    
-    USOS:
-    • Envio de relatorios
-    • Recebimento de atualizacoes
-    • Compartilhamento de dados
-    • Transferencia de logs
-    
-    PROTOCOLOS: SFTP, RSYNC
-
-5 - EXPURGADOR DE ARQUIVOS
-    Remove automaticamente arquivos antigos.
-    
-    DIRETORIOS LIMPOS:
-    • Backups (>30 dias)
-    • Logs (>30 dias)
-    • Programas antigos (>30 dias)
-    • Erros IsCOBOL (>30 dias)
-    • Arquivos ZIP (>15 dias)
-    
-    EXECUCAO:
-    • Manual: Via menu
-    • Automatica: Diaria (primeira execucao)
-
-6 - PARAMETROS
-    Visualiza e edita configuracoes do sistema.
-    
-    ACESSO:
-    • Consulta: Visualizacao apenas
-    • Manutencao: Edicao de valores
-    • Validacao: Testa configuracoes
-
-7 - UPDATE
-    Atualiza o proprio sistema de atualizacao.
-    
-    O QUE ATUALIZA:
-    • Scripts do atualiza.sh
-    • Modulos de biblioteca
-    • Arquivos de configuracao
-    • Sistema de ajuda
-    
-    FONTES:
-    • Online: GitHub
-    • Offline: Arquivos locais
-
-8 - LEMBRETES
-    Sistema de notas e lembretes.
-    
-    FUNCOES:
-    • Criar novas notas
-    • Visualizar notas
-    • Editar notas existentes
-    • Apagar notas
-    
-    USO:
-    - Registrar pendencias
-    - Anotacoes de manutencao
-    - Lembretes de atualizacoes
-
-DICAS DE USO:
-───────────────────────────────────────────────────────────────────
-
-MANUTENCAO REGULAR:
-1. Execute expurgador semanalmente
-2. Faca backup antes de atualizacoes
-3. Limpe temporarios mensalmente
-4. Recupere arquivos apos problemas
-
-ORGANIZACAO:
-• Use lembretes para agendar tarefas
-• Documente alteracoes importantes
-• Mantenha logs organizados
-
-PERFORMANCE:
-• Limpeza regular melhora velocidade
-• Recuperacao de arquivos otimiza indices
-• Expurgador libera recursos
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_temporarios() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DE LIMPEZA - TEMPORARIOS
-═══════════════════════════════════════════════════════════════════
-
-Gerencia arquivos temporarios criados durante operacao do sistema.
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - LIMPEZA DOS ARQUIVOS TEMPORARIOS
-    Remove arquivos temporarios de todas as bases.
-    
-    PROCESSO:
-    1. Le lista de padroes (arquivo atualizat)
-    2. Busca arquivos correspondentes
-    3. Compacta arquivos encontrados
-    4. Move para backup
-    5. Remove originais
-    
-    ARQUIVOS PROCESSADOS:
-    • Relatorios temporarios
-    • Arquivos de trabalho
-    • Impressoes antigas
-    • Cache de sistema
-    
-    DESTINO:
-    Arquivos sao compactados em:
-    tools/backup/Temps-[DATA].zip
-
-2 - ADICIONAR ARQUIVOS NO ATUALIZAT
-    Adiciona novo padrao à lista de limpeza.
-    
-    COMO USAR:
-    1. Informe o nome/padrao do arquivo
-    2. Use * para coringas
-    
-    EXEMPLOS:
-    • REL*.TMP = Todos arquivos REL com extensao .TMP
-    • TEMP* = Todos arquivos comecando com TEMP
-    • *.BAK = Todos arquivos .BAK
-    
-    ARQUIVO:
-    Padroes sao salvos em: cfg/atualizat
-
-3 - LISTAR ARQUIVOS DO ATUALIZAT
-    Exibe lista de padroes configurados.
-    
-    VISUALIZACAO:
-    • Numerada para referencia
-    • Um padrao por linha
-    • Formato legivel
-
-ARQUIVO ATUALIZAT:
-───────────────────────────────────────────────────────────────────
-
-LOCALIZACAO:
-cfg/atualizat
-
-FORMATO:
-Um padrao por linha, sem comentarios
-Exemplo:
-REL*.TMP
-TEMP*
-*.BAK
-WORK*.DAT
-
-PADROES COMUNS:
-• REL*.TMP - Relatorios temporarios
-• TEMP* - Arquivos de trabalho
-• *.BAK - Backups automaticos
-• WORK* - Arquivos de processamento
-• PRINT*.SPL - Filas de impressao
-
-INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────────
-
-SEGURANCA:
-• Arquivos sao compactados antes de remover
-• Backup mantido por 10 dias
-• Pode recuperar se necessario
-
-PERFORMANCE:
-• Execute regularmente (mensal)
-• Libera espaco em disco
-• Melhora velocidade de acesso
-• Reduz fragmentacao
-
-MULTIPLAS BASES:
-Se configurado com multiplas bases (base2, base3),
-a limpeza processa todas automaticamente.
-
-RECUPERACAO:
-Para recuperar arquivo removido:
-1. Localize backup: tools/backup/Temps-[DATA].zip
-2. Descompacte o arquivo necessario
-3. Restaure para local original
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_recuperacao() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DE RECUPERACAO DE ARQUIVO(S)
-═══════════════════════════════════════════════════════════════════
-
-Executa rebuild (reconstrucao) em arquivos de dados IsCOBOL,
-corrigindo indices e reorganizando registros.
-
-DISPONIVEL APENAS PARA: Sistemas IsCOBOL
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - UM ARQUIVO OU TODOS
-    Recupera arquivo especifico ou todos.
-    
-    PROCESSO:
-    • Nome especifico: Digite nome do arquivo (ex: CADCLI)
-    • Todos: Pressione ENTER sem digitar nada
-    
-    ARQUIVOS PROCESSADOS (todos):
-    • *.ARQ.dat - Arquivos de dados
-    • *.DAT.dat - Arquivos de dados
-    • *.LOG.dat - Logs do sistema
-    • *.PAN.dat - Paineis/Telas
-    
-    COMANDO UTILIZADO:
-    jutil -rebuild [ARQUIVO] -a -f
-    
-    PARAMETROS:
-    • -rebuild: Reconstroi arquivo
-    • -a: Modo automatico
-    • -f: Forca reconstrucao
-
-2 - ARQUIVOS PRINCIPAIS
-    Recupera conjunto de arquivos principais.
-    
-    CRITERIOS:
-    • Arquivos do ano atual (ATE[AA]*.dat)
-    • Notas fiscais eletronicas do ano (NFE?[AAAA].*.dat)
-    • Arquivos da lista atualizaj
-    
-    LISTA ATUALIZAJ:
-    Local: cfg/atualizaj
-    Contem: Nomes de arquivos criticos do sistema
-
-O QUE E REBUILD:
-───────────────────────────────────────────────────────────────────
-
-DEFINICAO:
-Rebuild (reconstrucao) e o processo de reorganizar um arquivo
-de dados indexed, reconstruindo seus indices e corrigindo
-possiveis inconsistencias.
-
-O QUE FAZ:
-1. Le todos os registros do arquivo
-2. Verifica integridade de cada registro
-3. Reconstroi indices do zero
-4. Reorganiza dados no disco
-5. Remove registros marcados para exclusao
-6. Otimiza espaco fisico
-
-QUANDO USAR:
-───────────────────────────────────────────────────────────────────
-
-OBRIGATORIO:
-• Erro "File is locked" persistente
-• Erro "Invalid key" ao acessar dados
-• Mensagem "Corrupt index"
-• Apos queda abrupta do sistema
-• Apos falha de disco ou energia
-
-RECOMENDADO:
-• Performance degradada
-• Arquivo cresceu muito sem reorganizacao
-• Manutencao preventiva mensal
-• Apos importacao em massa de dados
-• Antes de backup importante
-
-PREVENCAO:
-• Semanalmente nos arquivos principais
-• Mensalmente em todos os arquivos
-• Sempre apos erros de acesso
-
-PROCESSO DE RECUPERACAO:
-───────────────────────────────────────────────────────────────────
-
-PASSO 1: IDENTIFICACAO
-Sistema identifica arquivos a processar
-
-PASSO 2: VALIDACAO
-Verifica se arquivo existe e nao esta vazio
-
-PASSO 3: VERIFICACAO JUTIL
-Confirma disponibilidade do utilitario jutil
-
-PASSO 4: EXECUCAO
-Executa rebuild com progress indicator
-
-PASSO 5: VERIFICACAO
-Confirma sucesso da operacao
-
-PASSO 6: LOG
-Registra operacao em arquivo de log
-
-TEMPO DE PROCESSAMENTO:
-───────────────────────────────────────────────────────────────────
-
-FATORES:
-• Tamanho do arquivo
-• Quantidade de registros
-• Estado de fragmentacao
-• Performance do disco
-
-ESTIMATIVAS:
-• Arquivo pequeno (<10MB): Segundos
-• Arquivo medio (10-100MB): 1-5 minutos
-• Arquivo grande (100MB-1GB): 5-30 minutos
-• Arquivo muito grande (>1GB): 30+ minutos
-
-MULTIPLAS BASES:
-Se sistema possui multiplas bases (base2, base3),
-sera solicitado escolher qual base processar.
-
-INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────────
-
-USUARIOS:
-• Sistema deve estar sem usuarios
-• Ou pelo menos sem usar arquivo especifico
-• Rebuild em arquivo em uso pode falhar
-
-BACKUP:
-• Recomenda-se backup antes de rebuild
-• Principalmente em arquivos criticos
-• Pode usar: Menu Ferramentas > Backup
-
-ESPACO EM DISCO:
-• Necessario espaco = tamanho do arquivo
-• Rebuild cria arquivo temporario
-• Depois substitui o original
-
-LOGS:
-Operacoes registradas em:
-tools/logs/atualiza.[DATA].log
-
-SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
-
-PROBLEMA: "jutil not found"
-SOLUCAO: Verificar instalacao IsCOBOL
-
-PROBLEMA: "File is locked"
-SOLUCAO: Fechar sistema e tentar novamente
-
-PROBLEMA: "Permission denied"
-SOLUCAO: Verificar permissoes do arquivo
-
-PROBLEMA: "No space left on device"
-SOLUCAO: Liberar espaco em disco
-
-PROBLEMA: Rebuild travou
-SOLUCAO: Aguardar ou verificar se processo esta ativo
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_backup() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DE BACKUP(S)
-═══════════════════════════════════════════════════════════════════
-
-Sistema completo de backup e restauracao da base de dados.
-
-DISPONIVEL PARA: Sistemas sem banco de dados (BANCO=n)
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - BACKUP DA BASE DE DADOS
-    Cria backup completo ou incremental.
-    
-    TIPOS:
-    
-    COMPLETO:
-    • Todos os arquivos da base
-    • Exclui: *.zip, *.tar, *.tar.gz
-    • Formato: [EMPRESA]_completo_[DATA_HORA].zip
-    
-    INCREMENTAL:
-    • Apenas arquivos modificados
-    • Baseado em data de referencia
-    • Formato: [EMPRESA]_incremental_[DATA_HORA].zip
-    
-    PROCESSO:
-    1. Escolher base (se multiplas)
-    2. Escolher tipo de backup
-    3. Verificar backups recentes
-    4. Criar backup com progresso
-    5. Opcionalmente enviar para servidor
-    
-    DESTINO:
-    tools/backup/
-
-2 - RESTAURAR BASE DE DADOS
-    Restaura backup anterior.
-    
-    OPCOES:
-    • Restauracao completa (todos arquivos)
-    • Restauracao especifica (um arquivo)
-    
-    PROCESSO COMPLETO:
-    1. Listar backups disponiveis
-    2. Selecionar backup
-    3. Confirmar operacao
-    4. Descompactar para base
-    
-    PROCESSO ESPECIFICO:
-    1. Listar backups disponiveis
-    2. Selecionar backup
-    3. Informar nome do arquivo
-    4. Extrair apenas esse arquivo
-    
-    IMPORTANTE:
-    Restauracao sobrescreve arquivos existentes!
-
-3 - ENVIAR BACKUP
-    Envia backup para servidor remoto.
-    
-    PROCESSO:
-    1. Listar backups locais
-    2. Selecionar backup
-    3. Confirmar envio
-    4. Transferir via rsync/sftp
-    5. Opcionalmente remover local
-
-BACKUP COMPLETO:
-───────────────────────────────────────────────────────────────────
-
-O QUE INCLUI:
-• Todos arquivos de dados (.dat)
-• Arquivos de indice (.idx, .key)
-• Arquivos de configuracao (.cfg)
-• Logs importantes
-
-O QUE EXCLUI:
-• Arquivos ja compactados (.zip, .tar)
-• Backups antigos (*.bak)
-• Temporarios do sistema
-
-QUANDO FAZER:
-• Antes de atualizacoes importantes
-• Diariamente (final do dia)
-• Antes de manutencoes
-• Semanalmente (minimo)
-
-BACKUP INCREMENTAL:
-───────────────────────────────────────────────────────────────────
-
-O QUE INCLUI:
-Apenas arquivos modificados apos data especificada
-
-VANTAGENS:
-• Mais rapido
-• Menor espaco
-• Backup frequente viavel
-
-QUANDO FAZER:
-• Durante o dia (varias vezes)
-• Entre backups completos
-• Para dados em constante mudanca
-
-ESTRATEGIA RECOMENDADA:
-• Completo: Diario (noite)
-• Incremental: A cada 2-4 horas
-
-FORMATO DOS ARQUIVOS:
-───────────────────────────────────────────────────────────────────
-
-NOMENCLATURA:
-[EMPRESA]_[TIPO]_[AAAAMMDDHHMMSS].zip
-
-EXEMPLO:
-MINHAEMP_completo_20260108120000.zip
-MINHAEMP_incremental_20260108150000.zip
-
-COMPONENTES:
-• EMPRESA: Nome configurado no setup
-• TIPO: completo ou incremental
-• DATA: Ano, mes, dia, hora, minuto, segundo
-
-LOCALIZACAO:
-tools/backup/
-
-RETENCAO:
-• Local: 30 dias (expurgador)
-• Servidor: Conforme politica empresa
-
-PROCESSO DE BACKUP:
-───────────────────────────────────────────────────────────────────
-
-PASSO 1: VERIFICACAO PREVIA
-• Verifica backups recentes (ultimos 2 dias)
-• Alerta se ja existe
-• Permite criar adicional
-
-PASSO 2: PREPARACAO
-• Muda para diretorio da base
-• Define nome do arquivo
-• Prepara comando de compactacao
-
-PASSO 3: COMPACTACAO
-• Executa em background
-• Mostra progresso (spinner)
-• Registra em log
-
-PASSO 4: VERIFICACAO
-• Confirma criacao do arquivo
-• Verifica integridade do ZIP
-• Valida tamanho minimo
-
-PASSO 5: ENVIO (opcional)
-• Oferece enviar para servidor
-• Usa rsync ou sftp
-• Mantem ou remove local
-
-PROCESSO DE RESTAURACAO:
-───────────────────────────────────────────────────────────────────
-
-PASSO 1: SELECAO
-• Lista backups disponiveis
-• Mostra data/hora e tamanho
-• Permite filtrar por nome
-
-PASSO 2: CONFIRMACAO
-• Exibe backup selecionado
-• Alerta sobre sobrescrita
-• Solicita confirmacao
-
-PASSO 3: DESCOMPACTACAO
-• Extrai arquivos
-• Mostra progresso
-• Sobrescreve existentes
-
-PASSO 4: VERIFICACAO
-• Confirma arquivos restaurados
-• Verifica integridade
-• Registra em log
-
-INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────────
-
-ESPACO NECESSARIO:
-• Backup: ~igual ao tamanho da base
-• Compactacao reduz para 30-50%
-• Manter espaco livre minimo: 5GB
-
-TEMPO DE PROCESSAMENTO:
-• Completo: 5-30 minutos
-• Incremental: 1-5 minutos
-• Depende: tamanho, velocidade disco
-
-MULTIPLAS BASES:
-Se configurado multiplas bases:
-• Sistema solicita escolher qual
-• Pode fazer backup de cada uma
-• Nome do arquivo inclui identificacao
-
-SEGURANCA:
-• Backups nao criptografados
-• Proteja com permissoes adequadas
-• Servidor remoto deve ser seguro
-
-AUTOMACAO:
-Para backup automatico, use cron:
-0 22 * * * /caminho/atualiza.sh --backup-auto
-
-SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
-
-PROBLEMA: "Backup muito lento"
-SOLUCAO: Base muito grande, considere incremental
-
-PROBLEMA: "No space left on device"
-SOLUCAO: Limpe backups antigos ou aumente disco
-
-PROBLEMA: "Arquivo corrompido"
-SOLUCAO: Backup pode ter falhado, use anterior
-
-PROBLEMA: "Erro ao enviar para servidor"
-SOLUCAO: Verifique conectividade e credenciais
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_transferencia() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DE ENVIAR E RECEBER ARQUIVO(S)
-═══════════════════════════════════════════════════════════════════
-
-Sistema de transferencia de arquivos entre cliente e servidor.
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - ENVIAR ARQUIVO(S)
-    Envia arquivo para servidor remoto.
-    
-    PROCESSO:
-    1. Informar diretorio de origem
-       • Caminho completo ou
-       • ENTER para usar padrao (tools/envia)
-    
-    2. Informar nome do arquivo
-       • Nome completo com extensao
-       • Ex: relatorio.pdf
-    
-    3. Informar diretorio destino no servidor
-       • Caminho completo no servidor
-       • Ex: /home/usuario/documentos
-    
-    4. Fornecer senha do usuario remoto
-    
-    5. Transferencia via rsync
-       • Mostra progresso
-       • Mantem permissoes
-       • Compressao automatica
-    
-    PROTOCOLOS:
-    • RSYNC: Transferencia eficiente
-    • SSH: Seguranca na conexao
-    • Porta: Configuravel (padrao 41122)
-
-2 - RECEBER ARQUIVO(S)
-    Baixa arquivo do servidor.
-    
-    PROCESSO:
-    1. Informar diretorio de origem (servidor)
-       • Caminho completo no servidor
-       • Ex: /home/usuario/backup
-    
-    2. Informar nome do arquivo
-       • Nome completo com extensao
-       • Ex: dados.zip
-    
-    3. Informar diretorio destino (local)
-       • Caminho completo ou
-       • ENTER para usar padrao (tools/recebe)
-    
-    4. Fornecer senha do usuario remoto
-    
-    5. Transferencia via sftp
-       • Mostra progresso
-       • Verifica integridade
-    
-    PROTOCOLOS:
-    • SFTP: Protocolo seguro
-    • SSH: Criptografia
-    • Porta: Configuravel
-
-USO DE DIRETORIOS PADRAO:
-───────────────────────────────────────────────────────────────────
-
-ENVIO:
-Origem padrao: tools/envia/
-• Coloque arquivo neste diretorio
-• Pressione ENTER ao solicitar origem
-• Sistema usa automaticamente
-
-RECEBIMENTO:
-Destino padrao: tools/recebe/
-• Arquivo baixado neste diretorio
-• Pressione ENTER ao solicitar destino
-• Facilita localizacao
-
-VANTAGENS:
-• Organizacao centralizada
-• Facil localizacao de arquivos
-• Limpeza automatica (expurgador)
-
-CONFIGURACOES DE CONEXAO:
-───────────────────────────────────────────────────────────────────
-
-SERVIDOR:
-• IP: Configurado no setup
-• Porta: Padrao 41122 (SSH)
-• Usuario: Configurado no setup
-
-CREDENCIAIS:
-• Senha solicitada em cada operacao
-• Por seguranca, nao e armazenada
-• Ou use SSH keys (modo facilitado)
-
-MODO FACILITADO:
-Se configurado acessossh=s:
-• Usa chaves SSH
-• Sem solicitacao de senha
-• Conexao persistente
-• Mais rapido e seguro
-
-TIPOS DE ARQUIVO:
-───────────────────────────────────────────────────────────────────
-
-SUPORTADOS:
-• Documentos: .pdf, .doc, .docx, .txt
-• Planilhas: .xls, .xlsx, .csv
-• Imagens: .jpg, .png, .gif
-• Compactados: .zip, .tar, .gz
-• Backups: .bak, .backup
-• Dados: .dat, .db
-• Logs: .log
-• Executaveis: .sh, .exe
-• Todos os demais formatos
-
-LIMITACOES:
-• Tamanho: Limitado por disco
-• Permissoes: Requer acesso adequado
-• Rede: Depende de conectividade
-
-CASOS DE USO:
-───────────────────────────────────────────────────────────────────
-
-ENVIAR:
-• Relatorios para analise
-• Logs para suporte tecnico
-• Backups para servidor
-• Documentacao atualizada
-• Arquivos de configuracao
-• Exports de dados
-
-RECEBER:
-• Atualizacoes do sistema
-• Arquivos de configuracao
-• Manuais e documentacao
-• Templates e modelos
-• Imports de dados
-• Patches e correcoes
-
-SEGURANCA:
-───────────────────────────────────────────────────────────────────
-
-CRIPTOGRAFIA:
-• SSH: Todos dados criptografados
-• Senhas: Nunca em texto claro
-• Conexao: Protocolo seguro
-
-VALIDACAO:
-• Integridade: Checksums automaticos
-• Permissoes: Preservadas na transferencia
-• Sobrescrita: Confirmacao requerida
-
-AUDITORIA:
-• Logs: Todas operacoes registradas
-• Data/Hora: Timestamp completo
-• Usuario: Identificacao preservada
-
-SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
-
-PROBLEMA: "Connection refused"
-SOLUCAO: Verificar IP, porta e firewall
-
-PROBLEMA: "Permission denied"
-SOLUCAO: Verificar credenciais e permissoes
-
-PROBLEMA: "No such file or directory"
-SOLUCAO: Confirmar caminho completo e correto
-
-PROBLEMA: "Disk quota exceeded"
-SOLUCAO: Liberar espaco no destino
-
-PROBLEMA: Transferencia muito lenta
-SOLUCAO: Verificar velocidade da rede
-
-PROBLEMA: "Host key verification failed"
-SOLUCAO: Limpar ~/.ssh/known_hosts ou aceitar novo
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_setups() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DE SETUP DO SISTEMA
-═══════════════════════════════════════════════════════════════════
-
-Gerenciamento de configuracoes do sistema SAV.
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - CONSULTA DE SETUP
-    Visualiza todas as configuracoes atuais.
-    
-    INFORMACOES EXIBIDAS:
-    • Sistema e versao
-    • Diretorios configurados
-    • Bibliotecas em uso
-    • Conexao de rede
-    • Modo online/offline
-    • Parametros de backup
-    
-    USO:
-    • Verificar configuracao atual
-    • Documentar instalacao
-    • SOLUCAO DE PROBLEMAS
-    • Auditoria
-
-2 - MANUTENCAO DE SETUP
-    Permite editar configuracoes existentes.
-    
-    PARAMETROS EDITAVEIS:
-    • sistema: iscobol ou cobol
-    • verclass: Versao do IsCOBOL
-    • BANCO: Sistema usa banco (s/n)
-    • acessossh: Modo facilitado (s/n)
-    • IPSERVER: IP do servidor
-    • Offline: Modo offline (s/n)
-    • ENVIABACK: Diretorio backup servidor
-    • EMPRESA: Nome da empresa
-    • base, base2, base3: Diretorios dados
-    
-    PROCESSO:
-    1. Sistema carrega valores atuais
-    2. Para cada parametro:
-       • Mostra valor atual
-       • Pergunta se deseja alterar
-       • Solicita novo valor
-    3. Recria arquivos de configuracao
-    4. Recarrega configuracoes
-    
-    BACKUP AUTOMATICO:
-    Sistema cria .atualizac.bak antes de editar
-
-3 - VALIDAR CONFIGURACAO
-    Testa todas as configuracoes.
-    
-    VALIDACOES:
-    • Arquivos de configuracao existem
-    • Variaveis obrigatorias definidas
-    • Diretorios existem e acessiveis
-    • Comandos disponiveis
-    • Conectividade (modo online)
-    
-    RESULTADO:
-    • Erros: Problemas criticos
-    • Avisos: Problemas nao criticos
-    • OK: Tudo correto
-    
-    RECOMENDACAO:
-    Execute apos alteracoes ou problemas
-
-ARQUIVO DE CONFIGURACAO:
-───────────────────────────────────────────────────────────────────
-
-LOCALIZACAO:
-cfg/.atualizac
-
-FORMATO:
-Arquivo texto com pares chave=valor
-
-EXEMPLO:
-sistema=iscobol
-verclass=2024
-BANCO=n
-EMPRESA=MINHAEMP
-base=/dados_jisam
-IPSERVER=192.168.1.100
-Offline=n
-
-IMPORTANTE:
-• Nao adicionar espacos em volta do =
-• Valores sensiveis a maiusculas/minusculas
-• Sem aspas nos valores
-• Comentarios com #
-
-PARAMETROS PRINCIPAIS:
-───────────────────────────────────────────────────────────────────
-
-sistema:
-• iscobol: Sistema IsCOBOL
-• cobol: Micro Focus COBOL
-• Determina modulos a usar
-
-verclass:
-• 2018, 2020, 2023, 2024
-• Versao do IsCOBOL
-• Define compatibilidade biblioteca
-
-BANCO:
-• s: Sistema usa banco de dados
-• n: Sistema file-based
-• Afeta menus disponiveis
-
-base:
-• Diretorio principal de dados
-• Caminho relativo à raiz
-• Ex: /dados_jisam
-
-EMPRESA:
-• Nome da empresa (sem espacos)
-• Usado em backups
-• Identificacao de instalacao
-
-IPSERVER:
-• IP do servidor SAV
-• Para atualizacoes e backups
-• Ex: 192.168.1.100
-
-Offline:
-• s: Modo offline (sem servidor)
-• n: Modo online (com servidor)
-• Determina fonte de atualizacoes
-
-BIBLIOTECAS:
-───────────────────────────────────────────────────────────────────
-
-SAVATU1, SAVATU2, SAVATU3, SAVATU4:
-Padroes de nome dos arquivos de biblioteca
-
-FORMATO:
-tempSAV_IS[ANO]_[TIPO]_
-
-EXEMPLO (IsCOBOL 2024):
-SAVATU1=tempSAV_IS2024_classA_
-SAVATU2=tempSAV_IS2024_classB_
-SAVATU3=tempSAV_IS2024_tel_isc_
-SAVATU4=tempSAV_IS2024_xml_
-
-ATUALIZACAO AUTOMATICA:
-Ao mudar verclass, SAVATUs sao atualizados
-
-DIRETORIOS FIXOS:
-───────────────────────────────────────────────────────────────────
-
-Definidos automaticamente em tools/:
-• /progs - Programas atualizados
-• /olds - Backups de reversao
-• /logs - Arquivos de log
-• /cfg - Configuracoes
-• /backup - Backups da base
-• /envia - Arquivos para enviar
-• /recebe - Arquivos recebidos
-• /libs - Bibliotecas do sistema
-
-NAO MODIFICAR estes diretorios!
-
-CONFIGURACAO INICIAL:
-───────────────────────────────────────────────────────────────────
-
-Para nova instalacao, use:
-./libs/setup.sh
-
-WIZARD INTERATIVO:
-1. Escolhe sistema (IsCOBOL/Cobol)
-2. Define versao
-3. Configura banco de dados
-4. Define diretorios
-5. Configura rede
-6. Define backup
-7. Informacoes empresa
-8. Cria configuracoes
-9. Configura SSH (opcional)
-
-RECONFIGURACAO:
-Para modificar instalacao existente:
-./libs/setup.sh --edit
-
-SOLUCAO DE PROBLEMAS:
-───────────────────────────────────────────────────────────────────
-
-PROBLEMA: "Arquivo .atualizac nao encontrado"
-SOLUCAO: Execute ./libs/setup.sh
-
-PROBLEMA: "Variavel nao definida"
-SOLUCAO: Execute manutencao de setup
-
-PROBLEMA: "Diretorio nao encontrado"
-SOLUCAO: Verifique paths no .atualizac
-
-PROBLEMA: Alteracoes nao surtem efeito
-SOLUCAO: Saia e entre novamente no sistema
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_menu_lembretes() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-MENU DE LEMBRETES - BLOCO DE NOTAS
-═══════════════════════════════════════════════════════════════════
-
-Sistema simples de anotacoes e lembretes.
-
-OPCOES DISPONIVEIS:
-───────────────────────────────────────────────────────────────────
-
-1 - ESCREVER NOVA NOTA
-    Cria nova anotacao.
-    
-    PROCESSO:
-    1. Digite o conteudo da nota
-    2. Pode ser multiplas linhas
-    3. Pressione Ctrl+D para finalizar
-    4. Nota e salva automaticamente
-    
-    FORMATO:
-    Texto livre, sem formatacao especial
-    
-    EXEMPLO:
-    Atualizar sistema dia 15/01
-    Pendente: Testar modulo vendas
-    Lembrar: Backup completo sexta
-
-2 - VISUALIZAR NOTA
-    Exibe notas salvas.
-    
-    APRESENTACAO:
-    • Moldura ao redor do texto
-    • Formatacao preservada
-    • Facil leitura
-    
-    USO:
-    Consultar anotacoes e lembretes
-
-3 - EDITAR NOTA
-    Modifica nota existente.
-    
-    EDITOR:
-    • nano (padrao)
-    • ou editor definido em $EDITOR
-    
-    COMANDOS NANO:
-    • Ctrl+O = Salvar
-    • Ctrl+X = Sair
-    • Ctrl+K = Recortar linha
-    • Ctrl+U = Colar
-    
-    MODIFICACAO:
-    • Adicionar linhas
-    • Remover linhas
-    • Alterar texto
-
-4 - APAGAR NOTA
-    Remove todas as notas.
-    
-    PROCESSO:
-    1. Sistema solicita confirmacao
-    2. Se confirmar (S), apaga tudo
-    3. Se negar (N), cancela
-    
-    IMPORTANTE:
-    Acao irreversivel! Notas sao perdidas.
-
-ARQUIVO DE NOTAS:
-───────────────────────────────────────────────────────────────────
-
-LOCALIZACAO:
-cfg/atualizal
-
-FORMATO:
-Arquivo texto simples
-
-CONTEUDO:
-Todas as notas em sequencia
-
-PERSISTENCIA:
-Notas sao mantidas entre sessoes
-
-CASOS DE USO:
-───────────────────────────────────────────────────────────────────
-
-TAREFAS PENDENTES:
-[ ] Atualizar biblioteca versao 5280
-[ ] Verificar espaco em disco
-[ ] Testar recuperacao de arquivos
-
-HISTORICO DE MANUTENCAO:
-10/01 - Atualizado programa ADV000 
-11/01 - Backup completo realizado
-12/01 - Limpeza de temporarios
-
-PROBLEMAS CONHECIDOS:
-- Programa ADV000 lento (investigar)
-- Erro esporadico no ADV000
-- Aguardando correcao do suporte
-
-CONTATOS IMPORTANTES:
-Email: suporte@sav.com.br
-Horario: 8h às 18h
-
-SENHAS E ACESSOS:
-(Nao recomendado para informacoes sensiveis!)
-
-INFORMACOES IMPORTANTES:
-───────────────────────────────────────────────────────────────────
-
-SEGURANCA:
-• Notas em texto simples
-• Sem criptografia
-• Evite dados sensiveis
-• Qualquer usuario pode ler
-
-TAMANHO:
-• Sem limite de caracteres
-• Sem limite de linhas
-• Cuidado com arquivo muito grande
-
-BACKUP:
-• Arquivo nao e automaticamente backupado
-• Inclua em backup manual se necessario
-• Ou copie manualmente
-
-ALTERNATIVAS:
-Para anotacoes mais complexas:
-• Use sistema externo de notas
-• Software de gestao de tarefas
-• Wiki ou documentacao colaborativa
-
-EXIBICAO AUTOMATICA:
-Na inicializacao do sistema:
-• Se arquivo existe
-• Notas sao exibidas automaticamente
-• util para lembretes importantes
-• Configure para nao exibir se preferir
-
-DICAS:
-───────────────────────────────────────────────────────────────────
-
-ORGANIZACAO:
-Use marcadores e secoes:
-=== PENDENCIAS ===
-=== HISTORICO ===
-=== CONTATOS ===
-
-DATAS:
-Sempre inclua data nas anotacoes:
-[10/01/2026] Descricao do evento
-
-PRIORIDADES:
-Use marcadores:
-!!! Urgente
-!! Importante
-! Normal
-
-LIMPEZA:
-Remova informacoes antigas periodicamente
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
-_help_generico() {
-    local conteudo
-    conteudo=$(cat << 'EOF'
-AJUDA GERAL - SISTEMA SAV
-═══════════════════════════════════════════════════════════════════
-
-Sistema de Atualizacao SAV - Gerenciamento completo de programas,
-bibliotecas e manutencao do sistema.
-
-NAVEGACAO:
-───────────────────────────────────────────────────────────────────
-
-MENUS:
-• Digite o numero da opcao desejada
-• Pressione ENTER para confirmar
-• 9 = Voltar ao menu anterior
-• Ctrl+C = Cancelar operacao
-
-AJUDA CONTEXTUAL:
-• Pressione H a qualquer momento
-• Ou digite  para ajuda
-• M = Manual completo
-
-COMANDOS GERAIS:
-───────────────────────────────────────────────────────────────────
-
-CONFIRMACOES:
-• S ou s = Sim
-• N ou n = Nao
-• ENTER = Usa valor padrao [maiusculo]
-
-ENTRADA DE DADOS:
-• ENTER vazio = Cancelar ou usar padrao
-• ESC = Cancelar (quando disponivel)
-• Ctrl+C = Interromper processo
-
-ESTRUTURA DO SISTEMA:
-───────────────────────────────────────────────────────────────────
-
-DIRETORIOS PRINCIPAIS:
-/raiz/
-  classes/      - Programas compilados
-  tel_isc/      - Telas do sistema
-  xml/          - Configuracoes XML
-  dados_jisam/  - Base de dados
-  
-tools/
-  libs/         - Bibliotecas do atualiza
-  cfg/          - Configuracoes
-  logs/         - Arquivos de log
-  backup/       - Backups da base
-  olds/         - Backups de programas
-  progs/        - Programas atualizados
-  envia/        - Para envio
-  recebe/       - Recebidos
-
-ARQUIVOS IMPORTANTES:
-───────────────────────────────────────────────────────────────────
-
-cfg/.atualizac        - Configuracao principal
-cfg/atualizat         - Lista de temporarios
-cfg/atualizaj         - Arquivos principais para o rodar e rebuild
-cfg/atualizal         - Notas/lembretes
-logs/atualiza.log     - Log de operacoes
-logs/limpando.log     - Log de limpeza
-
-CONCEITOS IMPORTANTES:
-───────────────────────────────────────────────────────────────────
-
-PROGRAMA:
-Arquivo executavel individual (.class ou .int)
-
-BIBLIOTECA:
-Conjunto completo de programas do sistema
-
-BACKUP:
-Copia de seguranca de dados
-
-REBUILD:
-Reorganizacao de arquivo de dados
-
-TEMPORARIOS:
-Arquivos gerados durante operacao
-
-EXPURGADOR:
-Limpeza automatica de arquivos antigos
-
-PARA MAIS INFORMACOES:
-───────────────────────────────────────────────────────────────────
-
-• Pressione M para manual completo
-• Use ? em cada menu para ajuda especifica
-• Consulte documentacao online
-• Entre em contato com suporte SAV
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-}
-
 #---------- CRIACAO DO MANUAL PADRAO ----------#
 
-_criar_manual_padrao() {
-    cat > "$MANUAL_FILE" << 'MANUAL_EOF'
-═══════════════════════════════════════════════════════════════════
-
-INDICE:
-───────────────────────────────────────────────────────────────────
-1. Introducao
-2. Menu Principal
-3. Atualizacao de Programas
-4. Atualizacao de Biblioteca
-5. Ferramentas
-6. Configuracoes
-7. Resolucao de Problemas
-8. Contatos e Suporte
-
-═══════════════════════════════════════════════════════════════════
-1. INTRODUCAO
-═══════════════════════════════════════════════════════════════════
-
-O Sistema SAV e uma ferramenta completa para gerenciamento,
-atualizacao e manutencao de sistemas de gestao empresarial.
-
-
-PRINCIPAIS FUNCIONALIDADES:
-• Atualizacao de programas individuais ou em pacote
-• Atualizacao completa de bibliotecas
-• Backup e restauracao de dados
-• Recuperacao de arquivos corrompidos
-• Limpeza de arquivos temporarios
-• Transferencia de arquivos cliente/servidor
-• Gestao de configuracoes
-
-REQUISITOS DO SISTEMA:
-• Linux (qualquer distribuicao moderna)
-• Bash 4.0 ou superior
-• Utilitarios: zip, unzip, rsync, ssh
-• Espaco em disco: minimo 5GB livres
-• IsCOBOL ou Micro Focus COBOL (conforme instalacao)
-
-
-
-
-═══════════════════════════════════════════════════════════════════
-2. MENU PRINCIPAL
-═══════════════════════════════════════════════════════════════════
-
-Ponto de entrada do sistema com acesso a todas funcionalidades.
-
-2.1 OPCOES DO MENU PRINCIPAL
-
-[Para conteudo detalhado, use ? no menu]
-
-1 - Atualizar Programa(s)
-2 - Atualizar Biblioteca
-3 - Versao do IsCOBOL
-4 - Versao do Linux
-5 - Ferramentas
-9 - Sair do Sistema
-
-═══════════════════════════════════════════════════════════════════
-3. ATUALIZACAO DE PROGRAMAS
-═══════════════════════════════════════════════════════════════════
-
-3.1 PROGRAMAS ONLINE
-
-Atualiza programas diretamente do servidor SAV.
-
-PASSO A PASSO:
-1. Menu Principal > 1 > 1
-2. Informe nome do programa (MAIUSCULAS)
-3. Escolha tipo compilacao (1=Normal, 2=Debug)
-4. Repita para ate 6 programas
-5. ENTER para finalizar
-6. Aguarde download e instalacao
-
-EXEMPLO PRATICO:
-Nome do programa: CADCLI [ENTER]
-Tipo de compilacao: 1 [ENTER]
-Nome do programa: CADFOR [ENTER]
-Tipo de compilacao: 2 [ENTER]
-Nome do programa: [ENTER - finaliza]
-
-3.2 PROGRAMAS OFFLINE
-
-Para ambientes sem conexao com servidor.
-
-PREPARACAO:
-1. Copie arquivos .zip para diretorio offline
-2. Arquivos devem seguir padrao: [PROG]-class[VER].zip
-
-PROCESSO:
-1. Menu Principal > 1 > 2
-2. Informe programas (igual modo online)
-3. Sistema busca em diretorio offline
-4. Instala programas encontrados
-
-3.3 PROGRAMAS EM PACOTE
-
-Atualizacao em massa atraves de pacotes pre-definidos.
-
-VANTAGENS:
-• Mais rapido
-• Garante compatibilidade
-• Menos propenso a erros
-
-PROCESSO:
-Similar ao online/offline, mas usa nome do pacote.
-
-3.4 REVERTER PROGRAMA
-
-Volta programa para versao anterior usando backup automatico.
-
-QUANDO USAR:
-• Problema apos atualizacao
-• Incompatibilidade detectada
-• Necessidade de versao especifica
-
-LIMITACAO:
-Apenas ultimo backup disponivel (ultima atualizacao).
-
-═══════════════════════════════════════════════════════════════════
-4. ATUALIZACAO DE BIBLIOTECA
-═══════════════════════════════════════════════════════════════════
-
-Atualizacao completa do sistema, incluindo todos programas,
-telas, configuracoes XML e componentes auxiliares.
-
-4.1 QUANDO ATUALIZAR BIBLIOTECA
-
-OBRIGATORIO:
-• Mudanca de versao principal do sistema
-• Orientacao do suporte tecnico
-• Correcoes criticas de seguranca
-
-RECOMENDADO:
-• Atualizacoes mensais
-• Novos recursos disponiveis
-• Performance degradada
-
-EVITAR:
-• Horario comercial (usar noite/fim de semana)
-• Sem backup recente
-• Problemas nao resolvidos
-
-4.2 TIPOS DE BIBLIOTECA
-
-TRANSPC:
-Biblioteca de transporte e comunicacao
-
-SAVATU:
-Biblioteca principal do sistema SAV
-• Mais comum
-• Mais abrangente
-• Usado na maioria das atualizacoes
-
-4.3 PROCESSO DE ATUALIZACAO
-
-PREPARACAO:
-1. Fazer backup completo
-2. Verificar espaco em disco (5GB minimo)
-3. Avisar usuarios (sistema ficara indisponivel)
-MANUAL_EOF
-
-_mensagec "${GREEN}" "Manual padrao criado em: $MANUAL_FILE"
+# Verifica se manual.txt existe, se nao, avisa o usuário
+_verificar_manual() {
+    if [[ ! -f "$MANUAL_FILE" ]]; then
+        _linha "=" "${YELLOW}"
+        _mensagec "${YELLOW}" "  AVISO: Arquivo manual.txt nao encontrado!"
+        _linha "=" "${YELLOW}"
+        printf "\n"
+        _mensagec "${WHITE}" "O arquivo manual.txt deve estar em: ${CYAN}$MANUAL_FILE${NORM}"
+        printf "\n"
+        _mensagec "${WHITE}" "Por favor, crie o arquivo manual.txt com o conteúdo"
+        _mensagec "${WHITE}" "completo da documentaçao do sistema."
+        printf "\n"
+        _linha "=" "${YELLOW}"
+        return 1
+    fi
+    return 0
 }
 
 #---------- ATALHO RAPIDO DE AJUDA ----------#
 
-# Exibe menu rapido de ajuda
+# Exibe menu rápido de ajuda
 _ajuda_rapida() {
+    local contexto="${1:-ajuda}"
+    local secao_nome=""
+    local conteudo=""
+    
+    # Mapeia contexto para nome da seçao no manual.txt
+    case "$contexto" in
+        ajuda)
+            secao_nome="AJUDA_RAPIDA"
+            ;;
+        *)
+            secao_nome="MENU_PRINCIPAL"
+            ;;
+    esac
+    
     clear
     _linha "=" "${CYAN}"
-    _mensagec "${CYAN}" "AJUDA RAPIDA"
+    _mensagec "${CYAN}" "AJUDA - ${contexto^^}"
     _linha "=" "${CYAN}"
     printf "\n"
     
-   local conteudo
-   local conteudo=$(cat << EOF 
-COMANDOS DE AJUDA:
-───────────────────────────────────────────────────────────────────
-? ou help    = Ajuda contextual do menu atual
-M ou manual  = Manual completo do sistema
-
-NAVEGACAO:
-───────────────────────────────────────────────────────────────────
-[Numero]     = Selecionar opcao
-9            = Voltar ao menu anterior
-Ctrl+C       = Cancelar operacao
-ENTER        = Confirmar ou usar padrao
-
-CONFIRMACOES:
-───────────────────────────────────────────────────────────────────
-S ou s       = Sim
-N ou n       = Nao
-ENTER vazio  = Usa valor padrao [indicado em maiuscula]
-
-DICAS:
-───────────────────────────────────────────────────────────────────
-• Nomes de programas sempre em MAIuSCULAS
-• Leia mensagens com atencao
-• Faca backup antes de atualizacoes importantes
-• Em caso de duvida, consulte o manual completo
-
-SUPORTE:
-───────────────────────────────────────────────────────────────────
-Email: suporte@sav.com.br
-Horario: Segunda a Sexta, 8h às 18h
-EOF
-)
-    _exibir_paginado "$conteudo" 25
-
+    # Lê e exibe a seçao do manual
+    if conteudo=$(_ler_secao_manual "$secao_nome"); then
+        _exibir_paginado "$conteudo" 25
+    else
+        _mensagec "${YELLOW}" "Ajuda para '$contexto' nao disponivel no momento."
+        _mensagec "${YELLOW}" "Use 'M' para ver o manual completo."
+    fi
+    
     printf "\n"
-    _press
+    _linha "-" "${GREEN}"
+    _mensagec "${YELLOW}" "Pressione qualquer tecla para voltar ou 'M' para manual completo"
+    _linha "-" "${GREEN}"
+    
+    read -rsn1 resposta
+    if [[ "${resposta,,}" == "m" ]]; then
+        _exibir_manual_completo
+    fi
+}
+
+_ajuda_no_geral() {
+    local contexto="${1:-ajuda_no_geral}"
+    local secao_nome=""
+    local conteudo=""
+    
+    # Mapeia contexto para nome da seçao no manual.txt
+    case "$contexto" in
+        ajuda_no_geral)
+            secao_nome="AJUDA_NO_GERAL"
+            ;;
+        *)
+            secao_nome="MENU_PRINCIPAL"
+            ;;
+    esac
+    
+    clear
+    _linha "=" "${CYAN}"
+    _mensagec "${CYAN}" "AJUDA - ${contexto^^}"
+    _linha "=" "${CYAN}"
+    printf "\n"
+    
+    # Lê e exibe a seçao do manual
+    if conteudo=$(_ler_secao_manual "$secao_nome"); then
+        _exibir_paginado "$conteudo" 25
+    else
+        _mensagec "${YELLOW}" "Ajuda para '$contexto' nao disponivel no momento."
+        _mensagec "${YELLOW}" "Use 'M' para ver o manual completo."
+    fi
+    
+    printf "\n"
+    _linha "-" "${GREEN}"
+    _mensagec "${YELLOW}" "Pressione qualquer tecla para voltar ou 'M' para manual completo"
+    _linha "-" "${GREEN}"
+    
+    read -rsn1 resposta
+    if [[ "${resposta,,}" == "m" ]]; then
+        _exibir_manual_completo
+    fi
 }
 
 #---------- BUSCA NO MANUAL ----------#
 
 # Busca termo no manual
-# Parametros opcionais nao utilizados; sempre solicita termo ao usuario
 _buscar_manual() {
     local termo=""
+    
+    if ! _verificar_manual; then
+        _press
+        return 1
+    fi
     
     read -rp "${YELLOW}Termo para buscar: ${NORM}" termo
     
     if [[ -z "$termo" ]]; then
         _mensagec "${RED}" "Nenhum termo informado"
         return 1
-    fi
-    
-    if [[ ! -f "$MANUAL_FILE" ]]; then
-        _criar_manual_padrao
     fi
     
     clear
@@ -2128,26 +386,26 @@ _buscar_manual() {
     printf "\n"
     
     # Buscar e destacar resultados
-    if grep -in "$termo" "$MANUAL_FILE"; then
+    if grep -in --color=always "$termo" "$MANUAL_FILE"; then
         printf "\n"
-        _mensagec "${GREEN}" "Busca concluida"
+        _mensagec "${GREEN}" "Busca concluída"
     else
         _mensagec "${YELLOW}" "Nenhum resultado encontrado para: $termo"
     fi
     
     printf "\n"
     _press
-    
 }
 
 #---------- EXPORTAR MANUAL ----------#
 
 # Exporta manual para arquivo externo
 _exportar_manual() {
-    local destino="${1:-$HOME/manual_sav.txt}"
+    local destino="${1:-$TOOLS_DIR/manual_sav.txt}"
     
-    if [[ ! -f "$MANUAL_FILE" ]]; then
-        _criar_manual_padrao
+    if ! _verificar_manual; then
+        _press
+        return 1
     fi
     
     if cp "$MANUAL_FILE" "$destino"; then
@@ -2160,44 +418,6 @@ _exportar_manual() {
     _press
 }
 
-#---------- MENU PRINCIPAL DE AJUDA ----------#
-
-# Menu principal do sistema de ajuda
-_menu_ajuda_principal() {
-    while true; do
-        clear
-        _linha "=" "${CYAN}"
-        _mensagec "${CYAN}" "SISTEMA DE AJUDA"
-        _linha "=" "${CYAN}"
-        printf "\n"
-        
-        printf "%s\n" "${GREEN}1${NORM} - Manual Completo"
-        printf "%s\n" "${GREEN}2${NORM} - Ajuda Rapida"
-        printf "%s\n" "${GREEN}3${NORM} - Buscar no Manual"
-        printf "%s\n" "${GREEN}4${NORM} - Exportar Manual"
-        printf "%s\n" "${GREEN}5${NORM} - Ajuda por Contexto"
-        printf "\n"
-        printf "%s\n" "${GREEN}9${NORM} - Voltar"
-        printf "\n"
-        _linha "=" "${CYAN}"
-        
-        local opcao
-        read -rp "${YELLOW}Opcao: ${NORM}" opcao
-        
-        case "$opcao" in
-            1) _exibir_manual_completo ;;
-            2) _ajuda_rapida ;;
-            3) _buscar_manual ;;
-            4) _exportar_manual ;;
-            5) _menu_selecao_contexto ;;
-            9) return ;;
-            *)
-                _mensagec "${RED}" "Opcao invalida"
-                sleep 1
-                ;;
-        esac
-    done
-}
 
 # Menu para selecionar contexto de ajuda
 _menu_selecao_contexto() {
@@ -2207,21 +427,21 @@ _menu_selecao_contexto() {
     _linha "=" "${CYAN}"
 
     printf "\n"
-    printf "%s\n" "${GREEN}1${NORM} - Menu Principal"
-    printf "%s\n" "${GREEN}2${NORM} - Programas"
-    printf "%s\n" "${GREEN}3${NORM} - Biblioteca"
-    printf "%s\n" "${GREEN}4${NORM} - Ferramentas"
-    printf "%s\n" "${GREEN}5${NORM} - Temporarios"
-    printf "%s\n" "${GREEN}6${NORM} - Recuperacao"
-    printf "%s\n" "${GREEN}7${NORM} - Backup"
-    printf "%s\n" "${GREEN}8${NORM} - Transferencia"
-    printf "%s\n" "${GREEN}9${NORM} - Setups"
+    printf "%s\n" "${GREEN}1${NORM}  - Menu Principal"
+    printf "%s\n" "${GREEN}2${NORM}  - Programas"
+    printf "%s\n" "${GREEN}3${NORM}  - Biblioteca"
+    printf "%s\n" "${GREEN}4${NORM}  - Ferramentas"
+    printf "%s\n" "${GREEN}5${NORM}  - Temporários"
+    printf "%s\n" "${GREEN}6${NORM}  - Recuperaçao"
+    printf "%s\n" "${GREEN}7${NORM}  - Backup"
+    printf "%s\n" "${GREEN}8${NORM}  - Transferência"
+    printf "%s\n" "${GREEN}9${NORM}  - Setups"
     printf "%s\n" "${GREEN}10${NORM} - Lembretes"
     printf "\n"
     _linha "=" "${CYAN}"
     
     local opcao
-    read -rp "${YELLOW}Opcao: ${NORM}" opcao
+    read -rp "${YELLOW}Opçao: ${NORM}" opcao
     
     case "$opcao" in
         1) _exibir_ajuda_contextual "principal" ;;
@@ -2234,6 +454,6 @@ _menu_selecao_contexto() {
         8) _exibir_ajuda_contextual "transferencia" ;;
         9) _exibir_ajuda_contextual "setups" ;;
         10) _exibir_ajuda_contextual "lembretes" ;;
-        *) _mensagec "${RED}" "Opcao invalida" ; sleep 1 ;;
+        *) _mensagec "${RED}" "Opçao inválida" ; sleep 1 ;;
     esac
 }

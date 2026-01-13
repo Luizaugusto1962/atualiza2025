@@ -49,18 +49,18 @@ _principal() {
         printf "\n"
         _mensagec "${GREEN}" "5${NORM} -|: Ferramentas           "
         printf "\n"
+        _mensagec "${GREEN}" "0${NORM} -|: Sistema de Ajuda      "
+        printf "\n"
         _meia_linha "-" "${YELLOW}" "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9 ${RED}-|: Sair do Sistema "
         printf "\n"
-        _mensaged "${BLUE}" "${UPDATE}"
-        _linha "=" "${GREEN}"
+        _mensaged "${BLUE}" "${UPDATE}"     
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "="
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
-
+        _linha "=" "${GREEN}"
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
         
@@ -86,6 +86,7 @@ _principal() {
             3) _mostrar_versao_iscobol ;;
             4) _mostrar_versao_linux ;;
             5) _menu_ferramentas ;;
+            0) _menu_ajuda_principal ;;
             9) 
                 clear
                 _resetando
@@ -132,12 +133,11 @@ _menu_programas() {
             printf "\n"
             _mensaged "${BLUE}" "Versao do Iscobol - ${verclass}"
         fi
-        _linha "=" "${GREEN}"
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "="
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -206,12 +206,11 @@ _menu_biblioteca() {
             printf "\n"
             _mensaged "${BLUE}" "Versao Anterior - ${VERSAOANT}"
         fi
-        _linha "=" "${GREEN}"
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "="
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -294,18 +293,15 @@ _menu_ferramentas() {
             _mensagec "${GREEN}" "8${NORM} -|: Lembretes                 "
             printf "\n"
         fi
-        _mensagec "${GREEN}" "0${NORM} -|: Sistema de Ajuda          "
-        printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
-        _linha "=" "${GREEN}"
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "=" 
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -349,7 +345,6 @@ _menu_ferramentas() {
             6) _menu_setups ;;
             7) _executar_update ;;
             8) _menu_lembretes ;;
-            0) _menu_ajuda_principal ;;
             9) return ;;
             *)
                 _opinvalida
@@ -383,12 +378,11 @@ _menu_temporarios() {
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
-        _linha "=" "${GREEN}"
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "="
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -444,12 +438,11 @@ _menu_recuperar_arquivos() {
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
-        _linha "=" "${GREEN}"
-        
+         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "=" 
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -506,12 +499,11 @@ _menu_backup() {
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
-        _linha "=" "${GREEN}"
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "="
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -568,12 +560,11 @@ _menu_transferencia_arquivos() {
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
-        _linha "=" "${GREEN}"
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "="
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -628,12 +619,11 @@ _menu_setups() {
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
-        _linha "=" "${GREEN}"
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "="
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -708,12 +698,11 @@ _menu_lembretes() {
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
-        _linha "=" "${GREEN}"
         
         # Linha de ajuda
-        _linha "-" "${BLUE}"
+        _linha "="
         printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "-" "${BLUE}"
+        _linha "=" "${GREEN}"
 
         local opcao
         read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
@@ -747,6 +736,64 @@ _menu_lembretes() {
         esac
     done
 }
+
+#---------- MENU PRINCIPAL DE AJUDA ----------#
+
+# Menu principal do sistema de ajuda
+_menu_ajuda_principal() {
+    # Verifica se manual existe ao entrar no menu
+    if ! _verificar_manual; then
+        _press
+        return
+    fi
+    
+    while true; do
+        clear
+        printf "\n"
+        _linha "=" "${GREEN}"
+        _mensagec "${RED}" "SISTEMA DE AJUDA"
+        _linha 
+        printf "\n"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+        _mensagec "${GREEN}" "1${NORM} -|: Manual Completo    "
+        printf "\n"
+        _mensagec "${GREEN}" "2${NORM} -|: Ajuda Rapida       "
+        printf "\n"
+        _mensagec "${GREEN}" "3${NORM} -|: Ajuda no Geral     "
+        printf "\n"
+        _mensagec "${GREEN}" "4${NORM} -|: Buscar no Manual   "
+        printf "\n"
+        _mensagec "${GREEN}" "5${NORM} -|: Exportar Manual    "
+        printf "\n"
+        _mensagec "${GREEN}" "6${NORM} -|: Ajuda por Contexto  "
+        printf "\n"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        printf "\n"
+        _linha "=" "${GREEN}"
+        local opcao
+        read -rp "${YELLOW}Digite a opcao sesejada ->: ${NORM}" opcao
+
+# Verificar comandos da manuais        
+        case "${opcao}" in
+            1) _exibir_manual_completo ;;
+            2) _ajuda_rapida ;;
+            3) _ajuda_no_geral;;
+            4) _buscar_manual ;;
+            5) _exportar_manual ;;
+            6) _menu_selecao_contexto ;;
+            9) return ;;
+            *)
+                _opinvalida
+                _read_sleep 1
+                ;;
+        esac
+    done
+}
+
 
 #---------- MENU DE ESCOLHA DE BASE ----------#
 

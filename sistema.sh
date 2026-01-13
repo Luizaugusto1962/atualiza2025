@@ -327,6 +327,18 @@ fi
             _mensagec "${RED}" "Erro ao instalar $arquivo"
             ((arquivos_erro++))
         fi
+               if [ "$arquivo" = "manual.txt" ]; then
+            target="${cfg_dir}"
+        fi
+        
+        # Mover o manual para o diretorio de destino
+        if mv -f "$arquivo" "$target"; then
+            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
+            ((arquivos_instalados++))
+        else
+            _mensagec "${RED}" "Erro ao instalar $arquivo"
+            ((arquivos_erro++))
+        fi
     done
 
     # Verificar se houve erros na instalacao
