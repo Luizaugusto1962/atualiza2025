@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 06/01/2026-00
+# Versao: 04/12/2025-00
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -20,16 +20,19 @@ base="${base:-}"
 base2="${base2:-}"
 base3="${base3:-}"
 telas="${telas:-}"
+logs="${logs:-}"
+progs="${progs:-}"
+olds="${olds:-}"
+OLDS="${OLDS:-}"
 LOGS="${LOGS:-}"
 PROGS="${PROGS:-}"
-OLDS="${OLDS:-}"
 BACKUP="${BACKUP:-}"
 verclass="${verclass:-}"
+backup="${backup:-}"
 class="${class:-}"
 mclass="${mclass:-}"
 exec="${exec:-}"
 xml="${xml:-}"
-
 Offline="${Offline:-}"
 
 #---------- FUNcoES DE VERSaO ----------#
@@ -219,6 +222,14 @@ _atualizando() {
     _configurar_diretorios
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
 
+    # Criar backup do arquivo atual
+    if [[ ! -d "${backup}" ]]; then
+        mkdir -p "${backup}" || {
+            _mensagec "${RED}" "Erro: Nao foi possivel criar diretorio de backup"
+            return 1
+        }
+    fi
+
     # Fazer backup dos arquivos atuais
     local backup_sucesso=0
     local backup_erro=0
@@ -226,49 +237,23 @@ _atualizando() {
         _mensagec "${RED}" "Erro: Diretorio de atualizacao nao encontrado"
         return 1
     }
+    # Processar todos os arquivos .sh para backup
+    for arquivo in *.sh; do
+        # Verificar se o arquivo existe
+        if [[ ! -f "$arquivo" ]]; then
+            _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
+            break
+        fi
 
-# Processar todos os arquivos .sh para backup
-arquivos_encontrados=false
-
-# Diretório de backup completo (usa TOOLS_DIR + caminho relativo em 'backup')
-local BACKUP="${BACKUP}"
-
-for arquivo in *.sh; do
-    # Verificar se o arquivo existe (protecao contra glob vazio)
-    if [[ ! -f "$arquivo" ]]; then
-        _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para backup"
-        break
-    fi
-    
-    arquivos_encontrados=true
-    
-    # Criar diretório de backup se não existir
-    if [[ ! -d "$BACKUP" ]]; then
-        mkdir -p "$BACKUP" || {
-            _mensagec "${RED}" "Erro ao criar diretorio de backup"
+        # Copiar o arquivo para o diretorio de backup
+        if cp -f "$arquivo" "$backup/$arquivo.bak"; then
+            _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
+            ((backup_sucesso++))
+        else
+            _mensagec "${RED}" "Erro ao fazer backup de $arquivo"
             ((backup_erro++))
-            continue
-        }
-    fi
-
-    # Nome do arquivo de backup (remover .sh e adicionar .bak)
-    nome_base="${arquivo%.sh}"
-    arquivo_backup="$BACKUP/${nome_base}.bak"
-
-    # Copiar o arquivo para o diretório de backup
-    if cp -f "$arquivo" "$arquivo_backup"; then
-        _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
-        ((backup_sucesso++))
-    else
-        _mensagec "${RED}" "Erro ao fazer backup de $arquivo"
-        ((backup_erro++))
-    fi
-done
-
-# Resumo ao final (opcional)
-if $arquivos_encontrados; then
-    _mensagec "${BLUE}" "Resumo: $backup_sucesso sucessos, $backup_erro erros"
-fi    
+        fi
+    done
 
     # Verificar se houve erros no backup
     if [[ $backup_erro -gt 0 ]]; then
@@ -278,7 +263,7 @@ fi
         _mensagec "${YELLOW}" "Nenhum arquivo foi copiado para backup"
         return 1
     else
-        _mensagec "${BLUE}" "Backup de $backup_sucesso arquivo(s) realizado com sucesso"
+        _mensagec "${GREEN}" "Backup de $backup_sucesso arquivo(s) realizado com sucesso"
     fi
 
     # Acessar diretorio de trabalho
@@ -298,10 +283,30 @@ fi
         _mensagec "${RED}" "Erro ao descompactar atualizacao"
         return 1
     fi
-
     # Verificar e instalar arquivos
     local arquivos_instalados=0
     local arquivos_erro=0
+
+    # Atualizar manual.txt
+        local arquivo="manual.txt"
+        
+        if [ "$arquivo" = "manual.txt" ]; then
+            target="${cfg_dir}"
+        fi
+        
+        # Mover o manual para o diretorio de destino
+        if mv -f "$arquivo" "$target"; then
+            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
+            ((arquivos_instalados++))
+
+        # Verifica se o arquivo foi realmente movido
+            if [[ ! -f "$arquivo" && -f "$target/$arquivo" ]]; then
+            _mensagec "${BLUE}" "  (Verificado: arquivo movido corretamente)"
+            fi
+        else
+            _mensagec "${RED}" "Erro ao instalar $arquivo"
+            ((arquivos_erro++))
+        fi
 
     # Processar todos os arquivos .sh encontrados
     for arquivo in *.sh; do
@@ -320,18 +325,6 @@ fi
             target="${lib_dir}"
         fi
         # Mover o arquivo para o diretorio de destino
-        if mv -f "$arquivo" "$target"; then
-            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
-            ((arquivos_instalados++))
-        else
-            _mensagec "${RED}" "Erro ao instalar $arquivo"
-            ((arquivos_erro++))
-        fi
-               if [ "$arquivo" = "manual.txt" ]; then
-            target="${cfg_dir}"
-        fi
-        
-        # Mover o manual para o diretorio de destino
         if mv -f "$arquivo" "$target"; then
             _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
             ((arquivos_instalados++))
@@ -359,7 +352,7 @@ if [[ ! -d "${ENVIA}" ]]; then
     exit 1
 fi
 
-# Mudar para o diretório ENVIA com verificacao
+# Mudar para o diretório ENVIA com verificação
 if ! cd "${ENVIA}"; then
    _mensagec "${RED}" "ERRO: Nao foi possível acessar o diretorio '${ENVIA}'."
     exit 1
@@ -454,7 +447,7 @@ editar_variavel() {
             case "$opcao" in
             1) sistema="iscobol" ;;
             2) sistema="cobol" ;;
-            *) printf "%s\n" "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
+            *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
         elif [[ "$nome" == "BANCO" ]]; then
@@ -467,7 +460,7 @@ editar_variavel() {
             case "$opcao" in
             1) BANCO="s" ;;
             2) BANCO="n" ;;
-            *) printf "%s\n" "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
+            *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
         elif [[ "$nome" == "acessossh" ]]; then
@@ -480,7 +473,7 @@ editar_variavel() {
             case "$opcao" in
             1) acessossh="s" ;;
             2) acessossh="n" ;;
-            *) printf "%s\n" "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
+            *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
         elif [[ "$nome" == "IPSERVER" ]]; then
@@ -491,7 +484,7 @@ editar_variavel() {
             IPSERVER="$novo_ip"
         else
             IPSERVER="$valor_atual"
-            printf "%s\n" "Mantendo valor anterior: $valor_atual"
+            echo "Mantendo valor anterior: $valor_atual"
         fi    
 
         elif [[ "$nome" == "Offline" ]]; then
@@ -612,8 +605,7 @@ clear
         echo "SAVATU2=${SAVATU2}"
         echo "SAVATU3=${SAVATU3}"
         echo "SAVATU4=${SAVATU4}"
-        echo "progs=/progs"
-        echo "olds=/olds"
+        echo "progs=/progs"      
         echo "logs=/logs"
         echo "cfg=/cfg"
         echo "backup=/backup"
