@@ -295,8 +295,7 @@ _atualizando() {
         
         # Mover o manual para o diretorio de destino
         if mv -f "$arquivo" "$target"; then
-            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
-            ((arquivos_instalados++))
+            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso em $target"
 
         # Verifica se o arquivo foi realmente movido
             if [[ ! -f "$arquivo" && -f "$target/$arquivo" ]]; then
@@ -304,7 +303,7 @@ _atualizando() {
             fi
         else
             _mensagec "${RED}" "Erro ao instalar $arquivo"
-            ((arquivos_erro++))
+
         fi
 
     # Processar todos os arquivos .sh encontrados
