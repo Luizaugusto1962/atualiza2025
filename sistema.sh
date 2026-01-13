@@ -338,13 +338,13 @@ fi
             _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
             ((arquivos_instalados++))
             
-        # Verifica se o arquivo foi realmente movido
-            if [[ ! -f "$arquivo" && -f "$target/$arquivo" ]]; then
-                _mensagec "${BLUE}" "  (Verificado: arquivo movido corretamente)"
-            fi    
-        else
-            _mensagec "${RED}" "Erro ao instalar $arquivo"
-            ((arquivos_erro++))
+#        # Verifica se o arquivo foi realmente movido
+#            if [[ ! -f "$arquivo" && -f "$target/$arquivo" ]]; then
+#                _mensagec "${BLUE}" "  (Verificado: arquivo movido corretamente)"
+#            fi    
+#        else
+#            _mensagec "${RED}" "Erro ao instalar $arquivo"
+#            ((arquivos_erro++))
         fi
     done
 
