@@ -302,7 +302,7 @@ fi
     # Verificar e instalar arquivos
     local arquivos_instalados=0
     local arquivos_erro=0
-
+    local manual="manual.txt"
     # Processar todos os arquivos .sh encontrados
     for arquivo in *.sh; do
         # Verificar se o arquivo existe
@@ -329,22 +329,22 @@ fi
         fi
 
         # Define diretório destino para manual.txt
-        if [ "$arquivo" = "manual.txt" ]; then
+        if [ "$manual" = "manual.txt" ]; then
             target="${cfg_dir}"
         fi
         
         # Mover o manual para o diretorio de destino
-        if mv -f "$arquivo" "$target"; then
-            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
+        if mv -f "$manual" "$target"; then
+            _mensagec "${GREEN}" "Arquivo $manual instalado com sucesso"
             ((arquivos_instalados++))
             
-#        # Verifica se o arquivo foi realmente movido
-#            if [[ ! -f "$arquivo" && -f "$target/$arquivo" ]]; then
-#                _mensagec "${BLUE}" "  (Verificado: arquivo movido corretamente)"
-#            fi    
-#        else
-#            _mensagec "${RED}" "Erro ao instalar $arquivo"
-#            ((arquivos_erro++))
+        # Verifica se o arquivo foi realmente movido
+            if [[ ! -f "$manual" && -f "$target/$manual" ]]; then
+                _mensagec "${BLUE}" "  (Verificado: arquivo movido corretamente)"
+            fi    
+        else
+            _mensagec "${RED}" "Erro ao instalar $manual"
+            ((arquivos_erro++))
         fi
     done
 
