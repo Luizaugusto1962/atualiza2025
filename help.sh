@@ -4,7 +4,7 @@
 # Fornece documentacao completa e help contextual para o sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 13/01/2026-00
+# Versao: 14/01/2026-00
 
 cfg_dir="${cfg_dir:-}"
 TOOLS_DIR="${TOOLS_DIR:-}"
@@ -185,8 +185,7 @@ _exibir_manual_completo() {
             esac  
         fi
     done
-    
-    _press
+    return 0
 }
 
 # Exibe ajuda contextual baseada no menu atual
@@ -207,6 +206,9 @@ _exibir_ajuda_contextual() {
         biblioteca)
             secao_nome="MENU_BIBLIOTECA"
             ;;
+        arquivos)
+            secao_nome="MENU_ARQUIVOS"
+            ;;            
         ferramentas)
             secao_nome="MENU_FERRAMENTAS"
             ;;

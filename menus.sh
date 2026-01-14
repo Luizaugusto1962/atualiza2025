@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 13/01/2026-00
+# Versao: 14/01/2026-01
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -13,6 +13,38 @@ base="${base:-}"
 base2="${base2:-}"
 base3="${base3:-}"
 pasta="${pasta:-}"
+
+#---------- FUNCAO AUXILIAR DE LEITURA ----------#
+
+# Funcao auxiliar para leitura de opcao com suporte a ajuda contextual
+# Uso: _ler_opcao_menu "contexto"
+# Retorna: 0 se opcao normal, 1 se comando de ajuda processado
+_ler_opcao_menu() {
+    local contexto="${1:-geral}"
+    
+    # Exibir linha de ajuda
+    _linha "="
+    printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
+    _linha "=" "${GREEN}"
+    
+    # Ler opcao do usuario
+    read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
+    
+    # Verificar comandos de ajuda
+    case "${opcao,,}" in
+        "?"|"h"|"help"|"ajuda")
+            _exibir_ajuda_contextual "$contexto"
+            return 1
+            ;;
+        "m"|"manual")
+            _exibir_manual_completo
+            return 1
+            ;;
+    esac
+    
+    # Retorna 0 para processar a opcao normalmente
+    return 0
+}
 
 #---------- MENU PRINCIPAL ----------#
 # Menu principal do sistema
@@ -47,8 +79,10 @@ _principal() {
         printf "\n"
         _mensagec "${GREEN}" "4${NORM} -|: Versao do Linux       "
         printf "\n"
-        _mensagec "${GREEN}" "5${NORM} -|: Ferramentas           "
+        _mensagec "${GREEN}" "5${NORM} -|: Gerenciar Arquivos    "
         printf "\n"
+        _mensagec "${GREEN}" "6${NORM} -|: Ferramentas           "
+        printf "\n"        
         _mensagec "${GREEN}" "0${NORM} -|: Sistema de Ajuda      "
         printf "\n"
         _meia_linha "-" "${YELLOW}" "-" "${YELLOW}"
@@ -57,35 +91,19 @@ _principal() {
         printf "\n"
         _mensaged "${BLUE}" "${UPDATE}"     
         
-        # Linha de ajuda
-        _linha "="
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "principal"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "principal"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "principal"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _menu_programas ;;
             2) _menu_biblioteca ;;
             3) _mostrar_versao_iscobol ;;
             4) _mostrar_versao_linux ;;
-            5) _menu_ferramentas ;;
+            5) _menu_arquivos ;;
+            6) _menu_ferramentas ;;
             0) _menu_ajuda_principal ;;
             9) 
                 clear
@@ -134,29 +152,11 @@ _menu_programas() {
             _mensaged "${BLUE}" "Versao do Iscobol - ${verclass}"
         fi
         
-        # Linha de ajuda
-        _linha "="
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "programas"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "programas"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "programas"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _atualizar_programa_online ;;
@@ -207,29 +207,11 @@ _menu_biblioteca() {
             _mensaged "${BLUE}" "Versao Anterior - ${VERSAOANT}"
         fi
         
-        # Linha de ajuda
-        _linha "="
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "biblioteca"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "biblioteca"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "biblioteca"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _atualizar_transpc ;;
@@ -245,16 +227,17 @@ _menu_biblioteca() {
     done
 }
 
-#---------- MENU DE FERRAMENTAS ----------#
+####
+#---------- MENU DE ARQUIVOS ----------#
 
-# Menu de ferramentas do sistema
-_menu_ferramentas() {
+# Menu de arquivos do sistema
+_menu_arquivos() {
     while true; do
         tput clear
         printf "\n"
         
         _linha "=" "${GREEN}"
-        _mensagec "${RED}" "Menu das Ferramentas"
+        _mensagec "${RED}" "Menu Gerencial Arquivos"
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
@@ -269,14 +252,9 @@ _menu_ferramentas() {
             printf "\n"
             _mensagec "${GREEN}" "5${NORM} -|: Expurgador de Arquivos    "
             printf "\n"
-            _mensagec "${GREEN}" "6${NORM} -|: Parametros                "
-            printf "\n"
-            _mensagec "${GREEN}" "7${NORM} -|: Update                    "
-            printf "\n" 
-            _mensagec "${GREEN}" "8${NORM} -|: Lembretes                 "
-            printf "\n"
+
         else
-            _mensagec "${GREEN}" "1${NORM} -|: Temporarios               "
+            _mensagec "${GREEN}" "1${NORM} -|: Arquivos Temporarios      "
             printf "\n"
             _mensagec "${GREEN}" "2${NORM} -|: Recuperar Arquivos        "
             printf "\n" 
@@ -286,41 +264,17 @@ _menu_ferramentas() {
             printf "\n"
             _mensagec "${GREEN}" "5${NORM} -|: Expurgador de Arquivos    "
             printf "\n"
-            _mensagec "${GREEN}" "6${NORM} -|: Parametros                "
-            printf "\n"
-            _mensagec "${GREEN}" "7${NORM} -|: Update                    "
-            printf "\n"
-            _mensagec "${GREEN}" "8${NORM} -|: Lembretes                 "
-            printf "\n"
         fi
         _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
-        # Linha de ajuda
-        _linha "=" 
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "ferramentas"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "ferramentas"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "arquivos"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _menu_temporarios ;;
@@ -341,10 +295,7 @@ _menu_ferramentas() {
                 fi
                 ;;
             4) _menu_transferencia_arquivos ;;
-            5) _executar_expurgador "ferramentas" ;;
-            6) _menu_setups ;;
-            7) _executar_update ;;
-            8) _menu_lembretes ;;
+            5) _executar_expurgador "arquivos" ;;
             9) return ;;
             *)
                 _opinvalida
@@ -354,7 +305,56 @@ _menu_ferramentas() {
     done
 }
 
-#---------- MENU DE TEMPORaRIOS ----------#
+###
+#---------- MENU DE FERRAMENTAS ----------#
+
+# Menu de ferramentas do sistema
+_menu_ferramentas() {
+    while true; do
+        tput clear
+        printf "\n"
+        
+        _linha "=" "${GREEN}"
+        _mensagec "${RED}" "Menu das Ferramentas"
+        _linha
+        printf "\n"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+
+        # Opcoes do menu 
+        _mensagec "${GREEN}" "1${NORM} -|: Parametros                "
+        printf "\n"
+        _mensagec "${GREEN}" "2${NORM} -|: Update                    "
+        printf "\n" 
+        _mensagec "${GREEN}" "3${NORM} -|: Lembretes                 "
+        printf "\n"
+
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        printf "\n"
+        
+        # Usar funcao centralizada
+        local opcao
+        if ! _ler_opcao_menu "ferramentas"; then
+            continue
+        fi
+
+        case "${opcao}" in
+            1) _menu_setups ;;
+            2) _executar_update ;;
+            3) _menu_lembretes ;;
+            9) return ;;
+            *)
+                _opinvalida
+                _read_sleep 1
+                ;;
+        esac
+    done
+}
+
+#---------- MENU DE TEMPORARIOS ----------#
 
 # Menu de limpeza de arquivos temporarios
 _menu_temporarios() {
@@ -379,29 +379,11 @@ _menu_temporarios() {
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
-        # Linha de ajuda
-        _linha "="
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "temporarios"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "temporarios"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "temporarios"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _executar_limpeza_temporarios ;;
@@ -438,30 +420,12 @@ _menu_recuperar_arquivos() {
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
-         
-        # Linha de ajuda
-        _linha "=" 
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
-        local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
         
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "recuperacao"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "recuperacao"
-                continue
-                ;;
-        esac
+        # Usar funcao centralizada
+        local opcao
+        if ! _ler_opcao_menu "recuperacao"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _recuperar_arquivo_especifico ;;
@@ -475,7 +439,7 @@ _menu_recuperar_arquivos() {
     done
 }
 
-#---------- MENU DE backup ----------#
+#---------- MENU DE BACKUP ----------#
 
 # Menu de backup do sistema
 _menu_backup() {
@@ -500,29 +464,11 @@ _menu_backup() {
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
-        # Linha de ajuda
-        _linha "="
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "backup"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "backup"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "backup"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _executar_backup ;;
@@ -538,7 +484,7 @@ _menu_backup() {
 }
 
 
-#---------- MENU DE TRANSFERÃŠNCIA ----------#
+#---------- MENU DE TRANSFERENCIA ----------#
 
 # Menu de envio e recebimento de arquivos
 _menu_transferencia_arquivos() {
@@ -561,29 +507,11 @@ _menu_transferencia_arquivos() {
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
-        # Linha de ajuda
-        _linha "="
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "transferencia"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "transferencia"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "transferencia"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _enviar_arquivo_avulso ;;
@@ -620,29 +548,11 @@ _menu_setups() {
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
-        # Linha de ajuda
-        _linha "="
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "setups"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "setups"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "setups"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) 
@@ -699,29 +609,11 @@ _menu_lembretes() {
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
-        # Linha de ajuda
-        _linha "="
-        printf '%b\n' "${BLUE}Ajuda: Digite ${YELLOW}M${BLUE} (manual) | ${YELLOW}H${BLUE} (help)${NORM}"
-        _linha "=" "${GREEN}"
-
+        # Usar funcao centralizada
         local opcao
-        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
-        
-        # Verificar comandos de ajuda
-        case "${opcao,,}" in
-            "?")
-                _exibir_ajuda_contextual "lembretes"
-                continue
-                ;;
-            "m"|"manual")
-                _exibir_manual_completo
-                continue
-                ;;
-            "h"|"help"|"ajuda")
-                _exibir_ajuda_contextual "lembretes"
-                continue
-                ;;
-        esac
+        if ! _ler_opcao_menu "lembretes"; then
+            continue
+        fi
 
         case "${opcao}" in
             1) _escrever_nova_nota ;;
@@ -767,17 +659,17 @@ _menu_ajuda_principal() {
         printf "\n"
         _mensagec "${GREEN}" "5${NORM} -|: Exportar Manual    "
         printf "\n"
-        _mensagec "${GREEN}" "6${NORM} -|: Ajuda por Contexto  "
+        _mensagec "${GREEN}" "6${NORM} -|: Ajuda por Contexto "
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
         printf "\n"
         _linha "=" "${GREEN}"
+        
         local opcao
-        read -rp "${YELLOW}Digite a opcao sesejada ->: ${NORM}" opcao
+        read -rp "${YELLOW}Digite a opcao desejada ->: ${NORM}" opcao
 
-# Verificar comandos da manuais        
         case "${opcao}" in
             1) _exibir_manual_completo ;;
             2) _ajuda_rapida ;;
@@ -855,5 +747,4 @@ _menu_escolha_base() {
     done
 }
 
-#---------- MENU DE TIPO DE backup ----------#
-
+#---------- MENU DE TIPO DE BACKUP ----------#

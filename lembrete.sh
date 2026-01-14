@@ -2,10 +2,11 @@
 #
 # SISTEMA SAV - Script de Atualizacao Modular
 # lembrete.sh - Modulo de Lembretes e Notas
-# Versao: 04/12/2025-00
+# Versao: 14/01/2026-00
 # Autor: Luiz Augusto
 # utils.sh - Modulo de Utilitarios e Funcoes Auxiliares  
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
+
 #---------- FUNcoES DE LEMBRETES ----------#
 
 cfg_dir="${cfg_dir:-}" # Caminho do diretorio de configuracao do programa.

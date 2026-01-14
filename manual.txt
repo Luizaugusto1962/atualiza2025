@@ -80,15 +80,20 @@ OPCOES DISPONIVEIS:
     * Tempo de atividade (uptime)
 
 5 - FERRAMENTAS
-    Acesso ao menu de ferramentas administrativas.
+    Acesso ao menu de controle de arquivos.
     
     * Limpeza de arquivos temporarios
     * Recuperacao de arquivos de dados
     * Rotinas de backup
     * Transferencia de arquivos
     * Expurgador automatico
+
+6 - FERRAMENTAS
+    Acesso ao menu de ferramentas administrativas.
+    
     * Configuracoes do sistema
-    * Sistema de lembretes
+    * Atualizacao do sistema
+    * Sistema de lembretes e notas
 
 9 - SAIR DO SISTEMA
     Encerra o sistema SAV de forma segura.
@@ -390,14 +395,12 @@ PROBLEMA: "Programa nao inicia apos atualizacao"
 SOLUCAO: Reverta para versao anterior e contate suporte
 
 ---------------------------------------------------------------
-[MENU_FERRAMENTAS]
-MENU DE FERRAMENTAS
+[MENU_ARQUIVOS]
+MENU DE GERENCIAMENTO DE ARQUIVOS
 ---------------------------------------------------------------
 
-O menu de Ferramentas fornece utilitarios administrativos para
-manutencao e gestao do sistema SAV.
-
-OPCOES DISPONIVEIS:
+O menu de Arquivos do sistema fornece utilitarios administrativos para
+manutencao e gestao dos arquivos do sistema SAV.
 ---------------------------------------------------------------
 
 1 - TEMPORARIOS
@@ -445,9 +448,7 @@ OPCOES DISPONIVEIS:
     
     USOS:
     * Envio de relatorios
-    * Recebimento de atualizacoes
-    * Compartilhamento de dados
-    * Transferencia de logs
+     * Transferencia de logs
     
     PROTOCOLOS: SFTP, RSYNC
 
@@ -465,7 +466,18 @@ OPCOES DISPONIVEIS:
     * Manual: Via menu
     * Automatica: Diaria (primeira execucao)
 
-6 - PARAMETROS
+---------------------------------------------------------------
+[MENU_FERRAMENTAS]
+MENU DE FERRAMENTAS
+---------------------------------------------------------------
+
+O menu de Ferramentas fornece utilitarios administrativos para
+manutencao e gestao do sistema SAV.
+
+OPCOES DISPONIVEIS:
+---------------------------------------------------------------
+
+1 - PARAMETROS
     Visualiza e edita configuracoes do sistema.
     
     ACESSO:
@@ -473,7 +485,7 @@ OPCOES DISPONIVEIS:
     * Manutencao: Edicao de valores
     * Validacao: Testa configuracoes
 
-7 - UPDATE
+2 - UPDATE
     Atualiza o proprio sistema de atualizacao.
     
     O QUE ATUALIZA:
@@ -486,7 +498,7 @@ OPCOES DISPONIVEIS:
     * Online: GitHub
     * Offline: Arquivos locais
 
-8 - LEMBRETES
+3 - LEMBRETES
     Sistema de notas e lembretes.
     
     FUNCOES:
@@ -504,20 +516,18 @@ DICAS DE USO:
 ---------------------------------------------------------------
 
 MANUTENCAO REGULAR:
-1. Execute expurgador semanalmente
-2. Faca backup antes de atualizacoes
-3. Limpe temporarios mensalmente
-4. Recupere arquivos apos problemas
+1. Consulta dos parametro do progrma
+2. Atualizacao do sistema 
+3. Cadastro no lembretes
+
 
 ORGANIZACAO:
 * Use lembretes para agendar tarefas
 * Documente alteracoes importantes
-* Mantenha logs organizados
 
 PERFORMANCE:
-* Limpeza regular melhora velocidade
-* Recuperacao de arquivos otimiza indices
-* Expurgador libera recursos
+* Programa atualizado
+* Lembretes de alerta de uso do sistema
 
 ---------------------------------------------------------------
 [MENU_TEMPORARIOS]
@@ -1648,10 +1658,11 @@ INDICE:
 2. Menu Principal
 3. Atualizacao de Programas
 4. Atualizacao de Biblioteca
-5. Ferramentas
-6. Configuracoes
-7. Resolucao de Problemas
-8. Contatos e Suporte
+5. Gerenciamento de Arquivos
+6. Ferramentas
+7. Configuracoes
+8. Resolucao de Problemas
+9. Contatos e Suporte
 
 -------------------------------------------------------------------
 1. INTRODUCAO
@@ -1691,7 +1702,8 @@ Para conteudo detalhado, use ? no menu
 2 - Atualizar Biblioteca
 3 - Versao do IsCOBOL
 4 - Versao do Linux
-5 - Ferramentas
+5 - Gerenciar Arquivos
+6 - Ferramentas
 9 - Sair do Sistema
 
 -------------------------------------------------------------------
