@@ -51,9 +51,13 @@ _visualizar_notas_arquivo() {
         _press
         return 1
     fi
-    
+    # Mostrar cabecalho de notas.
     clear
-    
+    _linha "=" "${CYAN}"
+    _mensagec "${YELLOW}" "LEMBRETES E NOTAS"
+    _linha "=" "${CYAN}"
+    printf "\n"
+
     # Calcular largura maxima
     while IFS= read -r llinha; do
         if (( ${#llinha} > largura_max )); then
