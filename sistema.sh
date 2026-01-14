@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 13/01/2025-00
+# Versao: 14/01/2025-00
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -33,6 +33,9 @@ mclass="${mclass:-}"
 exec="${exec:-}"
 xml="${xml:-}"
 Offline="${Offline:-}"
+ENVIA="${ENVIA:-}"
+down_dir="${down_dir:-}"
+SAVISC="${SAVISC:-}"
 
 #---------- FUNcoES DE VERSaO ----------#
 
@@ -76,9 +79,9 @@ _mostrar_versao_linux() {
 
     # Checando se conecta com a internet ou nao
     if ping -c 1 google.com &>/dev/null; then
-        printf "${GREEN}"" Internet:""${NORM}""Conectada""%*s\n"
+        printf "${GREEN}""Internet: ""${NORM}""Conectada""%*s\n"
     else
-        printf "${GREEN}"" Internet:""${NORM}""Desconectada""%*s\n"
+        printf "${GREEN}""Internet: ""${NORM}""Desconectada""%*s\n"
     fi
 
     # Checando tipo de OS
@@ -222,8 +225,8 @@ _atualizando() {
     _mensagec "${GREEN}" "Atualizando script via GitHub..."
 
     # Criar backup do arquivo atual
-    if [[ ! -d "${backup}" ]]; then
-        mkdir -p "${backup}" || {
+    if [[ ! -d "${BACKUP}" ]]; then
+        mkdir -p "${BACKUP}" || {
             _mensagec "${RED}" "Erro: Nao foi possivel criar diretorio de backup"
             return 1
         }
@@ -245,7 +248,7 @@ _atualizando() {
         fi
 
         # Copiar o arquivo para o diretorio de backup
-        if cp -f "$arquivo" "$backup/$arquivo.bak"; then
+        if cp -f "$arquivo" "$BACKUP/$arquivo.bak"; then
             _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
             ((backup_sucesso++))
         else
@@ -288,7 +291,8 @@ _atualizando() {
 
     # Atualizar manual.txt
         local arquivo="manual.txt"
-        
+        chmod +x "$arquivo"
+
         if [ "$arquivo" = "manual.txt" ]; then
             target="${cfg_dir}"
         fi
