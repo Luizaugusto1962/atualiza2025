@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 15/01/2025-00
+# Versao: 15/01/2025-02
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -272,16 +272,18 @@ _atualizando() {
         _mensagec "${RED}" "Erro: Diretorio $ENVIA nao acessivel"
         return 1
     }
-
+    if [[ "${Offline}" == "n" ]]; then
     # Baixar arquivo
         if ! wget -q -c "$link"; then
             _mensagec "${RED}" "Erro ao baixar arquivo de atualizacao"
         return 1
         fi
-    #fi
+    fi
+
     # Descompactar
     if ! "${cmd_unzip}" -o -j "$zipfile" >>"$LOG_ATU" 2>&1; then
         _mensagec "${RED}" "Erro ao descompactar atualizacao"
+        _mensagec "${YELLOW}" "Verifique se o atualzia.zip esta no diretorio $ENVIA"
         return 1
     fi
     # Verificar e instalar arquivos
@@ -385,6 +387,7 @@ fi
 
     exit 0
 }
+
 _atualizar_online() {
     local link="https://github.com/Luizaugusto1962/Atualiza2025/archive/master/atualiza.zip"
        # Criar e acessar diretorio temporario
@@ -397,24 +400,31 @@ _atualizar_online() {
 
 # Atualizacao offline via arquivo local
 _atualizar_offline() {
+    local temp_dir="${ENVIA}/temp_update/"
+    local zipfile="atualiza.zip"
+
     # Criar e acessar diretorio temporario
     mkdir -p "$temp_dir" || {
         _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
         return 1
     }
 
-    # Acessar diretorio offline
-    cd "$down_dir" || {
-        _mensagec "${RED}" "Erro: Diretorio offline $down_dir nao acessivel"
-        return 1
-    }
-
     # Verificar se o arquivo zip existe
-    if [[ ! -f "$zipfile" ]]; then
+    if [[ ! -f "${down_dir}/${zipfile}" ]]; then
         _mensagec "${RED}" "Erro: $zipfile nao encontrado em $down_dir"
         return 1
     fi
-    mv "${zipfile}" "${temp_dir}"
+
+    mv "${down_dir}/${zipfile}" "${ENVIA}" || {
+        _mensagec "${RED}" "Erro: Nao foi possivel mover $zipfile para $ENVIA"
+        return 1
+    }
+
+        # Acessar diretorio offline
+    cd "$temp_dir" || {
+        _mensagec "${RED}" "Erro: Diretorio temporario, $temp_dir nao acessivel"
+        return 1
+    }
     _atualizando
 }
 
