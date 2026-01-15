@@ -58,28 +58,8 @@ OPCOES DISPONIVEIS:
     <<<  IMPORTANTE: Esta operacao e mais abrangente e pode levar
          mais tempo que a atualizacao de programas individuais.  >>>
 
-3 - VERSAO DO ISCOBOL
-    Exibe informacoes sobre a versao do IsCOBOL instalada.
-    
-    * Mostra numero da versao
-    * Exibe data de compilacao
-    * Lista recursos disponiveis
-    
-    Nota: Disponivel apenas para sistemas IsCOBOL.
 
-4 - VERSAO DO LINUX
-    Mostra informacoes detalhadas do sistema operacional.
-    
-    INFORMACOES EXIBIDAS:
-    * Distribuicao e versao do Linux
-    * Hostname do servidor
-    * IP interno e externo
-    * Usuarios logados
-    * Uso de memoria RAM e SWAP
-    * Uso de disco
-    * Tempo de atividade (uptime)
-
-5 - FERRAMENTAS
+3- GERENCIAR ARQUIVOS
     Acesso ao menu de controle de arquivos.
     
     * Limpeza de arquivos temporarios
@@ -88,9 +68,10 @@ OPCOES DISPONIVEIS:
     * Transferencia de arquivos
     * Expurgador automatico
 
-6 - FERRAMENTAS
+4 - FERRAMENTAS
     Acesso ao menu de ferramentas administrativas.
-    
+    * Versao do Iscobol
+    * Versao do Linux
     * Configuracoes do sistema
     * Atualizacao do sistema
     * Sistema de lembretes e notas
@@ -477,7 +458,29 @@ manutencao e gestao do sistema SAV.
 OPCOES DISPONIVEIS:
 ---------------------------------------------------------------
 
-1 - PARAMETROS
+
+1 - VERSAO DO ISCOBOL
+    Exibe informacoes sobre a versao do IsCOBOL instalada.
+    
+    * Mostra numero da versao
+    * Exibe data de compilacao
+    * Lista recursos disponiveis
+    
+    Nota: Disponivel apenas para sistemas IsCOBOL.
+
+2 - VERSAO DO LINUX
+    Mostra informacoes detalhadas do sistema operacional.
+    
+    INFORMACOES EXIBIDAS:
+    * Distribuicao e versao do Linux
+    * Hostname do servidor
+    * IP interno e externo
+    * Usuarios logados
+    * Uso de memoria RAM e SWAP
+    * Uso de disco
+    * Tempo de atividade (uptime)
+
+3 - PARAMETROS
     Visualiza e edita configuracoes do sistema.
     
     ACESSO:
@@ -485,7 +488,7 @@ OPCOES DISPONIVEIS:
     * Manutencao: Edicao de valores
     * Validacao: Testa configuracoes
 
-2 - UPDATE
+4 - UPDATE
     Atualiza o proprio sistema de atualizacao.
     
     O QUE ATUALIZA:
@@ -498,7 +501,7 @@ OPCOES DISPONIVEIS:
     * Online: GitHub
     * Offline: Arquivos locais
 
-3 - LEMBRETES
+5 - LEMBRETES
     Sistema de notas e lembretes.
     
     FUNCOES:

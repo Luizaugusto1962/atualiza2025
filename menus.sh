@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 14/01/2026-01
+# Versao: 15/01/2026-01
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -70,18 +70,9 @@ _principal() {
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} -|: Atualizar Biblioteca  "
         printf "\n"
-        
-        if [[ "${sistema}" = "iscobol" ]]; then
-            _mensagec "${GREEN}" "3${NORM} -|: Versao do Iscobol     "
-        else
-            _mensagec "${GREEN}" "3${NORM} -|: Funcao nao disponivel "
-        fi
+        _mensagec "${GREEN}" "3${NORM} -|: Gerenciar Arquivos    "
         printf "\n"
-        _mensagec "${GREEN}" "4${NORM} -|: Versao do Linux       "
-        printf "\n"
-        _mensagec "${GREEN}" "5${NORM} -|: Gerenciar Arquivos    "
-        printf "\n"
-        _mensagec "${GREEN}" "6${NORM} -|: Ferramentas           "
+        _mensagec "${GREEN}" "4${NORM} -|: Ferramentas           "
         printf "\n"        
         _mensagec "${GREEN}" "0${NORM} -|: Sistema de Ajuda      "
         printf "\n"
@@ -100,10 +91,8 @@ _principal() {
         case "${opcao}" in
             1) _menu_programas ;;
             2) _menu_biblioteca ;;
-            3) _mostrar_versao_iscobol ;;
-            4) _mostrar_versao_linux ;;
-            5) _menu_arquivos ;;
-            6) _menu_ferramentas ;;
+            3) _menu_arquivos ;;
+            4) _menu_ferramentas ;;
             0) _menu_ajuda_principal ;;
             9) 
                 clear
@@ -252,7 +241,6 @@ _menu_arquivos() {
             printf "\n"
             _mensagec "${GREEN}" "5${NORM} -|: Expurgador de Arquivos    "
             printf "\n"
-
         else
             _mensagec "${GREEN}" "1${NORM} -|: Arquivos Temporarios      "
             printf "\n"
@@ -323,11 +311,19 @@ _menu_ferramentas() {
         printf "\n"
 
         # Opcoes do menu 
-        _mensagec "${GREEN}" "1${NORM} -|: Parametros                "
+        if [[ "${sistema}" = "iscobol" ]]; then
+            _mensagec "${GREEN}" "1${NORM} -|: Versao do Iscobol        "
+        else
+            _mensagec "${GREEN}" "1${NORM} -|: Funcao nao disponivel    "
+        fi
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} -|: Update                    "
+        _mensagec "${GREEN}" "2${NORM} -|: Versao do Linux           "
+        printf "\n"
+        _mensagec "${GREEN}" "3${NORM} -|: Parametros                "
+        printf "\n"
+        _mensagec "${GREEN}" "4${NORM} -|: Update                    "
         printf "\n" 
-        _mensagec "${GREEN}" "3${NORM} -|: Lembretes                 "
+        _mensagec "${GREEN}" "5${NORM} -|: Lembretes                 "
         printf "\n"
 
         _meia_linha "-" "${YELLOW}"
@@ -342,9 +338,11 @@ _menu_ferramentas() {
         fi
 
         case "${opcao}" in
-            1) _menu_setups ;;
-            2) _executar_update ;;
-            3) _menu_lembretes ;;
+            1) _mostrar_versao_iscobol ;;
+            2) _mostrar_versao_linux ;;
+            3) _menu_setups ;;
+            4) _executar_update ;;
+            5) _menu_lembretes ;;
             9) return ;;
             *)
                 _opinvalida
