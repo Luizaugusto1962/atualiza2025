@@ -2,7 +2,7 @@
 #
 # SISTEMA SAV - Script de Atualizacao Modular
 # lembrete.sh - Modulo de Lembretes e Notas
-# Versao: 14/01/2026-00
+# Versao: 16/01/2026-00
 # Autor: Luiz Augusto
 # utils.sh - Modulo de Utilitarios e Funcoes Auxiliares  
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
@@ -43,47 +43,45 @@ _mostrar_notas_iniciais() {
 # Parametros: $1=arquivo_de_notas
 _visualizar_notas_arquivo() {
     local arquivo="$1"
-    local largura_max=0
-    local largura_total
     local llinha
-    
+
+    # Largura dinamica do terminal (fallback 80)
+    local cols
+    cols=$(tput cols 2>/dev/null || echo 80)
+
+    # Ajuste para o prefixo "* - " e identacao
+    local largura=$(( cols - 6 ))
+    (( largura < 40 )) && largura=40
+
     if [[ ! -f "$arquivo" || ! -r "$arquivo" ]]; then
         _mensagec "${RED}" "Arquivo de notas nao encontrado ou ilegivel: $arquivo"
         _press
         return 1
     fi
-    # Mostrar cabecalho de notas.
+
     clear
     _linha "=" "${CYAN}"
     _mensagec "${YELLOW}" "LEMBRETES E NOTAS"
     _linha "=" "${CYAN}"
     printf "\n"
 
-    # Calcular largura maxima
-    while IFS= read -r llinha; do
-        if (( ${#llinha} > largura_max )); then
-            largura_max=${#llinha}
-        fi
-    done < "$arquivo"
-    
-    largura_total=$((largura_max + 4))
-    
-    # Criar moldura superior
-    printf "+"
-    printf "%*s" $((largura_total - 2)) "" | tr ' ' '='
-    printf "+\n"
-    
-    # Mostrar conteúdo com bordas
     while IFS= read -r llinha || [[ -n "$llinha" ]]; do
-        printf "| %-*s |\n" $((largura_total - 4)) "$llinha"
+        # Ignora linhas vazias ou apenas com espacos
+        [[ -z "${llinha//[[:space:]]/}" ]] && continue
+
+        echo "$llinha" | fold -s -w "$largura" | {
+            read -r primeira
+            printf "* - %s\n" "$primeira"
+
+            while IFS= read -r resto; do
+                printf "    %s\n" "$resto"
+            done
+        }
     done < "$arquivo"
-    
-    # Criar moldura inferior  
-    printf "+"
-    printf "%*s" $((largura_total - 2)) "" | tr ' ' '='
-    printf "+\n"
+
+    printf "\n"
     _linha
-    _press 
+    _press
 }
 
 # Edita nota existente
