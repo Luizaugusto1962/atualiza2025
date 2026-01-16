@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 16/01/2026-01
+# Versao: 16/01/2026-02
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -57,7 +57,7 @@ _principal() {
         _linha "=" "${GREEN}"
         _mensagec "${RED}" "Menu Principal"
         _linha
-        _mensagec "${GREEN}" ".. Empresa: ${EMPRESA} .."
+        _mensagec "${GREEN}" ".. Empresa: ${WHITE}${EMPRESA}${GREEN} .."
         _linha
         _mensagec "${CYAN}" "_| Sistema: ${sistema} - Versao do Iscobol: ${verclass} |_"
         _linha
@@ -78,7 +78,7 @@ _principal() {
         printf "\n"
         _meia_linha "-" "${YELLOW}" "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9 ${RED}-|: Sair do Sistema "
+        _mensagec "${WHITE}" "9${RED} -|: Sair do Sistema "
         printf "\n"
         _mensaged "${BLUE}" "${UPDATE}"     
         
@@ -133,7 +133,7 @@ _menu_programas() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n" 
-        _mensagec "${GREEN}" "9 ${RED}-|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         if [[ -n "${verclass}" ]]; then
@@ -188,7 +188,7 @@ _menu_biblioteca() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         if [[ -n "${VERSAOANT}" ]]; then
@@ -255,7 +255,7 @@ _menu_arquivos() {
         fi
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         # Usar funcao centralizada
@@ -328,7 +328,7 @@ _menu_ferramentas() {
 
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         # Usar funcao centralizada
@@ -374,7 +374,7 @@ _menu_temporarios() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         # Usar funcao centralizada
@@ -416,7 +416,7 @@ _menu_recuperar_arquivos() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         # Usar funcao centralizada
@@ -459,7 +459,7 @@ _menu_backup() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         # Usar funcao centralizada
@@ -502,7 +502,7 @@ _menu_transferencia_arquivos() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         # Usar funcao centralizada
@@ -543,7 +543,7 @@ _menu_setups() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         # Usar funcao centralizada
@@ -604,7 +604,7 @@ _menu_lembretes() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         
         # Usar funcao centralizada
@@ -661,7 +661,7 @@ _menu_ajuda_principal() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         _linha "=" "${GREEN}"
         
@@ -711,7 +711,7 @@ _menu_escolha_base() {
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
         printf "\n"
         _linha "=" "${GREEN}"
 
@@ -759,11 +759,11 @@ _menu_tipo_backup() {
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
         printf "\n"
-        _mensagec "${GREEN}" "1${NORM} - Backup Completo      "
+        _mensagec "${GREEN}" "1${NORM} -|: Backup Completo      "
         printf "\n"
-        _mensagec "${GREEN}" "2${NORM} - Backup Incremental   "
+        _mensagec "${GREEN}" "2${NORM} -|: Backup Incremental   "
         printf "\n\n"
-        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
+        _mensagec "${WHITE}" "9${NORM} -|: ${RED}Menu Anterior"
         printf "\n"
         _linha "=" "${GREEN}"
 

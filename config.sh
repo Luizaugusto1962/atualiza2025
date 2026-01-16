@@ -94,7 +94,7 @@ export DESTINO2SERVER="/u/varejo/man/"                                   # Diret
 export DESTINO2SAVATUISC="/home/savatu/biblioteca/temp/ISCobol/sav-5.0/" # Diretorio da biblioteca IsCOBOL
 export DESTINO2SAVATUMF="/home/savatu/biblioteca/temp/Isam/sav-3.1"      # Diretorio da biblioteca Isam
 export DESTINO2TRANSPC="/u/varejo/trans_pc/"                             # Diretorio de transporte PC
-export SERACESOFF="/portalsav/Atualiza"                              # Diretorio do servidor offline
+export SERACESOFF="/portalsav/Atualiza"                                  # Diretorio do servidor offline
 #---------- FUNcoES DE CONFIGURAcaO ----------#
 
 # Funcao para definir cores do terminal
@@ -107,6 +107,7 @@ _definir_cores() {
         BLUE=$(tput bold)$(tput setaf 4)   # Azul
         PURPLE=$(tput bold)$(tput setaf 5) # Roxo
         CYAN=$(tput bold)$(tput setaf 6)   # Ciano
+        WHITE=$(tput bold)$(tput setaf 7)  # Branco
         NORM=$(tput sgr0)                  # Normal
         COLUMNS=$(tput cols)               # Numero de colunas do terminal
 
@@ -122,6 +123,7 @@ _definir_cores() {
         BLUE=""       # Limpar variavel Azul
         PURPLE=""     # Limpar variavel Roxo
         CYAN=""       # Limpar variavel Ciano
+        WHITE=""      # Limpar variavel Branco
         NORM=""       # Limpar variavel Normal
         COLUMNS=80    # Definir colunas padrao
     fi
@@ -436,7 +438,7 @@ _validar_configuracao() {
     
     # Verificar conectividade se for modo online
     if [[ "${Offline}" == "n" ]]; then
-        _mensagec "${YELLOW}" "INFO: Servidor em modo On ..."
+        _mensagec "${WHITE}" "INFO: Servidor em modo On ..."
     else 
         _mensagec "${GREEN}" "INFO: Servidor em modo Off ..."
     fi

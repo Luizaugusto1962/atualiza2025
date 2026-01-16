@@ -507,9 +507,9 @@ _executar_expurgador() {
     _ir_para_tools
     
     # Retornar ao menu baseado na origem
-    if [[ "$origem" == "ferramentas" ]]; then
+    if [[ "$origem" == "arquivos" ]]; then
         return 0
     else
-        _principal
+        _menu_arquivos
     fi
 }
