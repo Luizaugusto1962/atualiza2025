@@ -498,8 +498,8 @@ OPCOES DISPONIVEIS:
     * Sistema de ajuda
     
     FONTES:
-    * Online: GitHub
-    * Offline: Arquivos locais
+    * Online: Via o GitHub
+    * Offline: Arquivo "atualiza.zip deve ser salvo em /portalsav/Atualiza
 
 5 - LEMBRETES
     Sistema de notas e lembretes.

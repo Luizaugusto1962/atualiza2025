@@ -6,7 +6,7 @@
 # Email: luizaugusto@sav.com.br
 #
 # Versao do sistema
-readonly UPDATE="15/01/2025-01"
+readonly UPDATE="16/01/2025-00"
 export UPDATE
 
 # Diretorio do script principal
@@ -29,7 +29,7 @@ for dir in "${aux_dirs[@]}"; do
     }
 done
 
-printf "Todos os diretórios estão presentes.\n"
+printf "Todos os diretorios estao presentes.\n"
 
 # Funcao para carregar modulos com verificacao
 _carregar_modulo() {

@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 15/01/2026-01
+# Versao: 16/01/2026-01
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -746,3 +746,82 @@ _menu_escolha_base() {
 }
 
 #---------- MENU DE TIPO DE BACKUP ----------#
+# Menu para escolher tipo de backup
+
+_menu_tipo_backup() {
+
+    while true; do
+        clear
+        printf "\n"
+        _linha "=" "${GREEN}"
+        _mensagec "${RED}" "Menu de Tipo de Backup(s)"
+        _linha
+        printf "\n"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
+        printf "\n"
+        _mensagec "${GREEN}" "1${NORM} - Backup Completo      "
+        printf "\n"
+        _mensagec "${GREEN}" "2${NORM} - Backup Incremental   "
+        printf "\n\n"
+        _mensagec "${GREEN}" "9${NORM} - ${RED}Menu Anterior"
+        printf "\n"
+        _linha "=" "${GREEN}"
+
+        local opcao
+        read -rp "${YELLOW} Digite a opcao desejada -> ${NORM}" opcao
+
+        case "${opcao}" in
+            1) 
+                tipo_backup="completo"
+                export tipo_backup
+                return 0
+                ;;
+            2) 
+                tipo_backup="incremental"
+                export tipo_backup
+                return 0
+                ;;
+            9) return 1 ;;
+            *)
+                _opinvalida
+                _read_sleep 1
+                ;;
+        esac
+    done
+}
+
+#---------- FUNcoES AUXILIARES DE MENU ----------#
+
+# Define a base de trabalho atual
+# Parametros: $1=nome_da_base (base, base2, base3)
+_definir_base_trabalho() {
+    local base_var="$1"
+    local base_dir="${!base_var}"
+    
+    if [[ -z "${raiz}" ]] || [[ -z "${base_dir}" ]]; then
+        _mensagec "${RED}" "Erro: Variaveis de configuracao nao definidas"
+        _linha
+        _read_sleep 2
+        return 1
+    fi
+    
+    export base_trabalho="${raiz}${base_dir}"
+    
+    if [[ ! -d "${base_trabalho}" ]]; then
+        _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} nao encontrado"
+        _linha
+        _read_sleep 2
+        return 1
+    fi
+    
+    _mensagec "${GREEN}" "Base de trabalho definida: ${base_trabalho}"
+    return 0
+}
+
+# Limpa tela e volta ao menu especificado
+# Parametros: $1=nome_da_funcao_menu
+_voltar_menu() {
+    local menu_funcao="${1:-_principal}"
+    clear
+    "$menu_funcao"
+}
