@@ -54,7 +54,7 @@ _exibir_paginado() {
             case "${resposta,,}" in
                 q)
                     echo ""
-                    echo "${GREEN}Exibiçao interrompida${NORM}"
+                    echo "${GREEN}Exibicao interrompida${NORM}"
                     return 0
                     ;;
                 a)
