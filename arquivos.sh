@@ -134,10 +134,10 @@ _lista_arquivos_lixo() {
 }
 
 #---------- FUNcoES DE RECUPERAcaO ----------#
-
 # Recupera arquivo especifico ou todos
 _recuperar_arquivo_especifico() {
     local base_trabalho
+    local continuar="S"
     
     # Escolher base se necessario
     if [[ -n "${base2}" ]]; then
@@ -154,26 +154,39 @@ _recuperar_arquivo_especifico() {
         return 1
     fi
 
-    _meiodatela
-    _mensagec "${CYAN}" "Informe o nome do arquivo a ser recuperado ou ENTER para todos:"
-    _linha
-    
-    local nome_arquivo
-    read -rp "${YELLOW}Nome do arquivo: ${NORM}" nome_arquivo
-    nome_arquivo=$(echo "$nome_arquivo" | xargs) # Remove espacos extras
-    _linha "-" "${BLUE}"
-    
-    if [[ -z "$nome_arquivo" ]]; then
-        _recuperar_todos_arquivos "$base_trabalho"
-    else
-        _recuperar_arquivo_individual "$nome_arquivo" "$base_trabalho"
-    fi
+    # Loop para permitir múltiplas recuperações
+    while [[ "${continuar}" =~ ^[SsYy]$ ]]; do
+        _meiodatela
+        _mensagec "${CYAN}" "Informe o nome do arquivo a ser recuperado ou ENTER para todos:"
+        _linha
+        
+        local nome_arquivo
+        read -rp "${YELLOW}Nome do arquivo: ${NORM}" nome_arquivo
+        nome_arquivo=$(echo "$nome_arquivo" | xargs) # Remove espacos extras
+        _linha "-" "${BLUE}"
+        
+        if [[ -z "$nome_arquivo" ]]; then
+            _recuperar_todos_arquivos "$base_trabalho"
+        else
+            _recuperar_arquivo_individual "$nome_arquivo" "$base_trabalho"
+        fi
 
-    _linha "-" "${YELLOW}"
-    _mensagec "${YELLOW}" "Arquivo(s) recuperado(s)..."
-    _linha
+        _mensagec "${YELLOW}" "Arquivo(s) recuperado(s)..."
+        _linha
+        
+        # Pergunta se deseja informar mais arquivos
+        _mensagec "${CYAN}" "Deseja recuperar mais arquivos?"
+        read -rp "${YELLOW}[S/N]: ${NORM}" continuar
+        continuar=$(echo "$continuar" | xargs | tr '[:lower:]' '[:upper:]')
+        
+        # Se não informou nada, assumir "N"
+        [[ -z "$continuar" ]] && continuar="N"
+        
+        clear
+    done
+    
     _ir_para_tools
-    _press
+#    _press
 }
 
 # Recupera todos os arquivos principais
@@ -205,7 +218,7 @@ _recuperar_arquivo_individual() {
     
     # Validar nome do arquivo
     if [[ ! "$nome_arquivo" =~ ^[A-Z0-9]+$ ]]; then
-        _mensagec "${RED}" "Nome de arquivo invalido. Use apenas letras maiúsculas e números."
+        _mensagec "${RED}" "Nome de arquivo invalido. Use apenas letras maiusculas e numeros."
         return 1
     fi
     
