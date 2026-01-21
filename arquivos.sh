@@ -303,7 +303,6 @@ _executar_jutil() {
                 _log_sucesso "Rebuild executado: $(basename "$arquivo")"
             else
                 _mensagec "${RED}" "Erro no rebuild: $(basename "$arquivo")"
-                _linha "-" "${RED}"
                 return 1
             fi
             _linha "-" "${GREEN}"
