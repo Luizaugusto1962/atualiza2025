@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 15/01/2026-00
+# Versao: 22/01/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"   # Tipo de sistema (ex: iscobol, outros).
@@ -155,7 +155,7 @@ _recuperar_arquivo_especifico() {
     fi
 
     # Loop para permitir múltiplas recuperações
-    while [[ "${continuar}" =~ ^[SsYy]$ ]]; do
+    while [[ "${continuar}" =~ ^[Ss]$ ]]; do
         _meiodatela
         _mensagec "${CYAN}" "Informe o nome do arquivo a ser recuperado ou ENTER para todos:"
         _linha
@@ -163,30 +163,34 @@ _recuperar_arquivo_especifico() {
         local nome_arquivo
         read -rp "${YELLOW}Nome do arquivo: ${NORM}" nome_arquivo
         nome_arquivo=$(echo "$nome_arquivo" | xargs) # Remove espacos extras
+
         _linha "-" "${BLUE}"
         
         if [[ -z "$nome_arquivo" ]]; then
+            # Recupera todos → executa e sai do loop
             _recuperar_todos_arquivos "$base_trabalho"
-        else
+            _mensagec "${YELLOW}" "Todos os arquivos principais foram recuperados."
+            break   
+        fi 
+#        else
+            # Recupera arquivo específico
             _recuperar_arquivo_individual "$nome_arquivo" "$base_trabalho"
-        fi
-
-        _mensagec "${YELLOW}" "Arquivo(s) recuperado(s)..."
+            _mensagec "${YELLOW}" "Arquivo(s) recuperado(s)..."
+#        fi
         _linha
         
-        # Pergunta se deseja informar mais arquivos
+        # Só pergunta se quer continuar se foi um arquivo específico
         _mensagec "${CYAN}" "Deseja recuperar mais arquivos?"
         read -rp "${YELLOW}[S/N]: ${NORM}" continuar
         continuar=$(echo "$continuar" | xargs | tr '[:lower:]' '[:upper:]')
         
-        # Se não informou nada, assumir "N"
+        # Se vazio, assumir "N"
         [[ -z "$continuar" ]] && continuar="N"
-        
+    
         clear
     done
     
     _ir_para_tools
-#    _press
 }
 
 # Recupera todos os arquivos principais
@@ -203,12 +207,14 @@ _recuperar_todos_arquivos() {
                     _executar_jutil "$arquivo"
                 else
                     _mensagec "${YELLOW}" "Arquivo nao encontrado ou vazio: ${arquivo##*/}"
+                    _linha "-" "${GREEN}"
                 fi
             done
         done
     else
         _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} nao existe"
     fi
+    return 1
 }
 
 # Recupera arquivo individual
