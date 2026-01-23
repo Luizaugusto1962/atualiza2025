@@ -503,7 +503,10 @@ _executar_expurgador_diario() {
     # Executar limpeza basica
     _limpar_arquivos_antigos "${LOGS}" 30 "*.log"
     _limpar_arquivos_antigos "${BACKUP}" 30 "Temps*"
-    _limpar_arquivos_antigos "${OLDS}" 30 "Temps*"
+    _limpar_arquivos_antigos "${OLDS}" 30 "Temp*"
+    _limpar_arquivos_antigos "${OLDS}" 30 "*.zip*"
+    _limpar_arquivos_antigos "${OLDS}" 30 "*.bkp"
+    _limpar_arquivos_antigos "${BACKUP}" 30 "*.bkp"
     _limpar_arquivos_antigos "${savlog}" 30 "Temps*"
     _limpar_arquivos_antigos "${err_isc}" 30 "Temps*"
     _limpar_arquivos_antigos "${viewvix}" 30 "Temps*"
@@ -512,6 +515,7 @@ _executar_expurgador_diario() {
     touch "$flag_file"
     
     _log "Limpeza automatica diaria executada"
+    exit
 }
 
 # Funcao para checar se o zip esta instalado

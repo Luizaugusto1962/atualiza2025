@@ -572,7 +572,7 @@ OPCOES DISPONIVEIS:
     EXEMPLOS:
     * REL*.TMP = Todos arquivos REL com extensao .TMP
     * TEMP* = Todos arquivos comecando com TEMP
-    * *.BAK = Todos arquivos .BAK
+    * *.bkp = Todos arquivos .bkp
     
     ARQUIVO:
     Padroes sao salvos em: cfg/atualizat
@@ -596,13 +596,13 @@ Um padrao por linha, sem comentarios
 Exemplo:
 REL*.TMP
 TEMP*
-*.BAK
+*.BKp
 WORK*.DAT
 
 PADROES COMUNS:
 * REL*.TMP - Relatorios temporarios
 * TEMP* - Arquivos de trabalho
-* *.BAK - Backups automaticos
+* *.BKP - Backups automaticos
 * WORK* - Arquivos de processamento
 * PRINT*.SPL - Filas de impressao
 
@@ -874,7 +874,7 @@ O QUE INCLUI:
 
 O QUE EXCLUI:
 * Arquivos ja compactados (.zip, .tar)
-* Backups antigos (*.bak)
+* Backups antigos (*.bkp)
 * Temporarios do sistema
 
 QUANDO FAZER:
@@ -1132,7 +1132,7 @@ SUPORTADOS:
 * Planilhas: .xls, .xlsx, .csv
 * Imagens: .jpg, .png, .gif
 * Compactados: .zip, .tar, .gz
-* Backups: .bak, .backup
+* Backups: .bkp, .backup
 * Logs: .log
 * Executaveis: .sh, .exe
 * Todos os demais formatos
@@ -1251,7 +1251,7 @@ OPCOES DISPONIVEIS:
     4. Recarrega configuracoes
     
     BACKUP AUTOMATICO:
-    Sistema cria .atualizac.bak antes de editar
+    Sistema cria .atualizac.bkp antes de editar
 
 3 - VALIDAR CONFIGURACAO
     Testa todas as configuracoes.

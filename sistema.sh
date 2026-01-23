@@ -247,7 +247,7 @@ _atualizando() {
         fi
 
         # Copiar o arquivo para o diretorio de backup
-        if cp -f "$arquivo" "$BACKUP/$arquivo.bak"; then
+        if cp -f "$arquivo" "$BACKUP/$arquivo.bkp"; then
             _mensagec "${GREEN}" "Backup do arquivo $arquivo feito com sucesso"
             ((backup_sucesso++))
         else
@@ -554,7 +554,7 @@ if [[ -f ".atualizac" ]]; then
     }
 
     # Faz backup dos arquivos
-    cp .atualizac .atualizac.bak || {
+    cp .atualizac .atualizac.bkp || {
         echo "Erro: Falha ao criar backup de .atualizac"
         exit 1
     }

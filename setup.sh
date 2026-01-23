@@ -101,7 +101,7 @@ _edit_setup() {
     "." ./.atualizac
 
     # Fazer backup
-    cp .atualizac .atualizac.bak
+    cp .atualizac .atualizac.bkp
 
     # Edicao interativa das variaveis
     _editar_variavel sistema
