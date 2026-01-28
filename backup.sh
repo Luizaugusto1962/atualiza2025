@@ -707,33 +707,3 @@ _finalizar_backup_sucesso() {
         _linha
     fi
 }
-
-# Menu de selecao de backup
-_selecionar_backup_menu() {
-    local backups=("$@")
-    local escolha
-
-    _linha
-    _mensagec "${RED}" "Varios backups encontrados. Escolha um:"
-    _linha
-    
-    select escolha in "${backups[@]}" "Cancelar"; do
-        case $REPLY in
-            ''|*[!0-9]*)
-                printf "Digite o numero da opcao.\n"
-                continue
-                ;;
-        esac
-        
-        if (( REPLY >= 1 && REPLY <= ${#backups[@]} )); then
-            printf "%s\n" "$escolha"
-            return 0
-        elif (( REPLY == ${#backups[@]} + 1 )); then
-            _mensagec "${YELLOW}" "Operacao cancelada"
-            return 1
-        else
-            printf "Opcao invalida.\n"
-            continue
-        fi
-    done
-}

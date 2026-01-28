@@ -795,9 +795,11 @@ _menu_tipo_backup() {
 # Define a base de trabalho atual
 # Parametros: $1=nome_da_base (base, base2, base3)
 _definir_base_trabalho() {
-    local base_var="$1"
-    local base_dir="${!base_var}"
-    
+#    local base_var="$1"
+#    local base_dir="${!base_var}"
+
+    local base_dir="${!1}"
+
     if [[ -z "${raiz}" ]] || [[ -z "${base_dir}" ]]; then
         _mensagec "${RED}" "Erro: Variaveis de configuracao nao definidas"
         _linha
