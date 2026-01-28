@@ -428,7 +428,7 @@ _validar_configuracao() {
     for dir in "${dirs[@]}"; do
         local dir_path=""
         # Tratamento especial para E_EXEC e T_TELAS que ficam em ${raiz}
-        if [[ "$dir" == "E_EXEC" ]] || [[ "$dir" == "T_TELAS" ]]; then
+        if [[ "$dir" == "E_EXEC" ]] || [[ "$dir" == "T_TELAS" ]] || [[ "$dir" == "BASE1" ]]; then
             dir_path="${raiz}/${!dir}"
         else
             # Para outros diretorios, usar o caminho padrao
