@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao das bibliotecas do sistema (Transpc, Savatu)
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 29/12/2025-00
+# Versao: 28/01/2026-00
 
 raiz="${raiz:-}"
 principal="${principal:-}"

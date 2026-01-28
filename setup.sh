@@ -9,7 +9,7 @@
 #   - ./setup.sh --edit: Modo de edicao para modificar configuracoes existentes.
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 28/01/2026-00
 
 #---------- FUNcoES DE LoGICA DE NEGoCIO ----------#
 
@@ -56,26 +56,13 @@ _initial_setup() {
     _setup_backup
     _setup_empresa
 
-    # Finalizar .atualizac
-    {
-        echo "progs=/progs"
-        echo "olds=/olds"
-        echo "logs=/logs"
-        echo "cfg=/cfg"
-        echo "backup=/backup"
-        echo "envia=/envia"
-        echo "recebe=/recebe"
-        echo "libs=/libs"
-        echo "$tracejada"
-    } >> .atualizac
-
     # Criar atalho global
     echo "cd ${TOOLS_DIR:-TOOLS_DIR}" > /usr/local/bin/atualiza
     echo "./atualiza.sh" >> /usr/local/bin/atualiza
     chmod +x /usr/local/bin/atualiza
 
     echo "Pronto!"
-}
+} >> .atualizac
 
 # Edicao de configuracoes existentes
 _edit_setup() {
@@ -121,7 +108,6 @@ _edit_setup() {
     fi
 
     _editar_variavel BANCO
-#    _editar_variavel destino
     _editar_variavel acessossh
     _editar_variavel IPSERVER
     _editar_variavel Offline
@@ -174,9 +160,6 @@ _setup_iscobol() {
     esac
 
     {
-        echo "exec=/classes"
-        echo "telas=/tel_isc"
-        echo "xml=/xml"
         local classA="IS${VERCLASS}_*_"
         local classB="IS${VERCLASS}_classA_"
         local classC="IS${VERCLASS}_classB_"
@@ -199,8 +182,6 @@ _setup_cobol() {
         echo "mclass=-m6"
     } >> .atualizac
     {
-        echo "exec=/int"
-        echo "telas=/tel"
         echo "SAVATU1=tempSAVintA_"
         echo "SAVATU2=tempSAVintB_"
         echo "SAVATU3=tempSAVtel_"
@@ -386,22 +367,11 @@ _recreate_config_files() {
     } > .atualizac
 
     {
-        echo "exec=/classes"
-        echo "telas=/tel_isc"
-        echo "xml=/xml"
         echo "SAVATU=${SAVATU}"
         echo "SAVATU1=${SAVATU1}"
         echo "SAVATU2=${SAVATU2}"
         echo "SAVATU3=${SAVATU3}"
         echo "SAVATU4=${SAVATU4}"
-        echo "progs=/progs"
-        echo "olds=/olds"
-        echo "logs=/logs"
-        echo "cfg=/cfg"
-        echo "backup=/backup"
-        echo "envia=/envia"
-        echo "recebe=/recebe"
-        echo "libs=/libs"
     } >> .atualizac
 
     echo "$tracejada"

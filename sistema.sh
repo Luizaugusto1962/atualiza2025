@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 15/01/2025-02
+# Versao: 28/01/2025-02
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -19,21 +19,11 @@ pasta="${pasta:-}"
 base="${base:-}"
 base2="${base2:-}"
 base3="${base3:-}"
-telas="${telas:-}"
-logs="${logs:-}"
-progs="${progs:-}"
-OLDS="${OLDS:-}"
-LOGS="${LOGS:-}"
-PROGS="${PROGS:-}"
-BACKUP="${BACKUP:-}"
 verclass="${verclass:-}"
-backup="${backup:-}"
+# BACKUP="${BACKUP:-}"
 class="${class:-}"
 mclass="${mclass:-}"
-exec="${exec:-}"
-xml="${xml:-}"
 Offline="${Offline:-}"
-ENVIA="${ENVIA:-}"
 down_dir="${down_dir:-}"
 SAVISC="${SAVISC:-}"
 
@@ -169,9 +159,9 @@ _mostrar_parametros() {
     printf "${GREEN}Diretorio da base principal: ${NORM}${raiz}${base}""%*s\n"
     printf "${GREEN}Diretorio da segunda base: ${NORM}${raiz}${base2}""%*s\n"
     printf "${GREEN}Diretorio da terceira base: ${NORM}${raiz}${base3}""%*s\n"
-    printf "${GREEN}Diretorio dos executaveis: ${NORM}${raiz}${exec}""%*s\n"
-    printf "${GREEN}Diretorio das telas: ${NORM}${raiz}${telas}""%*s\n"
-    printf "${GREEN}Diretorio dos xmls: ${NORM}${raiz}${xml}""%*s\n"
+    printf "${GREEN}Diretorio dos executaveis: ${NORM}${E_EXEC}""%*s\n"
+    printf "${GREEN}Diretorio das telas: ${NORM}${T_TELAS}""%*s\n"
+    printf "${GREEN}Diretorio dos xmls: ${NORM}${X_XML}""%*s\n"
     printf "${GREEN}Diretorio dos logs: ${NORM}${LOGS}""%*s\n"
     printf "${GREEN}Diretorio dos olds: ${NORM}${OLDS}""%*s\n"
     printf "${GREEN}Diretorio dos progs: ${NORM}${PROGS}""%*s\n"
@@ -608,21 +598,11 @@ clear
         [[ -n "$base" ]] && echo "base=${base}"
         [[ -n "$base2" ]] && echo "base2=${base2}"
         [[ -n "$base3" ]] && echo "base3=${base3}"
-        echo "exec=/classes"
-        echo "telas=/tel_isc"
-        echo "xml=/xml"
 #        echo "SAVATU=${SAVATU}"
         echo "SAVATU1=${SAVATU1}"
         echo "SAVATU2=${SAVATU2}"
         echo "SAVATU3=${SAVATU3}"
         echo "SAVATU4=${SAVATU4}"
-        echo "progs=/progs"      
-        echo "logs=/logs"
-        echo "cfg=/cfg"
-        echo "backup=/backup"
-        echo "envia=/envia"
-        echo "recebe=/recebe"
-        echo "libs=/libs"
     } >.atualizac
 
     echo

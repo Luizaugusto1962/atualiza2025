@@ -4,7 +4,7 @@
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 06/01/2026-00
+# Versao: 28/01/2026-00
 
 #---------- FUNcoES DE FORMATAcaO DE TELA ----------#
 
@@ -175,11 +175,11 @@ _validar_configuracao_sistema() {
     fi
     
     # Verificar diretorios essenciais
-    local dirs=("exec" "telas")
+    local dirs=("E_EXEC" "T_TELAS")
     for dir in "${dirs[@]}"; do
         local dir_path=""
-        # Tratamento especial para exec e telas que ficam em ${raiz}
-                if [[ "$dir" == "exec" ]] || [[ "$dir" == "telas" ]]; then
+        # Tratamento especial para E_EXEC e T_TELAS que ficam em ${raiz}
+                if [[ "$dir" == "E_EXEC" ]] || [[ "$dir" == "T_TELAS" ]]; then
             dir_path="${raiz}/${!dir}"
         else
             # Para outros diretorios, usar o caminho padrao
@@ -524,7 +524,8 @@ _executar_expurgador_diario() {
 _check_instalado() {
     local app
     local missing=()
-
+    # Mensagem de erro principal
+    Z1="ERRO: Programa não encontrado"  # Definir a mensagem
 
     for app in zip unzip rsync wget; do
         if ! command -v "$app" >/dev/null 2>&1; then
@@ -532,9 +533,9 @@ _check_instalado() {
 
             # Mensagem de erro principal
             printf "\n"
-            printf "%*s${RED}" ""
+            printf "%s" "${RED}"
             printf "%*s\n" $(((${#Z1} + COLUMNS) / 2)) "${Z1}"
-            printf "%*s${NORM}" ""
+            printf "%s" "${NORM}"
 
             printf "${YELLOW} O programa nao foi encontrado ->> ${NORM}%s\n" "$app"
 

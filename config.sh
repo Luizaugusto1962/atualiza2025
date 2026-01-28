@@ -4,13 +4,13 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/12/2025-00
+# Versao: 28/01/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
 # Arrays para organizacao das variaveis
 declare -a cores=(RED GREEN YELLOW BLUE PURPLE CYAN NORM)
-declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR DIR raiz pasta base base2 base3 logs exec class telas xml olds)
+declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR DIR raiz pasta base base2 base3 logs olds backup cfg libs progs envia recebe)
 declare -a caminhos_base2=(progs backup sistema TEMPS UMADATA DIRB ENVIABACK ENVBASE SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who)
@@ -29,7 +29,6 @@ base="${base:-}"             # Caminho do diretorio da base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 logs="${logs:-}"             # Caminho do diretorio dos arquivos de log.
-exec="${exec:-}"             # Caminho do diretorio dos executaveis.
 class="${class:-}"           # Extensao do programa compilando.
 mclass="${mclass:-}"         # Extensao do programa compilando em modo debug.
 telas="${telas:-}"           # Caminho do diretorio das telas.
@@ -208,14 +207,22 @@ _configurar_diretorios() {
 
 # Configurar variaveis do sistema
 _configurar_variaveis_sistema() {
-    # Caminhos dos executaveis e dados
-    export E_EXEC="${raiz}${exec}"
-    export T_TELAS="${raiz}${telas}"
-    export X_XML="${raiz}${xml}"
-    export BASE1="${raiz}${base}"
-    export BASE2="${raiz}${base2}"
-    export BASE3="${raiz}${base3}"
-    
+    if [[ "${sistema}" == "iscobol" ]]; then
+   
+        # Caminhos dos executaveis e dados
+        export E_EXEC="${raiz}/classes"
+        export T_TELAS="${raiz}/tel_isc"
+        export X_XML="${raiz}/xml"
+        export BASE1="${raiz}${base}"
+        export BASE2="${raiz}${base2}"
+        export BASE3="${raiz}${base3}"
+    else
+        export E_EXEC="${raiz}/int"
+        export T_TELAS="${raiz}/tel"
+        export BASE1="${raiz}${base}"
+        export BASE2="${raiz}${base2}"
+        export BASE3="${raiz}${base3}"
+    fi
     # Configuracao do SAVISC
     readonly SAVISCC="${raiz}/savisc/iscobol/bin/"
     if [[ -n "${SAVISCC}" ]]; then
@@ -417,11 +424,11 @@ _validar_configuracao() {
     fi
     
     # Verificar diretorios essenciais
-    local dirs=("exec" "telas" "olds" "progs" "logs" "cfg" "libs" "backup")
+    local dirs=("olds" "progs" "logs" "cfg" "libs" "backup" "envia" "recebe" "E_EXEC" "T_TELAS" "BASE1")
     for dir in "${dirs[@]}"; do
         local dir_path=""
-        # Tratamento especial para exec e telas que ficam em ${raiz}
-        if [[ "$dir" == "exec" ]] || [[ "$dir" == "telas" ]]; then
+        # Tratamento especial para E_EXEC e T_TELAS que ficam em ${raiz}
+        if [[ "$dir" == "E_EXEC" ]] || [[ "$dir" == "T_TELAS" ]]; then
             dir_path="${raiz}/${!dir}"
         else
             # Para outros diretorios, usar o caminho padrao
