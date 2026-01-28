@@ -4,7 +4,7 @@
 # Responsavel por backup completo, incremental e restauracao
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 23/01/2026-02
+# Versao: 28/01/2026-00
 # Autor: Luiz Augusto
 
 sistema="${sistema:-}"
