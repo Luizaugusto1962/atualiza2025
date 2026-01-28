@@ -179,6 +179,7 @@ _mostrar_parametros() {
     _linha "=" "${GREEN}"
     printf "${GREEN}Diretorio para envio de backup: ${NORM}${ENVIABACK}""%*s\n"
     printf "${GREEN}Servidor OFF: ${NORM}${Offline}""%*s\n"
+    printf "${GREEN}Diretorio de configuracoes em OFF: ${NORM}${down_dir}""%*s\n"
     printf "${GREEN}Versao anterior da biblioteca: ${NORM}${VERSAOANT}""%*s\n"
     printf "${GREEN}Variavel da classe: ${NORM}${class}""%*s\n"
     printf "${GREEN}Variavel da mclass: ${NORM}${mclass}""%*s\n"

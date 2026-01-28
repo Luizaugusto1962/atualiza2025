@@ -88,13 +88,6 @@ DEFAULT_WHO="who"            # Comando padrao para verificar usuarios
 DEFAULT_PORTA="41122"        # Porta padrao
 DEFAULT_USUARIO="atualiza"   # Usuario padrao
 
-# Diretorios de destino para diferentes tipos de biblioteca
-export DESTINO2SERVER="/u/varejo/man/"                                   # Diretorio do servidor de atualizacao
-export DESTINO2SAVATUISC="/home/savatu/biblioteca/temp/ISCobol/sav-5.0/" # Diretorio da biblioteca IsCOBOL
-export DESTINO2SAVATUMF="/home/savatu/biblioteca/temp/Isam/sav-3.1"      # Diretorio da biblioteca Isam
-export DESTINO2TRANSPC="/u/varejo/trans_pc/"                             # Diretorio de transporte PC
-export SERACESOFF="/portalsav/Atualiza"                                  # Diretorio do servidor offline
-#---------- FUNcoES DE CONFIGURAcaO ----------#
 
 # Funcao para definir cores do terminal
 _definir_cores() {
@@ -180,7 +173,15 @@ _configurar_diretorios() {
             return 1
         }
     fi
-        
+
+    # Diretorios de destino para diferentes tipos de biblioteca
+    DESTINO2SERVER="/u/varejo/man/"                                   # Diretorio do servidor de atualizacao
+    DESTINO2SAVATUISC="/home/savatu/biblioteca/temp/ISCobol/sav-5.0/" # Diretorio da biblioteca IsCOBOL
+    DESTINO2SAVATUMF="/home/savatu/biblioteca/temp/Isam/sav-3.1"      # Diretorio da biblioteca Isam
+    DESTINO2TRANSPC="/u/varejo/trans_pc/"                             # Diretorio de transporte PC
+    SERACESOFF="/portalsav/Atualiza"                                  # Diretorio do servidor offline
+    export DESTINO2SERVER DESTINO2SAVATUISC DESTINO2SAVATUMF DESTINO2TRANSPC SERACESOFF
+
     # Definir diretorios de trabalho
     OLDS="${TOOLS_DIR}/olds"        # Diretorio de arquivos antigos
     PROGS="${TOOLS_DIR}/progs"      # Diretorio de programas
@@ -210,18 +211,20 @@ _configurar_variaveis_sistema() {
     if [[ "${sistema}" == "iscobol" ]]; then
    
         # Caminhos dos executaveis e dados
-        export E_EXEC="${raiz}/classes"
-        export T_TELAS="${raiz}/tel_isc"
-        export X_XML="${raiz}/xml"
-        export BASE1="${raiz}${base}"
-        export BASE2="${raiz}${base2}"
-        export BASE3="${raiz}${base3}"
+        E_EXEC="${raiz}/classes"
+        T_TELAS="${raiz}/tel_isc"
+        X_XML="${raiz}/xml"
+        BASE1="${raiz}${base}"
+        BASE2="${raiz}${base2}"
+        BASE3="${raiz}${base3}"
+        export E_EXEC T_TELAS X_XML BASE1 BASE2 BASE3
     else
-        export E_EXEC="${raiz}/int"
-        export T_TELAS="${raiz}/tel"
-        export BASE1="${raiz}${base}"
-        export BASE2="${raiz}${base2}"
-        export BASE3="${raiz}${base3}"
+        E_EXEC="${raiz}/int"
+        T_TELAS="${raiz}/tel"
+        BASE1="${raiz}${base}"
+        BASE2="${raiz}${base2}"
+        BASE3="${raiz}${base3}"
+        export E_EXEC T_TELAS BASE1 BASE2 BASE3
     fi
     # Configuracao do SAVISC
     readonly SAVISCC="${raiz}/savisc/iscobol/bin/"
