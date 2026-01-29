@@ -4,7 +4,7 @@
 # Responsavel por backup completo, incremental e restauracao
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 28/01/2026-00
+# Versao: 29/01/2026-00
 # Autor: Luiz Augusto
 
 sistema="${sistema:-}"
@@ -184,74 +184,10 @@ _executar_backup() {
 
 # Restaura backup do sistema
 _restaurar_backup() {
-    local arquivos_backup=()
-    local backup_selecionado
-
-    # Carrega todos os .zip disponiveis
-    shopt -s nullglob
-    arquivos_backup=("${BACKUP}/${EMPRESA}"_*.zip)
-
-    if ((${#arquivos_backup[@]} == 0)); then
-        _mensagec "${RED}" "Nenhum backup (${EMPRESA}_*.zip) encontrado"
-        _press
+    # Seleciona o backup usando a rotina unica
+    if ! _selecionar_backup; then
         return 1
     fi
-
-    # CORRECAO: Ordenar o array em ordem reversa para corresponder à exibicao
-    mapfile -t arquivos_backup < <(printf '%s\n' "${arquivos_backup[@]}" | sort -r)
-
-    _linha
-    _mensagec "${CYAN}" "Backups disponiveis (${#arquivos_backup[@]}):"
-    _linha
-
-    # Mostra lista numerada
-    printf '%s\n' "${arquivos_backup[@]}" | nl -w2 -s') '
-    _linha
-
-    if ((${#arquivos_backup[@]} == 1)); then
-        local nome_unico
-        nome_unico=$(basename "${arquivos_backup[0]}")
-        if _confirmar "Usar o unico backup encontrado? ${CYAN}${nome_unico}${YELLOW} S"; then
-            backup_selecionado="${arquivos_backup[0]}"
-        else
-            _mensagec "${YELLOW}" "Operacao cancelada."
-            return 1
-        fi
-    else
-        # Escolha interativa com cancelar explicito (0)
-        echo -e "${CYAN}Escolha o numero do backup (ou 0 para cancelar):${NORM}"
-        echo -e "${YELLOW}0) Cancelar${NORM}"
-        echo ""
-
-        while true; do
-            read -rp "${YELLOW}Opcao → ${NORM}" REPLY
-            echo ""
-
-            if [[ "$REPLY" == "0" || -z "$REPLY" ]]; then
-                _mensagec "${YELLOW}" "Operacao cancelada."
-                return 1
-            fi
-
-            if [[ ! "$REPLY" =~ ^[0-9]+$ ]]; then
-                _mensagec "${RED}" "Digite apenas o numero."
-                continue
-            fi
-
-            # CORRECAO: Agora o indice corresponde corretamente à lista exibida
-            local idx=$((REPLY - 1))
-            if (( idx >= 0 && idx < ${#arquivos_backup[@]} )); then
-                backup_selecionado="${arquivos_backup[$idx]}"
-                break
-            else
-                _mensagec "${RED}" "Numero invalido. Use 1 a ${#arquivos_backup[@]} ou 0 para cancelar."
-            fi
-        done
-    fi
-
-    local nome_backup
-    nome_backup=$(basename "$backup_selecionado")
-    _mensagec "${GREEN}" "Selecionado: $nome_backup"
-    _linha
 
     # Prossegue com a lógica de restauracao (completa ou parcial)
     if _confirmar "Deseja restaurar TODOS os arquivos do backup?" "N"; then
@@ -263,73 +199,10 @@ _restaurar_backup() {
 
 
 _enviar_backup_avulso() {
-    local arquivos_backup=()
-    local backup_selecionado
-
-    shopt -s nullglob
-    arquivos_backup=("${BACKUP}/${EMPRESA}"_*.zip)
-
-    if ((${#arquivos_backup[@]} == 0)); then
-        _mensagec "${RED}" "Nenhum backup (${EMPRESA}_*.zip) encontrado"
-        _press
+    # Seleciona o backup usando a rotina unica
+    if ! _selecionar_backup; then
         return 1
     fi
-
-    # CORRECAO: Ordenar o array em ordem reversa para corresponder à exibicao
-    mapfile -t arquivos_backup < <(printf '%s\n' "${arquivos_backup[@]}" | sort -r)
-
-    _linha
-    _mensagec "${CYAN}" "Backups disponiveis (${#arquivos_backup[@]}):"
-    _linha
-
-    # Mostra lista numerada
-    printf '%s\n' "${arquivos_backup[@]}" | nl -w2 -s') '
-    _linha
-
-    if ((${#arquivos_backup[@]} == 1)); then
-        local nome_unico
-        nome_unico=$(basename "${arquivos_backup[0]}")
-        if _confirmar "Usar o unico backup encontrado? ${CYAN}${nome_unico}${YELLOW} S"; then
-            backup_selecionado="${arquivos_backup[0]}"
-        else
-            _mensagec "${YELLOW}" "Operacao cancelada."
-            return 1
-        fi
-    else
-        # Escolha interativa com cancelar explicito (0)
-        echo -e "${CYAN}Escolha o numero do backup (ou 0 para cancelar):${NORM}"
-        echo -e "${YELLOW}0) Cancelar${NORM}"
-        echo ""
-
-        while true; do
-            read -rp "${YELLOW}Opcao → ${NORM}" REPLY
-            echo ""
-
-            if [[ "$REPLY" == "0" || -z "$REPLY" ]]; then
-                _mensagec "${YELLOW}" "Operacao cancelada."
-                return 1
-            fi
-
-            if [[ ! "$REPLY" =~ ^[0-9]+$ ]]; then
-                _mensagec "${RED}" "Digite apenas o numero."
-                continue
-            fi
-
-            # CORRECAO: Agora o indice corresponde corretamente à lista exibida
-            local idx=$((REPLY - 1))
-            if (( idx >= 0 && idx < ${#arquivos_backup[@]} )); then
-                backup_selecionado="${arquivos_backup[$idx]}"
-                break
-            else
-                _mensagec "${RED}" "Numero invalido. Use 1 a ${#arquivos_backup[@]} ou 0 para cancelar."
-            fi
-        done
-    fi
-
-    local nome_backup
-    nome_backup=$(basename "$backup_selecionado")
-    _mensagec "${GREEN}" "Selecionado: $nome_backup"
-    _linha
 
     if [[ "${Offline}" == "s" ]]; then
         _mover_backup_offline "$nome_backup"
@@ -341,7 +214,7 @@ _enviar_backup_avulso() {
     fi
 }
 
-#---------- FUNCOES DE EXECUCAO DE backup ----------#
+#---------- FUNCOES DE EXECUCAO DE BACKUP ----------#
 
 # Executa backup completo
 _executar_backup_completo() {
@@ -413,7 +286,7 @@ _executar_backup_incremental() {
     return $resultado
 }
 
-# Diretorio de trabalho
+# Muda para o diretorio de trabalho
 _diretorio_trabalho() {
     local base_trabalho="${BASE_TRABALHO:-${raiz}${base}}"
     
@@ -427,6 +300,81 @@ _diretorio_trabalho() {
         return 1
     }
     
+    return 0
+}
+
+#---------- ROTINA UNICA DE SELECAO DE BACKUP ----------#
+# Função centralizada para listar e selecionar backups
+# Define as variaveis globais: backup_selecionado e nome_backup
+_selecionar_backup() {
+    local arquivos_backup=()
+
+    # Carrega todos os .zip disponiveis
+    shopt -s nullglob
+    arquivos_backup=("${BACKUP}/${EMPRESA}"_*.zip)
+
+    if ((${#arquivos_backup[@]} == 0)); then
+        _mensagec "${RED}" "Nenhum backup (${EMPRESA}_*.zip) encontrado"
+        _press
+        return 1
+    fi
+
+    # Ordenar o array em ordem reversa para corresponder à exibicao
+    mapfile -t arquivos_backup < <(printf '%s\n' "${arquivos_backup[@]}" | sort -r)
+
+    _linha
+    _mensagec "${CYAN}" "Backups disponiveis (${#arquivos_backup[@]}):"
+    _linha
+
+    # Mostra lista numerada
+    printf '%s\n' "${arquivos_backup[@]}" | nl -w2 -s') '
+    _linha
+
+    if ((${#arquivos_backup[@]} == 1)); then
+        local nome_unico
+        nome_unico=$(basename "${arquivos_backup[0]}")
+        if _confirmar "Usar o unico backup encontrado? ${CYAN}${nome_unico}${YELLOW}" "S"; then
+            backup_selecionado="${arquivos_backup[0]}"
+        else
+            _mensagec "${YELLOW}" "Operacao cancelada."
+            return 1
+        fi
+    else
+        # Escolha interativa com cancelar explicito (0)
+        echo -e "${CYAN}Escolha o numero do backup (ou 0 para cancelar):${NORM}"
+        echo -e "${YELLOW}0) Cancelar${NORM}"
+        echo ""
+
+        while true; do
+            read -rp "${YELLOW}Opcao → ${NORM}" REPLY
+            echo ""
+
+            if [[ "$REPLY" == "0" || -z "$REPLY" ]]; then
+                _mensagec "${YELLOW}" "Operacao cancelada."
+                return 1
+            fi
+
+            if [[ ! "$REPLY" =~ ^[0-9]+$ ]]; then
+                _mensagec "${RED}" "Digite apenas o numero."
+                continue
+            fi
+
+            # Agora o indice corresponde corretamente à lista exibida
+            local idx=$((REPLY - 1))
+            if (( idx >= 0 && idx < ${#arquivos_backup[@]} )); then
+                backup_selecionado="${arquivos_backup[$idx]}"
+                break
+            else
+                _mensagec "${RED}" "Numero invalido. Use 1 a ${#arquivos_backup[@]} ou 0 para cancelar."
+            fi
+        done
+    fi
+
+    # Define o nome do backup selecionado (variavel global)
+    nome_backup=$(basename "$backup_selecionado")
+    _mensagec "${GREEN}" "Selecionado: $nome_backup"
+    _linha
+
     return 0
 }
 
