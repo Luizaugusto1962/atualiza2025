@@ -211,7 +211,7 @@ _restaurar_backup() {
     if ((${#arquivos_backup[@]} == 1)); then
         local nome_unico
         nome_unico=$(basename "${arquivos_backup[0]}")
-        if _confirmar "Usar o unico backup encontrado?\n${nome_unico}" "S"; then
+        if _confirmar "Usar o unico backup encontrado? ${CYAN}${nome_unico}${YELLOW} S"; then
             backup_selecionado="${arquivos_backup[0]}"
         else
             _mensagec "${YELLOW}" "Operacao cancelada."
@@ -289,7 +289,7 @@ _enviar_backup_avulso() {
     if ((${#arquivos_backup[@]} == 1)); then
         local nome_unico
         nome_unico=$(basename "${arquivos_backup[0]}")
-        if _confirmar "Usar o unico backup encontrado?\n${nome_unico}" "S"; then
+        if _confirmar "Usar o unico backup encontrado? ${CYAN}${nome_unico}${YELLOW} S"; then
             backup_selecionado="${arquivos_backup[0]}"
         else
             _mensagec "${YELLOW}" "Operacao cancelada."
