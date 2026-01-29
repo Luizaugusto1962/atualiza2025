@@ -346,7 +346,7 @@ _selecionar_backup() {
         echo ""
 
         while true; do
-            read -rp "${YELLOW}Opcao → ${NORM}" REPLY
+            read -rp "${YELLOW}Opcao -> ${NORM}" REPLY
             echo ""
 
             if [[ "$REPLY" == "0" || -z "$REPLY" ]]; then
