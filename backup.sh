@@ -224,7 +224,7 @@ _executar_backup_completo() {
         return 1
     fi
     
-    "$cmd_zip" "$arquivo_destino" ./*.* -x ./*.zip ./*.tar ./*.tar.gz >/dev/null 2>&1
+    "$cmd_zip" "$arquivo_destino" ./*.* -x ./*.zip ./*.tar ./*.gz ./*.log ./*.tmp ./*.old >/dev/null 2>&1
     local resultado=$?
     
     # Verificar se o backup foi criado
@@ -261,7 +261,7 @@ _executar_backup_incremental() {
 
     # Buscar arquivos modificados
     find . -type f -newermt "$data_referencia" \
-         ! -name "*.zip" ! -name "*.tar" ! -name "*.tar.gz" -print0 > "$arquivos_temp"
+         ! -name "*.zip" ! -name "*.tar"  -name "*.log" ! -name "*.tmp" ! -name "*.gz" "*.log" "*.old" -print0 > "$arquivos_temp"
 
     # Verificar se encontrou arquivos
     if [[ ! -s "$arquivos_temp" ]]; then
