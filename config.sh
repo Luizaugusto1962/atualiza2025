@@ -309,7 +309,7 @@ _configurar_acessos() {
             }
         fi
     else
-        down_dir="${TOOLS_DIR}"       
+        down_dir="${RECEBE}"       
     fi
 }
 

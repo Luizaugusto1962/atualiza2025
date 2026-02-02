@@ -180,13 +180,8 @@ _processar_biblioteca_offline() {
 
     for arquivo in "${arquivos_update[@]}"; do
         if [[ -f "${down_dir}/${arquivo}" ]]; then
-            if mv -f "${down_dir}/${arquivo}" "${TOOLS_DIR}"; then
-                _mensagec "${GREEN}" "Movendo biblioteca: ${arquivo}"
-                _linha
-            else
-                _mensagec "${RED}" "Erro ao mover arquivo: ${arquivo}"
-                return 1
-            fi
+            _mensagec "${GREEN}" "Arquivo encontrado: ${arquivo}"
+            _linha
         else
             _mensagec "${YELLOW}" "Arquivo nao encontrado: ${arquivo}"
         fi
@@ -197,12 +192,17 @@ _processar_biblioteca_offline() {
 
 # Salva atualizacao da biblioteca
 _salvar_atualizacao_biblioteca() {
-    _ir_para_tools
+    # Criar diretório envia se não existir
+    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
+    
+    # Ir para o diretório envia
+    cd "${RECEBE}" || return 1
+    
     clear
     _definir_variaveis_biblioteca
 
     _linha
-    _mensagec "${YELLOW}" "A atualizacao deve estar no diretorio ${TOOLS_DIR}"
+    _mensagec "${YELLOW}" "A atualizacao deve estar no diretorio ${RECEBE}"
     _linha
 
     # Verificar arquivos de atualizacao
@@ -320,7 +320,9 @@ _processar_atualizacao_biblioteca() {
 
 # Executa a atualizacao da biblioteca
 _executar_atualizacao_biblioteca() {
-    _ir_para_tools
+    # Ir para o diretório envia onde estão os arquivos
+    cd "${RECEBE}" || return 1
+    
     _definir_variaveis_biblioteca
      
     local -a arquivos_update
@@ -331,8 +333,8 @@ _executar_atualizacao_biblioteca() {
         [[ -n "${arquivo}" && -r "${arquivo}" ]] && ((total_arquivos++))
     done
     local contador=1
-####
- # Definir diretorio de configuracao usando variaveis locais
+
+# Definir diretorio de configuracao usando variaveis locais
 #    raiz="${TOOLS_DIR%/*}"
 #    principal="$(dirname "$raiz")"
 
@@ -340,7 +342,7 @@ local raiz_local
 raiz_local="${TOOLS_DIR%/*}"
 local principal_local
 principal_local="$(dirname "$raiz_local")"
-####
+
     # Processar cada arquivo de atualizacao
     for arquivo in "${arquivos_update[@]}"; do
         if [[ -n "${arquivo}" && -r "${arquivo}" ]]; then
@@ -373,7 +375,10 @@ principal_local="$(dirname "$raiz_local")"
     _linha
     _mensagec "${YELLOW}" "Atualizacao concluida com sucesso!"
     _linha
-    _ir_para_tools
+    
+    # Ir para o diretório envia para renomear os arquivos
+    cd "${RECEBE}" || return 1
+    
     # Mover arquivos .zip para .bkp
     for arquivo_zip in *_"${VERSAO}".zip; do
         if [[ -f "${arquivo_zip}" ]]; then
@@ -479,7 +484,11 @@ _reverter_programa_especifico_biblioteca() {
 
 # Baixa biblioteca via RSYNC
 _baixar_biblioteca_rsync() {
-    _ir_para_tools
+    # Criar diretório envia se não existir
+    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
+    
+    # Ir para o diretório envia
+    cd "${RECEBE}" || return 1
 
     if [[ "${acessossh}" == "s" ]]; then
 #        if [[ "${sistema}" == "iscobol" ]]; then
