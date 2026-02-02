@@ -6,8 +6,8 @@
 # SISTEMA SAV - Script de Atualizacao Modular
 # Versao: 02/02/2026-00
 
-raiz="${raiz:-}"
-principal="${principal:-}"
+raiz_local="${raiz_local:-}"
+principal_local="${principal_local:-}"
 sistema="${sistema:-}"
 cmd_zip="${cmd_zip:-}"
 cmd_unzip="${cmd_unzip:-}"
@@ -333,9 +333,13 @@ _executar_atualizacao_biblioteca() {
     local contador=1
 ####
  # Definir diretorio de configuracao usando variaveis locais
-    raiz="${TOOLS_DIR%/*}"
-    principal="$(dirname "$raiz")"
+#    raiz="${TOOLS_DIR%/*}"
+#    principal="$(dirname "$raiz")"
 
+local raiz_local
+raiz_local="${TOOLS_DIR%/*}"
+local principal_local
+principal_local="$(dirname "$raiz_local")"
 ####
     # Processar cada arquivo de atualizacao
     for arquivo in "${arquivos_update[@]}"; do
@@ -347,7 +351,7 @@ _executar_atualizacao_biblioteca() {
 
             # Descompactar arquivo em background
             {
-            "${cmd_unzip}" -o "${arquivo}" -d "${principal}" >>"${LOG_ATU}" 2>&1
+            "${cmd_unzip}" -o "${arquivo}" -d "${principal_local}" >>"${LOG_ATU}" 2>&1
             } &
             local pid_unzip=$!
             pids+=("$pid_unzip")  # Registrar PID para trap
