@@ -4,7 +4,7 @@
 # Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 06/01/2026-00
+# Versao: 02/02/2026-00
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -396,16 +396,43 @@ _configurar_ssh() {
 #---------- FUNcoES DE RETRY ----------#
 
 # Executa comando com retry automatico
+# AVISO: Esta funcao NAO eh usada atualmente no sistema
+# Para usar com seguranca, passe o comando como array: _executar_com_retry_seguro cmd arg1 arg2 ...
 _executar_com_retry() {
-    local comando="$1"
-    local max_tentativas="${2:-3}"
-    local intervalo="${3:-5}"
+    _mensagec "${RED}" "AVISO: Funcao _executar_com_retry esta obsoleta"
+    _mensagec "${YELLOW}" "Use _executar_com_retry_seguro passando comando como argumentos separados"
+    return 1
+}
+
+# Executa comando com retry automatico (versao segura sem eval)
+# Uso: _executar_com_retry_seguro comando arg1 arg2 ... -- max_tentativas intervalo
+_executar_com_retry_seguro() {
+    local max_tentativas=3
+    local intervalo=5
     local tentativa=1
+    local -a cmd_args=()
+    
+    # Processar argumentos
+    while [[ $# -gt 0 ]]; do
+        if [[ "$1" == "--" ]]; then
+            shift
+            [[ -n "${1:-}" ]] && max_tentativas="$1"
+            [[ -n "${2:-}" ]] && intervalo="$2"
+            break
+        fi
+        cmd_args+=("$1")
+        shift
+    done
+    
+    if [[ ${#cmd_args[@]} -eq 0 ]]; then
+        _log_erro "Nenhum comando fornecido"
+        return 1
+    fi
     
     while (( tentativa <= max_tentativas )); do
-        _log "Tentativa ${tentativa}/${max_tentativas}: ${comando}"
+        _log "Tentativa ${tentativa}/${max_tentativas}: ${cmd_args[*]}"
         
-        if eval "$comando"; then
+        if "${cmd_args[@]}"; then
             _log_sucesso "Comando executado com sucesso na tentativa ${tentativa}"
             return 0
         else
@@ -418,6 +445,6 @@ _executar_com_retry() {
         fi
     done
     
-    _log_erro "Comando falhou apos ${max_tentativas} tentativas: ${comando}"
+    _log_erro "Comando falhou apos ${max_tentativas} tentativas:"
     return 1
 }

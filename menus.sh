@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 28/01/2026-00
+# Versao: 02/02/2026-00
 # Autor: Luiz Augusto
 
 raiz="${raiz:-}"
@@ -235,25 +235,18 @@ _menu_arquivos() {
         printf "\n"
         
         # Verificar se sistema tem banco de dados
-        if [[ "${BANCO}" = "s" ]]; then
-            _mensagec "${GREEN}" "1${NORM} -|: Temporarios               "
-            printf "\n"
-            _mensagec "${GREEN}" "4${NORM} -|: Enviar e Receber Arquivos "
-            printf "\n"
-            _mensagec "${GREEN}" "5${NORM} -|: Expurgador de Arquivos    "
-            printf "\n"
-        else
-            _mensagec "${GREEN}" "1${NORM} -|: Arquivos Temporarios      "
-            printf "\n"
+        _mensagec "${GREEN}" "1${NORM} -|: Arquivos Temporarios      "
+        printf "\n"
+        if [[ "${BANCO}" != "s" ]]; then
             _mensagec "${GREEN}" "2${NORM} -|: Recuperar Arquivos        "
             printf "\n" 
             _mensagec "${GREEN}" "3${NORM} -|: Rotinas de Backup         "
             printf "\n"
-            _mensagec "${GREEN}" "4${NORM} -|: Enviar e Receber Arquivos "
-            printf "\n"
-            _mensagec "${GREEN}" "5${NORM} -|: Expurgador de Arquivos    "
-            printf "\n"
         fi
+        _mensagec "${GREEN}" "4${NORM} -|: Enviar e Receber Arquivos "
+        printf "\n"
+        _mensagec "${GREEN}" "5${NORM} -|: Expurgador de Arquivos    "
+        printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
@@ -268,19 +261,19 @@ _menu_arquivos() {
         case "${opcao}" in
             1) _menu_temporarios ;;
             2) 
-                if [[ "${BANCO}" != "s" ]]; then
-                    _menu_recuperar_arquivos
-                else
+                if [[ "${BANCO}" = "s" ]]; then
                     _opinvalida
                     _read_sleep 1
+                else
+                    _menu_recuperar_arquivos
                 fi
                 ;;
             3) 
-                if [[ "${BANCO}" != "s" ]]; then
-                    _menu_backup
-                else
+                if [[ "${BANCO}" = "s" ]]; then
                     _opinvalida
                     _read_sleep 1
+                else
+                    _menu_backup
                 fi
                 ;;
             4) _menu_transferencia_arquivos ;;
@@ -562,7 +555,7 @@ _menu_setups() {
                 # Apos a manutencao, recarregar as configuracoes
                 if [[ -f "${cfg_dir}/.atualizac" ]]; then
                     # shellcheck source=/dev/null
-                    "." "${cfg_dir}/.atualizac"
+                    source "${cfg_dir}/.atualizac"
                     _mensagec "${GREEN}" "Configuracoes recarregadas com sucesso!"
                     _read_sleep 2
                 fi
@@ -616,7 +609,14 @@ _menu_lembretes() {
 
         case "${opcao}" in
             1) _escrever_nova_nota ;;
-            2) _visualizar_notas_arquivo "${cfg_dir}/atualizal" ;;
+            2) 
+                if [[ -f "${cfg_dir}/atualizal" ]]; then
+                    _visualizar_notas_arquivo "${cfg_dir}/atualizal"
+                else
+                    _mensagec "${YELLOW}" "Arquivo de notas nao encontrado"
+                    _read_sleep 1
+                fi
+                ;;
             3) _editar_nota_existente ;;
             4) _apagar_nota_existente ;;
             9) return ;;
@@ -672,7 +672,7 @@ _menu_ajuda_principal() {
         case "${opcao}" in
             1) _exibir_manual_completo ;;
             2) _ajuda_rapida ;;
-            3) _ajuda_no_geral;;
+            3) _ajuda_no_geral ;;
             4) _buscar_manual ;;
             5) _exportar_manual ;;
             6) _menu_selecao_contexto ;;
@@ -796,10 +796,8 @@ _menu_tipo_backup() {
 # Define a base de trabalho atual
 # Parametros: $1=nome_da_base (base, base2, base3)
 _definir_base_trabalho() {
-#    local base_var="$1"
-#    local base_dir="${!base_var}"
-
-    local base_dir="${!1}"
+    local base_var="$1"
+    local base_dir="${!base_var}"
 
     if [[ -z "${raiz}" ]] || [[ -z "${base_dir}" ]]; then
         _mensagec "${RED}" "Erro: Variaveis de configuracao nao definidas"

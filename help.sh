@@ -4,7 +4,7 @@
 # Fornece documentacao completa e help contextual para o sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 14/01/2026-00
+# Versao: 02/02/2026-00
 
 cfg_dir="${cfg_dir:-}"
 TOOLS_DIR="${TOOLS_DIR:-}"
@@ -456,6 +456,9 @@ _menu_selecao_contexto() {
         8) _exibir_ajuda_contextual "transferencia" ;;
         9) _exibir_ajuda_contextual "setups" ;;
         10) _exibir_ajuda_contextual "lembretes" ;;
-        *) _mensagec "${RED}" "Opçao inválida" ; sleep 1 ;;
+        *) 
+            _mensagec "${RED}" "Opçao inválida" 
+             sleep 1 
+             ;;
     esac
 }

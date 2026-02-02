@@ -9,7 +9,7 @@
 #   - ./setup.sh --edit: Modo de edicao para modificar configuracoes existentes.
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 28/01/2026-00
+# Versao: 02/02/2026-00
 
 #---------- FUNcoES DE LoGICA DE NEGoCIO ----------#
 
@@ -62,7 +62,7 @@ _initial_setup() {
     chmod +x /usr/local/bin/atualiza
 
     echo "Pronto!"
-} >> .atualizac
+}
 
 # Edicao de configuracoes existentes
 _edit_setup() {
@@ -316,18 +316,18 @@ _editar_variavel() {
                 ;;
             "BANCO"|"acessossh")
                 read -rp "Novo valor (s/n): " opt
-                [[ "$opt" == "s" ]] && eval "$nome=s"
-                [[ "$opt" == "n" ]] && eval "$nome=n"
+                [[ "$opt" == "s" ]] && declare -g "$nome"="s"
+                [[ "$opt" == "n" ]] && declare -g "$nome"="n"
                 ;;
             "Offline")
                 read -rp "Sistema em modo Offline? (s/n): " opt            
-                [[ "$opt" == "s" ]] && eval "Offline=s" 
-                [[ "$opt" == "n" ]] && eval "Offline=n" 
+                [[ "$opt" == "s" ]] && declare -g "Offline"="s"
+                [[ "$opt" == "n" ]] && declare -g "Offline"="n"
                 ;;
 
             *)
                 read -rp "Novo valor para ${nome}: " novo_valor
-                eval "$nome=\"$novo_valor\""
+                declare -g "$nome"="$novo_valor"
                 ;;
         esac
     fi

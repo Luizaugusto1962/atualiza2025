@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao, instalacao e reversao de programas
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 29/12/2025-00
+# Versao: 02/02/2026-00
 
 raiz="${raiz:-}"
 sistema="${sistema:-}"
@@ -393,17 +393,17 @@ _processar_atualizacao_programas() {
         
         # Backup de arquivos .class
         if [[ -f "${E_EXEC}/${programa}.class" ]]; then
-            "${cmd_zip}" -m -j "$arquivo_backup" "${E_EXEC}/${programa}"*.class
+            "${cmd_zip}" -j "$arquivo_backup" "${E_EXEC}/${programa}"*.class
         fi
         
         # Backup de arquivos .int
         if [[ -f "${E_EXEC}/${programa}.int" ]]; then
-            "${cmd_zip}" -m -j "$arquivo_backup" "${E_EXEC}/${programa}.int"
+            "${cmd_zip}" -j "$arquivo_backup" "${E_EXEC}/${programa}.int"
         fi
         
         # Backup de arquivos .TEL
         if [[ -f "${T_TELAS}/${programa}.TEL" ]]; then
-            "${cmd_zip}" -m -j "$arquivo_backup" "${T_TELAS}/${programa}.TEL"
+            "${cmd_zip}" -j "$arquivo_backup" "${T_TELAS}/${programa}.TEL"
         fi
     done
 
@@ -493,14 +493,14 @@ _processar_atualizacao_pacotes() {
 
         # Backup dos arquivos antigos
         if [[ "${sistema}" == "iscobol" ]]; then
-            find "${E_EXEC}" -name "${progname}*.class" -exec "${cmd_zip}" -m -j "${OLDS}/${progname}-anterior.zip" {} + 2>/dev/null
+            find "${E_EXEC}" -name "${progname}*.class" -exec "${cmd_zip}" -j "${OLDS}/${progname}-anterior.zip" {} + 2>/dev/null
         else
-            find "${E_EXEC}" -name "${progname}*.int" -exec "${cmd_zip}" -m -j "${OLDS}/${progname}-anterior.zip" {} + 2>/dev/null
+            find "${E_EXEC}" -name "${progname}*.int" -exec "${cmd_zip}" -j "${OLDS}/${progname}-anterior.zip" {} + 2>/dev/null
         fi
 
         # Backup de arquivos .TEL se existirem
         if [[ -f "${progname}.TEL" ]]; then
-            find "${T_TELAS}" -name "${progname}*.TEL" -exec "${cmd_zip}" -m -j "${OLDS}/${progname}-anterior.zip" {} + 2>/dev/null
+            find "${T_TELAS}" -name "${progname}*.TEL" -exec "${cmd_zip}" -j "${OLDS}/${progname}-anterior.zip" {} + 2>/dev/null
         fi
 
         # Mover novos arquivos

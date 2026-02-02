@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 28/01/2025-02
+# Versao: 02/02/2026-00
 
 raiz="${raiz:-}"
 cfg_dir="${cfg_dir:-}"
@@ -503,7 +503,8 @@ editar_variavel() {
             esac
         else
             read -rp "Novo valor para ${nome}: " novo_valor
-            eval "$nome=\"$novo_valor\""
+            # Usar declare em vez de eval para seguranca
+            declare -g "$nome"="$novo_valor"
         fi
     fi
     printf "%s\n" "${tracejada}"

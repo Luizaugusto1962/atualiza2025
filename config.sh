@@ -4,7 +4,7 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 28/01/2026-00
+# Versao: 02/02/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
@@ -295,7 +295,7 @@ _carregar_config_empresa() {
     
     # Carregar configuracoes
     # shellcheck source=/dev/null
-    "." "${config_file}"
+    . "${config_file}"
 }
 
 # Configurar acesso offline se necessario

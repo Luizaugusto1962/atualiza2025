@@ -3,14 +3,14 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 22/01/2026-00
+# Versao: 02/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"   # Tipo de sistema (ex: iscobol, outros).
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
-BASE_TRABALHO="${BASE_TRABALHO:-}" # Base de trabalho selecionada.
+base_trabalho="${base_trabalho:-}" # Base de trabalho selecionada.
 cmd_zip="${cmd_zip:-}"  # Comando para compactacao (ex: zip).
 jut="${jut:-}"              # Caminho para o utilitario jutil.
 raiz="${raiz:-}"
@@ -73,8 +73,10 @@ _limpar_base_especifica() {
             
             # Compactar e mover arquivos temporarios
             local zip_temporarios="Temps-${UMADATA}.zip"
-            if find "$caminho_base" -type f -iname "$padrao_arquivo" -exec "$cmd_zip" -m "${BACKUP}/${zip_temporarios}" {} + >>"${LOG_LIMPA}" 2>&1; then
+            if find "$caminho_base" -type f -iname "$padrao_arquivo" -exec "$cmd_zip" "${BACKUP}/${zip_temporarios}" {} + >>"${LOG_LIMPA}" 2>&1; then
                 _log "Arquivos temporarios processados: $padrao_arquivo"
+                # Remover arquivos originais após compactação bem-sucedida
+                find "$caminho_base" -type f -iname "$padrao_arquivo" -delete
             fi
         fi
     done
@@ -136,13 +138,13 @@ _lista_arquivos_lixo() {
 #---------- FUNcoES DE RECUPERAcaO ----------#
 # Recupera arquivo especifico ou todos
 _recuperar_arquivo_especifico() {
-    local base_trabalho
     local continuar="S"
     
     # Escolher base se necessario
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
-        BASE_TRABALHO="${base_trabalho}"
+        # `_menu_escolha_base` / `_definir_base_trabalho` seta a variável global
+        # `base_trabalho` (export). Usaremos essa variável.
     else
         base_trabalho="${raiz}${base}"
     fi
@@ -171,12 +173,11 @@ _recuperar_arquivo_especifico() {
             _recuperar_todos_arquivos "$base_trabalho"
             _mensagec "${YELLOW}" "Todos os arquivos principais foram recuperados."
             break   
-        fi 
-#        else
+        else
             # Recupera arquivo específico
             _recuperar_arquivo_individual "$nome_arquivo" "$base_trabalho"
             _mensagec "${YELLOW}" "Arquivo(s) recuperado(s)..."
-#        fi
+        fi
         _linha
         
         # Só pergunta se quer continuar se foi um arquivo específico
@@ -213,8 +214,9 @@ _recuperar_todos_arquivos() {
         done
     else
         _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} nao existe"
+        return 1
     fi
-    return 1
+    return 0
 }
 
 # Recupera arquivo individual
@@ -251,13 +253,13 @@ _recuperar_arquivos_principais() {
     # Escolher base se necessario
     if [[ -n "${base2}" ]]; then
         _menu_escolha_base || return 1
-        BASE_TRABALHO="${base_trabalho}"
+        # `_menu_escolha_base`/`_definir_base_trabalho` deve setar `base_trabalho`
     else
         base_trabalho="${raiz}${base}"
     fi
     
     if [[ "${sistema}" = "iscobol" ]]; then
-        local base_trabalho="${BASE_TRABALHO:-${raiz}${base}}"
+        local base_trabalho="${base_trabalho:-${raiz}${base}}"
         cd "$base_trabalho" || {
             _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} nao encontrado"
             return 1
@@ -348,27 +350,24 @@ _enviar_arquivo_avulso() {
     read -rp "${YELLOW} -> ${NORM}" dir_origem
     _linha
     
-    if [[ ! -d "$dir_origem" ]]; then
-        if [[ -z "$dir_origem" ]]; then
-            dir_origem="${ENVIA}"
-            if [[ -d "$dir_origem" ]]; then
-                _linha
-                _mensagec "${YELLOW}" "Usando diretorio padrao: ${dir_origem}"
-                if ls -s "${dir_origem}"/*.* &>/dev/null; then
-                    _linha
-                    _mensagec "${YELLOW}" "Arquivos encontrados no diretorio"
-                    _linha
-                else
-                    _mensagec "${YELLOW}" "Nenhum arquivo encontrado no diretorio"
-                    _press
-                    return 1
-                fi
-            fi
-        else
-            _mensagec "${RED}" "Diretorio nao encontrado: ${dir_origem}"
+    if [[ -z "$dir_origem" ]]; then
+        dir_origem="${ENVIA:-}"
+        if [[ -z "$dir_origem" || ! -d "$dir_origem" ]]; then
+            _mensagec "${RED}" "Diretorio de origem nao informado ou padrao nao definido"
             _press
             return 1
         fi
+        _linha
+        _mensagec "${YELLOW}" "Usando diretorio padrao: ${dir_origem}"
+        if ! ls -s "${dir_origem}"/*.* &>/dev/null; then
+            _mensagec "${YELLOW}" "Nenhum arquivo encontrado no diretorio"
+            _press
+            return 1
+        fi
+    elif [[ ! -d "$dir_origem" ]]; then
+        _mensagec "${RED}" "Diretorio nao encontrado: ${dir_origem}"
+        _press
+        return 1
     fi
     
     # Solicitar nome do arquivo
@@ -459,7 +458,7 @@ _receber_arquivo_avulso() {
     _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
     _linha
     
-    if sftp -P "${PORTA}" "${USUARIO}@${IPSERVER}:${origem_remota}/${arquivo_receber}" "${destino_local}/."; then
+    if scp -P "${PORTA}" "${USUARIO}@${IPSERVER}:${origem_remota}/${arquivo_receber}" "${destino_local}/"; then
         _mensagec "${YELLOW}" "Arquivo recebido em \"${destino_local}\""
         _linha
         _read_sleep 3

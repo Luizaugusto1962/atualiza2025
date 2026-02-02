@@ -4,7 +4,7 @@
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 28/01/2026-00
+# Versao: 02/02/2026-00
 
 #---------- FUNcoES DE FORMATAcaO DE TELA ----------#
 
@@ -213,7 +213,7 @@ _solicitar_entrada() {
         
         # Permite saida com ENTER vazio
         if [[ -z "$entrada" ]]; then
-            eprintf "\n"
+            printf "\n"
             return 0
         fi
         
@@ -515,7 +515,7 @@ _executar_expurgador_diario() {
     touch "$flag_file"
     
     _log "Limpeza automatica diaria executada"
-    exit
+    return 0
 }
 
 # Funcao para checar se o zip esta instalado

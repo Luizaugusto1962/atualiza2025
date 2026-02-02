@@ -4,7 +4,7 @@
 # Responsavel por backup completo, incremental e restauracao
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 29/01/2026-00
+# Versao: 02/02/2026-00
 # Autor: Luiz Augusto
 
 sistema="${sistema:-}"
@@ -261,7 +261,7 @@ _executar_backup_incremental() {
 
     # Buscar arquivos modificados
     find . -type f -newermt "$data_referencia" \
-         ! -name "*.zip" ! -name "*.tar"  -name "*.log" ! -name "*.tmp" ! -name "*.gz" "*.log" "*.old" -print0 > "$arquivos_temp"
+         ! -name "*.zip" ! -name "*.tar" ! -name "*.log" ! -name "*.tmp" ! -name "*.gz" ! -name "*.old" -print0 > "$arquivos_temp"
 
     # Verificar se encontrou arquivos
     if [[ ! -s "$arquivos_temp" ]]; then

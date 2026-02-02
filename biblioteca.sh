@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao das bibliotecas do sistema (Transpc, Savatu)
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 28/01/2026-00
+# Versao: 02/02/2026-00
 
 raiz="${raiz:-}"
 principal="${principal:-}"
@@ -332,7 +332,7 @@ _executar_atualizacao_biblioteca() {
     done
     local contador=1
 ####
- # Definir diretorio de configuracao
+ # Definir diretorio de configuracao usando variaveis locais
     raiz="${TOOLS_DIR%/*}"
     principal="$(dirname "$raiz")"
 
@@ -395,11 +395,17 @@ _executar_atualizacao_biblioteca() {
     _mensagec "${RED}" "Versao atualizada - ${VERSAO}"
     _linha
 
-    # Salvar versao anterior
-    if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> "${cfg_dir}/.atualizac"; then
-        _mensagec "${RED}" "Erro ao gravar arquivo de versao atualizada"
-        _press
-        exit
+    # Salvar versao anterior (substituir se existir, adicionar se nao existir)
+    if grep -q "^VERSAOANT=" "${cfg_dir}/.atualizac" 2>/dev/null; then
+        # Substituir linha existente
+        sed -i "s/^VERSAOANT=.*/VERSAOANT=${VERSAO}/" "${cfg_dir}/.atualizac"
+    else
+        # Adicionar nova linha
+        if ! printf "VERSAOANT=%s\n" "${VERSAO}" >> "${cfg_dir}/.atualizac"; then
+            _mensagec "${RED}" "Erro ao gravar arquivo de versao atualizada"
+            _press
+            exit
+        fi
     fi
 
     pids=()  # Limpar PIDs apos sucesso
