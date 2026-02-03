@@ -4,7 +4,7 @@
 # Fornece documentacao completa e help contextual para o sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 03/02/2026-00
 
 cfg_dir="${cfg_dir:-}"
 TOOLS_DIR="${TOOLS_DIR:-}"
@@ -110,31 +110,6 @@ _ler_secao_manual() {
     else
         # É a última seçao, lê até o final
         conteudo=$(tail -n +${linha_inicio} "$MANUAL_FILE")
-    fi
-    
-    echo "$conteudo"
-    return 0
-}
-_ler_secao_manual3() {
-    local secao="$1"
-    local conteudo=""
-    
-    if [[ ! -f "$MANUAL_FILE" ]]; then
-        _mensagec "${RED}" "Arquivo manual.txt nao encontrado!"
-        _mensagec "${YELLOW}" "Execute a criaçao do manual primeiro."
-        return 1
-    fi
-    
-    # Lê a seçao entre [SECAO] e a proxima seçao [*] ou fim do arquivo
-    conteudo=$(awk "/^\[${secao}\]/,/^\[.*\]/ {
-        if (/^\[${secao}\]/) next;
-        if (/^\[.*\]/) exit;
-        print
-    }" "$MANUAL_FILE")
-    
-    if [[ -z "$conteudo" ]]; then
-        _mensagec "${YELLOW}" "Seçao [$secao] nao encontrada no manual."
-        return 1
     fi
     
     echo "$conteudo"
@@ -457,8 +432,8 @@ _menu_selecao_contexto() {
         9) _exibir_ajuda_contextual "setups" ;;
         10) _exibir_ajuda_contextual "lembretes" ;;
         *) 
-            _mensagec "${RED}" "Opçao inválida" 
-             sleep 1 
-             ;;
+            _mensagec "${RED}" "Opcao invalida" 
+            sleep 1 
+            ;;
     esac
 }

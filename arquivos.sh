@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 03/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"   # Tipo de sistema (ex: iscobol, outros).
@@ -259,7 +259,8 @@ _recuperar_arquivos_principais() {
     fi
     
     if [[ "${sistema}" = "iscobol" ]]; then
-        local base_trabalho="${base_trabalho:-${raiz}${base}}"
+        # Usar valor padrão se base_trabalho estiver vazia
+        base_trabalho="${base_trabalho:-${raiz}${base}}"
         cd "$base_trabalho" || {
             _mensagec "${RED}" "Erro: Diretorio ${base_trabalho} nao encontrado"
             return 1
@@ -359,7 +360,11 @@ _enviar_arquivo_avulso() {
         fi
         _linha
         _mensagec "${YELLOW}" "Usando diretorio padrao: ${dir_origem}"
-        if ! ls -s "${dir_origem}"/*.* &>/dev/null; then
+        # Verificar se há arquivos no diretório
+        shopt -s nullglob
+        local arquivos=("${dir_origem}"/*)
+        shopt -u nullglob
+        if (( ${#arquivos[@]} == 0 )); then
             _mensagec "${YELLOW}" "Nenhum arquivo encontrado no diretorio"
             _press
             return 1
@@ -373,6 +378,7 @@ _enviar_arquivo_avulso() {
     # Solicitar nome do arquivo
     _linha
     _mensagec "${CYAN}" "Informe o arquivo que deseja enviar"
+    _mensagec "${CYAN}" "Use * para enviar todas as extensoes (ex: ARQUIVO*)"
     _linha
     read -rp "${YELLOW}2- Nome do ARQUIVO: ${NORM}" arquivo_enviar
     
@@ -382,10 +388,47 @@ _enviar_arquivo_avulso() {
         return 1
     fi
     
-    if [[ ! -e "${dir_origem}/${arquivo_enviar}" ]]; then
-        _mensagec "${YELLOW}" "${arquivo_enviar} nao encontrado em ${dir_origem}"
-        _press
-        return 1
+    # Verificar se o arquivo contém wildcard (*)
+    if [[ "$arquivo_enviar" == *"*"* ]]; then
+        # Listar arquivos que correspondem ao padrão
+        shopt -s nullglob
+        local arquivos_encontrados=()
+        while IFS= read -r -d '' arquivo; do
+            arquivos_encontrados+=("$arquivo")
+        done < <(find "${dir_origem}" -maxdepth 1 -type f -name "${arquivo_enviar}" -print0)
+        shopt -u nullglob
+        
+        if (( ${#arquivos_encontrados[@]} == 0 )); then
+            _mensagec "${YELLOW}" "Nenhum arquivo encontrado com o padrao: ${arquivo_enviar}"
+            _press
+            return 1
+        fi
+        
+        # Mostrar arquivos encontrados
+        _linha
+        _mensagec "${CYAN}" "Arquivos encontrados (${#arquivos_encontrados[@]}):"
+        for arquivo in "${arquivos_encontrados[@]}"; do
+            _mensagec "${GREEN}" "  - $(basename "$arquivo")"
+        done
+        _linha
+        
+        # Confirmar envio
+        local confirmacao
+        read -rp "${YELLOW}Deseja enviar todos esses arquivos? [S/N]: ${NORM}" confirmacao
+        confirmacao=$(echo "$confirmacao" | tr '[:lower:]' '[:upper:]')
+        
+        if [[ "$confirmacao" != "S" ]]; then
+            _mensagec "${YELLOW}" "Envio cancelado pelo usuario"
+            _press
+            return 0
+        fi
+    else
+        # Verificação para arquivo único (sem wildcard)
+        if [[ ! -e "${dir_origem}/${arquivo_enviar}" ]]; then
+            _mensagec "${YELLOW}" "${arquivo_enviar} nao encontrado em ${dir_origem}"
+            _press
+            return 1
+        fi
     fi
     
     # Solicitar destino remoto
@@ -401,18 +444,32 @@ _enviar_arquivo_avulso() {
         return 1
     fi
     
-    # Enviar arquivo
+    # Enviar arquivo(s)
     _linha
     _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
     _linha
     
-    if rsync -avzP -e "ssh -p ${PORTA}" "${dir_origem}/${arquivo_enviar}" "${USUARIO}@${IPSERVER}:${destino_remoto}"; then
-        _mensagec "${YELLOW}" "Arquivo enviado para \"${destino_remoto}\""
-        _linha
-        _read_sleep 3
+    # Verificar se está enviando múltiplos arquivos ou apenas um
+    if [[ "$arquivo_enviar" == *"*"* ]]; then
+        # Enviar múltiplos arquivos usando o array
+        if rsync -avzP -e "ssh -p ${PORTA}" "${arquivos_encontrados[@]}" "${USUARIO}@${IPSERVER}:${destino_remoto}/"; then
+            _mensagec "${YELLOW}" "Arquivo(s) enviado(s) para \"${destino_remoto}\""
+            _linha
+            _read_sleep 3
+        else
+            _mensagec "${RED}" "Erro no envio dos arquivos"
+            _press
+        fi
     else
-        _mensagec "${RED}" "Erro no envio do arquivo"
-        _press
+        # Enviar arquivo único
+        if rsync -avzP -e "ssh -p ${PORTA}" "${dir_origem}/${arquivo_enviar}" "${USUARIO}@${IPSERVER}:${destino_remoto}"; then
+            _mensagec "${YELLOW}" "Arquivo enviado para \"${destino_remoto}\""
+            _linha
+            _read_sleep 3
+        else
+            _mensagec "${RED}" "Erro no envio do arquivo"
+            _press
+        fi
     fi
 }
 
