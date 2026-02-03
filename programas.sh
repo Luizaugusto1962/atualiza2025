@@ -358,7 +358,7 @@ _mover_arquivos_offline() {
             else
                 _mensagec "${RED}" "Arquivo nao encontrado: ${arquivo}"
             fi
-            _traco
+            _linha
         done
     fi
 }
