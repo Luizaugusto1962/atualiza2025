@@ -284,7 +284,11 @@ _solicitar_pacotes_atualizacao() {
 
 # Baixa programas via RSYNC/SFTP
 _baixar_programas_rsync() {
-   _ir_para_tools
+    # Criar diretório RECEBE se não existir
+    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
+    
+    # Ir para o diretório RECEBE
+    cd "${RECEBE}" || return 1
 
     if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
         return 1
@@ -350,11 +354,7 @@ _mover_arquivos_offline() {
     if [[ "${Offline}" == "s" ]]; then
         for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
             if [[ -f "${down_dir}/${arquivo}" ]]; then
-                if ! mv -f "${down_dir}/${arquivo}" "${TOOLS_DIR}"; then
-                    _mensagec "${RED}" "Erro ao mover: ${arquivo}"
-                    continue
-                fi
-                _mensagec "${GREEN}" "Arquivo movido: ${arquivo}"
+                _mensagec "${GREEN}" "Arquivo encontrado: ${arquivo}"
             else
                 _mensagec "${RED}" "Arquivo nao encontrado: ${arquivo}"
             fi
@@ -365,7 +365,9 @@ _mover_arquivos_offline() {
 
 # Processa atualizacao dos programas
 _processar_atualizacao_programas() {
-    _ir_para_tools
+    # Ir para o diretório RECEBE onde estão os arquivos baixados
+    cd "${RECEBE}" || return 1
+    
     local arquivo         # Nome do arquivo
     local extensao        # Extensao do arquivo
     local backup_file     # Nome do arquivo de backup
@@ -463,7 +465,9 @@ done
 
 # Processa atualizacao de pacotes
 _processar_atualizacao_pacotes() {
-#    cd "${down_dir}" || return 1
+    # Ir para o diretório onde estão os pacotes baixados
+    cd "${down_dir}" || return 1
+    
     _configurar_acessos
     # Descompactar pacotes
     for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
@@ -513,12 +517,15 @@ _processar_atualizacao_pacotes() {
 
 # Processa reversao de programas
 _processar_reversao_programas() {
+    # Criar diretório RECEBE se não existir
+    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
+    
     for programa_idx in "${!PROGRAMAS_SELECIONADOS[@]}"; do
         local programa="${PROGRAMAS_SELECIONADOS[$programa_idx]}"
         local arquivo_anterior="${OLDS}/${programa}-anterior.zip"
         
         if [[ -f "$arquivo_anterior" ]]; then
-            mv -f "$arquivo_anterior" "${TOOLS_DIR}/${programa}${class}.zip"
+            mv -f "$arquivo_anterior" "${RECEBE}/${programa}${class}.zip"
             _mensagec "${GREEN}" "Programa revertido: ${programa}"
         else
             _mensagec "${RED}" "Backup nao encontrado para: ${programa}"
@@ -526,7 +533,6 @@ _processar_reversao_programas() {
     done
 
     # Processar atualizacao com os arquivos revertidos
-    _ir_para_tools
     _processar_atualizacao_programas
 }
 
