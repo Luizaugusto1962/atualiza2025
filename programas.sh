@@ -6,23 +6,23 @@
 # SISTEMA SAV - Script de Atualizacao Modular
 # Versao: 02/02/2026-00
 
-raiz="${raiz:-}"
-sistema="${sistema:-}"
-acessossh="${acessossh:-}"
-cmd_zip="${cmd_zip:-}"
-cmd_unzip="${cmd_unzip:-}"
-cmd_find="${cmd_find:-}"
-class="${class:-}"
-mclass="${mclass:-}"
-Offline="${Offline:-}"
-down_dir="${down_dir:-}"
-#---------- VARIaVEIS GLOBAIS DO MoDULO ----------#
+raiz="${raiz:-}"            # Diretorio raiz do sistema
+sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
+acessossh="${acessossh:-}"  # Uso de acesso SSH (s/n)
+cmd_zip="${cmd_zip:-}"      # Comando de compactacao (zip)
+cmd_unzip="${cmd_unzip:-}"  # Comando de descompactacao (unzip)
+cmd_find="${cmd_find:-}"    # Comando find
+class="${class:-}"          # Sufixo de arquivos de compilacao normal
+mclass="${mclass:-}"        # Sufixo de arquivos de compilacao de depuracao
+Offline="${Offline:-}"      # Modo offline (s/n)
+down_dir="${down_dir:-}"    # Diretorio de download de arquivos
 
+#---------- VARIaVEIS GLOBAIS DO MODULO ----------#
 # Arrays para armazenar programas e arquivos
 declare -a PROGRAMAS_SELECIONADOS=()
 declare -a ARQUIVOS_PROGRAMA=()
 
-#---------- FUNcoES DE ATUALIZAcaO ONLINE ----------#
+#---------- FUNCOES DE ATUALIZAcaO ONLINE ----------#
 
 # Atualizacao de programas via conexao online
 _atualizar_programa_online() {

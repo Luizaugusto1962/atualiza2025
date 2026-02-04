@@ -6,18 +6,18 @@
 # SISTEMA SAV - Script de Atualizacao Modular
 # Versao: 02/02/2026-00
 
-raiz_local="${raiz_local:-}"
-principal_local="${principal_local:-}"
-sistema="${sistema:-}"
-cmd_zip="${cmd_zip:-}"
-cmd_unzip="${cmd_unzip:-}"
-cmd_find="${cmd_find:-}"
-acessossh="${acessossh:-}"
-Offline="${Offline:-}"
-down_dir="${down_dir:-}"
-cfg_dir="${cfg_dir:-}"
+raiz_local="${raiz_local:-}"           # Diretorio raiz do sistema
+principal_local="${principal_local:-}" # Diretorio principal do sistema
+sistema="${sistema:-}"                 # Tipo de sistema (iscobol/mf)
+cmd_zip="${cmd_zip:-}"                 # Comando de compactacao (zip)
+cmd_unzip="${cmd_unzip:-}"             # Comando de descompactacao (unzip)
+cmd_find="${cmd_find:-}"               # Comando find
+acessossh="${acessossh:-}"             # Acesso via SSH (s/n)
+Offline="${Offline:-}"                 # Modo offline (s/n)
+down_dir="${down_dir:-}"               # Diretorio de download
+cfg_dir="${cfg_dir:-}"                 # Diretorio de configuracao
 
-declare -g pids=()  # Array global para rastrear PIDs de background
+declare -g pids=()                     # Array global para rastrear PIDs de background
 
 # Funcao de cleanup em caso de interrupcao
 _limpar_interrupcao() {

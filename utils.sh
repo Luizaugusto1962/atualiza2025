@@ -6,9 +6,9 @@
 # SISTEMA SAV - Script de Atualizacao Modular
 # Versao: 02/02/2026-00
 
-#---------- FUNcoES DE FORMATAcaO DE TELA ----------#
+#---------- FUNCOES DE FORMATACAO DE TELA ----------#
 
-cfg_dir="${cfg_dir:-}" # Caminho do diretorio de configuracao do programa.
+cfg_dir="${cfg_dir:-}"        # Caminho do diretorio de configuracao do programa.
 
 # Limpa a tela e posiciona cursor no centro
 _meiodatela() {
@@ -16,10 +16,9 @@ _meiodatela() {
 }
 
 # Exibe mensagem centralizada colorida
-# Parametros: $1=cor $2=mensagem
 _mensagec() {
-    local color="${1}"
-    local message="${2}"
+    local color="${1}"      # Cor da mensagem
+    local message="${2}"    # Mensagem a ser exibida
     printf "%s%*s%s\n" "${color}" $(((${#message} + $(tput cols)) / 2)) "${message}" "${NORM}"
 }
 

@@ -13,12 +13,12 @@ export UPDATE
 TOOLS_DIR="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
 
 # Diretorios dos modulos e configuracoes
-lib_dir="${TOOLS_DIR}/libs"
-cfg_dir="${TOOLS_DIR}/cfg"
-export TOOLS_DIR lib_dir cfg_dir
+lib_dir="${TOOLS_DIR}/libs"       # Diretorio dos modulos de biblioteca
+cfg_dir="${TOOLS_DIR}/cfg"        # Diretorio de configuracoes
+export TOOLS_DIR lib_dir cfg_dir  
 
 # Diretórios obrigatórios
-aux_dirs=("${lib_dir}" "${cfg_dir}")
+aux_dirs=("${lib_dir}" "${cfg_dir}")  # Lista de diretorios obrigatorios
 
 for dir in "${aux_dirs[@]}"; do
     [[ -z "${dir}" ]] && { printf "ERRO: Variavel de diretorio nao definida.\n"; exit 1; }

@@ -9,7 +9,7 @@
 
 #---------- FUNcoES DE LEMBRETES ----------#
 
-cfg_dir="${cfg_dir:-}" # Caminho do diretorio de configuracao do programa.
+cfg_dir="${cfg_dir:-}"          # Caminho do diretorio de configuracao do programa.
 
 # Mostra menu de lembretes
 # Escreve nova nota

@@ -11,9 +11,9 @@ sistema="${sistema:-}"
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
 base2="${base2:-}"         # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"         # Caminho do diretorio da terceira base de dados.
-cmd_zip="${cmd_zip:-}"
-Offline="${Offline:-}"
-raiz="${raiz:-}"
+cmd_zip="${cmd_zip:-}"     # Comando de compactacao (zip)
+Offline="${Offline:-}"     # Modo offline (s/n)
+raiz="${raiz:-}"           # Diretorio raiz do sistema
 
 #---------- FUNCOES PRINCIPAIS DE backup ----------#
 

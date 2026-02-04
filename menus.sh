@@ -7,13 +7,13 @@
 # Versao: 02/02/2026-00
 # Autor: Luiz Augusto
 
-raiz="${raiz:-}"
-sistema="${sistema:-}"
-cfg_dir="${cfg_dir:-}"
-base="${base:-}"
-base2="${base2:-}"
-base3="${base3:-}"
-pasta="${pasta:-}"
+raiz="${raiz:-}"          # Diretorio raiz do sistema.
+sistema="${sistema:-}"    # Nome do sistema (iscobol, savatu, transpc).
+cfg_dir="${cfg_dir:-}"    # Caminho do diretorio de configuracao do programa.
+base="${base:-}"          # Caminho do diretorio da primeira base de dados.
+base2="${base2:-}"        # Caminho do diretorio da segunda base de dados.
+base3="${base3:-}"        # Caminho do diretorio da terceira base de dados.
+pasta="${pasta:-}"        # Caminho do diretorio de programas.
 
 #---------- FUNCAO AUXILIAR DE LEITURA ----------#
 

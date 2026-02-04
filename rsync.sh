@@ -6,13 +6,14 @@
 # SISTEMA SAV - Script de Atualizacao Modular
 # Versao: 02/02/2026-00
 
-raiz="${raiz:-}"
-sistema="${sistema:-}"
-acessossh="${acessossh:-}"
-cmd_zip="${cmd_zip:-}"
-cmd_unzip="${cmd_unzip:-}"
-cmd_find="${cmd_find:-}"
-#---------- CONFIGURAcoES DE CONEXaO ----------#
+raiz="${raiz:-}"            # Diretorio raiz do sistema.
+sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
+acessossh="${acessossh:-}"  # Uso de acesso via chave SSH (s/n).
+cmd_zip="${cmd_zip:-}"      # Comando de compactacao (zip).
+cmd_unzip="${cmd_unzip:-}"  # Comando de descompactacao (unzip).
+cmd_find="${cmd_find:-}"    # Comando find.
+
+#---------- CONFIGURACOES DE CONEXAO ----------#
 
 # Configura parametros de conexao
 _configurar_conexao() {
