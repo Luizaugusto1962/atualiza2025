@@ -6,16 +6,16 @@
 # Versao: 03/02/2026-00
 #
 # Variaveis globais esperadas
-sistema="${sistema:-}"   # Tipo de sistema (ex: iscobol, outros).
-base="${base:-}"           # Caminho do diretorio da segunda base de dados.
-base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
-base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
+sistema="${sistema:-}"             # Tipo de sistema (ex: iscobol, outros).
+base="${base:-}"                   # Caminho do diretorio da segunda base de dados.
+base2="${base2:-}"                 # Caminho do diretorio da segunda base de dados.
+base3="${base3:-}"                 # Caminho do diretorio da terceira base de dados.
 base_trabalho="${base_trabalho:-}" # Base de trabalho selecionada.
-cmd_zip="${cmd_zip:-}"  # Comando para compactacao (ex: zip).
-jut="${jut:-}"              # Caminho para o utilitario jutil.
-raiz="${raiz:-}"
-cfg_dir="${cfg_dir:-}"
-lib_dir="${lib_dir:-}"
+cmd_zip="${cmd_zip:-}"             # Comando para compactacao (ex: zip).
+jut="${jut:-}"                     # Caminho para o utilitario jutil.
+raiz="${raiz:-}"                   # Caminho raiz do sistema.
+cfg_dir="${cfg_dir:-}"             # Caminho do diretorio de configuracoes.
+lib_dir="${lib_dir:-}"             # Caminho do diretorio de bibliotecas.
 
 #---------- FUNcoES DE LIMPEZA ----------#
 
