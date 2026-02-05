@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
 # Atualiza.sh - Script de Atualizacao Modular do SISTEMA SAV
-# SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 29/12/2025-00
+# Versao: 05/02/2025-00
 # Autor: Luiz Augusto
+# Os programas usados por este script devem estar na pasts /libs.
 
 set -euo pipefail
 export LC_ALL=C
@@ -13,11 +13,11 @@ if [[ ! -t 0 && ! -p /dev/stdin ]]; then
     printf "%s\n" "Este script deve ser executado interativamente" >&2
     exit 1
 fi
-TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Diretorio do script atual
 
 # Diretorio do script TOOLS_DIR
-PLIBS_DIR="${TOOLS_DIR}/libs"
-readonly PLIBS_DIR TOOLS_DIR 
+PLIBS_DIR="${TOOLS_DIR}/libs" # Diretorio das bibliotecas
+readonly PLIBS_DIR TOOLS_DIR  # Define variaveis como somente leitura
 
 # Verifica se o diretorio libs existe
 if [[ ! -d "${PLIBS_DIR}" ]]; then
