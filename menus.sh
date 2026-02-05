@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 05/02/2026-00
 # Autor: Luiz Augusto
 
 raiz="${raiz:-}"          # Diretorio raiz do sistema.
@@ -306,9 +306,9 @@ _menu_ferramentas() {
 
         # Opcoes do menu 
         if [[ "${sistema}" = "iscobol" ]]; then
-            _mensagec "${GREEN}" "1${NORM} -|: Versao do Iscobol        "
+            _mensagec "${GREEN}" "1${NORM} -|: Versao do Iscobol         "
         else
-            _mensagec "${GREEN}" "1${NORM} -|: Funcao nao disponivel    "
+            _mensagec "${GREEN}" "1${NORM} -|: Funcao nao disponivel     "
         fi
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} -|: Versao do Linux           "
@@ -322,7 +322,7 @@ _menu_ferramentas() {
 
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior  "
         printf "\n"
         
         # Usar funcao centralizada
