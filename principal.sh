@@ -56,7 +56,7 @@ _carregar_modulo() {
 _carregar_modulo "utils.sh"      # Utilitarios basicos primeiro
 _carregar_modulo "config.sh"     # Configuracoes
 _carregar_modulo "lembrete.sh"   # Sistema de lembretes
-_carregar_modulo "rsync.sh"      # Operacoes de rede
+_carregar_modulo "vaievem.sh"      # Operacoes de rede
 _carregar_modulo "sistema.sh"    # Informacoes do sistema
 _carregar_modulo "arquivos.sh"   # Gestao de arquivos
 _carregar_modulo "backup.sh"     # Sistema de backup

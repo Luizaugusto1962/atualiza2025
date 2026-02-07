@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-# rsync.sh - Modulo de Operacoes de Sincronizacao
+# vaievem.sh - Modulo de Operacoes de Sincronizacao
 # Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 07/02/2026-00
 
 raiz="${raiz:-}"            # Diretorio raiz do sistema.
 sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
