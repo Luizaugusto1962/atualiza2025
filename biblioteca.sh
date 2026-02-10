@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao das bibliotecas do sistema (Transpc, Savatu)
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 10/02/2026-00
 
 raiz_local="${raiz_local:-}"           # Diretorio raiz do sistema
 principal_local="${principal_local:-}" # Diretorio principal do sistema
@@ -58,7 +58,7 @@ _limpar_interrupcao() {
 trap '_limpar_interrupcao INT' INT
 trap '_limpar_interrupcao TERM' TERM
 
-#---------- FUNcoES PRINCIPAIS DE ATUALIZAcaO ----------#
+#---------- FUNCOES PRINCIPAIS DE ATUALIZACAO ----------#
 
 # Atualizacao do Transpc
 _atualizar_transpc() {
@@ -82,7 +82,7 @@ _atualizar_transpc() {
 
     DESTINO2="${DESTINO2TRANSPC}"
     _configurar_acessos
-    _baixar_biblioteca_rsync
+    _baixar_biblioteca_sincroniza
 }
 
 # Atualizacao do Savatu
@@ -113,7 +113,7 @@ _atualizar_savatu() {
         DESTINO2="${DESTINO2SAVATUMF}"
     fi
     _configurar_acessos
-    _baixar_biblioteca_rsync
+    _baixar_biblioteca_sincroniza
 }
 
 # Atualizacao offline da biblioteca
@@ -166,7 +166,7 @@ _reverter_biblioteca() {
     fi
 }
 
-#---------- FUNcoES DE PROCESSAMENTO ----------#
+#---------- FUNCOES DE PROCESSAMENTO ----------#
 
 # Processa biblioteca offline
 _processar_biblioteca_offline() {
@@ -335,13 +335,10 @@ _executar_atualizacao_biblioteca() {
     local contador=1
 
 # Definir diretorio de configuracao usando variaveis locais
-#    raiz="${TOOLS_DIR%/*}"
-#    principal="$(dirname "$raiz")"
-
-local raiz_local
-raiz_local="${TOOLS_DIR%/*}"
-local principal_local
-principal_local="$(dirname "$raiz_local")"
+    local raiz_local
+    raiz_local="${TOOLS_DIR%/*}"
+    local principal_local
+    principal_local="$(dirname "$raiz_local")"
 
     # Processar cada arquivo de atualizacao
     for arquivo in "${arquivos_update[@]}"; do
@@ -421,8 +418,7 @@ principal_local="$(dirname "$raiz_local")"
     _press
 }
 
-#---------- FUNcoES DE REVERSaO ----------#
-
+#---------- FUNCOES DE REVERSAO ----------#
 # Reverte biblioteca completa
 _reverter_biblioteca_completa() {
     local arquivo_backup="$1"
@@ -442,7 +438,7 @@ _reverter_biblioteca_completa() {
     _ir_para_tools
     _mensagec "${YELLOW}" "Voltando backup anterior..."
     _linha
-    _mensagec "${YELLOW}" "Volta dos Programas Concluida"
+    _mensagec "${YELLOW}" "Volta de todos os Programas Concluida"
     _linha
     _press
 }
@@ -453,7 +449,7 @@ _reverter_programa_especifico_biblioteca() {
     local programa_reverter
 
     if ! cd "${OLDS}"; then
-        _mensagec "${RED}" "Erro ao acessar diretorio ${OLDS}"
+        _mensagec "${RED}" "Erro: Falha ao acessar o diretorio ${OLDS}"
         return 1
     fi
 
@@ -471,7 +467,7 @@ _reverter_programa_especifico_biblioteca() {
 
     local padrao="*/"
     if ! "${cmd_unzip}" -o "${arquivo_backup}" "${padrao}${programa_reverter}*" -d "/" >>"${LOG_ATU}"; then
-        _mensagec "${RED}" "Erro ao descompactar programa ${programa_reverter}"
+        _mensagec "${RED}" "Erro: Ao descompactar programa ${programa_reverter}"
         _press
         return 1
     fi
@@ -480,10 +476,10 @@ _reverter_programa_especifico_biblioteca() {
     _press
 }
 
-#---------- FUNcoES DE DOWNLOAD ----------#
+#---------- FUNCOES DE DOWNLOAD ----------#
 
-# Baixa biblioteca via RSYNC
-_baixar_biblioteca_rsync() {
+# Baixa biblioteca via SFTP
+_baixar_biblioteca_sincroniza() {
     # Criar diretório envia se não existir
     [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
     
@@ -491,7 +487,6 @@ _baixar_biblioteca_rsync() {
     cd "${RECEBE}" || return 1
 
     if [[ "${acessossh}" == "s" ]]; then
-#        if [[ "${sistema}" == "iscobol" ]]; then
             local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
             sftp -P "$PORTA" "${src}" "."
     else
@@ -564,4 +559,3 @@ _validar_diretorios_biblioteca() {
     
     return 0
 }
-
