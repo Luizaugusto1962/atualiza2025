@@ -4,7 +4,7 @@
 # Responsavel por backup completo, incremental e restauracao
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 10/02/2026-00
 # Autor: Luiz Augusto
 
 sistema="${sistema:-}"
@@ -497,10 +497,10 @@ _enviar_backup_servidor() {
     fi
 
     _linha
-    _mensagec "${YELLOW}" "Enviando backup via rsync..."
+    _mensagec "${YELLOW}" "Enviando backup via vaievem..."
     _linha
     
-    if rsync -avzP -e "ssh -p ${PORTA}" "${BACKUP}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}"; then
+    if _upload_rsync "${BACKUP}/${nome_backup}" "/${destino_remoto}"; then
         _linha
         _mensagec "${GREEN}" "Backup enviado com sucesso para \"${destino_remoto}\""
         _linha
@@ -589,16 +589,16 @@ _enviar_backup_rede() {
     fi
 
     _linha
-    _mensagec "${YELLOW}" "Enviando backup..."
+    _mensagec "${YELLOW}" "Enviando backup via vaievem..."
     _linha
     
-    if rsync -avzP -e "ssh -p ${PORTA}" "${BACKUP}/${nome_backup}" "${USUARIO}@${IPSERVER}:/${destino_remoto}" 2>/dev/null; then
+    if _upload_rsync "${BACKUP}/${nome_backup}" "/${destino_remoto}"; then
         _linha
         _mensagec "${GREEN}" "Backup enviado para \"${destino_remoto}\" no servidor ${IPSERVER}"
         _read_sleep 3
     else
         _linha
-        _mensagec "${RED}" "Erro ao enviar backup via rsync"
+        _mensagec "${RED}" "Erro ao enviar backup via vaievem"
         _press
         return 1
     fi

@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao, instalacao e reversao de programas
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 10/02/2026-00
 
 raiz="${raiz:-}"            # Diretorio raiz do sistema
 sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
@@ -44,8 +44,8 @@ _atualizar_programa_online() {
         return 1
     fi
     
-    # Baixar programas via rsync
-    _baixar_programas_rsync
+    # Baixar programas via vaievem
+    _baixar_programas_vaievem
     
     # Atualizar programas baixados
     _processar_atualizacao_programas
@@ -87,7 +87,7 @@ _atualizar_programa_pacote() {
         _mensagec "${YELLOW}" "Parametro do servidor OFF ativo"
         _mover_arquivos_offline
     else 
-        _baixar_pacotes_rsync
+        _baixar_pacotes_vaievem
     fi
         _processar_atualizacao_pacotes
         _linha
@@ -282,8 +282,8 @@ _solicitar_pacotes_atualizacao() {
 
 #---------- FUNcoES DE DOWNLOAD ----------#
 
-# Baixa programas via RSYNC/SFTP
-_baixar_programas_rsync() {
+# Baixa programas via vaievem (SFTP)
+_baixar_programas_vaievem() {
     # Criar diretório RECEBE se não existir
     [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
     
@@ -307,16 +307,17 @@ _baixar_programas_rsync() {
             _linha
             _mensagec "${GREEN}" "Transferindo: $arquivo"
 
-            if ! sftp -P "$PORTA" "$USUARIO"@"${IPSERVER}":"${DESTINO2SERVER}${arquivo}" .; then
+            if ! _download_sftp "${DESTINO2SERVER}${arquivo}" "."; then
                 _mensagec "${RED}" "Falha no download: $arquivo"
                 continue
             fi
         else
-            sftp sav_servidor <<EOF
-get "${DESTINO2SERVER}${arquivo}"
-EOF
+            if ! _download_sftp_ssh "${DESTINO2SERVER}${arquivo}" "."; then
+                _mensagec "${RED}" "Falha no download: $arquivo"
+                continue
+            fi
         fi
-       _linha 
+        _linha
         # Verificar se arquivo foi baixado
         if [[ ! -f "$arquivo" || ! -s "$arquivo" ]]; then
             _mensagec "${RED}" "ERRO: Falha ao baixar '$arquivo'"
@@ -333,7 +334,7 @@ EOF
 }
 
 # Baixa pacotes para diretorio especifico
-_baixar_pacotes_rsync() {
+_baixar_pacotes_vaievem() {
     _configurar_acessos
 
     cd "${down_dir}" || {
@@ -341,7 +342,7 @@ _baixar_pacotes_rsync() {
         return 1
     }
 
-    _baixar_programas_rsync
+    _baixar_programas_vaievem
 }
 
 #---------- FUNcoES DE PROCESSAMENTO ----------#

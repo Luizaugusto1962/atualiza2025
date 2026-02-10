@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 07/02/2026-00
+# Versao: 10/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"             # Tipo de sistema (ex: iscobol, outros).
@@ -451,18 +451,24 @@ _enviar_arquivo_avulso() {
     
     # Verificar se está enviando múltiplos arquivos ou apenas um
     if [[ "$arquivo_enviar" == *"*"* ]]; then
-        # Enviar múltiplos arquivos usando o array
-        if rsync -avzP -e "ssh -p ${PORTA}" "${arquivos_encontrados[@]}" "${USUARIO}@${IPSERVER}:${destino_remoto}/"; then
+        # Enviar múltiplos arquivos usando _upload_rsync do vaievem.sh
+        local falhas_envio=0
+        for arquivo_item in "${arquivos_encontrados[@]}"; do
+            if ! _upload_rsync "$arquivo_item" "${destino_remoto}/"; then
+                ((falhas_envio++))
+            fi
+        done
+        if (( falhas_envio == 0 )); then
             _mensagec "${YELLOW}" "Arquivo(s) enviado(s) para \"${destino_remoto}\""
             _linha
             _read_sleep 3
         else
-            _mensagec "${RED}" "Erro no envio dos arquivos"
+            _mensagec "${RED}" "Erro no envio de ${falhas_envio} arquivo(s)"
             _press
         fi
     else
-        # Enviar arquivo único
-        if rsync -avzP -e "ssh -p ${PORTA}" "${dir_origem}/${arquivo_enviar}" "${USUARIO}@${IPSERVER}:${destino_remoto}"; then
+        # Enviar arquivo único usando _upload_rsync do vaievem.sh
+        if _upload_rsync "${dir_origem}/${arquivo_enviar}" "${destino_remoto}"; then
             _mensagec "${YELLOW}" "Arquivo enviado para \"${destino_remoto}\""
             _linha
             _read_sleep 3

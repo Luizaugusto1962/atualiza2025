@@ -4,7 +4,7 @@
 # Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 07/02/2026-00
+# Versao: 10/02/2026-00
 
 raiz="${raiz:-}"            # Diretorio raiz do sistema.
 sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
