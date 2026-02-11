@@ -819,10 +819,3 @@ _definir_base_trabalho() {
     return 0
 }
 
-# Limpa tela e volta ao menu especificado
-# Parametros: $1=nome_da_funcao_menu
-_voltar_menu() {
-    local menu_funcao="${1:-_principal}"
-    clear
-    "$menu_funcao"
-}

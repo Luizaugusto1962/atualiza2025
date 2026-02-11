@@ -144,6 +144,7 @@ _setup_iscobol() {
     echo "2) Versao 2020"
     echo "3) Versao 2023"
     echo "4) Versao 2024"
+    echo "5) Versao 2025"
     read -rp "Escolha a versao -> " -n1 VERSAO
     echo
 
@@ -152,6 +153,7 @@ _setup_iscobol() {
         2) _2020 ;;
         3) _2023 ;;
         4) _2024 ;;
+        5) _2025 ;;
         *)
             echo "Alternativa incorreta, saindo!"
             sleep 1
@@ -222,6 +224,14 @@ _2024() {
     VERCLASS="2024"
 }
 
+_2025() {
+    {
+        echo "verclass=2025"
+        echo "class=-class25"
+        echo "mclass=-mclass25"
+    } >> .atualizac
+    VERCLASS="2025"
+}
 # Configuracoes adicionais
 _setup_banco_de_dados() {
     echo "$tracejada"

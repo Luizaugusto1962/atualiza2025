@@ -267,16 +267,6 @@ _configurar_variaveis_sistema() {
     INI="backup-${VERSAO}.zip"
 }
 
-# Funcao para carregar configuracoes com verificacao
-_carregar_parametros() {
- #   local modulo="$1"
-    local caminho_cfg="${cfg_dir}/"
-    if [[ ! -d "${caminho_cfg}" ]]; then
-        printf "ERRO: Nao foi possivel criar o diretorio %s\n" "${caminho_cfg}"
-        exit 1
-    fi
-}
-
 # Carregar arquivo de configuracao da empresa
 _carregar_config_empresa() {
     local config_file="${cfg_dir}/.atualizac"

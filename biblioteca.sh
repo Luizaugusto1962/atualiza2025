@@ -540,22 +540,3 @@ _obter_arquivos_atualizacao() {
     fi
 }
 
-#---------- VALIDAcoES ----------#
-# Valida se os diretorios de destino estao configurados
-_validar_diretorios_biblioteca() {
-    local diretorios_validar=(
-        "DESTINO2SERVER"
-        "DESTINO2SAVATUISC" 
-        "DESTINO2SAVATUMF"
-        "DESTINO2TRANSPC"
-    )
-    
-    for dir_var in "${diretorios_validar[@]}"; do
-        if [[ -z "${!dir_var}" ]]; then
-            _mensagec "${RED}" "Erro: Variavel ${dir_var} nao configurada"
-            return 1
-        fi
-    done
-    
-    return 0
-}

@@ -567,11 +567,3 @@ _mensagem_conclusao_reversao() {
         _reverter_programa
     fi
 }
-
-#---------- FUNcoES DE INTERFACE ----------#
-
-# Limpa arrays de programas
-_limpar_selecao_programas() {
-    PROGRAMAS_SELECIONADOS=()
-    ARQUIVOS_PROGRAMA=()
-}

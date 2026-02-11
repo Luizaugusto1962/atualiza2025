@@ -121,119 +121,7 @@ _validar_diretorio() {
     [[ -n "$dir" && -d "$dir" && -r "$dir" ]]
 }
 
-# Valida se arquivo existe e e legivel
-# Parametros: $1=caminho_arquivo
-# Retorna: 0=valido 1=invalido  
-_validar_arquivo() {
-    local arquivo="$1"
-    [[ -n "$arquivo" && -f "$arquivo" && -r "$arquivo" ]]
-}
 
-# Valida formato de data (DD-MM-AAAA)
-# Parametros: $1=data
-# Retorna: 0=valido 1=invalido
-_validar_data() {
-    local data="$1"
-    [[ "$data" =~ ^[0-9]{2}-[0-9]{2}-[0-9]{4}$ ]]
-}
-
-# Valida formato de versao (numerico)
-# Parametros: $1=versao
-# Retorna: 0=valido 1=invalido
-_validar_versao() {
-    local versao="$1"
-    [[ -n "$versao" && "$versao" =~ ^[0-9]+([.-][0-9]+)*$ ]]
-}
-
-# Valida se a configuracao do sistema esta correta
-# Retorna: 0=valido 1=invalido
-_validar_configuracao_sistema() {
-    local erros=0
-    
-    # Verificar arquivos de configuracao
-    if [[ ! -f "${cfg_dir}/.atualizac" ]]; then
-        _log_erro "Arquivo .atualizac nao encontrado"
-        ((erros++))
-    fi
-    
-    # Verificar variaveis essenciais
-    if [[ -z "${sistema}" ]]; then
-        _log_erro "Variavel 'sistema' nao definida"
-        ((erros++))
-    fi
-    
-    if [[ -z "${raiz}" ]]; then
-        _log_erro "Variavel 'raiz' nao definida"
-        ((erros++))
-    fi
-   
-    # Verificar se a variavel pasta esta definida
-    if [[ -z "${pasta}" ]]; then
-        _log_erro "Variavel 'pasta' nao definida"
-        ((erros++))
-    fi
-    
-    # Verificar diretorios essenciais
-    local dirs=("E_EXEC" "T_TELAS")
-    for dir in "${dirs[@]}"; do
-        local dir_path=""
-        # Tratamento especial para E_EXEC e T_TELAS que ficam em ${raiz}
-                if [[ "$dir" == "E_EXEC" ]] || [[ "$dir" == "T_TELAS" ]]; then
-            dir_path="${raiz}/${!dir}"
-        else
-            # Para outros diretorios, usar o caminho padrao
-            dir_path="${TOOLS_DIR}/${!dir}"
-        fi
-        
-        if [[ ! -d "${dir_path}" ]]; then
-            _log_erro "Diretorio ${dir} nao encontrado: ${dir_path}"
-            ((erros++))
-        fi
-    done
-    
-    return $(( erros > 0 ? 1 : 0 ))
-}
-
-#---------- FUNcoES DE ENTRADA DE DADOS ----------#
-
-# Solicita entrada do usuario com validacao
-# Parametros: $1=prompt $2=funcao_validacao $3=mensagem_erro
-# Retorna: valor validado em stdout
-_solicitar_entrada() {
-    local prompt="$1"
-    local funcao_validacao="$2" 
-    local mensagem_erro="${3:-Entrada invalida}"
-    local entrada
-    local tentativas=0
-    local max_tentativas=3
-    
-    while (( tentativas < max_tentativas )); do
-        read -rp "${YELLOW}${prompt}: ${NORM}" entrada
-        
-        # Permite saida com ENTER vazio
-        if [[ -z "$entrada" ]]; then
-            printf "\n"
-            return 0
-        fi
-        
-        # Valida entrada se funcao fornecida
-        if [[ -n "$funcao_validacao" ]]; then
-            if "$funcao_validacao" "$entrada"; then
-                printf "%s\n" "$entrada"
-                return 0
-            else
-                _mensagec "${RED}" "$mensagem_erro"
-                ((tentativas++))
-            fi
-        else
-            printf "%s\n" "$entrada"
-            return 0
-        fi
-    done
-    
-    _mensagec "${RED}" "Maximo de tentativas excedido"
-    return 1
-}
 
 # Solicita confirmacao S/N
 # Parametros: $1=mensagem $2=padrao(S/N)
@@ -275,32 +163,6 @@ _confirmar() {
 }
 
 #---------- FUNcoES DE PROGRESSO ----------#
-
-# Exibe barra de progresso simples
-# Parametros: $1=atual $2=total $3=largura_barra(opcional)
-_barra_progresso() {
-    local atual="$1"
-    local total="$2"
-    local largura="${3:-20}"
-    local percent
-    local preenchido
-    local vazio
-    local barra
-    
-    if (( total == 0 )); then
-        return 1
-    fi
-    
-    percent=$(( atual * 100 / total ))
-    preenchido=$(( percent * largura / 100 ))
-    vazio=$(( largura - preenchido ))
-    
-    # Criar barra visual
-    barra=$(printf "%${preenchido}s" | tr ' ' '#')
-    barra+=$(printf "%${vazio}s" | tr ' ' '-')
-    
-    printf "\r${YELLOW}[%s] %d%%${NORM}" "$barra" "$percent"
-}
 
 # Mostra progresso do backup com spinner animado e tempo decorrido
 _mostrar_progresso_backup() {
@@ -377,83 +239,7 @@ _log_sucesso() {
     _log "SUCESSO: $sucesso" "$arquivo_log"
 }
 
-#---------- FUNcoES DE FORMATAcaO DE DADOS ----------#
-
-# Formata tamanho de arquivo para leitura humana
-# Parametros: $1=tamanho_bytes
-_formatar_tamanho() {
-    local tamanho="$1"
-    local unidades=('B' 'KB' 'MB' 'GB' 'TB')
-    local unidade=0
-    
-    while (( tamanho >= 1024 && unidade < ${#unidades[@]} - 1 )); do
-        tamanho=$(( tamanho / 1024 ))
-        ((unidade++))
-    done
-    
-    printf "%d %s" "$tamanho" "${unidades[$unidade]}"
-}
-
-# Formata duracao em segundos para formato legivel
-# Parametros: $1=segundos
-_formatar_duracao() {
-    local segundos="$1"
-    local horas=$(( segundos / 3600 ))
-    local minutos=$(( (segundos % 3600) / 60 ))
-    local segs=$(( segundos % 60 ))
-    
-    if (( horas > 0 )); then
-        printf "%02d:%02d:%02d" "$horas" "$minutos" "$segs"
-    elif (( minutos > 0 )); then
-        printf "%02d:%02d" "$minutos" "$segs"
-    else
-        printf "%ds" "$segs"
-    fi
-}
-
-#---------- FUNcoES DE ARQUIVO ----------#
-
-# Cria backup de arquivo com timestamp
-# Parametros: $1=arquivo_original $2=diretorio_backup(opcional)
-_backup_arquivo() {
-    local arquivo="$1"
-    local nome_base
-    local extensao
-    local timestamp
-    local arquivo_backup
-    
-    if [[ ! -f "$arquivo" ]]; then
-        _log_erro "Arquivo nao encontrado para backup: $arquivo"
-        return 1
-    fi
-
-    # Verificar se o diretorio de backup existir
-    if [[ ! -d "$BACKUP" ]]; then
-        _mensagec "$YELLOW" "Diretorio de backups em $BACKUP, nao enconrado ..."
-        return 1
-    fi	
-
-    # Extrair nome e extensao
-    nome_base=$(basename "$arquivo")
-    if [[ "$nome_base" == *.* ]]; then
-        extensao=".${nome_base##*.}"
-        nome_base="${nome_base%.*}"
-    else
-        extensao=""
-    fi
-    
-    timestamp=$(date +"%Y%m%d_%H%M%S")
-    arquivo_backup="${BACKUP}/${nome_base}_${timestamp}${extensao}"
-    
-    if cp "$arquivo" "$arquivo_backup"; then
-        _log_sucesso "Backup criado: $arquivo_backup"
-        printf "%s\n" "$arquivo_backup"
-        return 0
-    else
-        _log_erro "Falha ao criar backup: $arquivo"
-        return 1
-    fi
-}
+#---------- FUNCOES DE ARQUIVO ----------#
 
 # Remove arquivos antigos de um diretorio
 # Parametros: $1=diretorio $2=dias $3=padrao(opcional)
@@ -480,7 +266,7 @@ _limpar_arquivos_antigos() {
     fi
 }
 
-#---------- FUNcoES DE INICIALIZAcaO ----------#
+#---------- FUNCOES DE INICIALIZACAO ----------#
 
 # Executa limpeza automatica diaria
 _executar_expurgador_diario() {
