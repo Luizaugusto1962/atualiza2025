@@ -81,12 +81,12 @@ ISCCLIENT="${ISCCLIENT:-}"   # Variavel que define o caminho do cliente ISC.
 base_trabalho="${base_trabalho:-}" # Variavel que define o caminho do diretorio de trabalho.
 
 # Configuracoes padrao
-DEFAULT_UNZIP="unzip"        # Comando padrao para descompactar
-DEFAULT_ZIP="zip"            # Comando padrao para compactar
-DEFAULT_FIND="find"          # Comando padrao para buscar arquivos
-DEFAULT_WHO="who"            # Comando padrao para verificar usuarios
-DEFAULT_PORTA="41122"        # Porta padrao
-DEFAULT_USUARIO="atualiza"   # Usuario padrao
+DEFAULT_UNZIP="${DEFAULT_UNZIP:-unzip}"        # Comando padrao para descompactar
+DEFAULT_ZIP="${DEFAULT_ZIP:-zip}"            # Comando padrao para compactar
+DEFAULT_FIND="${DEFAULT_FIND:-find}"          # Comando padrao para buscar arquivos
+DEFAULT_WHO="${DEFAULT_WHO:-who}"            # Comando padrao para verificar usuarios
+DEFAULT_PORTA="${DEFAULT_PORTA:-41122}"        # Porta padrao
+DEFAULT_USUARIO="${DEFAULT_USUARIO:-atualiza}"   # Usuario padrao
 
 
 # Funcao para definir cores do terminal
@@ -175,21 +175,21 @@ _configurar_diretorios() {
     fi
 
     # Diretorios de destino para diferentes tipos de biblioteca
-    DESTINO2SERVER="/u/varejo/man/"                                   # Diretorio do servidor de atualizacao
-    DESTINO2SAVATUISC="/home/savatu/biblioteca/temp/ISCobol/sav-5.0/" # Diretorio da biblioteca IsCOBOL
-    DESTINO2SAVATUMF="/home/savatu/biblioteca/temp/Isam/sav-3.1"      # Diretorio da biblioteca Isam
-    DESTINO2TRANSPC="/u/varejo/trans_pc/"                             # Diretorio de transporte PC
-    SERACESOFF="/portalsav/Atualiza"                                  # Diretorio do servidor offline
+    DESTINO2SERVER="${DESTINO2SERVER:-/u/varejo/man/}"                                      # Diretorio do servidor de atualizacao
+    DESTINO2SAVATUISC="${DESTINO2SAVATUISC:-/home/savatu/biblioteca/temp/ISCobol/sav-5.0/}" # Diretorio da biblioteca IsCOBOL
+    DESTINO2SAVATUMF="${DESTINO2SAVATUMF:-/home/savatu/biblioteca/temp/Isam/sav-3.1}"       # Diretorio da biblioteca Isam
+    DESTINO2TRANSPC="${DESTINO2TRANSPC:-/u/varejo/trans_pc/}"                               # Diretorio de transporte PC
+    SERACESOFF="${SERACESOFF:-/portalsav/Atualiza}"                                         # Diretorio do servidor offline
     export DESTINO2SERVER DESTINO2SAVATUISC DESTINO2SAVATUMF DESTINO2TRANSPC SERACESOFF
 
     # Definir diretorios de trabalho
-    OLDS="${TOOLS_DIR}/olds"        # Diretorio de arquivos antigos
-    PROGS="${TOOLS_DIR}/progs"      # Diretorio de programas
-    LOGS="${TOOLS_DIR}/logs"        # Diretorio de logs
-    ENVIA="${TOOLS_DIR}/envia"      # Diretorio de envio
-    RECEBE="${TOOLS_DIR}/recebe"    # Diretorio de recebimento
-    LIBS="${TOOLS_DIR}/libs"        # Diretorio de bibliotecas
-    BACKUP="${TOOLS_DIR}/backup"    # Diretorio de backup
+    OLDS="${OLDS:-${TOOLS_DIR}/olds}"         # Diretorio de arquivos antigos
+    PROGS="${PROGS:-${TOOLS_DIR}/progs}"      # Diretorio de programas
+    LOGS="${LOGS:-${TOOLS_DIR}/logs}"         # Diretorio de logs
+    ENVIA="${ENVIA:-${TOOLS_DIR}/envia}"      # Diretorio de envio
+    RECEBE="${RECEBE:-${TOOLS_DIR}/recebe}"   # Diretorio de recebimento
+    LIBS="${LIBS:-${TOOLS_DIR}/libs}"         # Diretorio de bibliotecas
+    BACKUP="${BACKUP:-${TOOLS_DIR}/backup}"   # Diretorio de backup
 
     # Criar diretorios se nao existirem
     local dirs=("${OLDS}" "${PROGS}" "${LOGS}" "${ENVIA}" "${RECEBE}" "${LIBS}" "${BACKUP}")
@@ -211,34 +211,34 @@ _configurar_variaveis_sistema() {
     if [[ "${sistema}" == "iscobol" ]]; then
    
         # Caminhos dos executaveis e dados
-        E_EXEC="${raiz}/classes"
-        T_TELAS="${raiz}/tel_isc"
-        X_XML="${raiz}/xml"
-        BASE1="${raiz}${base}"
-        BASE2="${raiz}${base2}"
-        BASE3="${raiz}${base3}"
+        E_EXEC="${E_EXEC:-${raiz}/classes}"
+        T_TELAS="${T_TELAS:-${raiz}/tel_isc}"
+        X_XML="${X_XML:-${raiz}/xml}"
+        BASE1="${BASE1:-${raiz}${base}}"
+        BASE2="${BASE2:-${raiz}${base2}}"
+        BASE3="${BASE3:-${raiz}${base3}}"
         export E_EXEC T_TELAS X_XML BASE1 BASE2 BASE3
     else
-        E_EXEC="${raiz}/int"
-        T_TELAS="${raiz}/tel"
-        BASE1="${raiz}${base}"
-        BASE2="${raiz}${base2}"
-        BASE3="${raiz}${base3}"
+        E_EXEC="${E_EXEC:-${raiz}/int}"
+        T_TELAS="${T_TELAS:-${raiz}/tel}"
+        BASE1="${BASE1:-${raiz}${base}}"
+        BASE2="${BASE2:-${raiz}${base2}}"
+        BASE3="${BASE3:-${raiz}${base3}}"
         export E_EXEC T_TELAS BASE1 BASE2 BASE3
     fi
     # Configuracao do SAVISC
-    readonly SAVISCC="${raiz}/savisc/iscobol/bin/"
+    readonly SAVISCC="${SAVISCC:-${raiz}/savisc/iscobol/bin/}"
     if [[ -n "${SAVISCC}" ]]; then
         SAVISC="${SAVISCC}"
     fi
     
     # Utilitarios
-    readonly JUTILL="jutil"
+    readonly JUTILL="${JUTILL:-jutil}"
     if [[ -n "${JUTILL}" ]]; then
         JUTIL="${JUTILL}"
     fi
     
-    readonly ISCCLIENTT="iscclient"
+    readonly ISCCLIENTT="${ISCCLIENTT:-$iscclient}"
     if [[ -n "${ISCCLIENTT}" ]]; then
         ISCCLIENT="${ISCCLIENTT}"
     fi
@@ -256,15 +256,15 @@ _configurar_variaveis_sistema() {
     fi
     
     # Configurar logs
-    LOG_ATU="${LOGS}/atualiza.$(date +"%Y-%m-%d").log"
-    LOG_LIMPA="${LOGS}/limpando.$(date +"%Y-%m-%d").log"
-    LOG_TMP="${LOGS}/"
+    LOG_ATU="${LOG_ATU:-${LOGS}/atualiza.$(date +"%Y-%m-%d").log}"
+    LOG_LIMPA="${LOG_LIMPA:-${LOGS}/limpando.$(date +"%Y-%m-%d").log}"
+    LOG_TMP="${LOG_TMP:-${LOGS}/}"
     
     # Data atual formatada
-    UMADATA=$(date +"%d-%m-%Y_%H%M%S")
+    UMADATA=${UMADATA:-$(date +"%d-%m-%Y_%H%M%S")}
     
     # Arquivo de backup padrao
-    INI="backup-${VERSAO}.zip"
+    INI=${INI:-"backup-${VERSAO}.zip"}
 }
 
 # Carregar arquivo de configuracao da empresa

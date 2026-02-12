@@ -227,7 +227,7 @@ _menu_arquivos() {
         printf "\n"
         
         _linha "=" "${GREEN}"
-        _mensagec "${RED}" "Menu Gerencial Arquivos"
+        _mensagec "${RED}" "Menu Gerencial dos Arquivos"
         _linha
         printf "\n"
         _mensagec "${PURPLE}" " Escolha a opcao:"
@@ -235,15 +235,17 @@ _menu_arquivos() {
         printf "\n"
         
         # Verificar se sistema tem banco de dados
-        _mensagec "${GREEN}" "1${NORM} -|: Arquivos Temporarios      "
-        printf "\n"
         if [[ "${BANCO}" != "s" ]]; then
-            _mensagec "${GREEN}" "2${NORM} -|: Recuperar Arquivos        "
+            _mensagec "${GREEN}" "1${NORM} -|: Recuperar Arquivos        "
             printf "\n" 
-            _mensagec "${GREEN}" "3${NORM} -|: Rotinas de Backup         "
+            _mensagec "${GREEN}" "2${NORM} -|: Rotinas de Backup         "
             printf "\n"
         fi
-        _mensagec "${GREEN}" "4${NORM} -|: Enviar e Receber Arquivos "
+        _mensagec "${GREEN}" "3${NORM} -|: Enviar e Receber Arquivos "
+        printf "\n"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+        _mensagec "${GREEN}" "4${NORM} -|: Arquivos Temporarios      "
         printf "\n"
         _mensagec "${GREEN}" "5${NORM} -|: Expurgador de Arquivos    "
         printf "\n"
@@ -259,8 +261,7 @@ _menu_arquivos() {
         fi
 
         case "${opcao}" in
-            1) _menu_temporarios ;;
-            2) 
+            1) 
                 if [[ "${BANCO}" = "s" ]]; then
                     _opinvalida
                     _read_sleep 1
@@ -268,7 +269,7 @@ _menu_arquivos() {
                     _menu_recuperar_arquivos
                 fi
                 ;;
-            3) 
+            2) 
                 if [[ "${BANCO}" = "s" ]]; then
                     _opinvalida
                     _read_sleep 1
@@ -276,7 +277,8 @@ _menu_arquivos() {
                     _menu_backup
                 fi
                 ;;
-            4) _menu_transferencia_arquivos ;;
+            3) _menu_transferencia_arquivos ;;
+            4) _menu_temporarios ;;
             5) _executar_expurgador "arquivos" ;;
             9) return ;;
             *)
