@@ -227,18 +227,18 @@ _configurar_variaveis_sistema() {
         export E_EXEC T_TELAS BASE1 BASE2 BASE3
     fi
     # Configuracao do SAVISC
-    readonly SAVISCC="${SAVISCC:-${raiz}/savisc/iscobol/bin/}"
+    readonly SAVISCC="${raiz}/savisc/iscobol/bin/"
     if [[ -n "${SAVISCC}" ]]; then
         SAVISC="${SAVISCC}"
     fi
     
     # Utilitarios
-    readonly JUTILL="${JUTILL:-jutil}"
+    readonly JUTILL="jutil"
     if [[ -n "${JUTILL}" ]]; then
         JUTIL="${JUTILL}"
     fi
     
-    readonly ISCCLIENTT="${ISCCLIENTT:-$iscclient}"
+    readonly ISCCLIENTT="iscclient"
     if [[ -n "${ISCCLIENTT}" ]]; then
         ISCCLIENT="${ISCCLIENTT}"
     fi

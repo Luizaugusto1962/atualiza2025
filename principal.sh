@@ -10,11 +10,11 @@ readonly UPDATE="11/02/2026-00"
 export UPDATE
 
 # Diretorio do script principal
-TOOLS_DIR="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
+TOOLS_DIR="${TOOLS_DIR:-$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")}"
 
 # Diretorios dos modulos e configuracoes
-lib_dir="${TOOLS_DIR}/libs"       # Diretorio dos modulos de biblioteca
-cfg_dir="${TOOLS_DIR}/cfg"        # Diretorio de configuracoes
+lib_dir="${lib_dir:-${TOOLS_DIR}/libs}"       # Diretorio dos modulos de biblioteca
+cfg_dir="${cfg_dir:-${TOOLS_DIR}/cfg}"        # Diretorio de configuracoes
 export TOOLS_DIR lib_dir cfg_dir  
 
 # Diretórios obrigatórios
