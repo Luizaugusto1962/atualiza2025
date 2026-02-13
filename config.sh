@@ -422,7 +422,7 @@ _validar_configuracao() {
         _mensagec "${RED}" "ERRO: Variavel 'sistema' nao definida!"
         ((erros++))
     elif [[ "${sistema}" != "iscobol" && "${sistema}" != "cobol" ]]; then
-        _mensagec "${YELLOW}" "WARNING: Valor desconhecido para 'sistema': ${sistema}"
+        _mensagec "${YELLOW}" "Alerta: Valor desconhecido para 'sistema': ${sistema}"
         ((warnings++))
     else
         _mensagec "${GREEN}" "OK: Sistema definido como ${sistema}"
@@ -436,7 +436,7 @@ _validar_configuracao() {
     fi
     
     if [[ -z "${BANCO}" ]]; then
-        _mensagec "${YELLOW}" "WARNING: Variavel 'BANCO' nao definida"
+        _mensagec "${YELLOW}" "Alerta: Variavel 'BANCO' nao definida"
         ((warnings++))
     else
         _mensagec "${GREEN}" "OK: Configuracao de banco de dados definida"
@@ -448,14 +448,14 @@ _validar_configuracao() {
         local dir_path=""
         # Tratamento especial para E_EXEC e T_TELAS que ficam em ${raiz}
         if [[ "$dir" == "E_EXEC" ]] || [[ "$dir" == "T_TELAS" ]] || [[ "$dir" == "BASE1" ]]; then
-            dir_path="${raiz}/${!dir}"
+            dir_path="${!dir}"
         else
             # Para outros diretorios, usar o caminho padrao
             dir_path="${TOOLS_DIR}${!dir}"
         fi
         
         if [[ ! -d "${dir_path}" ]]; then
-            _mensagec "${YELLOW}" "WARNING: Diretorio ${dir} nao encontrado: ${dir_path}"
+            _mensagec "${YELLOW}" "Alerta: Diretorio ${dir} nao encontrado: ${dir_path}"
             ((warnings++))
         else
             _mensagec "${GREEN}" "OK: Diretorio ${dir} encontrado"
