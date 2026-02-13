@@ -289,6 +289,7 @@ _configurar_variaveis_sistema() {
         SAVATU1="tempSAVintA_"
         SAVATU2="tempSAVintB_"
         SAVATU3="tempSAVtel_"
+        SAVATU="tempSAV????_"
     fi
 }
 
