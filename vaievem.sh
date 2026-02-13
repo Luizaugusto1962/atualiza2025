@@ -4,7 +4,7 @@
 # Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 10/02/2026-00
+# Versao: 13/02/2026-00
 
 #---------- CONFIGURACOES DE CONEXAO ----------#
 

@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 13/02/2026-00
 
 raiz="${raiz:-}"            # Diretorio raiz do sistema.
 cfg_dir="${cfg_dir:-}"      # Caminho do diretorio de configuracao do programa.
@@ -555,22 +555,7 @@ clear
     # Edita as variaveis
     editar_variavel sistema
     editar_variavel verclass
-
-    if [[ -n "$verclass" ]]; then
-        verclass_sufixo="${verclass: -2}"
-        class="-class${verclass_sufixo}"
-        mclass="-mclass${verclass_sufixo}"
-        echo "class e mclass foram atualizados automaticamente:"
-        echo "class=${class}"
-        echo "mclass=${mclass}"
-        atualizar_savatu_variaveis
-    else
-        editar_variavel class
-        editar_variavel mclass
-    fi
-
     editar_variavel BANCO
-#    editar_variavel destino
     editar_variavel acessossh
     editar_variavel IPSERVER
     editar_variavel Offline

@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao das bibliotecas do sistema (Transpc, Savatu)
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 10/02/2026-00
+# Versao: 13/02/2026-00
 
 raiz_local="${raiz_local:-}"           # Diretorio raiz do sistema
 principal_local="${principal_local:-}" # Diretorio principal do sistema
@@ -86,35 +86,35 @@ _atualizar_transpc() {
 }
 
 # Atualizacao do Savatu
-_atualizar_savatu() {
-    clear
-    _solicitar_versao_biblioteca
-    
-    if [[ -z "${VERSAO}" ]]; then
-        return 1
-    fi
-
-    if [[ "${Offline}" == "s" ]]; then
-        _linha
-        _mensagec "${YELLOW}" "Parametro de biblioteca do servidor OFF ativo"
-        _linha
-        _press
-        return 1
-    fi
-
-    _linha
-    _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
-    _linha
-
-    # Selecionar destino baseado no sistema
-    if [[ "${sistema}" = "iscobol" ]]; then
-        DESTINO2="${DESTINO2SAVATUISC}"
-    else
-        DESTINO2="${DESTINO2SAVATUMF}"
-    fi
-    _configurar_acessos
-    _baixar_biblioteca_sincroniza
-}
+#_atualizar_savatu() {
+#    clear
+#    _solicitar_versao_biblioteca
+#    
+#    if [[ -z "${VERSAO}" ]]; then
+#        return 1
+#    fi
+#
+#    if [[ "${Offline}" == "s" ]]; then
+#        _linha
+#        _mensagec "${YELLOW}" "Parametro de biblioteca do servidor OFF ativo"
+#        _linha
+#        _press
+#        return 1
+#    fi
+#
+#    _linha
+#    _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
+#    _linha
+#
+#    # Selecionar destino baseado no sistema
+#    if [[ "${sistema}" = "iscobol" ]]; then
+#        DESTINO2="${DESTINO2SAVATUISC}"
+#    else
+#        DESTINO2="${DESTINO2SAVATUMF}"
+#    fi
+#    _configurar_acessos
+#    _baixar_biblioteca_sincroniza
+#}
 
 # Atualizacao offline da biblioteca
 _atualizar_biblioteca_offline() {

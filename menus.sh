@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 05/02/2026-00
+# Versao: 13/02/2026-00
 # Autor: Luiz Augusto
 
 raiz="${raiz:-}"          # Diretorio raiz do sistema.
@@ -178,14 +178,14 @@ _menu_biblioteca() {
         printf "\n" 
         _mensagec "${GREEN}" "1${NORM} -|: Atualizacao do Transpc      "
         printf "\n" 
-        _mensagec "${GREEN}" "2${NORM} -|: Atualizacao do Savatu       "
-        printf "\n"
-        _mensagec "${GREEN}" "3${NORM} -|: Atualizacao OFF-Line        "
+#        _mensagec "${GREEN}" "2${NORM} -|: Atualizacao do Savatu       "
+#        printf "\n"
+        _mensagec "${GREEN}" "2${NORM} -|: Atualizacao OFF-Line        "
         printf "\n\n"
         _mensagec "${PURPLE}" "Escolha Desatualizar:               "
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "4${NORM} -|: Voltar Programa(s) da Biblioteca"
+        _mensagec "${GREEN}" "3${NORM} -|: Voltar Programa(s) da Biblioteca"
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
@@ -205,9 +205,9 @@ _menu_biblioteca() {
 
         case "${opcao}" in
             1) _atualizar_transpc ;;
-            2) _atualizar_savatu ;;
-            3) _atualizar_biblioteca_offline ;;
-            4) _reverter_biblioteca ;;
+    #        2) _atualizar_savatu ;;
+            2) _atualizar_biblioteca_offline ;;
+            3) _reverter_biblioteca ;;
             9) return ;;
             *)
                 _opinvalida

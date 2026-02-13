@@ -9,9 +9,14 @@
 #   - ./setup.sh --edit: Modo de edicao para modificar configuracoes existentes.
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 13/02/2026-00
 
 #---------- FUNcoES DE LoGICA DE NEGoCIO ----------#
+VERCLASS="${VERCLASS:-}"
+
+# Variáveis globais
+declare -l sistema base base2 base3 BANCO ENVIABACK
+declare -u EMPRESA
 
 # Configuracao inicial do sistema
 _initial_setup() {
@@ -93,20 +98,6 @@ _edit_setup() {
     # Edicao interativa das variaveis
     _editar_variavel sistema
     _editar_variavel verclass
-
-    if [[ -n "$verclass" ]]; then
-        local verclass_sufixo="${verclass: -2}"
-        class="-class${verclass_sufixo}"
-        mclass="-mclass${verclass_sufixo}"
-        echo "class e mclass foram atualizados automaticamente:"
-        echo "class=${class}"
-        echo "mclass=${mclass}"
-        _atualizar_savatu_variaveis
-    else
-        _editar_variavel class
-        _editar_variavel mclass
-    fi
-
     _editar_variavel BANCO
     _editar_variavel acessossh
     _editar_variavel IPSERVER
@@ -161,65 +152,38 @@ _setup_iscobol() {
             ;;
     esac
 
-    {
-        local classA="IS${VERCLASS}_*_"
-        local classB="IS${VERCLASS}_classA_"
-        local classC="IS${VERCLASS}_classB_"
-        local classD="IS${VERCLASS}_tel_isc_"
-        local classE="IS${VERCLASS}_xml_"
-        echo "SAVATU=tempSAV_${classA}"
-        echo "SAVATU1=tempSAV_${classB}"
-        echo "SAVATU2=tempSAV_${classC}"
-        echo "SAVATU3=tempSAV_${classD}"
-        echo "SAVATU4=tempSAV_${classE}"
-    } >> .atualizac
-}
+    }
+
 
 # Configuracao para Micro Focus Cobol
 _setup_cobol() {
     sistema="cobol"
     {
         echo "sistema=cobol"
-        echo "class=-6"
-        echo "mclass=-m6"
-    } >> .atualizac
-    {
-        echo "SAVATU1=tempSAVintA_"
-        echo "SAVATU2=tempSAVintB_"
-        echo "SAVATU3=tempSAVtel_"
     } >> .atualizac
 }
-
 # Funcoes de versao do IsCobol
 _2018() {
     {
         echo "verclass=2018"
-        echo "class=-class"
-        echo "mclass=-mclass"
     } >> .atualizac
     VERCLASS="2018"
 }
 _2020() {
     {
         echo "verclass=2020"
-        echo "class=-class20"
-        echo "mclass=-mclass20"
     } >> .atualizac
     VERCLASS="2020"
 }
 _2023() {
     {
         echo "verclass=2023"
-        echo "class=-class23"
-        echo "mclass=-mclass23"
     } >> .atualizac
     VERCLASS="2023"
 }
 _2024() {
     {
         echo "verclass=2024"
-        echo "class=-class24"
-        echo "mclass=-mclass24"
     } >> .atualizac
     VERCLASS="2024"
 }
@@ -227,8 +191,6 @@ _2024() {
 _2025() {
     {
         echo "verclass=2025"
-        echo "class=-class25"
-        echo "mclass=-mclass25"
     } >> .atualizac
     VERCLASS="2025"
 }
@@ -288,7 +250,7 @@ _setup_backup() {
     echo ${tracejada}
     echo "###     ( Nome de pasta no servidor da SAV )                ###"
     echo "Nome de pasta no servidor da SAV, informar somento o nome do cliente"
-    read -rp "(Ex: cliente/NOME_da_pasta_do_CLIENTE): " ENVIABACK
+    read -rp "(Ex: cliente/\"NOME_da_pasta_do_CLIENTE\"): " ENVIABACK
     if [[ -z "$ENVIABACK" && "${Offline}" =~ ^[Nn]$ ]]; then
         echo "ENVIABACK=" >> .atualizac
     elif [[ -n "$ENVIABACK" ]]; then
@@ -344,17 +306,6 @@ _editar_variavel() {
     echo "$tracejada"
 }
 
-# Atualiza as variaveis SAVATU com base na 'verclass'
-_atualizar_savatu_variaveis() {
-    local ano="${verclass}"
-    local sufixo="IS${ano}"
-    SAVATU="tempSAV_${sufixo}_*_"
-    SAVATU1="tempSAV_${sufixo}_classA_"
-    SAVATU2="tempSAV_${sufixo}_classB_"
-    SAVATU3="tempSAV_${sufixo}_tel_isc_"
-    SAVATU4="tempSAV_${sufixo}_xml_"
-}
-
 # Recria os arquivos de configuracao
 _recreate_config_files() {
     local tracejada="#-------------------------------------------------------------------#"
@@ -363,8 +314,6 @@ _recreate_config_files() {
     {
         echo "sistema=${sistema}"
         [[ -n "$verclass" ]] && echo "verclass=${verclass}"
-        [[ -n "$class" ]] && echo "class=${class}"
-        [[ -n "$mclass" ]] && echo "mclass=${mclass}"
         echo "BANCO=${BANCO}"
         echo "acessossh=${acessossh}"
         echo "IPSERVER=${IPSERVER}"
@@ -375,15 +324,6 @@ _recreate_config_files() {
         [[ -n "$base2" ]] && echo "base2=${base2}" || echo "#base2="
         [[ -n "$base3" ]] && echo "base3=${base3}" || echo "#base3="
     } > .atualizac
-
-    {
-        echo "SAVATU=${SAVATU}"
-        echo "SAVATU1=${SAVATU1}"
-        echo "SAVATU2=${SAVATU2}"
-        echo "SAVATU3=${SAVATU3}"
-        echo "SAVATU4=${SAVATU4}"
-    } >> .atualizac
-
     echo "$tracejada"
 }
 

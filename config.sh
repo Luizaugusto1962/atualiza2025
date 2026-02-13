@@ -4,7 +4,7 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 13/02/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
@@ -176,12 +176,12 @@ _configurar_diretorios() {
 
     # Diretorios de destino para diferentes tipos de biblioteca
     DESTINO2SERVER="${DESTINO2SERVER:-/u/varejo/man/}"                                      # Diretorio do servidor de atualizacao
-    DESTINO2SAVATUISC="${DESTINO2SAVATUISC:-/home/savatu/biblioteca/temp/ISCobol/sav-5.0/}" # Diretorio da biblioteca IsCOBOL
-    DESTINO2SAVATUMF="${DESTINO2SAVATUMF:-/home/savatu/biblioteca/temp/Isam/sav-3.1}"       # Diretorio da biblioteca Isam
+#    DESTINO2SAVATUISC="${DESTINO2SAVATUISC:-/home/savatu/biblioteca/temp/ISCobol/sav-5.0/}" # Diretorio da biblioteca IsCOBOL
+#   DESTINO2SAVATUMF="${DESTINO2SAVATUMF:-/home/savatu/biblioteca/temp/Isam/sav-3.1}"       # Diretorio da biblioteca Isam
     DESTINO2TRANSPC="${DESTINO2TRANSPC:-/u/varejo/trans_pc/}"                               # Diretorio de transporte PC
     SERACESOFF="${SERACESOFF:-/portalsav/Atualiza}"                                         # Diretorio do servidor offline
-    export DESTINO2SERVER DESTINO2SAVATUISC DESTINO2SAVATUMF DESTINO2TRANSPC SERACESOFF
-
+#   export DESTINO2SERVER DESTINO2SAVATUISC DESTINO2SAVATUMF DESTINO2TRANSPC SERACESOFF
+    export DESTINO2SERVER DESTINO2TRANSPC SERACESOFF
     # Definir diretorios de trabalho
     OLDS="${OLDS:-${TOOLS_DIR}/olds}"         # Diretorio de arquivos antigos
     PROGS="${PROGS:-${TOOLS_DIR}/progs}"      # Diretorio de programas
@@ -265,6 +265,31 @@ _configurar_variaveis_sistema() {
     
     # Arquivo de backup padrao
     INI=${INI:-"backup-${VERSAO}.zip"}
+
+    # Gerar sufixos de arquivos com base no tipo de compilacao.
+    if [[ "${sistema}" = "iscobol" ]]; then
+        verclass_sufixo="${verclass: -2}"
+        class="-class${verclass_sufixo}"
+        mclass="-mclass${verclass_sufixo}"
+#   Bibliotecas Iscobol 
+        local classA="IS${verclass}_classA_"
+        local classB="IS${verclass}_classB_"
+        local classC="IS${verclass}_tel_isc_"
+        local classD="IS${verclass}_xml_"
+        local classX="IS${verclass}_*_"
+        SAVATU1="tempSAV_${classA}"
+        SAVATU2="tempSAV_${classB}"
+        SAVATU3="tempSAV_${classC}"
+        SAVATU4="tempSAV_${classD}"
+        SAVATU="tempSAV_${classX}"
+    else
+        class="-${class:-6}"
+        mclass="-${mclass:-m6}"    
+#   Bibliotecas Isam
+        SAVATU1="tempSAVintA_"
+        SAVATU2="tempSAVintB_"
+        SAVATU3="tempSAVtel_"
+    fi
 }
 
 # Carregar arquivo de configuracao da empresa
@@ -272,6 +297,7 @@ _carregar_config_empresa() {
     local config_file="${cfg_dir}/.atualizac"
 
     # Verificar existência e permissoes
+    
     if [[ ! -e "${config_file}" ]]; then
         printf "ERRO: Arquivo nao existe no diretorio.\n" 
         printf "ATENCAO: Use o programa .setup.sh que esta na pasta /libs para criar as configuracoes.\n" 

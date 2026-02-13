@@ -46,7 +46,6 @@ OPCOES DISPONIVEIS:
     Atualiza o conjunto completo de bibliotecas do sistema.
     
     * Transpc: Biblioteca do diretorio /u/varejo/transpc
-    * Savatu: Biblioteca do diretorio /home/savatu/biblioteca
     * Modo Offline: Para ambientes sem conexao os arquivos .zip devem estar
       no diretorio configurado para offline (geralmente /portalsav/Atualiza)
     
@@ -76,6 +75,14 @@ OPCOES DISPONIVEIS:
     * Atualizacao do sistema
     * Sistema de lembretes e notas
 
+0 - Sistema de Ajuda    
+    1. Manual Completo
+    2. Ajuda Rapida
+    3. Ajuda no Geral
+    4. Buscar no Manual
+    5. Exportar Manual
+    6. Ajuda por Contexto
+ 
 9 - SAIR DO SISTEMA
     Encerra o sistema SAV de forma segura.
 
@@ -109,7 +116,7 @@ OPCOES DISPONIVEIS:
     1. Informe o nome do programa (em MAIUSCULAS)
     2. Escolha o tipo de compilacao:
        * 1 = Normal (producao)
-       * 2 = Depuracao (debug, com simbolos)
+       * 2 = Depuracao (debug)
     3. Repita para ate 6 programas
     4. Pressione ENTER para finalizar selecao
     5. Aguarde o download e instalacao
@@ -235,26 +242,7 @@ OPCOES DISPONIVEIS:
     IMPORTANTE:
     Esta e a atualizacao mais usada e completa do sistema.
 
-2 - ATUALIZACAO DO SAVATU
-    Atualiza a biblioteca principal do SAV.
-    
-    O QUE E:
-    Conjunto completo de programas que compoem o sistema SAV.
-    
-    CONTEUDO:
-    * Classes compiladas (.class)
-    * Telas de interface (.TEL)
-    * Arquivos XML de configuracao
-    * Programas para o sistema em MicroFocus (.int)
-    
-    VERSOES DISPONIVEIS:
-    * IsCOBOL 2018, 2020, 2023, 2024
-    * MicroFocus COBOL
-    
-    IMPORTANTE:
-    Esta e a atualizacao que pouco se usa ultimamente.
-
-3 - ATUALIZACAO OFF-LINE
+2 - ATUALIZACAO OFF-LINE
     Instala biblioteca a partir de arquivos locais.
     
     PROCESSO:
@@ -274,7 +262,7 @@ OPCOES DISPONIVEIS:
     * tempSAV_IS2024_tel_isc_5280.zip
     * tempSAV_IS2024_xml_5280.zip
 
-4 - VOLTAR PROGRAMA(S) DA BIBLIOTECA
+3 - VOLTAR PROGRAMA(S) DA BIBLIOTECA
     Reverte biblioteca para versao anterior.
     
     PROCESSO:
@@ -384,20 +372,7 @@ O menu de Arquivos do sistema fornece utilitarios administrativos para
 manutencao e gestao dos arquivos do sistema SAV.
 ---------------------------------------------------------------
 
-1 - TEMPORARIOS
-    Gerencia arquivos temporarios do sistema.
-    
-    FUNCOES:
-    * Limpeza automatica de arquivos antigos
-    * Compactacao antes de remover
-    * Manutencao da lista de temporarios
-    
-    BENEFICIOS:
-    - Libera espaco em disco
-    - Melhora performance
-    - Organiza base de dados
-
-2 - RECUPERAR ARQUIVOS
+1 - RECUPERAR ARQUIVOS
     Executa rebuild em arquivos de dados.
     
     O QUE FAZ:
@@ -412,7 +387,7 @@ manutencao e gestao dos arquivos do sistema SAV.
     
     DISPONIVEL APENAS PARA: Sistemas IsCOBOL
 
-3 - ROTINAS DE BACKUP
+2 - ROTINAS DE BACKUP
     Gerencia backups da base de dados.
     
     TIPOS:
@@ -424,7 +399,7 @@ manutencao e gestao dos arquivos do sistema SAV.
     - Restaurar backup
     - Enviar para servidor
 
-4 - ENVIAR E RECEBER ARQUIVOS
+3 - ENVIAR E RECEBER ARQUIVOS
     Transfere arquivos entre cliente e servidor.
     
     USOS:
@@ -432,6 +407,20 @@ manutencao e gestao dos arquivos do sistema SAV.
      * Transferencia de logs
     
     PROTOCOLOS: SFTP, RSYNC
+
+
+4 - TEMPORARIOS
+    Gerencia arquivos temporarios do sistema.
+    
+    FUNCOES:
+    * Limpeza automatica de arquivos antigos
+    * Compactacao antes de remover
+    * Manutencao da lista de temporarios
+    
+    BENEFICIOS:
+    - Libera espaco em disco
+    - Melhora performance
+    - Organiza base de dados
 
 5 - EXPURGADOR DE ARQUIVOS
     Remove automaticamente arquivos antigos.
