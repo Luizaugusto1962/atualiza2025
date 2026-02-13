@@ -509,26 +509,6 @@ editar_variavel() {
 }
 _manutencao_setup() {
 
-# Atualiza as variaveis SAVATU* com base na verclass
-atualizar_savatu_variaveis() {
-    local ano="${verclass}"
-    local sufixo="IS${ano}"
-
-#    SAVATU="tempSAV_${sufixo}_*_"
-    SAVATU1="tempSAV_${sufixo}_classA_"
-    SAVATU2="tempSAV_${sufixo}_classB_"
-    SAVATU3="tempSAV_${sufixo}_tel_isc_"
-    SAVATU4="tempSAV_${sufixo}_xml_"
-
-    echo "Variaveis SAVATU atualizadas com base em verclass:"
-#    echo "SAVATU=$SAVATU"
-    echo "SAVATU1=$SAVATU1"
-    echo "SAVATU2=$SAVATU2"
-    echo "SAVATU3=$SAVATU3"
-    echo "SAVATU4=$SAVATU4"
-    echo ${tracejada}
-}
-
 # Se os arquivos existem, carrega e pergunta se quer editar campo a campo
 if [[ -f ".atualizac" ]]; then
     echo "=================================================="
@@ -572,8 +552,6 @@ clear
     {
         echo "sistema=${sistema}"
         [[ -n "$verclass" ]] && echo "verclass=${verclass}"
-        [[ -n "$class" ]] && echo "class=${class}"
-        [[ -n "$mclass" ]] && echo "mclass=${mclass}"
         [[ -n "$BANCO" ]] && echo "BANCO=${BANCO}"
         [[ -n "$acessossh" ]] && echo "acessossh=${acessossh}"
         [[ -n "$IPSERVER" ]] && echo "IPSERVER=${IPSERVER}"      
@@ -583,11 +561,6 @@ clear
         [[ -n "$base" ]] && echo "base=${base}"
         [[ -n "$base2" ]] && echo "base2=${base2}"
         [[ -n "$base3" ]] && echo "base3=${base3}"
-#        echo "SAVATU=${SAVATU}"
-        echo "SAVATU1=${SAVATU1}"
-        echo "SAVATU2=${SAVATU2}"
-        echo "SAVATU3=${SAVATU3}"
-        echo "SAVATU4=${SAVATU4}"
     } >.atualizac
 
     echo
