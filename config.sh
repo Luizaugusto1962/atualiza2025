@@ -4,17 +4,17 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 13/02/2026-00
+# Versao: 19/02/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
 # Arrays para organizacao das variaveis
 declare -a cores=(RED GREEN YELLOW BLUE PURPLE CYAN NORM)
-declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR DIR raiz pasta base base2 base3 logs olds backup cfg libs progs envia recebe)
-declare -a caminhos_base2=(progs backup sistema TEMPS UMADATA DIRB ENVIABACK ENVBASE SERACESOFF E_EXEC T_TELAS X_XML)
+declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR raiz pasta base base2 base3 logs olds cfg libs envia recebe)
+declare -a caminhos_base2=(progs backup INI UMADATA ENVIABACK SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
-declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who)
-declare -a outros=(NOMEPROG PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 VBACKUP ARQUIVO VERSAO ARQUIVO2 VERSAOANT INI SAVISC DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ jut JUTIL ISCCLIENT ISCCLIENTT SAVISCC Offline base_trabalho)
+declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO jut JUTIL ISCCLIENT ISCCLIENTT)
+declare -a outros=(PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 ARQUIVO VERSAO VERSAOANT SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
 #-Variaveis de configuracao do sistema ---------------------------------------------------------#
@@ -29,8 +29,6 @@ base="${base:-}"             # Caminho do diretorio da base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 logs="${logs:-}"             # Caminho do diretorio dos arquivos de log.
-class="${class:-}"           # Extensao do programa compilando.
-mclass="${mclass:-}"         # Extensao do programa compilando em modo debug.
 telas="${telas:-}"           # Caminho do diretorio das telas.
 xml="${xml:-}"               # Caminho do diretorio dos arquivos xml.
 olds="${olds:-}"             # Caminho do diretorio dos arquivos de backup.
@@ -56,7 +54,6 @@ cmd_unzip="${cmd_unzip:-}"   # Comando para descompactar arquivos.
 cmd_zip="${cmd_zip:-}"       # Comando para compactar arquivos.
 cmd_find="${cmd_find:-}"     # Comando para buscar arquivos.
 cmd_who="${cmd_who:-}"       # Comando para saber quem esta logado no sistema.
-VBACKUP="${VBACKUP:-}"       # Variavel que define se sera realizado backup.
 ARQUIVO="${ARQUIVO:-}"       # Variavel que define o nome do arquivo a ser baixado.
 PEDARQ="${PEDARQ:-}"         # Variavel que define se sera realizado o pedido de arquivos.
 prog="${prog:-}"             # Variavel que define o nome do programa a ser baixado.
@@ -176,12 +173,10 @@ _configurar_diretorios() {
 
     # Diretorios de destino para diferentes tipos de biblioteca
     DESTINO2SERVER="${DESTINO2SERVER:-/u/varejo/man/}"                                      # Diretorio do servidor de atualizacao
-#    DESTINO2SAVATUISC="${DESTINO2SAVATUISC:-/home/savatu/biblioteca/temp/ISCobol/sav-5.0/}" # Diretorio da biblioteca IsCOBOL
-#   DESTINO2SAVATUMF="${DESTINO2SAVATUMF:-/home/savatu/biblioteca/temp/Isam/sav-3.1}"       # Diretorio da biblioteca Isam
     DESTINO2TRANSPC="${DESTINO2TRANSPC:-/u/varejo/trans_pc/}"                               # Diretorio de transporte PC
     SERACESOFF="${SERACESOFF:-/portalsav/Atualiza}"                                         # Diretorio do servidor offline
-#   export DESTINO2SERVER DESTINO2SAVATUISC DESTINO2SAVATUMF DESTINO2TRANSPC SERACESOFF
     export DESTINO2SERVER DESTINO2TRANSPC SERACESOFF
+
     # Definir diretorios de trabalho
     OLDS="${OLDS:-${TOOLS_DIR}/olds}"         # Diretorio de arquivos antigos
     PROGS="${PROGS:-${TOOLS_DIR}/progs}"      # Diretorio de programas
