@@ -4,7 +4,7 @@
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/02/2026-00
+# Versao: 19/02/2026-00
 
 #---------- FUNCOES DE FORMATACAO DE TELA ----------#
 
@@ -292,14 +292,11 @@ _executar_expurgador_diario() {
     
     # Executar limpeza basica
     _limpar_arquivos_antigos "${LOGS}" 30 "*.log"
-    _limpar_arquivos_antigos "${BACKUP}" 30 "Temps*"
-    _limpar_arquivos_antigos "${OLDS}" 30 "Temp*"
-    _limpar_arquivos_antigos "${OLDS}" 30 "*.zip*"
-    _limpar_arquivos_antigos "${OLDS}" 30 "*.bkp"
-    _limpar_arquivos_antigos "${BACKUP}" 30 "*.bkp"
-    _limpar_arquivos_antigos "${savlog}" 30 "Temps*"
-    _limpar_arquivos_antigos "${err_isc}" 30 "Temps*"
-    _limpar_arquivos_antigos "${viewvix}" 30 "Temps*"
+    _limpar_arquivos_antigos "${BACKUP}" 30 "*.*"
+    _limpar_arquivos_antigos "${OLDS}" 30 "*.*"
+    _limpar_arquivos_antigos "${savlog}" 30 "*.*"
+    _limpar_arquivos_antigos "${err_isc}" 30 "*.*"
+    _limpar_arquivos_antigos "${viewvix}" 30 "*.*"
     
     # Criar flag para hoje
     touch "$flag_file"
@@ -315,7 +312,7 @@ _check_instalado() {
     local app
     local missing=()
     # Mensagem de erro principal
-    Z1="ERRO: Programa não encontrado"  # Definir a mensagem
+    Z1="ERRO: Programa nao encontrado"  # Definir a mensagem
 
     for app in zip unzip rsync wget; do
         if ! command -v "$app" >/dev/null 2>&1; then
