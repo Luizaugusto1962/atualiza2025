@@ -271,7 +271,7 @@ _atualizando() {
     # Descompactar
     if ! "${cmd_unzip}" -o -j "$zipfile" >>"$LOG_ATU" 2>&1; then
         _mensagec "${RED}" "Erro ao descompactar atualizacao"
-        _mensagec "${YELLOW}" "Verifique se o atualzia.zip esta no diretorio $ENVIA"
+        _mensagec "${YELLOW}" "Verifique se o atualiza.zip esta no diretorio $ENVIA"
         return 1
     fi
     # Verificar e instalar arquivos

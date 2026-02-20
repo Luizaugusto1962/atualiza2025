@@ -53,12 +53,12 @@ _executar_limpeza_temporarios() {
 
     _press
 }
-
-# Limpa arquivos de uma base especifica
 _limpar_base_especifica() {
     local caminho_base="$1"
     local arquivo_lista="$2"
     local arquivos_temp=()
+    local total_arquivos=0
+    local total_padroes=0
     
     # Ler lista de arquivos temporarios
     mapfile -t arquivos_temp < "$arquivo_lista"
@@ -71,16 +71,29 @@ _limpar_base_especifica() {
         if [[ -n "$padrao_arquivo" ]]; then
             _mensagec "${GREEN}" "Processando padrao: ${YELLOW}${padrao_arquivo}${NORM}"
             
+            # Contar arquivos encontrados para o padrao atual
+            local qtd_padrao
+            qtd_padrao=$(find "$caminho_base" -type f -iname "$padrao_arquivo" | wc -l)
+            
             # Compactar e mover arquivos temporarios
             local zip_temporarios="Temps-${UMADATA}.zip"
             if find "$caminho_base" -type f -iname "$padrao_arquivo" -exec "$cmd_zip" "${BACKUP}/${zip_temporarios}" {} + >>"${LOG_LIMPA}" 2>&1; then
-                _log "Arquivos temporarios processados: $padrao_arquivo"
+                _log "Arquivos temporarios processados: $padrao_arquivo (${qtd_padrao} arquivo(s))"
+                _mensagec "${GREEN}" "  >> ${qtd_padrao} arquivo(s) encontrado(s) para o padrao: ${YELLOW}${padrao_arquivo}${NORM}"
                 # Remover arquivos originais após compactação bem-sucedida
                 find "$caminho_base" -type f -iname "$padrao_arquivo" -delete
+                
+                (( total_arquivos += qtd_padrao ))
+                (( total_padroes++ ))
             fi
         fi
     done
-        
+    
+    _linha
+    _mensagec "${YELLOW}" "Resumo da limpeza:"
+    _mensagec "${GREEN}"  "  Padroes processados : ${YELLOW}${total_padroes}"
+    _mensagec "${GREEN}"  "  Total de arquivos   : ${YELLOW}${total_arquivos}"
+    _log "Limpeza concluida: ${total_padroes} padrao(oes), ${total_arquivos} arquivo(s) processado(s) em ${caminho_base}"
     _linha
 }
 
