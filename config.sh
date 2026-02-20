@@ -4,17 +4,19 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 19/02/2026-00
+# Versao: 20/02/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
 # Arrays para organizacao das variaveis
 declare -a cores=(RED GREEN YELLOW BLUE PURPLE CYAN NORM)
-declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR raiz pasta base base2 base3 logs olds cfg libs envia recebe)
-declare -a caminhos_base2=(progs backup INI UMADATA ENVIABACK SERACESOFF E_EXEC T_TELAS X_XML)
+declare -a atualizac=(sistema verclass BANCO base base2 base3 acessossh IPSERVER Offline ENVIABACK EMPRESA VERSAOANT)
+declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR raiz base base2 base3 backup logs olds cfg libs envia recebe)
+declare -a caminhos_base2=(INI UMADATA SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO jut JUTIL ISCCLIENT ISCCLIENTT)
-declare -a outros=(PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 ARQUIVO VERSAO VERSAOANT SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
+declare -a outros=(PEDARQ prog PORTA USUARIO DESTINO2 ARQUIVO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
+declare -a logis=(LOG LOG_ATU LOG_LIMPA LOG_TMP)
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
 #-Variaveis de configuracao do sistema ---------------------------------------------------------#
@@ -24,16 +26,12 @@ declare -a outros=(PEDARQ prog PORTA USUARIO IPSERVER DESTINO2 ARQUIVO VERSAO VE
 raiz="${raiz:-}"             # Caminho do diretorio raiz do programa.
 cfg_dir="${cfg_dir:-}"       # Caminho do diretorio de configuracao do programa.
 lib_dir="${lib_dir:-}"       # Caminho do diretorio de bibliotecas do programa.
-pasta="${pasta:-}"           # Caminho do diretorio onde estao os executaveis.
 base="${base:-}"             # Caminho do diretorio da base de dados.
 base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
 base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 logs="${logs:-}"             # Caminho do diretorio dos arquivos de log.
-telas="${telas:-}"           # Caminho do diretorio das telas.
-xml="${xml:-}"               # Caminho do diretorio dos arquivos xml.
 olds="${olds:-}"             # Caminho do diretorio dos arquivos de backup.
 libs="${libs:-}"             # Caminho do diretorio das bibliotecas.
-progs="${progs:-}"           # Caminho do diretorio dos programas.
 BACKUP="${BACKUP:-}"         # Caminho do diretorio de backup.
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
 SAVATU="${SAVATU:-}"         # Caminho do diretorio da biblioteca do servidor da SAV.
@@ -42,6 +40,7 @@ SAVATU2="${SAVATU2:-}"       # Caminho do diretorio da biblioteca do servidor da
 SAVATU3="${SAVATU3:-}"       # Caminho do diretorio da biblioteca do servidor da SAV.
 SAVATU4="${SAVATU4:-}"       # Caminho do diretorio da biblioteca do servidor da SAV.
 verclass="${verclass:-}"     # Ano da versao
+BANCO="${BANCO:-}"           # Variavel que define o tipo de banco de dados usado pelo sistema.
 ENVIABACK="${ENVIABACK:-}"   # Variavel que define o caminho para onde sera enviado o backup.
 VERSAO="${VERSAO:-}"         # Variavel que define a versao do programa.
 INI="${INI:-}"               # Variavel que define o caminho do arquivo de configuracao do sistema.
@@ -439,7 +438,7 @@ _validar_configuracao() {
     fi
     
     # Verificar diretorios essenciais
-    local dirs=("olds" "progs" "logs" "cfg" "libs" "backup" "envia" "recebe" "E_EXEC" "T_TELAS" "BASE1")
+    local dirs=("olds" "logs" "cfg" "libs" "backup" "envia" "recebe" "E_EXEC" "T_TELAS" "BASE1")
     for dir in "${dirs[@]}"; do
         local dir_path=""
         # Tratamento especial para E_EXEC e T_TELAS que ficam em ${raiz}
@@ -490,11 +489,13 @@ _ir_para_tools() {
 # Funcao para resetar variaveis (cleanup)
 _resetando() {
     unset -v "${cores[@]}" 2>/dev/null || true
+    unset -v "${atualizac[@]}" 2>/dev/null || true
     unset -v "${caminhos_base[@]}" 2>/dev/null || true
     unset -v "${caminhos_base2[@]}" 2>/dev/null || true
     unset -v "${biblioteca[@]}" 2>/dev/null || true
     unset -v "${comandos[@]}" 2>/dev/null || true
     unset -v "${outros[@]}" 2>/dev/null || true
+    unset -v "${logis[@]}" 2>/dev/null || true
     
     tput sgr0 2>/dev/null || true
     exit 1

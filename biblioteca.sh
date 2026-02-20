@@ -4,10 +4,10 @@
 # Responsavel pela atualizacao das bibliotecas do sistema (Transpc, Savatu)
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 13/02/2026-00
+# Versao: 20/02/2026-00
 
-raiz_local="${raiz_local:-}"           # Diretorio raiz do sistema
-principal_local="${principal_local:-}" # Diretorio principal do sistema
+#raiz_local="${raiz_local:-}"           # Diretorio raiz do sistema
+#principal_local="${principal_local:-}" # Diretorio principal do sistema
 sistema="${sistema:-}"                 # Tipo de sistema (iscobol/mf)
 cmd_zip="${cmd_zip:-}"                 # Comando de compactacao (zip)
 cmd_unzip="${cmd_unzip:-}"             # Comando de descompactacao (unzip)

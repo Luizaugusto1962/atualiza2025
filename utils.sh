@@ -4,16 +4,16 @@
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 19/02/2026-00
+# Versao: 20/02/2026-00
 
 #---------- FUNCOES DE FORMATACAO DE TELA ----------#
 
-cfg_dir="${cfg_dir:-}"        # Caminho do diretorio de configuracao do programa.
+#cfg_dir="${cfg_dir:-}"        # Caminho do diretorio de configuracao do programa.
 raiz="${raiz:-}"              # Diretorio raiz do sistema.
-LOGS="${LOGS:-}"              # Diretorio de logs.
-BACKUP="${BACKUP:-}"          # Diretorio de backups.
-OLDS="${OLDS:-}"              # Diretorio de arquivos antigos.
-LOG_ATU="${LOG_ATU:-}"        # Arquivo de log do processo de atual
+#LOGS="${LOGS:-}"              # Diretorio de logs.
+#BACKUP="${BACKUP:-}"          # Diretorio de backups.
+#OLDS="${OLDS:-}"              # Diretorio de arquivos antigos.
+#LOG_ATU="${LOG_ATU:-}"        # Arquivo de log do processo de atual
 
 # Limpa a tela e posiciona cursor no centro
 _meiodatela() {

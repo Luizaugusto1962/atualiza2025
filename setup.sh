@@ -9,9 +9,9 @@
 #   - ./setup.sh --edit: Modo de edicao para modificar configuracoes existentes.
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 13/02/2026-00
+# Versao: 20/02/2026-00
 
-#---------- FUNcoES DE LoGICA DE NEGoCIO ----------#
+#---------- FUNCAO DE LOGICA DE NEGOCIO ----------#
 VERCLASS="${VERCLASS:-}"
 
 # Variáveis globais

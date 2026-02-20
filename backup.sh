@@ -4,16 +4,16 @@
 # Responsavel por backup completo, incremental e restauracao
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 10/02/2026-00
+# Versao: 20/02/2026-00
 # Autor: Luiz Augusto
 
-sistema="${sistema:-}"
+#sistema="${sistema:-}"
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
-base2="${base2:-}"         # Caminho do diretorio da segunda base de dados.
-base3="${base3:-}"         # Caminho do diretorio da terceira base de dados.
-cmd_zip="${cmd_zip:-}"
-Offline="${Offline:-}"
-raiz="${raiz:-}"
+#base2="${base2:-}"         # Caminho do diretorio da segunda base de dados.
+#base3="${base3:-}"         # Caminho do diretorio da terceira base de dados.
+#cmd_zip="${cmd_zip:-}"
+Offline="${Offline:-}"     # Indicador de ambiente offline (s/n)
+raiz="${raiz:-}"           # Caminho raiz do sistema.
 
 #---------- FUNCOES PRINCIPAIS DE backup ----------#
 
