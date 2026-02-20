@@ -5,7 +5,7 @@
 # Autor: Luiz Augusto
 # Os programas usados por este script devem estar na pasts /libs.
 
-set -euo pipefail
+set -euo pipefail # Configuracao de seguranca para o script
 export LC_ALL=C
 
 # Verificacoes basicas
