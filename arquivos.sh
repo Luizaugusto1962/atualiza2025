@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 20/02/2026-00
+# Versao: 23/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"             # Tipo de sistema (ex: iscobol, outros).
@@ -69,8 +69,6 @@ _limpar_base_especifica() {
     
     for padrao_arquivo in "${arquivos_temp[@]}"; do
         if [[ -n "$padrao_arquivo" ]]; then
-            _mensagec "${GREEN}" "Processando padrao: ${YELLOW}${padrao_arquivo}${NORM}"
-            
             # Contar arquivos encontrados para o padrao atual
             local qtd_padrao
             qtd_padrao=$(find "$caminho_base" -type f -iname "$padrao_arquivo" | wc -l)
@@ -92,7 +90,7 @@ _limpar_base_especifica() {
     _linha
     _mensagec "${YELLOW}" "Resumo da limpeza:"
     _mensagec "${GREEN}"  "  Padroes processados : ${YELLOW}${total_padroes}"
-    _mensagec "${GREEN}"  "  Total de arquivos   : ${YELLOW}${total_arquivos}"
+    _mensagec "${GREEN}"  "  Total de arquivos  : ${YELLOW}${total_arquivos}"
     _log "Limpeza concluida: ${total_padroes} padrao(oes), ${total_arquivos} arquivo(s) processado(s) em ${caminho_base}"
     _linha
 }
