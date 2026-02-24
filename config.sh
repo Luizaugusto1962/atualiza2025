@@ -4,7 +4,7 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 20/02/2026-00
+# Versao: 24/02/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
@@ -32,7 +32,6 @@ base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
 logs="${logs:-}"             # Caminho do diretorio dos arquivos de log.
 olds="${olds:-}"             # Caminho do diretorio dos arquivos de backup.
 libs="${libs:-}"             # Caminho do diretorio das bibliotecas.
-BACKUP="${BACKUP:-}"         # Caminho do diretorio de backup.
 sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
 SAVATU="${SAVATU:-}"         # Caminho do diretorio da biblioteca do servidor da SAV.
 SAVATU1="${SAVATU1:-}"       # Caminho do diretorio da biblioteca do servidor da SAV.
