@@ -241,6 +241,18 @@ _atualizando() {
         return 1
     else
         _mensagec "${GREEN}" "Backup de $backup_sucesso arquivo(s) realizado com sucesso"
+         # Compactar arquivos .bkp com nome baseado na data atual (DDMM_backup.zip)
+        local data_zip
+        data_zip=$(date +"%d%m")
+        local zip_nome="${data_zip}_backup.zip"
+
+        if cd "${BACKUP}" && zip -jm "${zip_nome}" ./*.sh.bkp >>"$LOG_ATU" 2>&1; then
+            _mensagec "${GREEN}" "Backup compactado com sucesso: ${BACKUP}/${zip_nome}"
+        else
+            _mensagec "${YELLOW}" "Aviso: Nao foi possivel compactar os arquivos de backup"
+        fi
+        cd "${lib_dir}" || return 1
+
     fi
 
     # Acessar diretorio de trabalho
