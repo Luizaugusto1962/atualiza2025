@@ -4,19 +4,18 @@
 # Responsavel pela atualizacao, instalacao e reversao de programas
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 20/02/2026-00
-
-#raiz="${raiz:-}"            # Diretorio raiz do sistema
+# Versao: 24/02/2026-00
+#
+# Variaveis globais esperadas
 sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
 acessossh="${acessossh:-}"  # Uso de acesso SSH (s/n)
 cmd_zip="${cmd_zip:-}"      # Comando de compactacao (zip)
 cmd_unzip="${cmd_unzip:-}"  # Comando de descompactacao (unzip)
-#cmd_find="${cmd_find:-}"    # Comando find
 Offline="${Offline:-}"      # Modo offline (s/n)
 down_dir="${down_dir:-}"    # Diretorio de download de arquivos
-#verclass="${verclass:-}"    # Tipo de compilacao do programa 
 class="${class:-}"                    # Sufixo para arquivos de classe
 mclass="${mclass:-}"                   # Sufixo para arquivos de classe de depuracao
+
 #---------- VARIaVEIS GLOBAIS DO MODULO ----------#
 # Arrays para armazenar programas e arquivos
 declare -a PROGRAMAS_SELECIONADOS=()

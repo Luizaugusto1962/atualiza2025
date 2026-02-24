@@ -7,6 +7,7 @@
 # Versao: 24/02/2026-00
 
 #---------- FUNCOES DE FORMATACAO DE TELA ----------#
+# Variaveis globais esperadas
 raiz="${raiz:-}"              # Diretorio raiz do sistema.
 
 # Limpa a tela e posiciona cursor no centro

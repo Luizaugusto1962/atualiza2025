@@ -4,26 +4,14 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 20/02/2026-00
-
-#raiz="${raiz:-}"            # Diretorio raiz do sistema.
+# Versao: 24/02/2026-00
+#
+# Variaveis globais esperadas
 cfg_dir="${cfg_dir:-}"      # Caminho do diretorio de configuracao do programa.
 lib_dir="${lib_dir:-}"      # Diretorio dos modulos de biblioteca.
-#err_isc="${err_isc:-}"      # Codigo de erro do IsCOBOL.
-#sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
-#acessossh="${acessossh:-}"  # Uso de acesso via chave SSH (s/n).
-#cmd_zip="${cmd_zip:-}"      # Comando de compactacao (zip).
 cmd_unzip="${cmd_unzip:-}"  # Comando de descompactacao (unzip).
-#cmd_find="${cmd_find:-}"    # Comando find.
-#base="${base:-}"            # Caminho do diretorio da primeira base de dados.
-#base2="${base2:-}"          # Caminho do diretorio da segunda base de dados.
-#base3="${base3:-}"          # Caminho do diretorio da terceira base de dados.
-#verclass="${verclass:-}"    # Versao da classe em uso.
 class="${class:-}"          # Variavel da classe.
 mclass="${mclass:-}"        # Variavel da mclass.
-#Offline="${Offline:-}"      # Modo offline (s/n).
-#down_dir="${down_dir:-}"    # Diretorio de configuracoes em OFF.
-#SAVISC="${SAVISC:-}"        # Caminho da biblioteca do IsCOBOL.
 
 #---------- FUNCOES DE VERSAO ----------#
 # Mostra versao do IsCOBOL
