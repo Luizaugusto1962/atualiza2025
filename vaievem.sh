@@ -97,7 +97,7 @@ _download_scp() {
     local usuario="${5:-$USUARIO}"    
 
     _log "Iniciando download SCP com chave SSH: ${arquivo_remoto}"
-        if sftp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
+        if scp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
         _log_sucesso "Download SCP concluido: ${arquivo_remoto}"
         return 0
     else
