@@ -92,9 +92,12 @@ EOF
 _download_scp() {
     local arquivo_remoto="$1"
     local destino_local="${2:-.}"
-    
+    local servidor="${3:-$IPSERVER}"
+    local porta="${4:-$PORTA}"
+    local usuario="${5:-$USUARIO}"    
+
     _log "Iniciando download SCP com chave SSH: ${arquivo_remoto}"
-    if scp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
+        if sftp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
         _log_sucesso "Download SCP concluido: ${arquivo_remoto}"
         return 0
     else
