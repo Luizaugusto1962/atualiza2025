@@ -94,8 +94,7 @@ _download_scp() {
     local destino_local="${2:-.}"
     
     _log "Iniciando download SCP com chave SSH: ${arquivo_remoto}"
-    
-    if scp -P "$PORTA" "sav_servidor:${arquivo_remoto}" "$destino_local"; then
+    if scp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
         _log_sucesso "Download SCP concluido: ${arquivo_remoto}"
         return 0
     else
