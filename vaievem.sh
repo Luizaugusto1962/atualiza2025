@@ -4,9 +4,15 @@
 # Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 13/02/2026-00
-
+# Versao: 25/02/2026-00
+#
 #---------- CONFIGURACOES DE CONEXAO ----------#
+#
+# Variaveis globais esperadas
+acessossh="${acessossh:-s}"            # Acesso via SSH (s/n)
+arquivo_enviar="${arquivo_enviar:-}"   # Arquivo a ser enviado (pode conter wildcard)
+dir_origem="${dir_origem:-.}"          # Diretório de origem para upload
+arquivos_encontrados=()                # Array para armazenar arquivos encontrados para envio
 
 # Testa conectividade com o servidor
 _testar_conexao() {
@@ -111,3 +117,103 @@ _upload_rsync() {
     fi
 }
 
+#---------- FUNCOES DE DOWNLOAD ----------#
+
+# Baixa biblioteca via SFTP
+_baixar_biblioteca_sincroniza() {
+    _log "Iniciando download da biblioteca: ${SAVATU}${VERSAO}"
+
+    # Criar diretório de recebimento se não existir
+    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
+
+    cd "${RECEBE}" || return 1
+
+    if [[ "${acessossh}" == "s" ]]; then
+        local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
+
+        if sftp -P "$PORTA" "${src}" "."; then
+            _log_sucesso "Download da biblioteca concluido: ${SAVATU}${VERSAO}.zip"
+            return 0
+        else
+            _log_erro "Falha no download da biblioteca: ${SAVATU}${VERSAO}.zip"
+            return 1
+        fi
+    else
+        _definir_variaveis_biblioteca
+
+        local arquivos_update
+        read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
+
+        if [[ ${#arquivos_update[@]} -eq 0 ]]; then
+            _mensagec "${RED}" "Erro: Nenhum arquivo de atualizacao encontrado"
+            return 1
+        fi
+
+        for arquivo in "${arquivos_update[@]}"; do
+            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
+
+            if sftp -P "$PORTA" "${src}" "."; then
+                _log_sucesso "Download concluido: ${arquivo}"
+            else
+                _log_erro "Falha no download: ${arquivo}"
+                return 1
+            fi
+        done
+
+        return 0
+    fi
+}
+
+_baixar_biblioteca_sincroniza2() {
+    # Criar diretório envia se não existir
+    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
+    
+    # Ir para o diretório envia
+    cd "${RECEBE}" || return 1
+
+    if [[ "${acessossh}" == "s" ]]; then
+            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
+            sftp -P "$PORTA" "${src}" "."
+    else
+          _definir_variaveis_biblioteca
+          local arquivos_update
+          read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
+
+        for arquivo in "${arquivos_update[@]}"; do
+            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
+            sftp -P "$PORTA" "${src}" "."
+        done
+    fi
+
+}
+
+_enviar_arquivo_multi() {
+   # Verificar se está enviando múltiplos arquivos ou apenas um
+    if [[ "$arquivo_enviar" == *"*"* ]]; then
+        # Enviar múltiplos arquivos usando _upload_rsync do vaievem.sh
+        local falhas_envio=0
+        for arquivo_item in "${arquivos_encontrados[@]}"; do
+            if ! _upload_rsync "$arquivo_item" "${destino_remoto}/"; then
+                ((falhas_envio++))
+            fi
+        done
+        if (( falhas_envio == 0 )); then
+            _mensagec "${YELLOW}" "Arquivo(s) enviado(s) para \"${destino_remoto}\""
+            _linha
+            _read_sleep 3
+        else
+            _mensagec "${RED}" "Erro no envio de ${falhas_envio} arquivo(s)"
+            _press
+        fi
+    else
+        # Enviar arquivo único usando _upload_rsync do vaievem.sh
+        if _upload_rsync "${dir_origem}/${arquivo_enviar}" "${destino_remoto}"; then
+            _mensagec "${YELLOW}" "Arquivo enviado para \"${destino_remoto}\""
+            _linha
+            _read_sleep 3
+        else
+            _mensagec "${RED}" "Erro no envio do arquivo"
+            _press
+        fi
+    fi
+}

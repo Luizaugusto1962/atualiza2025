@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao das bibliotecas do sistema (Transpc, Savatu)
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 25/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"                 # Tipo de sistema (iscobol/mf)
@@ -15,7 +15,7 @@ acessossh="${acessossh:-}"             # Acesso via SSH (s/n)
 Offline="${Offline:-}"                 # Modo offline (s/n)
 down_dir="${down_dir:-}"               # Diretorio de download
 cfg_dir="${cfg_dir:-}"                 # Diretorio de configuracao
-
+DESTINO2="${DESTINO2:-}"               # Destino para Transpc
 declare -g pids=()                     # Array global para rastrear PIDs de background
 
 # Funcao de cleanup em caso de interrupcao
@@ -82,38 +82,8 @@ _atualizar_transpc() {
     DESTINO2="${DESTINO2TRANSPC}"
     _configurar_acessos
     _baixar_biblioteca_sincroniza
+    _salvar_atualizacao_biblioteca
 }
-
-# Atualizacao do Savatu
-#_atualizar_savatu() {
-#    clear
-#    _solicitar_versao_biblioteca
-#    
-#    if [[ -z "${VERSAO}" ]]; then
-#        return 1
-#    fi
-#
-#    if [[ "${Offline}" == "s" ]]; then
-#        _linha
-#        _mensagec "${YELLOW}" "Parametro de biblioteca do servidor OFF ativo"
-#        _linha
-#        _press
-#        return 1
-#    fi
-#
-#    _linha
-#    _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
-#    _linha
-#
-#    # Selecionar destino baseado no sistema
-#    if [[ "${sistema}" = "iscobol" ]]; then
-#        DESTINO2="${DESTINO2SAVATUISC}"
-#    else
-#        DESTINO2="${DESTINO2SAVATUMF}"
-#    fi
-#    _configurar_acessos
-#    _baixar_biblioteca_sincroniza
-#}
 
 # Atualizacao offline da biblioteca
 _atualizar_biblioteca_offline() {
@@ -473,32 +443,6 @@ _reverter_programa_especifico_biblioteca() {
 
     _mensagec "${YELLOW}" "Volta do Programa Concluida"
     _press
-}
-
-#---------- FUNCOES DE DOWNLOAD ----------#
-
-# Baixa biblioteca via SFTP
-_baixar_biblioteca_sincroniza() {
-    # Criar diretório envia se não existir
-    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
-    
-    # Ir para o diretório envia
-    cd "${RECEBE}" || return 1
-
-    if [[ "${acessossh}" == "s" ]]; then
-            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
-            sftp -P "$PORTA" "${src}" "."
-    else
-          _definir_variaveis_biblioteca
-          local arquivos_update
-          read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
-
-        for arquivo in "${arquivos_update[@]}"; do
-            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
-            sftp -P "$PORTA" "${src}" "."
-        done
-    fi
-    _salvar_atualizacao_biblioteca
 }
 
 #---------- FUNcoES AUXILIARES ----------#

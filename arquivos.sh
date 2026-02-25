@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 25/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"             # Tipo de sistema (ex: iscobol, outros).
@@ -456,36 +456,8 @@ _enviar_arquivo_avulso() {
     _linha
     _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
     _linha
-    
-    # Verificar se está enviando múltiplos arquivos ou apenas um
-    if [[ "$arquivo_enviar" == *"*"* ]]; then
-        # Enviar múltiplos arquivos usando _upload_rsync do vaievem.sh
-        local falhas_envio=0
-        for arquivo_item in "${arquivos_encontrados[@]}"; do
-            if ! _upload_rsync "$arquivo_item" "${destino_remoto}/"; then
-                ((falhas_envio++))
-            fi
-        done
-        if (( falhas_envio == 0 )); then
-            _mensagec "${YELLOW}" "Arquivo(s) enviado(s) para \"${destino_remoto}\""
-            _linha
-            _read_sleep 3
-        else
-            _mensagec "${RED}" "Erro no envio de ${falhas_envio} arquivo(s)"
-            _press
-        fi
-    else
-        # Enviar arquivo único usando _upload_rsync do vaievem.sh
-        if _upload_rsync "${dir_origem}/${arquivo_enviar}" "${destino_remoto}"; then
-            _mensagec "${YELLOW}" "Arquivo enviado para \"${destino_remoto}\""
-            _linha
-            _read_sleep 3
-        else
-            _mensagec "${RED}" "Erro no envio do arquivo"
-            _press
-        fi
-    fi
-}
+    _enviar_arquivo_multi
+ }
 
 # Recebe arquivo avulso
 _receber_arquivo_avulso() {
