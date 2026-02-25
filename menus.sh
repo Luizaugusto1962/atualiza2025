@@ -4,12 +4,12 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 25/02/2026-00
 # Autor: Luiz Augusto
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"    # Nome do sistema (iscobol, savatu, transpc).
-cfg_dir="${cfg_dir:-}"    # Caminho do diretorio de configuracao do programa.
+cfg_dir="${cfg_dir:-${TOOLS_DIR}/cfg}"        # Diretorio de configuracoes
 base="${base:-}"          # Caminho do diretorio da primeira base de dados.
 base2="${base2:-}"        # Caminho do diretorio da segunda base de dados.
 
@@ -554,8 +554,7 @@ _menu_setups() {
                _manutencao_setup
                 # Apos a manutencao, recarregar as configuracoes
                 if [[ -f "${cfg_dir}/.atualizac" ]]; then
-                    # shellcheck source=/dev/null
-                    source "${cfg_dir}/.atualizac"
+                    "." "${cfg_dir}/.atualizac"
                     _mensagec "${GREEN}" "Configuracoes recarregadas com sucesso!"
                     _read_sleep 2
                 fi

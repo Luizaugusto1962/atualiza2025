@@ -34,7 +34,7 @@ _testar_conexao() {
 }
 
 #---------- FUNcoES DE DOWNLOAD ----------#
-
+#
 # Download via SFTP
 _download_sftp() {
     local arquivo_remoto="$1"
@@ -88,9 +88,25 @@ EOF
     return $status
 }
 
+# Download via SCP com chave SSH configurada
+_download_scp() {
+    local arquivo_remoto="$1"
+    local destino_local="${2:-.}"
+    
+    _log "Iniciando download SCP com chave SSH: ${arquivo_remoto}"
+    
+    if scp -P "$PORTA" "sav_servidor:${arquivo_remoto}" "$destino_local"; then
+        _log_sucesso "Download SCP concluido: ${arquivo_remoto}"
+        return 0
+    else
+        _log_erro "Falha no download SCP: ${arquivo_remoto}"
+        return 1
+    fi
+}
+
 
 #---------- FUNcoES DE UPLOAD ----------#
-
+#
 # Upload via RSYNC
 _upload_rsync() {
     local arquivo_local="$1"
@@ -118,8 +134,8 @@ _upload_rsync() {
 }
 
 #---------- FUNCOES DE DOWNLOAD ----------#
-
-# Baixa biblioteca via SFTP
+#
+# Download biblioteca via SFTP (funcao principal)
 _baixar_biblioteca_sincroniza() {
     _log "Iniciando download da biblioteca: ${SAVATU}${VERSAO}"
 
@@ -152,7 +168,7 @@ _baixar_biblioteca_sincroniza() {
         for arquivo in "${arquivos_update[@]}"; do
             local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
 
-            if sftp -P "$PORTA" "${src}" "."; then
+            if scp -P "$PORTA" "${src}" "."; then
                 _log_sucesso "Download concluido: ${arquivo}"
             else
                 _log_erro "Falha no download: ${arquivo}"
@@ -164,29 +180,7 @@ _baixar_biblioteca_sincroniza() {
     fi
 }
 
-_baixar_biblioteca_sincroniza2() {
-    # Criar diretório envia se não existir
-    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
-    
-    # Ir para o diretório envia
-    cd "${RECEBE}" || return 1
-
-    if [[ "${acessossh}" == "s" ]]; then
-            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
-            sftp -P "$PORTA" "${src}" "."
-    else
-          _definir_variaveis_biblioteca
-          local arquivos_update
-          read -ra arquivos_update <<< "$(_obter_arquivos_atualizacao)"
-
-        for arquivo in "${arquivos_update[@]}"; do
-            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
-            sftp -P "$PORTA" "${src}" "."
-        done
-    fi
-
-}
-
+# Enviar arquivo(s) via RSYNC. Pode lidar com arquivos únicos ou múltiplos usando wildcard.
 _enviar_arquivo_multi() {
    # Verificar se está enviando múltiplos arquivos ou apenas um
     if [[ "$arquivo_enviar" == *"*"* ]]; then
@@ -216,4 +210,55 @@ _enviar_arquivo_multi() {
             _press
         fi
     fi
+}
+
+# Baixa programas via vaievem (SFTP)
+_baixar_programas_vaievem() {
+    # Criar diretório RECEBE se não existir
+    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
+    
+    # Ir para o diretório RECEBE
+    cd "${RECEBE}" || return 1
+
+    if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
+        return 1
+    fi
+
+    _linha
+    _mensagec "${YELLOW}" "Realizando sincronizacao dos arquivos..."
+
+    for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
+        _linha
+        _mensagec "${GREEN}" "Transferindo: $arquivo"
+        _linha
+
+        if [[ "${acessossh}" == "s" ]]; then
+            _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
+            _linha
+            _mensagec "${GREEN}" "Transferindo: $arquivo"
+
+            if ! _download_sftp "${DESTINO2SERVER}${arquivo}" "."; then
+                _mensagec "${RED}" "Falha no download: $arquivo"
+                continue
+            fi
+        else
+            if ! _download_scp "${DESTINO2SERVER}${arquivo}" "."; then
+                _mensagec "${RED}" "Falha no download: $arquivo"
+                continue
+            fi
+        fi
+        _linha
+        # Verificar se arquivo foi baixado
+        if [[ ! -f "$arquivo" || ! -s "$arquivo" ]]; then
+            _mensagec "${RED}" "ERRO: Falha ao baixar '$arquivo'"
+            continue
+        fi
+
+        if ! unzip -t "$arquivo" >/dev/null 2>&1; then
+           _mensagec "${RED}" "ERRO: Arquivo corrompido: $arquivo"
+           rm -f "$arquivo"
+           continue
+        fi
+        _mensagec "${GREEN}" "Download concluido: $arquivo"
+    done
 }

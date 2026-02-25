@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao, instalacao e reversao de programas
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 25/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
@@ -282,56 +282,6 @@ _solicitar_pacotes_atualizacao() {
 
 #---------- FUNcoES DE DOWNLOAD ----------#
 
-# Baixa programas via vaievem (SFTP)
-_baixar_programas_vaievem() {
-    # Criar diretório RECEBE se não existir
-    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
-    
-    # Ir para o diretório RECEBE
-    cd "${RECEBE}" || return 1
-
-    if (( ${#ARQUIVOS_PROGRAMA[@]} == 0 )); then
-        return 1
-    fi
-
-    _linha
-    _mensagec "${YELLOW}" "Realizando sincronizacao dos arquivos..."
-
-    for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
-        _linha
-        _mensagec "${GREEN}" "Transferindo: $arquivo"
-        _linha
-
-        if [[ "${acessossh}" == "n" ]]; then
-            _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
-            _linha
-            _mensagec "${GREEN}" "Transferindo: $arquivo"
-
-            if ! _download_sftp "${DESTINO2SERVER}${arquivo}" "."; then
-                _mensagec "${RED}" "Falha no download: $arquivo"
-                continue
-            fi
-        else
-            if ! _download_sftp_ssh "${DESTINO2SERVER}${arquivo}" "."; then
-                _mensagec "${RED}" "Falha no download: $arquivo"
-                continue
-            fi
-        fi
-        _linha
-        # Verificar se arquivo foi baixado
-        if [[ ! -f "$arquivo" || ! -s "$arquivo" ]]; then
-            _mensagec "${RED}" "ERRO: Falha ao baixar '$arquivo'"
-            continue
-        fi
-
-        if ! unzip -t "$arquivo" >/dev/null 2>&1; then
-           _mensagec "${RED}" "ERRO: Arquivo corrompido: $arquivo"
-           rm -f "$arquivo"
-           continue
-        fi
-        _mensagec "${GREEN}" "Download concluido: $arquivo"
-    done
-}
 
 # Baixa pacotes para diretorio especifico
 _baixar_pacotes_vaievem() {
