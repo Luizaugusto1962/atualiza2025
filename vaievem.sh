@@ -33,38 +33,38 @@ _testar_conexao() {
     return 1
 }
 
-#---------- FUNcoES DE DOWNLOAD ----------#
-#
+#---------- FUNCOES DE DOWNLOAD ----------#
+# Inativado para uso futuro.
 # Download via SFTP
-_download_sftp() {
-    local arquivo_remoto="$1"
-    local destino_local="${2:-.}"
-    local servidor="${3:-$IPSERVER}"
-    local porta="${4:-$PORTA}"
-    local usuario="${5:-$USUARIO}"
-    
-    if [[ -z "$arquivo_remoto" ]]; then
-        _mensagec "${RED}" "Erro: Arquivo remoto nao especificado"
-        return 1
-    fi
-    
-    _log "Iniciando download SFTP: ${arquivo_remoto}"
-    
-    # Verificar conectividade
-    if ! _testar_conexao "$servidor" "$porta"; then
-        _mensagec "${RED}" "Erro: Nao foi possivel conectar ao servidor ${servidor}:${porta}"
-        return 1
-    fi
-    
-    # Executar SFTP
-    if sftp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
-        _log_sucesso "Download SFTP concluido: ${arquivo_remoto}"
-        return 0
-    else
-        _log_erro "Falha no download SFTP: ${arquivo_remoto}"
-        return 1
-    fi
-}
+#_download_sftp() {
+#    local arquivo_remoto="$1"
+#    local destino_local="${2:-.}"
+#    local servidor="${3:-$IPSERVER}"
+#    local porta="${4:-$PORTA}"
+#    local usuario="${5:-$USUARIO}"
+#    
+#    if [[ -z "$arquivo_remoto" ]]; then
+#        _mensagec "${RED}" "Erro: Arquivo remoto nao especificado"
+#        return 1
+#    fi
+#    
+#    _log "Iniciando download SFTP: ${arquivo_remoto}"
+#    
+#    # Verificar conectividade
+#    if ! _testar_conexao "$servidor" "$porta"; then
+#        _mensagec "${RED}" "Erro: Nao foi possivel conectar ao servidor ${servidor}:${porta}"
+#        return 1
+#    fi
+#    
+#    # Executar SFTP
+#    if sftp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
+#        _log_sucesso "Download SFTP concluido: ${arquivo_remoto}"
+#        return 0
+#    else
+#        _log_erro "Falha no download SFTP: ${arquivo_remoto}"
+#        return 1
+#    fi
+#}
 
 # Download via SFTP com chave SSH configurada
 _download_sftp_ssh() {
@@ -72,7 +72,7 @@ _download_sftp_ssh() {
     local destino_local="${2:-.}"
     
     _log "Iniciando download SFTP com chave SSH: ${arquivo_remoto}"
-    
+    # Executar SFTP   
     sftp sav_servidor <<EOF
 get "${arquivo_remoto}" "${destino_local}"
 quit
@@ -96,8 +96,9 @@ _download_scp() {
     local porta="${4:-$PORTA}"
     local usuario="${5:-$USUARIO}"    
 
-    _log "Iniciando download SCP com chave SSH: ${arquivo_remoto}"
-        if scp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
+    _log "Iniciando download SCP: ${arquivo_remoto}"
+    # Executar SCP
+    if scp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
         _log_sucesso "Download SCP concluido: ${arquivo_remoto}"
         return 0
     else
@@ -239,7 +240,7 @@ _baixar_programas_vaievem() {
             _linha
             _mensagec "${GREEN}" "Transferindo: $arquivo"
 
-            if ! _download_sftp "${DESTINO2SERVER}${arquivo}" "."; then
+            if ! _download_sftp_ssh "${DESTINO2SERVER}${arquivo}" "."; then
                 _mensagec "${RED}" "Falha no download: $arquivo"
                 continue
             fi
