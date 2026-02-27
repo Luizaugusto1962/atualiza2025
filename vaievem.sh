@@ -9,10 +9,13 @@
 #---------- CONFIGURACOES DE CONEXAO ----------#
 #
 # Variaveis globais esperadas
-acessossh="${acessossh:-s}"            # Acesso via SSH (s/n)
-arquivo_enviar="${arquivo_enviar:-}"   # Arquivo a ser enviado (pode conter wildcard)
-dir_origem="${dir_origem:-.}"          # Diretorio de origem para upload
-arquivos_encontrados=()                # Array para armazenar arquivos encontrados para envio
+acessossh="${acessossh:-s}"                    # Acesso via SSH (s/n)
+arquivo_enviar="${arquivo_enviar:-}"           # Arquivo a ser enviado (pode conter wildcard)
+dir_origem="${dir_origem:-.}"                  # Diretorio de origem para upload
+destino_remoto="${destino_remoto:-}"           # Destino remoto para upload (ex: /caminho/destino/)
+destino_biblioteca="${destino_biblioteca:-}"   # Diretorio de destino da biblioteca no servidor
+destino_server="${destino_server:-}"           # Diretorio do servidor de atualizacao
+arquivos_encontrados=()                        # Array para armazenar arquivos encontrados para envio
 
 #---------- FUNCOES AUXILIARES (BAIXO NIVEL) ----------#
 
@@ -120,7 +123,7 @@ _baixar_biblioteca_sincroniza() {
         cd "${RECEBE}" || return 1
 
         if [[ "${acessossh}" == "s" ]]; then
-            local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
+            local src="${USUARIO}@${IPSERVER}:${destino_biblioteca}${SAVATU}${VERSAO}.zip"
 
             if sftp -P "$SERVER_PORTA" "${src}" "."; then
                 _log_sucesso "Download da biblioteca concluido: ${SAVATU}${VERSAO}.zip"
@@ -141,7 +144,7 @@ _baixar_biblioteca_sincroniza() {
             fi
 
             for arquivo in "${arquivos_update[@]}"; do
-                local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
+                local src="${USUARIO}@${IPSERVER}:${destino_biblioteca}${arquivo}"
 
                 if scp -P "$SERVER_PORTA" "${src}" "."; then
                     _log_sucesso "Download concluido: ${arquivo}"
@@ -185,12 +188,12 @@ _baixar_programas_vaievem() {
             if [[ "${acessossh}" == "s" ]]; then
                 _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
 
-                if ! _download_sftp_ssh "${DESTINO2SERVER}${arquivo}" "."; then
+                if ! _download_sftp_ssh "${destino_server}${arquivo}" "."; then
                     _mensagec "${RED}" "Falha no download: $arquivo"
                     continue
                 fi
             else
-                if ! _download_scp "${DESTINO2SERVER}${arquivo}" "."; then
+                if ! _download_scp "${destino_server}${arquivo}" "."; then
                     _mensagec "${RED}" "Falha no download: $arquivo"
                     continue
                 fi

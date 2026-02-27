@@ -15,7 +15,6 @@ acessossh="${acessossh:-}"             # Acesso via SSH (s/n)
 Offline="${Offline:-}"                 # Modo offline (s/n)
 down_dir="${down_dir:-}"               # Diretorio de download
 cfg_dir="${cfg_dir:-}"                 # Diretorio de configuracao
-DESTINO2="${DESTINO2:-}"               # Destino para Transpc
 
 declare -g pids=()                     # Array global para rastrear PIDs de background
 
@@ -79,8 +78,6 @@ _atualizar_transpc() {
     _linha
     _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
     _linha
-
-    DESTINO2="${DESTINO2TRANSPC}"
     _configurar_acessos
     _baixar_biblioteca_sincroniza
     _salvar_atualizacao_biblioteca

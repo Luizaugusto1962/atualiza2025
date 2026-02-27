@@ -15,7 +15,7 @@ declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR raiz base base2 base3 back
 declare -a caminhos_base2=(INI UMADATA SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO jut JUTIL ISCCLIENT ISCCLIENTT)
-declare -a outros=(PEDARQ prog SERVER_PORTA USUARIO DESTINO2 ARQUIVO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
+declare -a outros=(PEDARQ prog SERVER_PORTA USUARIO ARQUIVO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
 declare -a logis=(LOG LOG_ATU LOG_LIMPA LOG_TMP)
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
@@ -59,7 +59,7 @@ prog="${prog:-}"                                 # Variavel que define o nome do
 SERVER_PORTA="${SERVER_PORTA:-}"                 # Variavel que define a porta a ser usada para.
 USUARIO="${USUARIO:-}"                           # Variavel que define o usuario a ser usado.
 IPSERVER="${IPSERVER:-}"                         # Variavel que define o ip do servidor da SAV.
-DESTINO2="${DESTINO2:-}"                         # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
+destino_biblioteca="${destino_biblioteca:-}"     # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
 RED="${RED:-}"                                   # Cor vermelha
 GREEN="${GREEN:-}"                               # Cor verde
 YELLOW="${YELLOW:-}"                             # Cor amarela
@@ -171,10 +171,10 @@ _configurar_diretorios() {
     fi
 
     # Diretorios de destino para diferentes tipos de biblioteca
-    DESTINO2SERVER="${DESTINO2SERVER:-/u/varejo/man/}"                                      # Diretorio do servidor de atualizacao
-    DESTINO2TRANSPC="${DESTINO2TRANSPC:-/u/varejo/trans_pc/}"                               # Diretorio de transporte PC
+    destino_server="${destino_server:-/u/varejo/man/}"                                      # Diretorio do servidor de atualizacao
+    destino_biblioteca="${destino_biblioteca:-/u/varejo/trans_pc/}"                               # Diretorio de transporte PC
     SERACESOFF="${SERACESOFF:-/portalsav/Atualiza}"                                         # Diretorio do servidor offline
-    export DESTINO2SERVER DESTINO2TRANSPC SERACESOFF
+    export destino_server destino_biblioteca SERACESOFF
 
     # Definir diretorios de trabalho
     OLDS="${OLDS:-${TOOLS_DIR}/olds}"         # Diretorio de arquivos antigos
