@@ -115,7 +115,7 @@ _reverter_programa() {
 
         # Verificar se foi digitado ENTER
         if [[ -z "${programa}" ]]; then
-            _mensagec "${RED}" "Nenhum programa informado. Saindo..."
+            _mensagec "${RED}" "Nenhum programa informado OU Fim de selecao. Saindo..."
             _linha
             break
         fi
@@ -131,14 +131,15 @@ _reverter_programa() {
         local arquivo_zip="${programa}${class}.zip"
         ARQUIVOS_PROGRAMA+=("$arquivo_zip")
         
-        _linha
         _mensagec "${GREEN}" "Programa adicionado: ${programa}"
         _linha
-        
+        sleep 1  
+              
         # Mostrar lista atual
         _mensagec "${YELLOW}" "Programas a serem revertidos:"
         for lista in "${PROGRAMAS_SELECIONADOS[@]}"; do
-            _mensagec "${GREEN}" "  - $lista"
+            _mensagec "${GREEN}" "Programa - $lista"
+        sleep 1
         done
     done
 
