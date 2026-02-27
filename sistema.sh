@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 27/02/2026-00
 #
 # Variaveis globais esperadas
 cfg_dir="${cfg_dir:-}"      # Caminho do diretorio de configuracao do programa.
@@ -168,7 +168,7 @@ _mostrar_parametros() {
     printf "${GREEN}Versao anterior da biblioteca: ${NORM}${VERSAOANT}""%*s\n"
     printf "${GREEN}Variavel da classe: ${NORM}${class}""%*s\n"
     printf "${GREEN}Variavel da mclass: ${NORM}${mclass}""%*s\n"
-    printf "${GREEN}Porta de conexao: ${NORM}${PORTA}""%*s\n"
+    printf "${GREEN}Porta de conexao: ${NORM}${SERVER_PORTA}""%*s\n"
     printf "${GREEN}Usuario de conexao: ${NORM}${USUARIO}""%*s\n"
     printf "${GREEN}Servidor IP: ${NORM}${IPSERVER}""%*s\n"
     _linha "=" "${GREEN}"
@@ -569,17 +569,17 @@ clear
     
 if [[ "${acessossh}" = "s" ]]; then
 
-# CONFIGURAcoES PERSONALIZaVEIS (ALTERE AQUI OU VIA VARIaVEIS DE AMBIENTE)
-SERVER_IP="${IPSERVER}"        # IP do servidor (padrao: 177.45.80.10)
-SERVER_PORT="${SERVER_PORT:-41122}"            # Porta SFTP (padrao: 41122)
+# CONFIGURAcoES PERSONALIZAVEIS (ALTERE AQUI OU VIA VARIAVEIS DE AMBIENTE)
+SERVER_IP="${IPSERVER}"                        # IP do servidor 
+SERVER_PORTA="${SERVER_PORTA:-41122}"            # Porta SFTP (padrao: 41122)
 SERVER_USER="${SERVER_USER:-atualiza}"         # Usuario SSH (padrao: atualiza)
 CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS_DIR}/.ssh/control}"
 # VALIDAcaO DAS VARIaVEIS OBRIGAToRIAS
-    if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
+    if [[ -z "$SERVER_IP" || -z "$SERVER_PORTA" || -z "$SERVER_USER" ]]; then
         echo "Erro: Variaveis obrigatorias nao definidas!"
         echo "Defina via ambiente ou edite as configuracoes no inicio do script:"
         echo "  export SERVER_IP='seu.ip.aqui'"
-        echo "  export SERVER_PORT='porta'"
+        echo "  export SERVER_PORTA='porta'"
         echo "  export SERVER_USER='usuario'"
         exit 1
     fi
@@ -617,7 +617,7 @@ CONTROL_PATH="$CONTROL_PATH_BASE"
     cat << EOF >> "/root/.ssh/config"
 Host sav_servidor
     HostName $SERVER_IP
-    Port $SERVER_PORT
+    Port $SERVER_PORTA
     User $SERVER_USER
     ControlMaster auto
     ControlPath $CONTROL_PATH/%r@%h:%p
@@ -633,7 +633,7 @@ EOF
 # Configuracao adicionada automaticamente
 Host sav_servidor
     HostName $SERVER_IP
-    Port $SERVER_PORT
+    Port $SERVER_PORTA
     User $SERVER_USER
     ControlMaster auto
     ControlPath $CONTROL_PATH/%r@%h:%p
@@ -645,7 +645,7 @@ EOF
 _linha
 # EXIBE OS PARaMETROS UTILIZADOS
 echo -e "\n   IP do Servidor:   ${SERVER_IP}"
-echo "   Porta:            ${SERVER_PORT}"
+echo "   Porta:            ${SERVER_PORTA}"
 echo "   Usuario:          ${SERVER_USER}"
 echo "   ControlPath:      ${CONTROL_PATH}/%r@%h:%p"
 echo -e "\n Validacao concluida! Teste com:"

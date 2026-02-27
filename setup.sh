@@ -9,7 +9,7 @@
 #   - ./setup.sh --edit: Modo de edicao para modificar configuracoes existentes.
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 27/02/2026-00
 
 #---------- FUNCAO DE LOGICA DE NEGOCIO ----------#
 # Variaveis globais esperadas
@@ -332,11 +332,11 @@ _recreate_config_files() {
 # Configura acesso SSH facilitado
 _configure_ssh_access() {
     local SERVER_IP="${IPSERVER}"
-    local SERVER_PORT="${PORTA:-41122}"
+    local SERVER_PORTA="${SERVER_PORTA:-41122}"
     local SERVER_USER="${USUARIO:-atualiza}"
     local CONTROL_PATH_BASE="/${TOOLS_DIR}/.ssh/control"
 
-    if [[ -z "$SERVER_IP" || -z "$SERVER_PORT" || -z "$SERVER_USER" ]]; then
+    if [[ -z "$SERVER_IP" || -z "$SERVER_PORTA" || -z "$SERVER_USER" ]]; then
         echo "Erro: Variaveis de servidor nao definidas para configuracao SSH."
         return 1
     fi
@@ -353,7 +353,7 @@ _configure_ssh_access() {
         cat << EOF > "/root/.ssh/config"
 Host sav_servidor
     HostName $SERVER_IP
-    Port $SERVER_PORT
+    Port $SERVER_PORTA
     User $SERVER_USER
     ControlMaster auto
     ControlPath $CONTROL_PATH/%r@%h:%p
@@ -367,7 +367,7 @@ EOF
 
 Host sav_servidor
     HostName $SERVER_IP
-    Port $SERVER_PORT
+    Port $SERVER_PORTA
     User $SERVER_USER
     ControlMaster auto
     ControlPath $CONTROL_PATH/%r@%h:%p

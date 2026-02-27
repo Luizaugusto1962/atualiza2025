@@ -4,7 +4,7 @@
 # Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 26/02/2026-00
+# Versao: 27/02/2026-00
 #
 #---------- CONFIGURACOES DE CONEXAO ----------#
 #
@@ -50,7 +50,7 @@ _download_scp() {
     local arquivo_remoto="$1"
     local destino_local="${2:-.}"
     local servidor="${3:-$IPSERVER}"
-    local porta="${4:-$PORTA}"
+    local porta="${4:-$SERVER_PORTA}"
     local usuario="${5:-$USUARIO}"
 
     if [[ -z "$arquivo_remoto" ]]; then
@@ -75,7 +75,7 @@ _upload_rsync() {
     local arquivo_local="$1"
     local destino_remoto="$2"
     local servidor="${3:-$IPSERVER}"
-    local porta="${4:-$PORTA}"
+    local porta="${4:-$SERVER_PORTA}"
     local usuario="${5:-$USUARIO}"
 
     if [[ -z "$arquivo_local" || -z "$destino_remoto" ]]; then
@@ -122,7 +122,7 @@ _baixar_biblioteca_sincroniza() {
         if [[ "${acessossh}" == "s" ]]; then
             local src="${USUARIO}@${IPSERVER}:${DESTINO2}${SAVATU}${VERSAO}.zip"
 
-            if sftp -P "$PORTA" "${src}" "."; then
+            if sftp -P "$SERVER_PORTA" "${src}" "."; then
                 _log_sucesso "Download da biblioteca concluido: ${SAVATU}${VERSAO}.zip"
                 return 0
             else
@@ -143,7 +143,7 @@ _baixar_biblioteca_sincroniza() {
             for arquivo in "${arquivos_update[@]}"; do
                 local src="${USUARIO}@${IPSERVER}:${DESTINO2}${arquivo}"
 
-                if scp -P "$PORTA" "${src}" "."; then
+                if scp -P "$SERVER_PORTA" "${src}" "."; then
                     _log_sucesso "Download concluido: ${arquivo}"
                 else
                     _log_erro "Falha no download: ${arquivo}"

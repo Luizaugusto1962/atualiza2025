@@ -15,7 +15,7 @@ declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR raiz base base2 base3 back
 declare -a caminhos_base2=(INI UMADATA SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO jut JUTIL ISCCLIENT ISCCLIENTT)
-declare -a outros=(PEDARQ prog PORTA USUARIO DESTINO2 ARQUIVO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
+declare -a outros=(PEDARQ prog SERVER_PORTA USUARIO DESTINO2 ARQUIVO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER DEFAULT_DESTINO2 UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
 declare -a logis=(LOG LOG_ATU LOG_LIMPA LOG_TMP)
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
@@ -23,57 +23,58 @@ declare -a logis=(LOG LOG_ATU LOG_LIMPA LOG_TMP)
 # Variaveis de configuracao do sistema que podem ser definidas pelo usuario.
 # As variaveis com o prefixo "destino" sao usadas para definir o caminho
 # dos diretorios que serao usados pelo programa.
-raiz="${raiz:-}"                   # Caminho do diretorio raiz do programa.
-cfg_dir="${cfg_dir:-}"             # Caminho do diretorio de configuracao do programa.
-lib_dir="${lib_dir:-}"             # Caminho do diretorio de bibliotecas do programa.
-base="${base:-}"                   # Caminho do diretorio da base de dados.
-base2="${base2:-}"                 # Caminho do diretorio da segunda base de dados.
-base3="${base3:-}"                 # Caminho do diretorio da terceira base de dados.
-logs="${logs:-}"                   # Caminho do diretorio dos arquivos de log.
-olds="${olds:-}"                   # Caminho do diretorio dos arquivos de backup.
-libs="${libs:-}"                   # Caminho do diretorio das bibliotecas.
-sistema="${sistema:-}"             # Tipo de sistema que esta sendo usado (iscobol ou isam).
-SAVATU="${SAVATU:-}"               # Caminho do diretorio da biblioteca do servidor da SAV.
-SAVATU1="${SAVATU1:-}"             # Caminho do diretorio da biblioteca do servidor da SAV.
-SAVATU2="${SAVATU2:-}"             # Caminho do diretorio da biblioteca do servidor da SAV.
-SAVATU3="${SAVATU3:-}"             # Caminho do diretorio da biblioteca do servidor da SAV.
-SAVATU4="${SAVATU4:-}"             # Caminho do diretorio da biblioteca do servidor da SAV.
-verclass="${verclass:-}"           # Ano da versao
-BANCO="${BANCO:-}"                 # Variavel que define o tipo de banco de dados usado pelo sistema.
-ENVIABACK="${ENVIABACK:-}"         # Variavel que define o caminho para onde sera enviado o backup.
-VERSAO="${VERSAO:-}"               # Variavel que define a versao do programa.
-INI="${INI:-}"                     # Variavel que define o caminho do arquivo de configuracao do sistema.
-Offline="${Offline:-}"             # Variavel que define se o sistema esta em modo offline.
-down_dir="${down_dir:-}"           # Variavel que define o caminho do diretorio do servidor off.  
-SERACESOFF="${SERACESOFF:-}"       # Variavel que define o caminho do diretorio do servidor off.
-acessossh="${acessossh:-}"         # Variavel que define o caminho do diretorio do servidor off.
-VERSAOANT="${VERSAOANT:-}"         # Variavel que define a versao do programa anterior.
-cmd_unzip="${cmd_unzip:-}"         # Comando para descompactar arquivos.
-cmd_zip="${cmd_zip:-}"             # Comando para compactar arquivos.
-cmd_find="${cmd_find:-}"           # Comando para buscar arquivos.
-cmd_who="${cmd_who:-}"             # Comando para saber quem esta logado no sistema.
-ARQUIVO="${ARQUIVO:-}"             # Variavel que define o nome do arquivo a ser baixado.
-PEDARQ="${PEDARQ:-}"               # Variavel que define se sera realizado o pedido de arquivos.
-prog="${prog:-}"                   # Variavel que define o nome do programa a ser baixado.
-PORTA="${PORTA:-}"                 # Variavel que define a porta a ser usada para.
-USUARIO="${USUARIO:-}"             # Variavel que define o usuario a ser usado.
-IPSERVER="${IPSERVER:-}"           # Variavel que define o ip do servidor da SAV.
-DESTINO2="${DESTINO2:-}"           # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
-RED="${RED:-}"                     # Cor vermelha
-GREEN="${GREEN:-}"                 # Cor verde
-YELLOW="${YELLOW:-}"               # Cor amarela
-BLUE="${BLUE:-}"                   # Cor azul
-PURPLE="${PURPLE:-}"               # Cor roxa
-CYAN="${CYAN:-}"                   # Cor ciano
-NORM="${NORM:-}"                   # Cor normal
-COLUMNS="${COLUMNS:-}"             # Numero de colunas do terminal
-LOG="${LOG:-}"                     # Variavel que define o caminho do arquivo de log.
-LOG_ATU="${LOG_ATU:-}"             # Variavel que define o caminho do arquivo de log de atualizacao.
-LOG_LIMPA="${LOG_LIMPA:-}"         # Variavel que define o caminho do arquivo de log de limpeza.
-LOG_TMP="${LOG_TMP:-}"             # Variavel que define o caminho do arquivo de log temporario.
-UMADATA="${UMADATA:-}"             # Variavel que define o caminho do arquivo de dados da UMA.
-ISCCLIENT="${ISCCLIENT:-}"         # Variavel que define o caminho do cliente ISC.
-base_trabalho="${base_trabalho:-}" # Variavel que define o caminho do diretorio de trabalho.
+
+raiz="${raiz:-}"                                 # Caminho do diretorio raiz do programa.
+cfg_dir="${cfg_dir:-}"                           # Caminho do diretorio de configuracao do programa.
+lib_dir="${lib_dir:-}"                           # Caminho do diretorio de bibliotecas do programa.
+base="${base:-}"                                 # Caminho do diretorio da base de dados.
+base2="${base2:-}"                               # Caminho do diretorio da segunda base de dados.
+base3="${base3:-}"                               # Caminho do diretorio da terceira base de dados.
+logs="${logs:-}"                                 # Caminho do diretorio dos arquivos de log.
+olds="${olds:-}"                                 # Caminho do diretorio dos arquivos de backup.
+libs="${libs:-}"                                 # Caminho do diretorio das bibliotecas.
+sistema="${sistema:-}"                           # Tipo de sistema que esta sendo usado (iscobol ou isam).
+SAVATU="${SAVATU:-}"                             # Caminho do diretorio da biblioteca do servidor da SAV.
+SAVATU1="${SAVATU1:-}"                           # Caminho do diretorio da biblioteca do servidor da SAV.
+SAVATU2="${SAVATU2:-}"                           # Caminho do diretorio da biblioteca do servidor da SAV.
+SAVATU3="${SAVATU3:-}"                           # Caminho do diretorio da biblioteca do servidor da SAV.
+SAVATU4="${SAVATU4:-}"                           # Caminho do diretorio da biblioteca do servidor da SAV.
+verclass="${verclass:-}"                         # Ano da versao
+BANCO="${BANCO:-}"                               # Variavel que define o tipo de banco de dados usado pelo sistema.
+ENVIABACK="${ENVIABACK:-}"                       # Variavel que define o caminho para onde sera enviado o backup.
+VERSAO="${VERSAO:-}"                             # Variavel que define a versao do programa.
+INI="${INI:-}"                                   # Variavel que define o caminho do arquivo de configuracao do sistema.
+Offline="${Offline:-}"                           # Variavel que define se o sistema esta em modo offline.
+down_dir="${down_dir:-}"                         # Variavel que define o caminho do diretorio do servidor off.  
+SERACESOFF="${SERACESOFF:-}"                     # Variavel que define o caminho do diretorio do servidor off.
+acessossh="${acessossh:-}"                       # Variavel que define o caminho do diretorio do servidor off.
+VERSAOANT="${VERSAOANT:-}"                       # Variavel que define a versao do programa anterior.
+cmd_unzip="${cmd_unzip:-}"                       # Comando para descompactar arquivos.
+cmd_zip="${cmd_zip:-}"                           # Comando para compactar arquivos.
+cmd_find="${cmd_find:-}"                         # Comando para buscar arquivos.
+cmd_who="${cmd_who:-}"                           # Comando para saber quem esta logado no sistema.
+ARQUIVO="${ARQUIVO:-}"                           # Variavel que define o nome do arquivo a ser baixado.
+PEDARQ="${PEDARQ:-}"                             # Variavel que define se sera realizado o pedido de arquivos.
+prog="${prog:-}"                                 # Variavel que define o nome do programa a ser baixado.
+SERVER_PORTA="${SERVER_PORTA:-}"                 # Variavel que define a porta a ser usada para.
+USUARIO="${USUARIO:-}"                           # Variavel que define o usuario a ser usado.
+IPSERVER="${IPSERVER:-}"                         # Variavel que define o ip do servidor da SAV.
+DESTINO2="${DESTINO2:-}"                         # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
+RED="${RED:-}"                                   # Cor vermelha
+GREEN="${GREEN:-}"                               # Cor verde
+YELLOW="${YELLOW:-}"                             # Cor amarela
+BLUE="${BLUE:-}"                                 # Cor azul
+PURPLE="${PURPLE:-}"                             # Cor roxa
+CYAN="${CYAN:-}"                                 # Cor ciano
+NORM="${NORM:-}"                                 # Cor normal
+COLUMNS="${COLUMNS:-}"                           # Numero de colunas do terminal
+LOG="${LOG:-}"                                   # Variavel que define o caminho do arquivo de log.
+LOG_ATU="${LOG_ATU:-}"                           # Variavel que define o caminho do arquivo de log de atualizacao.
+LOG_LIMPA="${LOG_LIMPA:-}"                       # Variavel que define o caminho do arquivo de log de limpeza.
+LOG_TMP="${LOG_TMP:-}"                           # Variavel que define o caminho do arquivo de log temporario.
+UMADATA="${UMADATA:-}"                           # Variavel que define o caminho do arquivo de dados da UMA.
+ISCCLIENT="${ISCCLIENT:-}"                       # Variavel que define o caminho do cliente ISC.
+base_trabalho="${base_trabalho:-}"               # Variavel que define o caminho do diretorio de trabalho.
 
 # Configuracoes padrao
 DEFAULT_UNZIP="${DEFAULT_UNZIP:-unzip}"          # Comando padrao para descompactar
@@ -240,8 +241,8 @@ _configurar_variaveis_sistema() {
     jut="${SAVISC}${JUTIL}"
     
     # Configurar porta e acesso
-    if [[ -z "${PORTA}" ]]; then
-        PORTA="${DEFAULT_PORTA}"
+    if [[ -z "${SERVER_PORTA}" ]]; then
+        SERVER_PORTA="${DEFAULT_PORTA}"
     fi
     
     if [[ -z "${USUARIO}" ]]; then

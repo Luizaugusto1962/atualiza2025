@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 25/02/2026-00
+# Versao: 27/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"             # Tipo de sistema (ex: iscobol, outros).
@@ -501,7 +501,7 @@ _receber_arquivo_avulso() {
     _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
     _linha
     
-    if scp -P "${PORTA}" "${USUARIO}@${IPSERVER}:${origem_remota}/${arquivo_receber}" "${destino_local}/"; then
+    if scp -P "${SERVER_PORTA}" "${USUARIO}@${IPSERVER}:${origem_remota}/${arquivo_receber}" "${destino_local}/"; then
         _mensagec "${YELLOW}" "Arquivo recebido em \"${destino_local}\""
         _linha
         _read_sleep 3
