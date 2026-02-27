@@ -16,6 +16,7 @@ Offline="${Offline:-}"                 # Modo offline (s/n)
 down_dir="${down_dir:-}"               # Diretorio de download
 cfg_dir="${cfg_dir:-}"                 # Diretorio de configuracao
 DESTINO2="${DESTINO2:-}"               # Destino para Transpc
+
 declare -g pids=()                     # Array global para rastrear PIDs de background
 
 # Funcao de cleanup em caso de interrupcao

@@ -4,7 +4,7 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 27/02/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
@@ -23,64 +23,64 @@ declare -a logis=(LOG LOG_ATU LOG_LIMPA LOG_TMP)
 # Variaveis de configuracao do sistema que podem ser definidas pelo usuario.
 # As variaveis com o prefixo "destino" sao usadas para definir o caminho
 # dos diretorios que serao usados pelo programa.
-raiz="${raiz:-}"             # Caminho do diretorio raiz do programa.
-cfg_dir="${cfg_dir:-}"       # Caminho do diretorio de configuracao do programa.
-lib_dir="${lib_dir:-}"       # Caminho do diretorio de bibliotecas do programa.
-base="${base:-}"             # Caminho do diretorio da base de dados.
-base2="${base2:-}"           # Caminho do diretorio da segunda base de dados.
-base3="${base3:-}"           # Caminho do diretorio da terceira base de dados.
-logs="${logs:-}"             # Caminho do diretorio dos arquivos de log.
-olds="${olds:-}"             # Caminho do diretorio dos arquivos de backup.
-libs="${libs:-}"             # Caminho do diretorio das bibliotecas.
-sistema="${sistema:-}"       # Tipo de sistema que esta sendo usado (iscobol ou isam).
-SAVATU="${SAVATU:-}"         # Caminho do diretorio da biblioteca do servidor da SAV.
-SAVATU1="${SAVATU1:-}"       # Caminho do diretorio da biblioteca do servidor da SAV.
-SAVATU2="${SAVATU2:-}"       # Caminho do diretorio da biblioteca do servidor da SAV.
-SAVATU3="${SAVATU3:-}"       # Caminho do diretorio da biblioteca do servidor da SAV.
-SAVATU4="${SAVATU4:-}"       # Caminho do diretorio da biblioteca do servidor da SAV.
-verclass="${verclass:-}"     # Ano da versao
-BANCO="${BANCO:-}"           # Variavel que define o tipo de banco de dados usado pelo sistema.
-ENVIABACK="${ENVIABACK:-}"   # Variavel que define o caminho para onde sera enviado o backup.
-VERSAO="${VERSAO:-}"         # Variavel que define a versao do programa.
-INI="${INI:-}"               # Variavel que define o caminho do arquivo de configuracao do sistema.
-Offline="${Offline:-}"       # Variavel que define se o sistema esta em modo offline.
-down_dir="${down_dir:-}"     # Variavel que define o caminho do diretorio do servidor off.  
-SERACESOFF="${SERACESOFF:-}" # Variavel que define o caminho do diretorio do servidor off.
-acessossh="${acessossh:-}"   # Variavel que define o caminho do diretorio do servidor off.
-VERSAOANT="${VERSAOANT:-}"   # Variavel que define a versao do programa anterior.
-cmd_unzip="${cmd_unzip:-}"   # Comando para descompactar arquivos.
-cmd_zip="${cmd_zip:-}"       # Comando para compactar arquivos.
-cmd_find="${cmd_find:-}"     # Comando para buscar arquivos.
-cmd_who="${cmd_who:-}"       # Comando para saber quem esta logado no sistema.
-ARQUIVO="${ARQUIVO:-}"       # Variavel que define o nome do arquivo a ser baixado.
-PEDARQ="${PEDARQ:-}"         # Variavel que define se sera realizado o pedido de arquivos.
-prog="${prog:-}"             # Variavel que define o nome do programa a ser baixado.
-PORTA="${PORTA:-}"           # Variavel que define a porta a ser usada para.
-USUARIO="${USUARIO:-}"       # Variavel que define o usuario a ser usado.
-IPSERVER="${IPSERVER:-}"     # Variavel que define o ip do servidor da SAV.
-DESTINO2="${DESTINO2:-}"     # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
-RED="${RED:-}"               # Cor vermelha
-GREEN="${GREEN:-}"           # Cor verde
-YELLOW="${YELLOW:-}"         # Cor amarela
-BLUE="${BLUE:-}"             # Cor azul
-PURPLE="${PURPLE:-}"         # Cor roxa
-CYAN="${CYAN:-}"             # Cor ciano
-NORM="${NORM:-}"             # Cor normal
-COLUMNS="${COLUMNS:-}"       # Numero de colunas do terminal
-LOG="${LOG:-}"               # Variavel que define o caminho do arquivo de log.
-LOG_ATU="${LOG_ATU:-}"       # Variavel que define o caminho do arquivo de log de atualizacao.
-LOG_LIMPA="${LOG_LIMPA:-}"   # Variavel que define o caminho do arquivo de log de limpeza.
-LOG_TMP="${LOG_TMP:-}"       # Variavel que define o caminho do arquivo de log temporario.
-UMADATA="${UMADATA:-}"       # Variavel que define o caminho do arquivo de dados da UMA.
-ISCCLIENT="${ISCCLIENT:-}"   # Variavel que define o caminho do cliente ISC.
+raiz="${raiz:-}"                   # Caminho do diretorio raiz do programa.
+cfg_dir="${cfg_dir:-}"             # Caminho do diretorio de configuracao do programa.
+lib_dir="${lib_dir:-}"             # Caminho do diretorio de bibliotecas do programa.
+base="${base:-}"                   # Caminho do diretorio da base de dados.
+base2="${base2:-}"                 # Caminho do diretorio da segunda base de dados.
+base3="${base3:-}"                 # Caminho do diretorio da terceira base de dados.
+logs="${logs:-}"                   # Caminho do diretorio dos arquivos de log.
+olds="${olds:-}"                   # Caminho do diretorio dos arquivos de backup.
+libs="${libs:-}"                   # Caminho do diretorio das bibliotecas.
+sistema="${sistema:-}"             # Tipo de sistema que esta sendo usado (iscobol ou isam).
+SAVATU="${SAVATU:-}"               # Caminho do diretorio da biblioteca do servidor da SAV.
+SAVATU1="${SAVATU1:-}"             # Caminho do diretorio da biblioteca do servidor da SAV.
+SAVATU2="${SAVATU2:-}"             # Caminho do diretorio da biblioteca do servidor da SAV.
+SAVATU3="${SAVATU3:-}"             # Caminho do diretorio da biblioteca do servidor da SAV.
+SAVATU4="${SAVATU4:-}"             # Caminho do diretorio da biblioteca do servidor da SAV.
+verclass="${verclass:-}"           # Ano da versao
+BANCO="${BANCO:-}"                 # Variavel que define o tipo de banco de dados usado pelo sistema.
+ENVIABACK="${ENVIABACK:-}"         # Variavel que define o caminho para onde sera enviado o backup.
+VERSAO="${VERSAO:-}"               # Variavel que define a versao do programa.
+INI="${INI:-}"                     # Variavel que define o caminho do arquivo de configuracao do sistema.
+Offline="${Offline:-}"             # Variavel que define se o sistema esta em modo offline.
+down_dir="${down_dir:-}"           # Variavel que define o caminho do diretorio do servidor off.  
+SERACESOFF="${SERACESOFF:-}"       # Variavel que define o caminho do diretorio do servidor off.
+acessossh="${acessossh:-}"         # Variavel que define o caminho do diretorio do servidor off.
+VERSAOANT="${VERSAOANT:-}"         # Variavel que define a versao do programa anterior.
+cmd_unzip="${cmd_unzip:-}"         # Comando para descompactar arquivos.
+cmd_zip="${cmd_zip:-}"             # Comando para compactar arquivos.
+cmd_find="${cmd_find:-}"           # Comando para buscar arquivos.
+cmd_who="${cmd_who:-}"             # Comando para saber quem esta logado no sistema.
+ARQUIVO="${ARQUIVO:-}"             # Variavel que define o nome do arquivo a ser baixado.
+PEDARQ="${PEDARQ:-}"               # Variavel que define se sera realizado o pedido de arquivos.
+prog="${prog:-}"                   # Variavel que define o nome do programa a ser baixado.
+PORTA="${PORTA:-}"                 # Variavel que define a porta a ser usada para.
+USUARIO="${USUARIO:-}"             # Variavel que define o usuario a ser usado.
+IPSERVER="${IPSERVER:-}"           # Variavel que define o ip do servidor da SAV.
+DESTINO2="${DESTINO2:-}"           # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
+RED="${RED:-}"                     # Cor vermelha
+GREEN="${GREEN:-}"                 # Cor verde
+YELLOW="${YELLOW:-}"               # Cor amarela
+BLUE="${BLUE:-}"                   # Cor azul
+PURPLE="${PURPLE:-}"               # Cor roxa
+CYAN="${CYAN:-}"                   # Cor ciano
+NORM="${NORM:-}"                   # Cor normal
+COLUMNS="${COLUMNS:-}"             # Numero de colunas do terminal
+LOG="${LOG:-}"                     # Variavel que define o caminho do arquivo de log.
+LOG_ATU="${LOG_ATU:-}"             # Variavel que define o caminho do arquivo de log de atualizacao.
+LOG_LIMPA="${LOG_LIMPA:-}"         # Variavel que define o caminho do arquivo de log de limpeza.
+LOG_TMP="${LOG_TMP:-}"             # Variavel que define o caminho do arquivo de log temporario.
+UMADATA="${UMADATA:-}"             # Variavel que define o caminho do arquivo de dados da UMA.
+ISCCLIENT="${ISCCLIENT:-}"         # Variavel que define o caminho do cliente ISC.
 base_trabalho="${base_trabalho:-}" # Variavel que define o caminho do diretorio de trabalho.
 
 # Configuracoes padrao
-DEFAULT_UNZIP="${DEFAULT_UNZIP:-unzip}"        # Comando padrao para descompactar
-DEFAULT_ZIP="${DEFAULT_ZIP:-zip}"            # Comando padrao para compactar
-DEFAULT_FIND="${DEFAULT_FIND:-find}"          # Comando padrao para buscar arquivos
-DEFAULT_WHO="${DEFAULT_WHO:-who}"            # Comando padrao para verificar usuarios
-DEFAULT_PORTA="${DEFAULT_PORTA:-41122}"        # Porta padrao
+DEFAULT_UNZIP="${DEFAULT_UNZIP:-unzip}"          # Comando padrao para descompactar
+DEFAULT_ZIP="${DEFAULT_ZIP:-zip}"                # Comando padrao para compactar
+DEFAULT_FIND="${DEFAULT_FIND:-find}"             # Comando padrao para buscar arquivos
+DEFAULT_WHO="${DEFAULT_WHO:-who}"                # Comando padrao para verificar usuarios
+DEFAULT_PORTA="${DEFAULT_PORTA:-41122}"          # Porta padrao
 DEFAULT_USUARIO="${DEFAULT_USUARIO:-atualiza}"   # Usuario padrao
 
 
@@ -88,31 +88,31 @@ DEFAULT_USUARIO="${DEFAULT_USUARIO:-atualiza}"   # Usuario padrao
 _definir_cores() {
     # Verificar se o terminal suporta cores
     if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
-        RED=$(tput bold)$(tput setaf 1)    # Vermelho
-        GREEN=$(tput bold)$(tput setaf 2)  # Verde
-        YELLOW=$(tput bold)$(tput setaf 3) # Amarelo
-        BLUE=$(tput bold)$(tput setaf 4)   # Azul
-        PURPLE=$(tput bold)$(tput setaf 5) # Roxo
-        CYAN=$(tput bold)$(tput setaf 6)   # Ciano
-        WHITE=$(tput bold)$(tput setaf 7)  # Branco
-        NORM=$(tput sgr0)                  # Normal
-        COLUMNS=$(tput cols)               # Numero de colunas do terminal
+        RED=$(tput bold)$(tput setaf 1)          # Vermelho
+        GREEN=$(tput bold)$(tput setaf 2)        # Verde
+        YELLOW=$(tput bold)$(tput setaf 3)       # Amarelo
+        BLUE=$(tput bold)$(tput setaf 4)         # Azul
+        PURPLE=$(tput bold)$(tput setaf 5)       # Roxo
+        CYAN=$(tput bold)$(tput setaf 6)         # Ciano
+        WHITE=$(tput bold)$(tput setaf 7)        # Branco
+        NORM=$(tput sgr0)                        # Normal
+        COLUMNS=$(tput cols)                     # Numero de colunas do terminal
 
         # Limpar tela inicial
-        tput clear    # Limpa a tela
-        tput bold     # Ativa o negrito
-        tput setaf 7  # Define a cor branca para o texto
+        tput clear                               # Limpa a tela
+        tput bold                                # Ativa o negrito
+        tput setaf 7                             # Define a cor branca para o texto
     else
         # Terminal sem suporte a cores
-        RED=""        # Limpar variavel Vermelho
-        GREEN=""      # Limpar variavel Verde
-        YELLOW=""     # Limpar variavel Amarelo
-        BLUE=""       # Limpar variavel Azul
-        PURPLE=""     # Limpar variavel Roxo
-        CYAN=""       # Limpar variavel Ciano
-        WHITE=""      # Limpar variavel Branco
-        NORM=""       # Limpar variavel Normal
-        COLUMNS=80    # Definir colunas padrao
+        RED=""                                   # Limpar variavel Vermelho
+        GREEN=""                                 # Limpar variavel Verde
+        YELLOW=""                                # Limpar variavel Amarelo
+        BLUE=""                                  # Limpar variavel Azul
+        PURPLE=""                                # Limpar variavel Roxo
+        CYAN=""                                  # Limpar variavel Ciano
+        WHITE=""                                 # Limpar variavel Branco
+        NORM=""                                  # Limpar variavel Normal
+        COLUMNS=80                               # Definir colunas padrao
     fi
 readonly RED GREEN YELLOW BLUE PURPLE CYAN NORM 
 }
