@@ -15,7 +15,7 @@ declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR raiz base base2 base3 back
 declare -a caminhos_base2=(INI UMADATA SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO jut JUTIL ISCCLIENT ISCCLIENTT)
-declare -a outros=(PEDARQ prog SERVER_PORTA USUARIO ARQUIVO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
+declare -a outros=(PEDARQ PROG SERVER_PORTA USUARIO ARQUIVO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
 declare -a logis=(LOG LOG_ATU LOG_LIMPA LOG_TMP)
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
@@ -55,7 +55,7 @@ cmd_find="${cmd_find:-}"                         # Comando para buscar arquivos.
 cmd_who="${cmd_who:-}"                           # Comando para saber quem esta logado no sistema.
 ARQUIVO="${ARQUIVO:-}"                           # Variavel que define o nome do arquivo a ser baixado.
 PEDARQ="${PEDARQ:-}"                             # Variavel que define se sera realizado o pedido de arquivos.
-prog="${prog:-}"                                 # Variavel que define o nome do programa a ser baixado.
+PROG="${PROG:-}"                                 # Variavel que define o nome do programa a ser baixado.
 SERVER_PORTA="${SERVER_PORTA:-}"                 # Variavel que define a porta a ser usada para.
 USUARIO="${USUARIO:-}"                           # Variavel que define o usuario a ser usado.
 IPSERVER="${IPSERVER:-}"                         # Variavel que define o ip do servidor da SAV.

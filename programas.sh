@@ -137,8 +137,8 @@ _reverter_programa() {
         
         # Mostrar lista atual
         _mensagec "${YELLOW}" "Programas a serem revertidos:"
-        for prog in "${PROGRAMAS_SELECIONADOS[@]}"; do
-            _mensagec "${GREEN}" "  - $prog"
+        for lista in "${PROGRAMAS_SELECIONADOS[@]}"; do
+            _mensagec "${GREEN}" "  - $lista"
         done
     done
 
