@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 27/02/2026-00
+# Versao: 28/02/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"             # Tipo de sistema (ex: iscobol, outros).
@@ -14,7 +14,7 @@ jut="${jut:-}"                     # Caminho para o utilitario jutil.
 raiz="${raiz:-}"                   # Caminho raiz do sistema.
 cfg_dir="${cfg_dir:-}"             # Caminho do diretorio de configuracoes.
 
-#---------- FUNcoES DE LIMPEZA ----------#
+#---------- FUNCOES DE LIMPEZA ----------#
 
 # Executa limpeza de arquivos temporarios
 _executar_limpeza_temporarios() {
@@ -143,7 +143,7 @@ _lista_arquivos_lixo() {
     _press
 }
 
-#---------- FUNcoES DE RECUPERAcaO ----------#
+#---------- FUNCOES DE RECUPERACAO ----------#
 # Recupera arquivo especifico ou todos
 _recuperar_arquivo_especifico() {
     local continuar="S"
@@ -346,7 +346,7 @@ _executar_jutil() {
     fi
 }
 
-#---------- FUNcoES DE TRANSFERÊNCIA ----------#
+#---------- FUNCOES DE TRANSFERENCIA ----------#
 
 # Envia arquivo avulso
 _enviar_arquivo_avulso() {
@@ -500,9 +500,8 @@ _receber_arquivo_avulso() {
     _linha
     _mensagec "${YELLOW}" "Informe a senha para o usuario remoto:"
     _linha
-    
-    if scp -P "${SERVER_PORTA}" "${USUARIO}@${IPSERVER}:${origem_remota}/${arquivo_receber}" "${destino_local}/"; then
-        _mensagec "${YELLOW}" "Arquivo recebido em \"${destino_local}\""
+    if _download_scp "${origem_remota}/${arquivo_receber}" "${destino_local}/"; then
+        _mensagec "${GREEN}" "Arquivo recebido com sucesso em \"${destino_local}\""
         _linha
         _read_sleep 3
     else
