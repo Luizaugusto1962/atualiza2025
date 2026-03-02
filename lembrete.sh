@@ -39,6 +39,69 @@ _mostrar_notas_iniciais() {
     fi
 }
 
+# ---------- MENSAGEM DE ENTRADA ----------
+# Gera ou edita a mensagem que sera exibida ao iniciar o programa
+_gerar_mensagem_entrada() {
+    clear
+    _linha
+    _mensagec "${YELLOW}" "Digite a mensagem de entrada (Ctrl+D para finalizar):"
+    _linha
+
+    local arquivo_msg="${cfg_dir}/entrada.txt"
+    # sobrescreve o arquivo existente
+    if cat > "$arquivo_msg"; then
+        _linha
+        _mensagec "${GREEN}" "Mensagem gravada com sucesso!"
+        sleep 2
+    else
+        _mensagec "${RED}" "Erro ao gravar mensagem"
+        sleep 2
+    fi
+}
+
+# Exibe a mensagem de entrada e oferece opcao para excluir apos leitura
+_mostrar_mensagem_entrada() {
+    local arquivo_msg="${cfg_dir}/entrada.txt"
+    if [[ -f "$arquivo_msg" && -s "$arquivo_msg" ]]; then
+        clear
+        _linha "=" "${CYAN}"
+        _mensagec "${YELLOW}" "MENSAGEM DE ENTRADA"
+        _linha "=" "${CYAN}"
+        printf "\n"
+        # exibicao simples, respeitando largura do terminal
+        local cols
+        cols=$(tput cols 2>/dev/null || echo 80)
+        fold -s -w "$cols" < "$arquivo_msg"
+        printf "\n"
+        _linha
+        if _confirmar "Excluir mensagem de entrada?" "N"; then
+            rm -f "$arquivo_msg"
+            _mensagec "${GREEN}" "Mensagem removida"
+            sleep 1
+        fi
+        _press
+    fi
+}
+
+# Apaga manualmente a mensagem de entrada
+_apagar_mensagem_entrada() {
+    local arquivo_msg="${cfg_dir}/entrada.txt"
+    if [[ ! -f "$arquivo_msg" ]]; then
+        _mensagec "${YELLOW}" "Nenhuma mensagem de entrada encontrada!"
+        sleep 2
+        return
+    fi
+
+    if _confirmar "Tem certeza que deseja apagar a mensagem de entrada?" "N"; then
+        if rm -f "$arquivo_msg"; then
+            _mensagec "${RED}" "Mensagem excluida com sucesso!"
+        else
+            _mensagec "${RED}" "Erro ao excluir mensagem"
+        fi
+        sleep 2
+    fi
+}
+
 # Visualiza arquivo de notas formatado
 # Parametros: $1=arquivo_de_notas
 _visualizar_notas_arquivo() {

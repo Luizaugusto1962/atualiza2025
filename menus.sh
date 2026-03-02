@@ -589,6 +589,8 @@ _menu_lembretes() {
         _mensagec "${PURPLE}" " Escolha a opcao:"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
+        _mensagec "${GREEN}" "0${NORM} -|: Mensagem de entrada   "; _mensagec "${WHITE}" "(criar/excluir)"
+        printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Escrever nova nota    "
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} -|: Visualizar nota       "
@@ -609,6 +611,17 @@ _menu_lembretes() {
         fi
 
         case "${opcao}" in
+            0)
+                # criar ou apagar mensagem de entrada
+                PS3="Escolha ação -> "
+                select a in "Criar/editar" "Apagar" "Cancelar"; do
+                    case $REPLY in
+                        1) _gerar_mensagem_entrada; break ;;        
+                        2) _apagar_mensagem_entrada; break ;;
+                        *) break ;;
+                    esac
+                done
+                ;;
             1) _escrever_nova_nota ;;
             2) 
                 if [[ -f "${cfg_dir}/atualizal" ]]; then

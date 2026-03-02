@@ -91,6 +91,9 @@ main() {
     # Inicializar sistema
     _inicializar_sistema
     
+    # Mostrar mensagem de entrada (se existe) e opcao para excluir
+    _mostrar_mensagem_entrada
+
     # Mostrar notas se existirem
     _mostrar_notas_iniciais
     

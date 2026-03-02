@@ -278,62 +278,94 @@ _atualizando() {
     local arquivos_instalados=0
     local arquivos_erro=0
 
-    # Atualizar manual.txt
-        local arquivo="manual.txt"
-        chmod +x "$arquivo"
-
-        if [ "$arquivo" = "manual.txt" ]; then
-            target="${cfg_dir}"
+    #---------- INSTALAR ARQUIVOS DE CONFIGURAÇÃO ----------#
+    # Processa manual.txt e atualiza.txt com destino ${cfg_dir}
+    local -a cfg_files=("manual.txt" "entrada.txt")
+    
+    for cfg_arquivo in "${cfg_files[@]}"; do
+        if [[ ! -f "$cfg_arquivo" ]]; then
+            continue  # Arquivo não encontrado, pula para próximo
         fi
+
+        # Definir permissões executáveis
+        chmod +x "$cfg_arquivo" 2>/dev/null || true
+
+        # Definir destino (cfg_dir para todos os arquivos de config)
+        local cfg_target="${cfg_dir}"
         
-        # Mover o manual para o diretorio de destino
-        if mv -f "$arquivo" "$target"; then
-            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso em $target"
-
-        # Verifica se o arquivo foi realmente movido
-            if [[ ! -f "$arquivo" && -f "$target/$arquivo" ]]; then
-            _mensagec "${GREEN}" "Verificado: arquivo movido corretamente"
-            fi
-        else
-            _mensagec "${RED}" "Erro ao instalar $arquivo"
-
+        # Criar destino se não existir
+        if ! mkdir -p "$cfg_target" 2>/dev/null; then
+            _mensagec "${RED}" "Erro ao criar diretório de destino: $cfg_target"
+            ((arquivos_erro++))
+            continue
         fi
 
-    # Processar todos os arquivos .sh encontrados
-    for arquivo in *.sh; do
-        # Verificar se o arquivo existe
-        if [[ ! -f "$arquivo" ]]; then
-            _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh encontrado para processar"
-            break
-        else
-            chmod +x "$arquivo"
-        fi
-
-        # Determinar destino
-        if [ "$arquivo" = "atualiza.sh" ]; then
-            target="${TOOLS_DIR}"
-        else
-            target="${lib_dir}"
-        fi
-        # Mover o arquivo para o diretorio de destino
-        if mv -f "$arquivo" "$target"; then
-            _mensagec "${GREEN}" "Arquivo $arquivo instalado com sucesso"
+        # Mover arquivo para destino
+        if mv -f "$cfg_arquivo" "$cfg_target/$cfg_arquivo"; then
+            _mensagec "${GREEN}" "✓ Arquivo $cfg_arquivo instalado em $cfg_target"
             ((arquivos_instalados++))
+             
         else
-            _mensagec "${RED}" "Erro ao instalar $arquivo"
+            _mensagec "${RED}" "✗ Erro ao instalar $cfg_arquivo"
             ((arquivos_erro++))
         fi
     done
 
-    # Verificar se houve erros na instalacao
+    #---------- INSTALAR ARQUIVOS .SH ----------#
+    # Processa todos os arquivos .sh encontrados
+    local sh_instalados=0
+    for arquivo in *.sh; do
+        # Verificar se o arquivo existe
+        if [[ ! -f "$arquivo" ]]; then
+            continue  # Arquivo não encontrado, pula para próximo
+        fi
+
+        # Definir permissões executáveis
+        chmod +x "$arquivo" || {
+            _mensagec "${RED}" "Aviso: falha ao definir permissão em $arquivo"
+        }
+
+        # Determinar destino baseado no nome do arquivo
+        local sh_target
+        if [[ "$arquivo" == "atualiza.sh" ]]; then
+            sh_target="${TOOLS_DIR}"
+        else
+            sh_target="${lib_dir}"
+        fi
+
+        # Criar destino se não existir
+        if ! mkdir -p "$sh_target" 2>/dev/null; then
+            _mensagec "${RED}" "Erro ao criar diretório: $sh_target"
+            ((arquivos_erro++))
+            continue
+        fi
+
+        # Mover arquivo para destino
+        if mv -f "$arquivo" "$sh_target/"; then
+            _mensagec "${GREEN}" "✓ Instalado $arquivo em $sh_target"
+            ((arquivos_instalados++))
+            ((sh_instalados++))
+        else
+            _mensagec "${RED}" "✗ Erro ao instalar $arquivo"
+            ((arquivos_erro++))
+        fi
+    done
+
+    # Relatório final de instalação
+    if [[ $sh_instalados -eq 0 ]]; then
+        _mensagec "${YELLOW}" "Aviso: Nenhum arquivo .sh foi instalado"
+    fi
+
+    #---------- VALIDAÇÃO FINAL ----------#
+    # Verificar resultado da instalação
     if [[ $arquivos_erro -gt 0 ]]; then
-        _mensagec "${RED}" "Falha na instalacao de $arquivos_erro arquivo(s)"
+        _mensagec "${RED}" "Falha na instalação de $arquivos_erro arquivo(s)"
         return 1
     elif [[ $arquivos_instalados -eq 0 ]]; then
-        _mensagec "${YELLOW}" "Nenhum arquivo foi instalado"
+        _mensagec "${YELLOW}" "Nenhum arquivo foi instalado - verifique os arquivos no ZIP"
         return 1
     else
-        _mensagec "${GREEN}" "Instalados $arquivos_instalados arquivo(s) com sucesso"
+        _mensagec "${GREEN}" "Sucesso: $arquivos_instalados arquivo(s) instalado(s)"
     fi
 
 # Limpar diretorio de trabalho

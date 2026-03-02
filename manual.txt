@@ -1525,6 +1525,13 @@ Na inicializacao do sistema:
 * util para lembretes importantes
 * Configure para nao exibir se preferir
 
+MENSAGEM DE ENTRADA:
+* Arquivo separado (${cfg_dir}/entrada)
+* Pode ser gerado pelo menu de lembretes (opcao 0)
+* Exibido sempre que o programa inicia
+* Apresenta pergunta para excluir logo apos a leitura
+* Ideal para comunicados temporarios a todos os usuarios
+
 DICAS:
 -------------------------------------------------------------------
 
