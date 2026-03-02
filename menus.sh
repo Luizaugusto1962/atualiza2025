@@ -321,7 +321,8 @@ _menu_ferramentas() {
         printf "\n" 
         _mensagec "${GREEN}" "5${NORM} -|: Lembretes                 "
         printf "\n"
-
+        _mensagec "${GREEN}" "6${NORM} -|: Avisos                    "
+        printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${WHITE}" "9${RED} -|: Menu Anterior  "
@@ -339,6 +340,7 @@ _menu_ferramentas() {
             3) _menu_setups ;;
             4) _executar_update ;;
             5) _menu_lembretes ;;
+            6) _menu_avisos ;;
             9) return ;;
             *)
                 _opinvalida
@@ -589,8 +591,6 @@ _menu_lembretes() {
         _mensagec "${PURPLE}" " Escolha a opcao:"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
-        _mensagec "${GREEN}" "0${NORM} -|: Mensagem de entrada   "; _mensagec "${WHITE}" "(criar/excluir)"
-        printf "\n"
         _mensagec "${GREEN}" "1${NORM} -|: Escrever nova nota    "
         printf "\n"
         _mensagec "${GREEN}" "2${NORM} -|: Visualizar nota       "
@@ -611,17 +611,7 @@ _menu_lembretes() {
         fi
 
         case "${opcao}" in
-            0)
-                # criar ou apagar mensagem de entrada
-                PS3="Escolha ação -> "
-                select a in "Criar/editar" "Apagar" "Cancelar"; do
-                    case $REPLY in
-                        1) _gerar_mensagem_entrada; break ;;        
-                        2) _apagar_mensagem_entrada; break ;;
-                        *) break ;;
-                    esac
-                done
-                ;;
+
             1) _escrever_nova_nota ;;
             2) 
                 if [[ -f "${cfg_dir}/atualizal" ]]; then
@@ -642,6 +632,47 @@ _menu_lembretes() {
     done
 }
 
+# Menu de aviso inicial
+_menu_avisos() {
+    while true; do
+        clear
+        printf "\n"
+        _linha "=" "${GREEN}"
+        _mensagec "${RED}" "Menu de Aviso(s)"
+        _linha
+        printf "\n"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+        _mensagec "${GREEN}" "1${NORM} -|: Gerar Aviso   "
+        printf "\n"
+        _mensagec "${GREEN}" "2${NORM} -|: Editar Aviso  "
+        printf "\n"
+        _mensagec "${GREEN}" "3${NORM} -|: Apagar Aviso  "
+        printf "\n"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
+        printf "\n"
+        
+        # Usar funcao centralizada
+        local opcao
+        if ! _ler_opcao_menu "aviso"; then
+            continue
+        fi
+
+        case "${opcao}" in
+            1) _gerar_aviso_entrada ;;
+            2) _editar_aviso_existente ;;
+            3) _apagar_aviso_entrada ;;
+            9) return ;;
+            *)
+                _opinvalida
+                _read_sleep 1
+                ;;
+        esac
+    done
+}
 #---------- MENU PRINCIPAL DE AJUDA ----------#
 
 # Menu principal do sistema de ajuda

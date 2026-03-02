@@ -504,6 +504,20 @@ OPCOES DISPONIVEIS:
     - Anotacoes de manutencao
     - Lembretes de atualizacoes
 
+6 - AVISO
+    Sistema de avisos.
+    
+    FUNCOES:
+    * Criar novas notas
+    * Editar notas existentes
+    * Apagar notas
+    
+    USO:
+    - Registrar alerta para o sistema
+    - Anotacoes de manutencao
+    - Aviso sobre atualizacoes
+
+
 DICAS DE USO:
 ---------------------------------------------------------------
 
@@ -1458,6 +1472,7 @@ OPCOES DISPONIVEIS:
     IMPORTANTE:
     Acao irreversivel! Notas sao perdidas.
 
+
 ARQUIVO DE NOTAS:
 -------------------------------------------------------------------
 
@@ -1498,6 +1513,164 @@ INFORMACOES IMPORTANTES:
 
 SEGURANCA:
 * Notas em texto simples
+* Sem criptografia
+* Evite dados sensiveis
+* Qualquer usuario pode ler
+
+TAMANHO:
+* Sem limite de caracteres
+* Sem limite de linhas
+* Cuidado com arquivo muito grande
+
+BACKUP:
+* Arquivo nao e automaticamente backupado
+* Inclua em backup manual se necessario
+* Ou copie manualmente
+
+ALTERNATIVAS:
+Para anotacoes mais complexas:
+* Use sistema externo de notas
+* Software de gestao de tarefas
+* Wiki ou documentacao colaborativa
+
+EXIBICAO AUTOMATICA:
+Na inicializacao do sistema:
+* Se arquivo existe
+* Notas sao exibidas automaticamente
+* util para lembretes importantes
+* Configure para nao exibir se preferir
+
+MENSAGEM DE ENTRADA:
+* Arquivo separado (${cfg_dir}/entrada)
+* Pode ser gerado pelo menu de lembretes (opcao 0)
+* Exibido sempre que o programa inicia
+* Apresenta pergunta para excluir logo apos a leitura
+* Ideal para comunicados temporarios a todos os usuarios
+
+DICAS:
+-------------------------------------------------------------------
+
+ORGANIZACAO:
+Use marcadores e secoes:
+=== PENDENCIAS ===
+=== HISTORICO ===
+=== CONTATOS ===
+
+DATAS:
+Sempre inclua data nas anotacoes:
+[10/01/2026] Descricao do evento
+
+PRIORIDADES:
+Use marcadores:
+!!! Urgente
+!! Importante
+! Normal
+
+LIMPEZA:
+Remova informacoes antigas periodicamente
+
+-------------------------------------------------------------------
+[MENU_AVISO]
+MENU DE AVISO- BLOCO DE NOTAS
+-------------------------------------------------------------------
+
+Sistema simples de anotacoes e lembretes.
+
+OPCOES DISPONIVEIS:
+-------------------------------------------------------------------
+
+1 - ESCREVER NOVO AVISO
+    Cria um novo aviso ao entrar no sistema.
+    
+    PROCESSO:
+    1. Digite o conteudo do aviso
+    2. Pode ser multiplas linhas
+    3. Pressione Ctrl+D para finalizar
+    4. Nota e salva automaticamente
+    
+    FORMATO:
+    Texto livre, sem formatacao especial
+    
+    EXEMPLO:
+    Atualizar sistema dia 15/01
+    Pendente: Testar modulo vendas
+    Lembrar: Backup completo sexta
+
+2 - VISUALIZAR AVISO
+    Exibe aviso salvo.
+    
+    APRESENTACAO:
+    * Moldura ao redor do texto
+    * Formatacao preservada
+    * Facil leitura
+    
+    USO:
+    Consultar avisos
+
+3 - EDITAR AVISO
+    Modifica avisos existente.
+    
+    EDITOR:
+    * nano (padrao)
+    * ou editor definido em $EDITOR
+    
+    COMANDOS NANO:
+    * Ctrl+O = Salvar
+    * Ctrl+X = Sair
+    * Ctrl+K = Recortar linha
+    * Ctrl+U = Colar
+    
+    MODIFICACAO:
+    * Adicionar linhas
+    * Remover linhas
+    * Alterar texto
+
+4 - APAGAR NOTA
+    Remove todas as notas.
+    
+    PROCESSO:
+    1. Sistema solicita confirmacao
+    2. Se confirmar (S), apaga tudo
+    3. Se negar (N), cancela
+    
+    IMPORTANTE:
+    Acao irreversivel! Notas sao perdidas.
+
+
+ARQUIVO DE AVISO:
+-------------------------------------------------------------------
+
+LOCALIZACAO:
+cfg/entrada.txt
+
+FORMATO:
+Arquivo texto simples
+
+CONTEUDO:
+Todas os avisos em sequencia
+
+PERSISTENCIA:
+Aviso sao mantidas entre sessoes
+
+CASOS DE USO:
+-------------------------------------------------------------------
+
+HISTORICO DE MANUTENCAO:
+- Rodar o programa de setupo que esta em /tools/libs/setup.sh
+
+PROBLEMAS CONHECIDOS:
+- Programa ADV000 lento (investigar)
+- Erro esporadico no ADV000
+- Aguardando correcao do suporte
+
+SENHAS E ACESSOS:
+(Nao recomendado para informacoes sensiveis!)
+
+INFORMACOES IMPORTANTES:
+-------------------------------------------------------------------
+
+SEGURANCA:
+* Avisos em texto simples
 * Sem criptografia
 * Evite dados sensiveis
 * Qualquer usuario pode ler
@@ -1616,6 +1789,7 @@ cfg/.atualizac        - Configuracao principal
 cfg/atualizat         - Lista de temporarios
 cfg/atualizaj         - Arquivos principais para o rodar e rebuild
 cfg/atualizal         - Notas/lembretes
+cfg/entrada.txt       - Aviso de entrada.
 logs/atualiza.log     - Log de operacoes
 logs/limpando.log     - Log de limpeza
 

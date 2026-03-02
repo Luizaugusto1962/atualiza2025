@@ -41,7 +41,7 @@ _mostrar_notas_iniciais() {
 
 # ---------- MENSAGEM DE ENTRADA ----------
 # Gera ou edita a mensagem que sera exibida ao iniciar o programa
-_gerar_mensagem_entrada() {
+_gerar_aviso_entrada() {
     clear
     _linha
     _mensagec "${YELLOW}" "Digite a mensagem de entrada (Ctrl+D para finalizar):"
@@ -59,8 +59,24 @@ _gerar_mensagem_entrada() {
     fi
 }
 
+# Edita nota existente
+_editar_aviso_existente() {
+    local arquivo_avisos="${cfg_dir}/entrada.txt"
+    
+    clear
+    if [[ -f "$arquivo_avisos" ]]; then
+        if ! ${EDITOR:-nano} "$arquivo_avisos"; then
+            _mensagec "${RED}" "Erro ao abrir editor!"
+            sleep 2
+        fi
+    else
+        _mensagec "${YELLOW}" "Nenhuma mensagem de aviso encontrada para editar!"
+        sleep 2
+    fi
+}
+
 # Exibe a mensagem de entrada e oferece opcao para excluir apos leitura
-_mostrar_mensagem_entrada() {
+_mostrar_aviso() {
     local arquivo_msg="${cfg_dir}/entrada.txt"
     if [[ -f "$arquivo_msg" && -s "$arquivo_msg" ]]; then
         clear
@@ -79,12 +95,11 @@ _mostrar_mensagem_entrada() {
             _mensagec "${GREEN}" "Mensagem removida"
             sleep 1
         fi
-        _press
     fi
 }
 
 # Apaga manualmente a mensagem de entrada
-_apagar_mensagem_entrada() {
+_apagar_aviso_entrada() {
     local arquivo_msg="${cfg_dir}/entrada.txt"
     if [[ ! -f "$arquivo_msg" ]]; then
         _mensagec "${YELLOW}" "Nenhuma mensagem de entrada encontrada!"

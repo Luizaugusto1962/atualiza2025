@@ -92,7 +92,7 @@ main() {
     _inicializar_sistema
     
     # Mostrar mensagem de entrada (se existe) e opcao para excluir
-    _mostrar_mensagem_entrada
+    _mostrar_aviso
 
     # Mostrar notas se existirem
     _mostrar_notas_iniciais

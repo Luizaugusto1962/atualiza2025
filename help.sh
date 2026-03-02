@@ -205,6 +205,9 @@ _exibir_ajuda_contextual() {
         lembretes)
             secao_nome="MENU_LEMBRETES"
             ;;
+        aviso)
+            secao_nome="MENU_AVISO"
+            ;;    
         *)
             secao_nome="MENU_PRINCIPAL"
             ;;
