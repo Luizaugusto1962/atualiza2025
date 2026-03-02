@@ -4,14 +4,16 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 25/02/2026-00
+# Versao: 02/03/2026-00
 # Autor: Luiz Augusto
 #
 # Variaveis globais esperadas
-sistema="${sistema:-}"    # Nome do sistema (iscobol, savatu, transpc).
-cfg_dir="${cfg_dir:-${TOOLS_DIR}/cfg}"        # Diretorio de configuracoes
-base="${base:-}"          # Caminho do diretorio da primeira base de dados.
-base2="${base2:-}"        # Caminho do diretorio da segunda base de dados.
+sistema="${sistema:-}"                    # Nome do sistema (iscobol, savatu, transpc).
+cfg_dir="${cfg_dir:-${TOOLS_DIR}/cfg}"    # Diretorio de configuracoes
+base="${base:-}"                          # Caminho do diretorio da primeira base de dados.
+base2="${base2:-}"                        # Caminho do diretorio da segunda base de dados.
+dbmaker="${dbmaker:-}"                    # Caminho do diretorio da base de dados do dbmaker.
+empresa="${empresa:-}"                    # Nome da empresa (usado para exibir no menu)
 
 #---------- FUNCAO AUXILIAR DE LEITURA ----------#
 
@@ -56,7 +58,7 @@ _principal() {
         _linha "=" "${GREEN}"
         _mensagec "${RED}" "Menu Principal"
         _linha
-        _mensagec "${GREEN}" ".. Empresa: ${WHITE}${EMPRESA}${GREEN} .."
+        _mensagec "${GREEN}" ".. Empresa: ${WHITE}${empresa}${GREEN} .."
         _linha
         _mensagec "${CYAN}" "_| Sistema: ${sistema} - Versao do Iscobol: ${verclass} |_"
         _linha
@@ -233,7 +235,7 @@ _menu_arquivos() {
         printf "\n"
         
         # Verificar se sistema tem banco de dados
-        if [[ "${BANCO}" != "s" ]]; then
+        if [[ "${dbmaker}" != "s" ]]; then
             _mensagec "${GREEN}" "1${NORM} -|: Recuperar Arquivos        "
             printf "\n" 
             _mensagec "${GREEN}" "2${NORM} -|: Rotinas de Backup         "
@@ -260,7 +262,7 @@ _menu_arquivos() {
 
         case "${opcao}" in
             1) 
-                if [[ "${BANCO}" = "s" ]]; then
+                if [[ "${dbmaker}" = "s" ]]; then
                     _opinvalida
                     _read_sleep 1
                 else
@@ -268,7 +270,7 @@ _menu_arquivos() {
                 fi
                 ;;
             2) 
-                if [[ "${BANCO}" = "s" ]]; then
+                if [[ "${dbmaker}" = "s" ]]; then
                     _opinvalida
                     _read_sleep 1
                 else

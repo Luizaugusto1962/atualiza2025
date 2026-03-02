@@ -9,15 +9,15 @@
 #   - ./setup.sh --edit: Modo de edicao para modificar configuracoes existentes.
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 27/02/2026-00
+# Versao: 02/03/2026-00
 
 #---------- FUNCAO DE LOGICA DE NEGOCIO ----------#
 # Variaveis globais esperadas
 VERCLASS="${VERCLASS:-}"
 
 # Variáveis globais
-declare -l sistema base base2 base3 BANCO ENVIABACK
-declare -u EMPRESA
+declare -l sistema base base2 base3 dbmaker enviabackup
+declare -u empresa
 
 # Configuracao inicial do sistema
 _initial_setup() {
@@ -99,12 +99,12 @@ _edit_setup() {
     # Edicao interativa das variaveis
     _editar_variavel sistema
     _editar_variavel verclass
-    _editar_variavel BANCO
+    _editar_variavel dbmaker
     _editar_variavel acessossh
-    _editar_variavel IPSERVER
+    _editar_variavel ipserver
     _editar_variavel Offline
-    _editar_variavel ENVIABACK
-    _editar_variavel EMPRESA
+    _editar_variavel enviabackup
+    _editar_variavel empresa
     _editar_variavel base
     _editar_variavel base2
     _editar_variavel base3
@@ -198,12 +198,12 @@ _2025() {
 # Configuracoes adicionais
 _setup_banco_de_dados() {
     echo "$tracejada"
-    read -rp "Sistema em banco de dados [S/N]: " -n1 BANCO
+    read -rp "Sistema em banco de dados [S/N]: " -n1 dbmaker
     echo
-    if [[ "${BANCO}" =~ ^[Ss]$ ]]; then
-        echo "BANCO=s" >> .atualizac
+    if [[ "${dbmaker}" =~ ^[Ss]$ ]]; then
+        echo "dbmaker=s" >> .atualizac
     else
-        echo "BANCO=n" >> .atualizac
+        echo "dbmaker=n" >> .atualizac
     fi
 }
 _setup_diretorios() {
@@ -230,9 +230,9 @@ _setup_acesso_remoto() {
     fi
     echo ${tracejada}
     echo "###      ( IP do servidor da SAV )         ###"
-    read -rp "Informe o IP do servidor: " IPSERVER
-    echo "IPSERVER=${IPSERVER}" >> .atualizac
-    echo "IP do servidor:${IPSERVER}"
+    read -rp "Informe o IP do servidor: " ipserver
+    echo "ipserver=${ipserver}" >> .atualizac
+    echo "IP do servidor:${ipserver}"
     echo ${tracejada}
 
     echo "###      ( Tipo de acesso        )         ###"
@@ -251,22 +251,22 @@ _setup_backup() {
     echo ${tracejada}
     echo "###     ( Nome de pasta no servidor da SAV )                ###"
     echo "Nome de pasta no servidor da SAV, informar somento o nome do cliente"
-    read -rp "(Ex: cliente/\"NOME_da_pasta_do_CLIENTE\"): " ENVIABACK
-    if [[ -z "$ENVIABACK" && "${Offline}" =~ ^[Nn]$ ]]; then
-        echo "ENVIABACK=" >> .atualizac
-    elif [[ -n "$ENVIABACK" ]]; then
-        echo "ENVIABACK=cliente/${ENVIABACK}" >> .atualizac
+    read -rp "(Ex: cliente/\"NOME_da_pasta_do_CLIENTE\"): " enviabackup
+    if [[ -z "$enviabackup" && "${Offline}" =~ ^[Nn]$ ]]; then
+        echo "enviabackup=" >> .atualizac
+    elif [[ -n "$enviabackup" ]]; then
+        echo "enviabackup=cliente/${enviabackup}" >> .atualizac
     else
-        echo "ENVIABACK=${Offline}" >> .atualizac
+        echo "enviabackup=${Offline}" >> .atualizac
     fi
 }
 _setup_empresa() {
 echo ${tracejada}
-echo "###     ( NOME DA EMPRESA )                   ###"
+echo "###     ( NOME DA empresa )                   ###"
 echo "###   Nao pode conter espacos entre os nomes    ###"
 echo ${tracejada}
-    read -rp "Nome da Empresa (sem espacos): " EMPRESA
-    echo "EMPRESA=${EMPRESA}" >> .atualizac
+    read -rp "Nome da Empresa (sem espacos): " empresa
+    echo "empresa=${empresa}" >> .atualizac
 }
 
 #---------- FUNcoES DE EDIcaO ----------#
@@ -287,7 +287,7 @@ _editar_variavel() {
                 [[ "$opt" == "1" ]] && sistema="iscobol"
                 [[ "$opt" == "2" ]] && sistema="cobol"
                 ;;
-            "BANCO"|"acessossh")
+            "dbmaker"|"acessossh")
                 read -rp "Novo valor (s/n): " opt
                 [[ "$opt" == "s" ]] && declare -g "$nome"="s"
                 [[ "$opt" == "n" ]] && declare -g "$nome"="n"
@@ -315,12 +315,12 @@ _recreate_config_files() {
     {
         echo "sistema=${sistema}"
         [[ -n "$verclass" ]] && echo "verclass=${verclass}"
-        echo "BANCO=${BANCO}"
+        echo "dbmaker=${dbmaker}"
         echo "acessossh=${acessossh}"
-        echo "IPSERVER=${IPSERVER}"
+        echo "ipserver=${ipserver}"
         echo "Offline=${Offline}"
-        echo "ENVIABACK=${ENVIABACK}"
-        echo "EMPRESA=${EMPRESA}"
+        echo "enviabackup=${enviabackup}"
+        echo "empresa=${empresa}"
         echo "base=${base}"
         [[ -n "$base2" ]] && echo "base2=${base2}" || echo "#base2="
         [[ -n "$base3" ]] && echo "base3=${base3}" || echo "#base3="
@@ -331,7 +331,7 @@ _recreate_config_files() {
 #---------- FUNcoES AUXILIARES ----------#
 # Configura acesso SSH facilitado
 _configure_ssh_access() {
-    local SERVER_IP="${IPSERVER}"
+    local SERVER_IP="${ipserver}"
     local SERVER_PORTA="${SERVER_PORTA:-41122}"
     local SERVER_USER="${USUARIO:-atualiza}"
     local CONTROL_PATH_BASE="/${TOOLS_DIR}/.ssh/control"

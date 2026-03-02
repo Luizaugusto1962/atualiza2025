@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 27/02/2026-00
+# Versao: 02/03/2026-00
 #
 # Variaveis globais esperadas
 cfg_dir="${cfg_dir:-}"      # Caminho do diretorio de configuracao do programa.
@@ -138,7 +138,7 @@ _mostrar_versao_linux() {
 _mostrar_parametros() {
     clear
     _linha "=" "${GREEN}"
-    printf "${GREEN}Sistema e banco de dados: ${NORM}${BANCO}""%*s\n"
+    printf "${GREEN}Sistema e banco de dados: ${NORM}${dbmaker}""%*s\n"
     printf "${GREEN}Diretorio raiz: ${NORM}${raiz}""%*s\n"
     printf "${GREEN}Diretorio do atualiza.sh: ${NORM}${TOOLS_DIR}""%*s\n"
     printf "${GREEN}Diretorio da base principal: ${NORM}${raiz}${base}""%*s\n"
@@ -162,7 +162,7 @@ _mostrar_parametros() {
     _press
     clear
     _linha "=" "${GREEN}"
-    printf "${GREEN}Diretorio para envio de backup: ${NORM}${ENVIABACK}""%*s\n"
+    printf "${GREEN}Diretorio para envio de backup: ${NORM}${enviabackup}""%*s\n"
     printf "${GREEN}Servidor OFF: ${NORM}${Offline}""%*s\n"
     printf "${GREEN}Diretorio de configuracoes em OFF: ${NORM}${down_dir}""%*s\n"
     printf "${GREEN}Versao anterior da biblioteca: ${NORM}${VERSAOANT}""%*s\n"
@@ -170,7 +170,7 @@ _mostrar_parametros() {
     printf "${GREEN}Variavel da mclass: ${NORM}${mclass}""%*s\n"
     printf "${GREEN}Porta de conexao: ${NORM}${SERVER_PORTA}""%*s\n"
     printf "${GREEN}Usuario de conexao: ${NORM}${USUARIO}""%*s\n"
-    printf "${GREEN}Servidor IP: ${NORM}${IPSERVER}""%*s\n"
+    printf "${GREEN}Servidor IP: ${NORM}${ipserver}""%*s\n"
     _linha "=" "${GREEN}"
     _press
 }
@@ -421,8 +421,8 @@ _atualizar_offline() {
 readonly tracejada="#-------------------------------------------------------------------#"
 
 # Variaveis globais
-declare -l sistema base base2 base3 BANCO raiz Offline ENVIABACK
-declare -u EMPRESA
+declare -l sistema base base2 base3 dbmaker raiz Offline enviabackup
+declare -u empresa
 # Posiciona o script no diretorio cfg_dir.
 cd "${cfg_dir}" || {
     _mensagec "${RED}" "Erro: Diretorio ${cfg_dir} nao encontrado"
@@ -449,7 +449,7 @@ editar_variavel() {
             *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
-        elif [[ "$nome" == "BANCO" ]]; then
+        elif [[ "$nome" == "dbmaker" ]]; then
             printf "\n"
             printf "%s\n" "${tracejada}"
             printf "%s\n" "O sistema usa banco de dados?"
@@ -457,8 +457,8 @@ editar_variavel() {
             printf "%s\n" "2) Nao"
             read -rp "Opcao [1-2]: " opcao
             case "$opcao" in
-            1) BANCO="s" ;;
-            2) BANCO="n" ;;
+            1) dbmaker="s" ;;
+            2) dbmaker="n" ;;
             *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
@@ -475,14 +475,14 @@ editar_variavel() {
             *) echo "Opcao invalida. Mantendo valor anterior: $valor_atual" ;;
             esac
 
-        elif [[ "$nome" == "IPSERVER" ]]; then
+        elif [[ "$nome" == "ipserver" ]]; then
             printf "\n"
             printf "%s\n" "${tracejada}"
             read -rp "Digite o IP do Servidor SAV (ou pressione Enter para manter $valor_atual): " novo_ip
         if [[ -n "$novo_ip" ]]; then
-            IPSERVER="$novo_ip"
+            ipserver="$novo_ip"
         else
-            IPSERVER="$valor_atual"
+            ipserver="$valor_atual"
             echo "Mantendo valor anterior: $valor_atual"
         fi    
 
@@ -534,12 +534,12 @@ clear
     # Edita as variaveis
     editar_variavel sistema
     editar_variavel verclass
-    editar_variavel BANCO
+    editar_variavel dbmaker
     editar_variavel acessossh
-    editar_variavel IPSERVER
+    editar_variavel ipserver
     editar_variavel Offline
-    editar_variavel ENVIABACK
-    editar_variavel EMPRESA
+    editar_variavel enviabackup
+    editar_variavel empresa
     editar_variavel base
     editar_variavel base2
     editar_variavel base3
@@ -551,12 +551,12 @@ clear
     {
         echo "sistema=${sistema}"
         [[ -n "$verclass" ]] && echo "verclass=${verclass}"
-        [[ -n "$BANCO" ]] && echo "BANCO=${BANCO}"
+        [[ -n "$dbmaker" ]] && echo "dbmaker=${dbmaker}"
         [[ -n "$acessossh" ]] && echo "acessossh=${acessossh}"
-        [[ -n "$IPSERVER" ]] && echo "IPSERVER=${IPSERVER}"      
+        [[ -n "$ipserver" ]] && echo "ipserver=${ipserver}"      
         [[ -n "$Offline" ]] && echo "Offline=${Offline}"
-        [[ -n "$ENVIABACK" ]] && echo "ENVIABACK=${ENVIABACK}"
-        [[ -n "$EMPRESA" ]] && echo "EMPRESA=${EMPRESA}"
+        [[ -n "$enviabackup" ]] && echo "enviabackup=${enviabackup}"
+        [[ -n "$empresa" ]] && echo "empresa=${empresa}"
         [[ -n "$base" ]] && echo "base=${base}"
         [[ -n "$base2" ]] && echo "base2=${base2}"
         [[ -n "$base3" ]] && echo "base3=${base3}"
@@ -570,7 +570,7 @@ clear
 if [[ "${acessossh}" = "s" ]]; then
 
 # CONFIGURAcoES PERSONALIZAVEIS (ALTERE AQUI OU VIA VARIAVEIS DE AMBIENTE)
-SERVER_IP="${IPSERVER}"                        # IP do servidor 
+SERVER_IP="${ipserver}"                        # IP do servidor 
 SERVER_PORTA="${SERVER_PORTA:-41122}"            # Porta SFTP (padrao: 41122)
 SERVER_USER="${SERVER_USER:-atualiza}"         # Usuario SSH (padrao: atualiza)
 CONTROL_PATH_BASE="${CONTROL_PATH_BASE:-${TOOLS_DIR}/.ssh/control}"

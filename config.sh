@@ -4,18 +4,18 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 27/02/2026-00
+# Versao: 02/03/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
 # Arrays para organizacao das variaveis
 declare -a cores=(RED GREEN YELLOW BLUE PURPLE CYAN NORM)
-declare -a atualizac=(sistema verclass BANCO base base2 base3 acessossh IPSERVER Offline ENVIABACK EMPRESA VERSAOANT)
+declare -a atualizac=(sistema verclass dbmaker base base2 base3 acessossh ipserver Offline enviabackup empresa VERSAOANT)
 declare -a caminhos_base=(BASE1 BASE2 BASE3 TOOLS_DIR raiz base base2 base3 backup logs olds cfg libs envia recebe)
 declare -a caminhos_base2=(INI UMADATA SERACESOFF E_EXEC T_TELAS X_XML)
 declare -a biblioteca=(SAVATU SAVATU1 SAVATU2 SAVATU3 SAVATU4)
 declare -a comandos=(cmd_unzip cmd_zip cmd_find cmd_who DEFAULT_UNZIP DEFAULT_ZIP DEFAULT_FIND DEFAULT_WHO jut JUTIL ISCCLIENT ISCCLIENTT)
-declare -a outros=(SERVER_PORTA USUARIO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_IPSERVER UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
+declare -a outros=(SERVER_PORTA USUARIO VERSAO SAVISC DEFAULT_VERSAO VERSAO DEFAULT_ARQUIVO DEFAULT_PEDARQ DEFAULT_PROG DEFAULT_PORTA DEFAULT_USUARIO DEFAULT_ipserver UPDATE DEFAULT_PEDARQ SAVISCC Offline base_trabalho)
 declare -a logis=(LOG LOG_ATU LOG_LIMPA LOG_TMP)
 
 #-VARIAVEIS do sistema ----------------------------------------------------------------------------#
@@ -40,8 +40,8 @@ SAVATU2="${SAVATU2:-}"                           # Caminho do diretorio da bibli
 SAVATU3="${SAVATU3:-}"                           # Caminho do diretorio da biblioteca do servidor da SAV.
 SAVATU4="${SAVATU4:-}"                           # Caminho do diretorio da biblioteca do servidor da SAV.
 verclass="${verclass:-}"                         # Ano da versao
-BANCO="${BANCO:-}"                               # Variavel que define o tipo de banco de dados usado pelo sistema.
-ENVIABACK="${ENVIABACK:-}"                       # Variavel que define o caminho para onde sera enviado o backup.
+dbmaker="${dbmaker:-}"                               # Variavel que define o tipo de banco de dados usado pelo sistema.
+enviabackup="${enviabackup:-}"                       # Variavel que define o caminho para onde sera enviado o backup.
 VERSAO="${VERSAO:-}"                             # Variavel que define a versao do programa.
 INI="${INI:-}"                                   # Variavel que define o caminho do arquivo de configuracao do sistema.
 Offline="${Offline:-}"                           # Variavel que define se o sistema esta em modo offline.
@@ -55,7 +55,7 @@ cmd_find="${cmd_find:-}"                         # Comando para buscar arquivos.
 cmd_who="${cmd_who:-}"                           # Comando para saber quem esta logado no sistema.
 SERVER_PORTA="${SERVER_PORTA:-}"                 # Variavel que define a porta a ser usada para.
 USUARIO="${USUARIO:-}"                           # Variavel que define o usuario a ser usado.
-IPSERVER="${IPSERVER:-}"                         # Variavel que define o ip do servidor da SAV.
+ipserver="${ipserver:-}"                         # Variavel que define o ip do servidor da SAV.
 destino_biblioteca="${destino_biblioteca:-}"     # Variavel que define o caminho do diretorio da biblioteca do servidor da SAV.
 RED="${RED:-}"                                   # Cor vermelha
 GREEN="${GREEN:-}"                               # Cor verde
@@ -427,8 +427,8 @@ _validar_configuracao() {
         _mensagec "${GREEN}" "OK: Diretorio raiz definido"
     fi
     
-    if [[ -z "${BANCO}" ]]; then
-        _mensagec "${YELLOW}" "Alerta: Variavel 'BANCO' nao definida"
+    if [[ -z "${dbmaker}" ]]; then
+        _mensagec "${YELLOW}" "Alerta: Variavel 'dbmaker' nao definida"
         ((warnings++))
     else
         _mensagec "${GREEN}" "OK: Configuracao de banco de dados definida"

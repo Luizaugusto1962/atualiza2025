@@ -790,7 +790,7 @@ MENU DE BACKUP(S)
 
 Sistema completo de backup e restauracao da base de dados.
 
-DISPONIVEL PARA: Sistemas sem banco de dados (BANCO=n)
+DISPONIVEL PARA: Sistemas sem banco de dados (dbmaker=n)
 
 OPCOES DISPONIVEIS:
 ---------------------------------------------------------------
@@ -803,12 +803,12 @@ OPCOES DISPONIVEIS:
     COMPLETO:
     * Todos os arquivos da base
     * Exclui: *.zip, *.tar, *.tar.gz
-    * Formato: [EMPRESA]_completo_[DATA_HORA].zip
+    * Formato: [empresa]_completo_[DATA_HORA].zip
     
     INCREMENTAL:
     * Apenas arquivos modificados
     * Baseado em data de referencia
-    * Formato: [EMPRESA]_incremental_[DATA_HORA].zip
+    * Formato: [empresa]_incremental_[DATA_HORA].zip
     
     PROCESSO:
     1. Escolher base (se multiplas)
@@ -896,14 +896,14 @@ FORMATO DOS ARQUIVOS:
 -------------------------------------------------------------------
 
 NOMENCLATURA:
-[EMPRESA]_[TIPO]_[AAAAMMDDHHMMSS].zip
+[empresa]_[TIPO]_[AAAAMMDDHHMMSS].zip
 
 EXEMPLO:
 MINHAEMP_completo_20260108120000.zip
 MINHAEMP_incremental_20260108150000.zip
 
 COMPONENTES:
-* EMPRESA: Nome configurado no setup
+* empresa: Nome configurado no setup
 * TIPO: completo ou incremental
 * DATA: Ano, mes, dia, hora, minuto, segundo
 
@@ -1222,12 +1222,12 @@ OPCOES DISPONIVEIS:
     PARAMETROS EDITAVEIS:
     * sistema: iscobol ou cobol
     * verclass: Versao do IsCOBOL
-    * BANCO: Sistema usa banco (s/n)
+    * dbmaker: Sistema usa banco (s/n)
     * acessossh: Modo facilitado (s/n)
-    * IPSERVER: IP do servidor
+    * ipserver: IP do servidor
     * Offline: Modo offline (s/n)
-    * ENVIABACK: Diretorio backup servidor
-    * EMPRESA: Nome da empresa
+    * enviabackup: Diretorio backup servidor
+    * empresa: Nome da empresa
     * base, base2, base3: Diretorios dados
     
     PROCESSO:
@@ -1272,10 +1272,10 @@ Arquivo texto com pares chave=valor
 EXEMPLO:
 sistema=iscobol
 verclass=2024
-BANCO=n
-EMPRESA=MINHAEMP
+dbmaker=n
+empresa=MINHAEMP
 base=/dados_jisam
-IPSERVER=192.168.1.100
+ipserver=192.168.1.100
 Offline=n
 
 IMPORTANTE:
@@ -1297,7 +1297,7 @@ verclass:
 * Versao do IsCOBOL
 * Define compatibilidade biblioteca
 
-BANCO:
+dbmaker:
 * s: Sistema usa banco de dados
 * n: Sistema file-based
 * Afeta menus disponiveis
@@ -1307,12 +1307,12 @@ base:
 * Caminho relativo a raiz
 * Ex: /dados_jisam
 
-EMPRESA:
+empresa:
 * Nome da empresa (sem espacos)
 * Usado em backups
 * Identificacao de instalacao
 
-IPSERVER:
+ipserver:
 * IP do servidor SAV
 * Para atualizacoes e backups
 * Ex: 192.168.1.100

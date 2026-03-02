@@ -4,13 +4,15 @@
 # Responsavel por backup completo, incremental e restauracao
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 04/03/2026-00
 # Autor: Luiz Augusto
 #
 # Variaveis globais esperadas
 base="${base:-}"           # Caminho do diretorio da segunda base de dados.
 Offline="${Offline:-}"     # Indicador de ambiente offline (s/n)
 raiz="${raiz:-}"           # Caminho raiz do sistema.
+empresa="${empresa:-}"     # Nome da empresa (usado para nomear backups)
+ipserver="${ipserver:-}"   # Endereco IP do servidor de atualizacao 
 
 #---------- FUNCOES PRINCIPAIS DE backup ----------#
 
@@ -78,7 +80,7 @@ _executar_backup() {
 
     # Gerar nome do arquivo
     local nome_backup
-    nome_backup="${EMPRESA}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
+    nome_backup="${empresa}_${tipo_backup}_$(date +%Y%m%d%H%M).zip"
     local caminho_backup="${BACKUP}/$nome_backup"
 
     # Verificar backups recentes
@@ -308,10 +310,10 @@ _selecionar_backup() {
 
     # Carrega todos os .zip disponiveis
     shopt -s nullglob
-    arquivos_backup=("${BACKUP}/${EMPRESA}"_*.zip)
+    arquivos_backup=("${BACKUP}/${empresa}"_*.zip)
 
     if ((${#arquivos_backup[@]} == 0)); then
-        _mensagec "${RED}" "Nenhum backup (${EMPRESA}_*.zip) encontrado"
+        _mensagec "${RED}" "Nenhum backup (${empresa}_*.zip) encontrado"
         _press
         return 1
     fi
@@ -483,8 +485,8 @@ _enviar_backup_servidor() {
     fi
 
     # Determinar destino
-    if [[ -n "${ENVIABACK}" ]]; then
-        destino_remoto="${ENVIABACK}"
+    if [[ -n "${enviabackup}" ]]; then
+        destino_remoto="${enviabackup}"
     else
         read -rp "${YELLOW}Diretorio de destino no servidor: ${NORM}" destino_remoto
         while [[ -z "$destino_remoto" ]]; do
@@ -575,8 +577,8 @@ _enviar_backup_rede() {
         return 1
     fi
     
-    if [[ -n "${ENVIABACK}" ]]; then
-        destino_remoto="${ENVIABACK}"
+    if [[ -n "${enviabackup}" ]]; then
+        destino_remoto="${enviabackup}"
     else
         read -rp "${YELLOW}Diretorio remoto: ${NORM}" destino_remoto
         while [[ -z "$destino_remoto" ]]; do
@@ -591,7 +593,7 @@ _enviar_backup_rede() {
     
     if _upload_rsync "${BACKUP}/${nome_backup}" "/${destino_remoto}"; then
         _linha
-        _mensagec "${GREEN}" "Backup enviado para \"${destino_remoto}\" no servidor ${IPSERVER}"
+        _mensagec "${GREEN}" "Backup enviado para \"${destino_remoto}\" no servidor ${ipserver}"
         _read_sleep 3
     else
         _linha
@@ -620,11 +622,11 @@ _verificar_espaco_disco() {
 
 # Verifica backups recentes (ultimos 2 dias)
 _verificar_backups_recentes() {
-    if find "${BACKUP}" -maxdepth 1 -ctime -2 -name "${EMPRESA}*zip" -print -quit | grep -q .; then
+    if find "${BACKUP}" -maxdepth 1 -ctime -2 -name "${empresa}*zip" -print -quit | grep -q .; then
         _linha
         _mensagec "$CYAN" "Ja existe backup recente em $BACKUP:"
         _linha
-        ls -ltrh "${BACKUP}/${EMPRESA}"_*.zip 2>/dev/null
+        ls -ltrh "${BACKUP}/${empresa}"_*.zip 2>/dev/null
         _linha
         return 0
     fi
