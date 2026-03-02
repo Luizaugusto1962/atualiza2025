@@ -2,7 +2,7 @@
 #
 # SISTEMA SAV - Script de Atualizacao Modular
 # lembrete.sh - Modulo de Lembretes e Notas
-# Versao: 24/02/2026-00
+# Versao: 24/02/2026-01
 # Autor: Luiz Augusto
 # utils.sh - Modulo de Utilitarios e Funcoes Auxiliares  
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo

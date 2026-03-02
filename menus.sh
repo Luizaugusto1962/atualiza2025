@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/03/2026-00
+# Versao: 02/03/2026-01
 # Autor: Luiz Augusto
 #
 # Variaveis globais esperadas

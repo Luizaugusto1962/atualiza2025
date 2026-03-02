@@ -1789,7 +1789,7 @@ cfg/.atualizac        - Configuracao principal
 cfg/atualizat         - Lista de temporarios
 cfg/atualizaj         - Arquivos principais para o rodar e rebuild
 cfg/atualizal         - Notas/lembretes
-cfg/entrada.txt       - Aviso de entrada.
+cfg/entrada.txt       - Aviso de entrada
 logs/atualiza.log     - Log de operacoes
 logs/limpando.log     - Log de limpeza
 

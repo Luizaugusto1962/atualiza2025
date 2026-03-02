@@ -4,7 +4,7 @@
 # Fornece documentacao completa e help contextual para o sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 02/03/2026-01
 #
 # Variaveis globais esperadas
 cfg_dir="${cfg_dir:-}"     # Diretorio de configuracoes
