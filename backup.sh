@@ -496,7 +496,7 @@ _enviar_backup_servidor() {
     fi
 
     _linha
-    _mensagec "${YELLOW}" "Enviando backup via vaievem..."
+    _mensagec "${YELLOW}" "Enviando backup para ${destino_remoto}..."
     _linha
     
     if _upload_rsync "${BACKUP}/${nome_backup}" "/${destino_remoto}"; then
@@ -588,7 +588,7 @@ _enviar_backup_rede() {
     fi
 
     _linha
-    _mensagec "${YELLOW}" "Enviando backup via vaievem..."
+    _mensagec "${YELLOW}" "Enviando backup para ${destino_remoto}..."
     _linha
     
     if _upload_rsync "${BACKUP}/${nome_backup}" "/${destino_remoto}"; then
