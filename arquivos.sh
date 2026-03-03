@@ -329,6 +329,9 @@ _executar_jutil() {
         if [[ -x "${jut}" ]]; then
             if "${jut}" -rebuild "$arquivo" -a -f; then
                 _log_sucesso "Rebuild executado: $(basename "$arquivo")"
+                # garantir permissões máximas após o rebuild
+                chmod 0777 "$arquivo" 2>/dev/null || \
+                    _mensagec "${YELLOW}" "Aviso: nao foi possivel alterar permissoes de $arquivo"
             else
                 _mensagec "${RED}" "Erro no rebuild: $(basename "$arquivo")"
                 return 1
