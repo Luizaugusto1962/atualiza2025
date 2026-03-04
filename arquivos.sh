@@ -311,40 +311,49 @@ _processar_lista_arquivos() {
     
     while IFS= read -r listando || [[ -n "$listando" ]]; do
         [[ -z "$listando" ]] && continue
-        
         local caminho_arquivo="${base_trabalho}/${listando}"
-        if [[ -e "$caminho_arquivo" ]]; then
-            _executar_jutil "$caminho_arquivo"
-        else
-            _mensagec "${RED}" "Arquivo nao encontrado: ${listando}"
-        fi
+#        if [[ -f "$caminho_arquivo" ]]; then
+         _executar_jutil "$caminho_arquivo"
+#        else
+#            _mensagec "${RED}" "Arquivo nao encontrado: ${listando}"
+#        fi
     done < "$arquivo_lista"
 }
 
 # Executa jutil no arquivo especificado
 _executar_jutil() {
     local arquivo="$1"
-    
-    if [[ -n "$arquivo" && -e "$arquivo" && -s "$arquivo" ]]; then
-        if [[ -x "${jut}" ]]; then
+    if [[ -x "${jut}" ]]; then    
+        if [[ -n "$arquivo" && -e "$arquivo" && -s "$arquivo" ]]; then
             if "${jut}" -rebuild "$arquivo" -a -f; then
                 _log_sucesso "Rebuild executado: $(basename "$arquivo")"
                 # garantir permissões máximas após o rebuild
                 chmod 0777 "$arquivo" 2>/dev/null || \
                     _mensagec "${YELLOW}" "Aviso: nao foi possivel alterar permissoes de $arquivo"
+                # garantir permissões máximas nos arquivos .idx gerados pelo jutil
+                local dir_arquivo base_arquivo arquivo_idx
+                dir_arquivo="$(dirname "$arquivo")"
+                base_arquivo="$(basename "$arquivo" .dat)"
+                for arquivo_idx in "${dir_arquivo}/${base_arquivo}"*.idx; do
+                    if [[ -f "$arquivo_idx" ]]; then
+                        chmod 0777 "$arquivo_idx" 2>/dev/null || \
+                            _mensagec "${YELLOW}" "Aviso: nao foi possivel alterar permissoes de $arquivo_idx"
+                    fi
+                done
             else
                 _mensagec "${RED}" "Erro no rebuild: $(basename "$arquivo")"
                 return 1
             fi
             _linha "-" "${GREEN}"
+
         else
-            _mensagec "${RED}" "Erro: jutil nao encontrado em ${jut}"
+            _mensagec "${YELLOW}" "Arquivo nao encontrado ou vazio: $(basename "$arquivo" 2>/dev/null || echo "$arquivo")"
             return 1
         fi
     else
-        _mensagec "${YELLOW}" "Arquivo nao encontrado ou vazio: $(basename "$arquivo" 2>/dev/null || echo "$arquivo")"
+        _mensagec "${RED}" "Erro: jutil nao encontrado em ${jut}"
         return 1
-    fi
+fi    
 }
 
 #---------- FUNCOES DE TRANSFERENCIA ----------#

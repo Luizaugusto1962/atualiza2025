@@ -280,7 +280,7 @@ _atualizando() {
 
     #---------- INSTALAR ARQUIVOS DE CONFIGURAÇÃO ----------#
     # Processa manual.txt e atualiza.txt com destino ${cfg_dir}
-    local -a cfg_files=("manual.txt" "entrada.txt")
+    local -a cfg_files=("manual.txt" "entrada.txt" "atualizaj" "atualizat")
     
     for cfg_arquivo in "${cfg_files[@]}"; do
         if [[ ! -f "$cfg_arquivo" ]]; then
