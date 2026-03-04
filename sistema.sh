@@ -302,7 +302,7 @@ _atualizando() {
 
         # Mover arquivo para destino
         if mv -f "$cfg_arquivo" "$cfg_target/$cfg_arquivo"; then
-            _mensagec "${GREEN}" "✓ Arquivo $cfg_arquivo instalado em $cfg_target"
+            _mensagec "${GREEN}" "Arquivo $cfg_arquivo instalado em $cfg_target"
             ((arquivos_instalados++))
              
         else
@@ -342,7 +342,7 @@ _atualizando() {
 
         # Mover arquivo para destino
         if mv -f "$arquivo" "$sh_target/"; then
-            _mensagec "${GREEN}" "✓ Instalado $arquivo em $sh_target"
+            _mensagec "${GREEN}" "Instalado $arquivo em $sh_target"
             ((arquivos_instalados++))
             ((sh_instalados++))
         else
