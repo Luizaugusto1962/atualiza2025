@@ -460,9 +460,9 @@ _processar_atualizacao_pacotes() {
         fi
 
         # Mover novos arquivos
-        mv ./*.class "${E_EXEC}/" >>"${LOG_ATU}" 2>&1
+        mv -f "${progname}"*.class "${E_EXEC}/" >>"${LOG_ATU}" 2>&1
         if [[ -f "${progname}.TEL" ]]; then
-            mv ./*.TEL "${T_TELAS}/" >>"${LOG_ATU}" 2>&1
+            mv -f "${progname}"*.TEL "${T_TELAS}/" >>"${LOG_ATU}" 2>&1
         fi
     done
 }
