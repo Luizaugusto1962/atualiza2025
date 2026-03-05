@@ -669,7 +669,8 @@ _listar_logs_atualizacao() {
         printf "\n"
         _linha
     fi
-    _press
+    _mensagec "${YELLOW}" "<< Pressione ENTER para voltar >>"
+    read -r
 } 
 _listar_logs_limpeza() {
     clear
@@ -741,5 +742,6 @@ _listar_logs_limpeza() {
         printf "\n"
         _linha
     fi
-    _press
+    _mensagec "${YELLOW}" "<< Pressione ENTER para voltar >>"
+    read -r
 }
