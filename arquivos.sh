@@ -3,7 +3,7 @@
 # arquivos.sh - Modulo de Gestao de Arquivos
 # Responsavel por limpeza, recuperacao, transferência e expurgo de arquivos
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/03/2026-00
+# Versao: 05/03/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"             # Tipo de sistema (ex: iscobol, outros).
@@ -597,4 +597,133 @@ _executar_expurgador() {
     else
         _menu_arquivos
     fi
+}
+
+_listar_logs_atualizacao() {
+    clear
+    _linha
+    _mensagec "${YELLOW}" "Logs de Atualizacao encontrados em ${LOGS}:"
+    _linha
+    
+    local logs=("${LOGS}"/atualiza.*)
+    if [[ ! -e "${logs[0]}" ]]; then
+        _mensagec "${RED}" "Nenhum log de atualizacao encontrado."
+        _press
+        return 1
+    fi
+
+    # Exibir lista numerada dos logs disponiveis
+    local i=1
+    for log in "${logs[@]}"; do
+        _mensagec "${CYAN}" "  ${i}) $(basename "$log")"
+        (( i++ ))
+    done
+    _linha
+    _mensagec "${GREEN}" "  0) Visualizar todos"
+    _linha
+
+    local opcao
+    read -rp "${YELLOW}Selecione o arquivo [0-$((i-1))]: ${NORM}" opcao
+
+    # Validar entrada
+    if [[ -z "$opcao" ]]; then
+        _mensagec "${RED}" "Nenhuma opcao selecionada."
+        _press
+        return 1
+    fi
+
+    if ! [[ "$opcao" =~ ^[0-9]+$ ]] || (( opcao < 0 || opcao >= i )); then
+        _mensagec "${RED}" "Opcao invalida."
+        _press
+        return 1
+    fi
+
+    clear
+    _linha
+
+    if (( opcao == 0 )); then
+        # Visualizar todos os logs
+        _mensagec "${YELLOW}" "Exibindo todos os logs de atualizacao:"
+        _linha
+        for log in "${logs[@]}"; do
+            _mensagec "${CYAN}" ">>> Arquivo: $(basename "$log")"
+            _linha
+            cat "$log"
+            printf "\n"
+            _linha
+        done
+    else
+        # Visualizar log selecionado
+        local log_selecionado="${logs[$((opcao-1))]}"
+        _mensagec "${YELLOW}" "Exibindo log: $(basename "$log_selecionado")"
+        _linha
+        cat "$log_selecionado"
+        printf "\n"
+        _linha
+    fi
+    _press
+} 
+_listar_logs_limpeza() {
+    clear
+    _linha
+    _mensagec "${YELLOW}" "Logs de Limpeza encontrados em ${LOGS}:"
+    _linha
+    
+    local logs=("${LOGS}"/limpando.*)
+    if [[ ! -e "${logs[0]}" ]]; then
+        _mensagec "${RED}" "Nenhum log de limpeza encontrado."
+        _press
+        return 1
+    fi
+
+    # Exibir lista numerada dos logs disponiveis
+    local i=1
+    for log in "${logs[@]}"; do
+        _mensagec "${CYAN}" "  ${i}) $(basename "$log")"
+        (( i++ ))
+    done
+    _linha
+    _mensagec "${GREEN}" "  0) Visualizar todos"
+    _linha
+
+    local opcao
+    read -rp "${YELLOW}Selecione o arquivo [0-$((i-1))]: ${NORM}" opcao
+
+    # Validar entrada
+    if [[ -z "$opcao" ]]; then
+        _mensagec "${RED}" "Nenhuma opcao selecionada."
+        _press
+        return 1
+    fi
+
+    if ! [[ "$opcao" =~ ^[0-9]+$ ]] || (( opcao < 0 || opcao >= i )); then
+        _mensagec "${RED}" "Opcao invalida."
+        _press
+        return 1
+    fi
+
+    clear
+    _linha
+
+    if (( opcao == 0 )); then
+        # Visualizar todos os logs
+        _mensagec "${YELLOW}" "Exibindo todos os logs de limpeza:"
+        _linha
+        for log in "${logs[@]}"; do
+            _mensagec "${CYAN}" ">>> Arquivo: $(basename "$log")"
+            _linha
+            cat "$log"
+            printf "\n"
+            _linha
+        done
+    else
+        # Visualizar log selecionado
+        local log_selecionado="${logs[$((opcao-1))]}"
+        _mensagec "${YELLOW}" "Exibindo log: $(basename "$log_selecionado")"
+        _linha
+        cat "$log_selecionado"
+        printf "\n"
+        _linha
+    fi
+    _press
 }

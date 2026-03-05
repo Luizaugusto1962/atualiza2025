@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/03/2026-01
+# Versao: 05/03/2026-01
 # Autor: Luiz Augusto
 #
 # Variaveis globais esperadas
@@ -323,6 +323,8 @@ _menu_ferramentas() {
         printf "\n"
         _mensagec "${GREEN}" "6${NORM} -|: Avisos                    "
         printf "\n"
+        _mensagec "${GREEN}" "7${NORM} -|: Logs                      "
+        printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"
         _mensagec "${WHITE}" "9${RED} -|: Menu Anterior  "
@@ -341,6 +343,7 @@ _menu_ferramentas() {
             4) _executar_update ;;
             5) _menu_lembretes ;;
             6) _menu_avisos ;;
+            7) _menu_logs ;;
             9) return ;;
             *)
                 _opinvalida
@@ -673,6 +676,46 @@ _menu_avisos() {
         esac
     done
 }
+
+# Menu dos logs do sistema
+_menu_logs() {
+    while true; do
+        clear
+        printf "\n"
+        _linha "=" "${GREEN}"
+        _mensagec "${RED}" "Menu dos Logs"
+        _linha
+        printf "\n"
+        _mensagec "${PURPLE}" " Escolha a opcao:"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+        _mensagec "${GREEN}" "1${NORM} -|: Log de Atualizacao"
+        printf "\n"
+        _mensagec "${GREEN}" "2${NORM} -|: Log de Limpeza    "
+        printf "\n"
+        _meia_linha "-" "${YELLOW}"
+        printf "\n"
+        _mensagec "${WHITE}" "9${RED} -|: Menu Anterior "
+        printf "\n"
+        
+        # Usar funcao centralizada
+        local opcao
+        if ! _ler_opcao_menu "logs"; then
+            continue
+        fi
+
+        case "${opcao}" in
+            1) _listar_logs_atualizacao ;;
+            2) _listar_logs_limpeza ;;
+            9) return ;;
+            *)
+                _opinvalida
+                _read_sleep 1
+                ;;
+        esac
+    done
+}
+
 #---------- MENU PRINCIPAL DE AJUDA ----------#
 
 # Menu principal do sistema de ajuda
