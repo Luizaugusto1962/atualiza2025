@@ -648,7 +648,11 @@ _listar_logs_atualizacao() {
         for log in "${logs[@]}"; do
             _mensagec "${CYAN}" ">>> Arquivo: $(basename "$log")"
             _linha
-            cat "$log"
+            if [[ -s "$log" ]]; then
+                cat "$log"
+            else
+                _mensagec "${RED}" "Arquivo sem dados."
+            fi
             printf "\n"
             _linha
         done
@@ -657,7 +661,11 @@ _listar_logs_atualizacao() {
         local log_selecionado="${logs[$((opcao-1))]}"
         _mensagec "${YELLOW}" "Exibindo log: $(basename "$log_selecionado")"
         _linha
-        cat "$log_selecionado"
+        if [[ -s "$log_selecionado" ]]; then
+            cat "$log_selecionado"
+        else
+            _mensagec "${RED}" "Arquivo sem dados."
+        fi
         printf "\n"
         _linha
     fi
@@ -712,7 +720,11 @@ _listar_logs_limpeza() {
         for log in "${logs[@]}"; do
             _mensagec "${CYAN}" ">>> Arquivo: $(basename "$log")"
             _linha
-            cat "$log"
+            if [[ -s "$log" ]]; then
+                cat "$log"
+            else
+                _mensagec "${RED}" "Arquivo sem dados."
+            fi
             printf "\n"
             _linha
         done
@@ -721,7 +733,11 @@ _listar_logs_limpeza() {
         local log_selecionado="${logs[$((opcao-1))]}"
         _mensagec "${YELLOW}" "Exibindo log: $(basename "$log_selecionado")"
         _linha
-        cat "$log_selecionado"
+        if [[ -s "$log_selecionado" ]]; then
+            cat "$log_selecionado"
+        else
+            _mensagec "${RED}" "Arquivo sem dados."
+        fi
         printf "\n"
         _linha
     fi
