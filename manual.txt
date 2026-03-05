@@ -517,6 +517,16 @@ OPCOES DISPONIVEIS:
     - Anotacoes de manutencao
     - Aviso sobre atualizacoes
 
+7 - LOGS
+    Mostra os logs do sistema.
+    
+    FUNCOES:
+    * Exibir logs de atualizacao
+    * Exibir logs de limpeza
+    
+    USO:
+    - Verificar atualizacao
+    - Verificar limpeza
 
 DICAS DE USO:
 ---------------------------------------------------------------
@@ -529,11 +539,11 @@ MANUTENCAO REGULAR:
 
 ORGANIZACAO:
 * Use lembretes para agendar tarefas
-* Documente alteracoes importantes
-
-PERFORMANCE:
-* Programa atualizado
-* Lembretes de alerta de uso do sistema
+* Documentar alteracoes importantes
+* Verificar logs
+* Verificar parametro
+* Verificar versao do iscobol
+* Verificar versao do linux
 
 ---------------------------------------------------------------
 [MENU_TEMPORARIOS]
@@ -1726,6 +1736,12 @@ Use marcadores:
 
 LIMPEZA:
 Remova informacoes antigas periodicamente
+-------------------------------------------------------------------
+[MENU_LOGS]
+MENU DE LOGS 
+-------------------------------------------------------------------
+Mostra os logs do sistema de atualizacao
+Mostra os logs do sistema de limpeza
 
 -------------------------------------------------------------------
 [AJUDA_NO_GERAL]

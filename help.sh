@@ -207,7 +207,10 @@ _exibir_ajuda_contextual() {
             ;;
         aviso)
             secao_nome="MENU_AVISO"
-            ;;    
+            ;;  
+        logs)
+            secao_nome="MENU_LOGS"
+            ;;
         *)
             secao_nome="MENU_PRINCIPAL"
             ;;
