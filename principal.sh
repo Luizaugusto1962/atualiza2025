@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/03/2026-00
+# Versao: 05/03/2026-00
 # Autor: Luiz Augusto
 # Email: luizaugusto@sav.com.br
 #
 # Versao do sistema
-readonly UPDATE="02/03/2026-00"
+readonly UPDATE="05/03/2026-00"
 export UPDATE
 
 # Diretorio do script principal

@@ -4,7 +4,7 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/03/2026-00
+# Versao: 05/03/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
@@ -149,11 +149,9 @@ _configurar_comandos() {
 _configurar_diretorios() {
     
     # Verificar diretorio principal
-    if [[ -n "${TOOLS_DIR}" ]] && [[ -d "${TOOLS_DIR}" ]]; then
-        _mensagec "${CYAN}" "Diretorio encontrado: ${TOOLS_DIR}"
-    else
-        _mensagec "${RED}" "ERRO: Diretorio %s nao encontrado.\n" "${TOOLS_DIR}"
-        return 1
+    if [[ ! -n "${TOOLS_DIR}" ]] || [[ ! -d "${TOOLS_DIR}" ]]; then
+        _mensagec "${CYAN}" "Diretorio principal nao encontrado: ${TOOLS_DIR}"
+        exit 1
     fi
 
     # Definir diretorio de configuracao
@@ -352,13 +350,8 @@ _validar_diretorios() {
         local caminho="$1"
         local mensagem_erro="$2"
         
-        if [[ -n "${caminho}" ]] && [[ -d "${caminho}" ]]; then
-            _mensagec "${CYAN}" "Diretorio validado: ${caminho}"
-        else
-            _linha "*"
-            _mensagec "${RED}" "${mensagem_erro}: ${caminho}"
-            _linha "*"
-            _read_sleep 2
+        if [[ ! -n "${caminho}" ]] || [[ ! -d "${caminho}" ]]; then
+            _mensagec "${CYAN}" "Diretorio nao encontrado: ${caminho}"
             exit 1
         fi
     }
@@ -449,8 +442,6 @@ _validar_configuracao() {
         if [[ ! -d "${dir_path}" ]]; then
             _mensagec "${YELLOW}" "Alerta: Diretorio ${dir} nao encontrado: ${dir_path}"
             ((warnings++))
-        else
-            _mensagec "${GREEN}" "OK: Diretorio ${dir} encontrado"
         fi
     done
     
