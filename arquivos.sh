@@ -33,6 +33,8 @@ _executar_limpeza_temporarios() {
         return 1
     fi
 
+    local arquivo_lista2="${cfg_dir}/atualizat2"
+
     # Limpar temporarios antigos do backup
     find "${BACKUP}" -type f -name "Temps*" -mtime +10 -delete 2>/dev/null || true
 
@@ -42,6 +44,10 @@ _executar_limpeza_temporarios() {
             local caminho_base="${raiz}${base_dir}"
             if [[ -d "$caminho_base" ]]; then
                 _limpar_base_especifica "$caminho_base" "$arquivo_lista"
+                # Processar atualizat2 na sequencia, se existir
+                if [[ -f "${arquivo_lista2}" && -r "${arquivo_lista2}" ]]; then
+                    _limpar_base_especifica "$caminho_base" "$arquivo_lista2"
+                fi
             else
                 _mensagec "${YELLOW}" "Diretorio nao existe: ${caminho_base}"
             fi
@@ -87,7 +93,7 @@ _limpar_base_especifica() {
     _linha
     _mensagec "${YELLOW}" "Resumo da limpeza:"
     _mensagec "${GREEN}"  "  Padroes processados : ${YELLOW}${total_padroes}"
-    _mensagec "${GREEN}"  "  Total de arquivos  : ${YELLOW}${total_arquivos}"
+    _mensagec "${GREEN}"  "  Total de arquivos   : ${YELLOW}${total_arquivos}"
     _log "Limpeza concluida: ${total_padroes} padrao(oes), ${total_arquivos} arquivo(s) processado(s) em ${caminho_base}"
     _linha
 }
@@ -101,7 +107,7 @@ _adicionar_arquivo_lixo() {
     
     clear
     _meiodatela
-    _mensagec "${CYAN}" "Informe o nome do arquivo a ser adicionado ao atualizat"
+    _mensagec "${CYAN}" "Informe o nome do arquivo a ser adicionado ao atualizat2"
     _linha
     
     local novo_arquivo
@@ -115,8 +121,8 @@ _adicionar_arquivo_lixo() {
     fi
 
     # Adicionar arquivo à lista
-    echo "$novo_arquivo" >> atualizat
-    _mensagec "${CYAN}" "Arquivo '${novo_arquivo}' adicionado com sucesso ao 'atualizat'"
+    echo "$novo_arquivo" >> atualizat2
+    _mensagec "${CYAN}" "Arquivo '${novo_arquivo}' adicionado com sucesso ao 'atualizat2'"
     _linha
     
     _press
@@ -137,6 +143,16 @@ _lista_arquivos_lixo() {
         nl -w3 -s'. ' atualizat
     else
         _mensagec "${YELLOW}" "Nenhum arquivo listado no 'atualizat'"
+    fi
+
+    _linha
+    _mensagec "${CYAN}" "Lista de arquivos no atualizat2:"
+    _linha
+
+    if [[ -f "atualizat2" && -s "atualizat2" ]]; then
+        nl -w3 -s'. ' atualizat2
+    else
+        _mensagec "${YELLOW}" "Nenhum arquivo listado no 'atualizat2'"
     fi
 
     _linha

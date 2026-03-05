@@ -29,8 +29,6 @@ for dir in "${aux_dirs[@]}"; do
     }
 done
 
-printf "Todos os diretorios estao presentes.\n"
-
 # Funcao para carregar modulos com verificacao
 _carregar_modulo() {
     local modulo="$1"
