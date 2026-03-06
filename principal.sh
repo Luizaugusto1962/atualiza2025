@@ -6,7 +6,7 @@
 # Email: luizaugusto@sav.com.br
 #
 # Versao do sistema
-readonly UPDATE="05/03/2026-00"
+readonly UPDATE="06/03/2026-00"
 export UPDATE
 
 # Diretorio do script principal
@@ -53,6 +53,7 @@ _carregar_modulo() {
 # Carregamento sequencial dos modulos (ordem importante)
 _carregar_modulo "utils.sh"      # Utilitarios basicos primeiro
 _carregar_modulo "config.sh"     # Configuracoes
+_carregar_modulo "auth.sh"       # Autenticacao
 _carregar_modulo "lembrete.sh"   # Sistema de lembretes
 _carregar_modulo "vaievem.sh"      # Operacoes de rede
 _carregar_modulo "sistema.sh"    # Informacoes do sistema
@@ -88,6 +89,12 @@ main() {
     
     # Inicializar sistema
     _inicializar_sistema
+    
+    # Autenticacao
+    if ! _login; then
+        printf "Autenticacao falhou. Saindo...\n"
+        exit 1
+    fi
     
     # Mostrar mensagem de entrada (se existe) e opcao para excluir
     _mostrar_aviso

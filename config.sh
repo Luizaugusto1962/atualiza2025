@@ -348,7 +348,7 @@ _validar_diretorios() {
     # Funcao auxiliar para verificar diretorio
     _verifica_diretorio() {
         local caminho="$1"
-        local mensagem_erro="$2"
+#        local mensagem_erro="$2"
         
         if [[ ! -n "${caminho}" ]] || [[ ! -d "${caminho}" ]]; then
             _mensagec "${CYAN}" "Diretorio nao encontrado: ${caminho}"
