@@ -53,15 +53,12 @@ _executar_limpeza_temporarios() {
             fi
         fi
     done
-
     _press
 }
 _limpar_base_especifica() {
     local caminho_base="$1"
     local arquivo_lista="$2"
     local arquivos_temp=()
-    local total_arquivos=0
-    local total_padroes=0
     
     # Ler lista de arquivos temporarios
     mapfile -t arquivos_temp < "$arquivo_lista"
@@ -70,31 +67,34 @@ _limpar_base_especifica() {
     _read_sleep 1
     _linha
     
+    local zip_temporarios="Temps-${UMADATA}.zip"
+
     for padrao_arquivo in "${arquivos_temp[@]}"; do
-        if [[ -n "$padrao_arquivo" ]]; then
-            # Contar arquivos encontrados para o padrao atual
-            local qtd_padrao
-            qtd_padrao=$(find "$caminho_base" -type f -iname "$padrao_arquivo" | wc -l)
-            
-            # Compactar e mover arquivos temporarios
-            local zip_temporarios="Temps-${UMADATA}.zip"
-            if find "$caminho_base" -type f -iname "$padrao_arquivo" -exec "$cmd_zip" "${BACKUP}/${zip_temporarios}" {} + >>"${LOG_LIMPA}" 2>&1; then
-                _log "Arquivos temporarios processados: $padrao_arquivo (${qtd_padrao} arquivo(s))"
-                _mensagec "${GREEN}" "  >> ${qtd_padrao} arquivo(s) encontrado(s) para o padrao: ${YELLOW}${padrao_arquivo}${NORM}"
-                # Remover arquivos originais após compactação bem-sucedida
-                find "$caminho_base" -type f -iname "$padrao_arquivo" -delete
-                
-                (( total_arquivos += qtd_padrao ))
-                (( total_padroes++ ))
-            fi
+        [[ -n "$padrao_arquivo" ]] || continue
+
+        # Coletar arquivos de uma unica vez — mesma lista usada no zip e no rm
+        local arquivos_zip=()
+        mapfile -t arquivos_zip < <(find "$caminho_base" -type f -iname "$padrao_arquivo")
+        local qtd_padrao="${#arquivos_zip[@]}"
+
+        # Nenhum arquivo encontrado para este padrao — pular
+        if [[ "$qtd_padrao" -eq 0 ]]; then
+            continue
+        fi
+
+        _mensagec "${GREEN}" "Processando padrao: ${YELLOW}${padrao_arquivo}${NORM} (${qtd_padrao} arquivo(s))"
+
+        # Compactar — $cmd_zip sem aspas para suportar flags (ex: "zip -j")
+        if $cmd_zip "${BACKUP}/${zip_temporarios}" "${arquivos_zip[@]}" >>"${LOG_LIMPA}" 2>&1; then
+            _log "Arquivos temporarios compactados: $padrao_arquivo (${qtd_padrao} arquivo(s))"
+            # Remover usando o mesmo array ja coletado — sem segundo find
+            rm -f "${arquivos_zip[@]}" && _log "Arquivos removidos: $padrao_arquivo" || _log "AVISO: falha ao remover arquivos do padrao: $padrao_arquivo"
+        else
+            _log "ERRO ao compactar arquivos do padrao: $padrao_arquivo"
+            _mensagec "${RED}" "  >> ERRO ao compactar padrao: ${padrao_arquivo}"
         fi
     done
-    
-    _linha
-    _mensagec "${YELLOW}" "Resumo da limpeza:"
-    _mensagec "${GREEN}"  "  Padroes processados : ${YELLOW}${total_padroes}"
-    _mensagec "${GREEN}"  "  Total de arquivos   : ${YELLOW}${total_arquivos}"
-    _log "Limpeza concluida: ${total_padroes} padrao(oes), ${total_arquivos} arquivo(s) processado(s) em ${caminho_base}"
+        
     _linha
 }
 
