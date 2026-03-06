@@ -47,7 +47,7 @@ _gerar_aviso_entrada() {
     _mensagec "${YELLOW}" "Digite a mensagem de entrada (Ctrl+D para finalizar):"
     _linha
 
-    local arquivo_msg="${cfg_dir}/entrada.txt"
+    local arquivo_msg="${cfg_dir}/avisos"
     # sobrescreve o arquivo existente
     if cat > "$arquivo_msg"; then
         _linha
@@ -61,7 +61,7 @@ _gerar_aviso_entrada() {
 
 # Edita nota existente
 _editar_aviso_existente() {
-    local arquivo_avisos="${cfg_dir}/entrada.txt"
+    local arquivo_avisos="${cfg_dir}/avisos"
     
     clear
     if [[ -f "$arquivo_avisos" ]]; then
@@ -77,7 +77,7 @@ _editar_aviso_existente() {
 
 # Exibe a mensagem de entrada e oferece opcao para excluir apos leitura
 _mostrar_aviso() {
-    local arquivo_msg="${cfg_dir}/entrada.txt"
+    local arquivo_msg="${cfg_dir}/avisos"
     if [[ -f "$arquivo_msg" && -s "$arquivo_msg" ]]; then
         clear
         _linha "=" "${CYAN}"
@@ -100,7 +100,7 @@ _mostrar_aviso() {
 
 # Apaga manualmente a mensagem de entrada
 _apagar_aviso_entrada() {
-    local arquivo_msg="${cfg_dir}/entrada.txt"
+    local arquivo_msg="${cfg_dir}/avisos"
     if [[ ! -f "$arquivo_msg" ]]; then
         _mensagec "${YELLOW}" "Nenhuma mensagem de entrada encontrada!"
         sleep 2

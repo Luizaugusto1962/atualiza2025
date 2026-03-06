@@ -1651,7 +1651,7 @@ ARQUIVO DE AVISO:
 -------------------------------------------------------------------
 
 LOCALIZACAO:
-cfg/entrada.txt
+cfg/avisos
 
 FORMATO:
 Arquivo texto simples
@@ -1805,7 +1805,7 @@ cfg/.atualizac        - Configuracao principal
 cfg/atualizat         - Lista de temporarios
 cfg/atualizaj         - Arquivos principais para o rodar e rebuild
 cfg/atualizal         - Notas/lembretes
-cfg/entrada.txt       - Aviso de entrada
+cfg/avisos       - Aviso de entrada
 logs/atualiza.log     - Log de operacoes
 logs/limpando.log     - Log de limpeza
 
