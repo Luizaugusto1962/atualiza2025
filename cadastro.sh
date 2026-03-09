@@ -4,7 +4,7 @@
 # Permite cadastrar usuarios e senhas para o sistema SAV
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 06/03/2026-01
+# Versao: 09/03/2026-01
 # Autor: Luiz Augusto
 #
 #
@@ -23,16 +23,49 @@ cfg_dir="${cfg_dir:-${TOOLS_DIR}/cfg}"
 "." "${lib_dir}/utils.sh" 2>/dev/null || { echo "Erro: utils.sh nao encontrado."; exit 1; }
 "." "${lib_dir}/auth.sh" 2>/dev/null || { echo "Erro: auth.sh nao encontrado."; exit 1; }
 
+# Cores para o menu
+        RED=$(tput bold)$(tput setaf 1)          # Vermelho
+        GREEN=$(tput bold)$(tput setaf 2)        # Verde
+        YELLOW=$(tput bold)$(tput setaf 3)       # Amarelo
 # Funcao principal
 main() {
-    tput clear
-    printf "\n"
-    _linha "=" "${GREEN}"
-    _mensagec "${RED}" "Cadastro de Usuario - Sistema SAV"
-    _linha "=" "${GREEN}"
-    printf "\n"
+    while true; do
+        tput clear
+        printf "\n"
+        _linha "=" "${GREEN}"
+        _mensagec "${RED}" "Cadastro de Usuario - Sistema SAV"
+        _linha "=" "${GREEN}"
+        printf "\n"
+        _mensagec "${YELLOW} 1. Cadastrar novo usuario"
+        _mensagec "${YELLOW} 2. Alterar senha de usuario"
+        _mensagec "${YELLOW} 0. Voltar"
+        _linha "=" "${GREEN}"
+        _mensagec "${GREEN}" "Digite o numero da opcao desejada e pressione ENTER." 
+        read -rp "Escolha uma opcao: " opcao
 
-    _cadastrar_usuario
+        case "$opcao" in
+            1)
+                printf "\n"
+                _cadastrar_usuario
+                printf "\n"
+                read -rp "Pressione ENTER para continuar..." -t 5
+                ;;
+            2)
+                printf "\n"
+                _alterar_senha
+                printf "\n"
+                read -rp "Pressione ENTER para continuar..." -t 5
+                ;;
+            0)
+                clear
+                exit 0
+                ;;
+            *)
+                _opinvalida
+                _read_sleep 1
+                ;;
+        esac
+    done
 }
 
 # Executar

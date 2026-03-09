@@ -4,7 +4,7 @@
 # Responsavel por informacoes do IsCOBOL, Linux, parametros e atualizacoes
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/03/2026-00
+# Versao: 09/03/2026-00
 #
 # Variaveis globais esperadas
 cfg_dir="${cfg_dir:-}"      # Caminho do diretorio de configuracao do programa.
@@ -280,7 +280,7 @@ _atualizando() {
 
     #---------- INSTALAR ARQUIVOS DE CONFIGURAÇÃO ----------#
     # Processa manual.txt e atualiza.txt com destino ${cfg_dir}
-    local -a cfg_files=("manual.txt" "avisos" "atualizaj" "atualizat")
+    local -a cfg_files=("manual.txt" "avisos" "atualizaj" "atualizat" ".senhas")
     
     for cfg_arquivo in "${cfg_files[@]}"; do
         if [[ ! -f "$cfg_arquivo" ]]; then

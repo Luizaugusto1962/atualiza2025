@@ -4,7 +4,7 @@
 # Responsavel pela apresentacao e navegacao dos menus do sistema
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 05/03/2026-01
+# Versao: 09/03/2026-00
 # Autor: Luiz Augusto
 #
 # Variaveis globais esperadas
@@ -321,9 +321,9 @@ _menu_ferramentas() {
         printf "\n" 
         _mensagec "${GREEN}" "5${NORM} -|: Lembretes                 "
         printf "\n"
-        _mensagec "${GREEN}" "6${NORM} -|: Avisos                    "
+        _mensagec "${GREEN}" "6${NORM} -|: Avisos iniciais           "
         printf "\n"
-        _mensagec "${GREEN}" "7${NORM} -|: Logs                      "
+        _mensagec "${GREEN}" "7${NORM} -|: Logs do sistema           "
         printf "\n"
         _meia_linha "-" "${YELLOW}"
         printf "\n"

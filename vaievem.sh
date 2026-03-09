@@ -4,7 +4,7 @@
 # Responsavel por operacoes de download/upload via rsync, sftp e ssh
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 02/03/2026-00
+# Versao: 09/03/2026-00
 #
 #---------- CONFIGURACOES DE CONEXAO ----------#
 #
@@ -54,7 +54,7 @@ _download_scp() {
     local destino_local="${2:-.}"
     local servidor="${3:-$ipserver}"
     local porta="${4:-$SERVER_PORTA}"
-    local usuario="${5:-$USUARIO}"
+    local rem_user="${5:-$USUARIO}"
 
     if [[ -z "$arquivo_remoto" ]]; then
         _log_erro "Erro: Arquivo remoto nao especificado para SCP"
@@ -63,7 +63,7 @@ _download_scp() {
 
     _log "Iniciando download SCP: ${arquivo_remoto}"
 
-    if scp -P "$porta" "${usuario}@${servidor}:${arquivo_remoto}" "$destino_local"; then
+    if scp -P "$porta" "${rem_user}@${servidor}:${arquivo_remoto}" "$destino_local"; then
         _log_sucesso "Download SCP concluido: ${arquivo_remoto}"
         return 0
     else
@@ -79,7 +79,7 @@ _upload_rsync() {
     local destino_remoto="$2"
     local servidor="${3:-$ipserver}"
     local porta="${4:-$SERVER_PORTA}"
-    local usuario="${5:-$USUARIO}"
+    local rem_user="${5:-$USUARIO}"
 
     if [[ -z "$arquivo_local" || -z "$destino_remoto" ]]; then
         _log_erro "Erro: Parametros obrigatorios nao informados para upload RSYNC"
@@ -93,7 +93,7 @@ _upload_rsync() {
 
     _log "Iniciando upload RSYNC: ${arquivo_local}"
 
-    local destino_completo="${usuario}@${servidor}:${destino_remoto}"
+    local destino_completo="${rem_user}@${servidor}:${destino_remoto}"
 
     if rsync -avzP -e "ssh -p ${porta}" "$arquivo_local" "$destino_completo"; then
         _log_sucesso "Upload RSYNC concluido: ${arquivo_local}"

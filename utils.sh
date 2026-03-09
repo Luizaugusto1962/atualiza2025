@@ -4,7 +4,7 @@
 # Funcoes basicas para formatacao, mensagens, validacao e controle de fluxo
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 24/02/2026-00
+# Versao: 09/03/2026-00
 
 #---------- FUNCOES DE FORMATACAO DE TELA ----------#
 # Variaveis globais esperadas
@@ -216,9 +216,10 @@ _log() {
     local mensagem="$1"
     local arquivo_log="${2:-$LOG_ATU}"
     local timestamp
+    local user="${usuario:-SISTEMA}"
     
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-    printf "[%s] %s\n" "$timestamp" "$mensagem" >> "$arquivo_log" 2>/dev/null
+    printf "[%s] [%s] %s\n" "$timestamp" "$user" "$mensagem" >> "$arquivo_log" 2>/dev/null
 }
 
 # Registra erro no log
