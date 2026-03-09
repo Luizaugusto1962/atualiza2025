@@ -4,7 +4,7 @@
 # Responsavel pela atualizacao, instalacao e reversao de programas
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 04/03/2026-00
+# Versao: 09/03/2026-00
 #
 # Variaveis globais esperadas
 sistema="${sistema:-}"      # Nome do sistema (iscobol, savatu, transpc).
@@ -302,8 +302,8 @@ _baixar_pacotes_vaievem() {
 _mover_arquivos_offline() {
     _configurar_acessos
 
-    cd "${down_dir}" || return 1
-    if [[ "${Offline}" == "s" ]]; then
+#    cd "${down_dir}" || return 1
+#    if [[ "${Offline}" == "s" ]]; then
         for arquivo in "${ARQUIVOS_PROGRAMA[@]}"; do
             if [[ -f "${down_dir}/${arquivo}" ]]; then
                 _mensagec "${GREEN}" "Arquivo encontrado: ${arquivo}"
@@ -312,14 +312,14 @@ _mover_arquivos_offline() {
             fi
             _linha
         done
-    fi
+#    fi
 }
 
 # Processa atualizacao dos programas
 _processar_atualizacao_programas() {
     # Ir para o diretório RECEBE onde estão os arquivos baixados
-    cd "${RECEBE}" || return 1
-    
+    cd "${down_dir}" || return 1
+
     local arquivo         # Nome do arquivo
     local extensao        # Extensao do arquivo
     local backup_file     # Nome do arquivo de backup
@@ -470,14 +470,14 @@ _processar_atualizacao_pacotes() {
 # Processa reversao de programas
 _processar_reversao_programas() {
     # Criar diretório RECEBE se não existir
-    [[ ! -d "${RECEBE}" ]] && mkdir -p "${RECEBE}"
+    [[ ! -d "${down_dir}" ]] && mkdir -p "${down_dir}"
     
     for programa_idx in "${!PROGRAMAS_SELECIONADOS[@]}"; do
         local programa="${PROGRAMAS_SELECIONADOS[$programa_idx]}"
         local arquivo_anterior="${OLDS}/${programa}-anterior.zip"
         
         if [[ -f "$arquivo_anterior" ]]; then
-            mv -f "$arquivo_anterior" "${RECEBE}/${programa}${class}.zip"
+            mv -f "$arquivo_anterior" "${down_dir}/${programa}${class}.zip"
             _mensagec "${GREEN}" "Programa revertido: ${programa}"
         else
             _mensagec "${RED}" "Backup nao encontrado para: ${programa}"

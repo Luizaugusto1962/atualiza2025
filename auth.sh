@@ -27,40 +27,40 @@ _hash_senha() {
 _cadastrar_usuario() {
     local usuario senha senha_confirm hash_senha
 
-    printf "Cadastro de Usuario\n"
-    printf "===================\n\n"
+    _mensagec "${RED}" "Cadastro de Usuario"
+    _meia_linha "=" "${RED}"
 
-    read -rp "Digite o nome do usuario: " usuario
+    read -rp "${YELLOW}Digite o nome do usuario: ${NORM}" usuario
     usuario=$(echo "$usuario" | tr '[:lower:]' '[:upper:]')
     if [[ -z "$usuario" ]]; then
-        printf "Usuario nao pode ser vazio.\n"
+        _mensagec "${RED}" "Usuario nao pode ser vazio."
         return 1
     fi
 
     # Verificar se usuario ja existe
     if grep -q "^${usuario}:" "$SENHA_FILE" 2>/dev/null; then
-        printf "Usuario ja existe.\n"
+        _mensagec "${RED}" "Usuario ja existe."
         return 1
     fi
 
-    read -rsp "Digite a senha: " senha
+    read -rsp "${YELLOW}Digite a senha: ${NORM}" senha
     printf "\n"
-    read -rsp "Confirme a senha: " senha_confirm
+    read -rsp "${YELLOW}Confirme a senha: ${NORM}" senha_confirm
     printf "\n"
 
     if [[ "$senha" != "$senha_confirm" ]]; then
-        printf "Senhas nao coincidem.\n"
+        _mensagec "${RED}" "Senhas nao coincidem."
         return 1
     fi
 
     if [[ -z "$senha" ]]; then
-        printf "Senha nao pode ser vazia.\n"
+        _mensagec "${RED}" "Senha nao pode ser vazia."
         return 1
     fi
 
     hash_senha=$(_hash_senha "$senha")
     echo "${usuario}:${hash_senha}" >> "$SENHA_FILE"
-    printf "Usuario cadastrado com sucesso.\n"
+    _mensagec "${GREEN}" "Usuario cadastrado com sucesso."
 }
 
 # Funcao para login
@@ -68,39 +68,44 @@ _login() {
     local senha hash_senha stored_hash
     # usuario is made global to be used in logging
 
-    printf "Login no Sistema\n"
-    printf "================\n\n"
+    _mensagec "${RED}" "Login no Sistema"
+    _linha "=" "${GREEN}"
 
-    read -rp "Usuario: " usuario
+    read -rp "${YELLOW}Usuario: ${NORM}" usuario
     usuario=$(echo "$usuario" | tr '[:lower:]' '[:upper:]')
-    read -rsp "Senha: " senha
+    read -rsp "${YELLOW}Senha: ${NORM}" senha
     printf "\n"
 
     if [[ ! -f "$SENHA_FILE" ]]; then
-        printf "Nenhum usuario cadastrado. Execute o programa de cadastro primeiro.\n"
+        _mensagec "${RED}" "Nenhum usuario cadastrado. Execute o programa de cadastro primeiro."
         return 1
     fi
 
     # Verificar se o arquivo de senhas esta vazio
     if [[ ! -s "$SENHA_FILE" ]]; then
-        printf "ALERTA: Arquivo de senhas esta vazio. Nenhum usuario cadastrado no sistema.\n"
-        printf "Execute o programa de cadastro primeiro.\n"
+        _mensagec "${RED}" "ALERTA: Arquivo de senhas esta vazio. Nenhum usuario cadastrado no sistema."
+        _mensagec "${YELLOW}" "Execute o programa de cadastro primeiro."
+        _linha "-" "${RED}"
+
         return 1
     fi
 
     stored_hash=$(grep "^${usuario}:" "$SENHA_FILE" | cut -d':' -f2)
     if [[ -z "$stored_hash" ]]; then
-        printf "Usuario nao encontrado.\n"
+        _mensagec "${RED}" "Usuario nao encontrado."
+        _linha "-" "${RED}"
         return 1
     fi
 
     hash_senha=$(_hash_senha "$senha")
     if [[ "$hash_senha" == "$stored_hash" ]]; then
-        printf "Login bem-sucedido.\n"
+        _mensagec "${GREEN}" "Login bem-sucedido."
         export usuario
         return 0
     else
-        printf "Senha incorreta.\n"
+        _mensagec "${RED}" "Senha incorreta."
+        _linha "-" "${RED}"
+        printf "\n"
         # Clear usuario on failure
         unset usuario
         return 1
@@ -113,46 +118,48 @@ _alterar_senha() {
     read -rp "Usuario: " usuario
     usuario=$(echo "$usuario" | tr '[:lower:]' '[:upper:]')
     if [[ -z "$usuario" ]]; then
-        printf "Voce precisa estar logado para alterar a senha.\n"
+        _mensagec "${RED}" "Voce precisa estar logado para alterar a senha."
         return 1
     fi
 
-    printf "Alteracao de Senha\n"
-    printf "==================\n\n"
+    _mensagec "${RED}" "Alteracao de Senha"
+    _linha "=" "${RED}"
 
-    read -rsp "Digite a senha atual: " senha_atual
+    read -rsp "${YELLOW}Digite a senha atual: ${NORM}" senha_atual
     printf "\n"
 
     # Verificar senha atual
     stored_hash=$(grep "^${usuario}:" "$SENHA_FILE" | cut -d':' -f2)
     if [[ -z "$stored_hash" ]]; then
-        printf "Usuario nao encontrado.\n"
+        _mensagec "${RED}" "Usuario nao encontrado."
+        _linha "-" "${RED}"
         return 1
     fi
 
     hash_atual=$(_hash_senha "$senha_atual")
     if [[ "$hash_atual" != "$stored_hash" ]]; then
-        printf "Senha atual incorreta.\n"
+        _mensagec "${RED}" "Senha atual incorreta."
+        _linha "-" "${RED}"
         return 1
     fi
 
-    read -rsp "Digite a nova senha: " nova_senha
+    read -rsp "${YELLOW}Digite a nova senha: ${NORM}" nova_senha
     printf "\n"
-    read -rsp "Confirme a nova senha: " confirm_senha
+    read -rsp "${YELLOW}Confirme a nova senha: ${NORM}" confirm_senha
     printf "\n"
 
     if [[ "$nova_senha" != "$confirm_senha" ]]; then
-        printf "Novas senhas nao coincidem.\n"
+        _mensagec "${RED}" "Novas senhas nao coincidem."
         return 1
     fi
 
     if [[ -z "$nova_senha" ]]; then
-        printf "Nova senha nao pode ser vazia.\n"
+        _mensagec "${RED}" "Nova senha nao pode ser vazia."
         return 1
     fi
 
     hash_nova=$(_hash_senha "$nova_senha")
     # Atualizar a linha no arquivo
     sed -i "s/^${usuario}:.*/${usuario}:${hash_nova}/" "$SENHA_FILE"
-    printf "Senha alterada com sucesso.\n"
+    _mensagec "${GREEN}" "Senha alterada com sucesso."
 }

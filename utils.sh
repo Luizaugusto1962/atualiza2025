@@ -149,8 +149,8 @@ _confirmar() {
         fi
         
         case "${resposta,,}" in
-            s|sim|y|yes) return 0 ;;
-            n|nao|no) return 1 ;;
+            s|sim) return 0 ;;
+            n|nao) return 1 ;;
             *)
                 _mensagec "${RED}" "Resposta invalida"
                 ((tentativas++))
