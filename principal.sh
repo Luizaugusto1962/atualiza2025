@@ -6,7 +6,7 @@
 # Email: luizaugusto@sav.com.br
 #
 # Versao do sistema
-readonly UPDATE="06/03/2026-00"
+readonly UPDATE="10/03/2026-2025"
 export UPDATE
 
 # Diretorio do script principal
@@ -53,7 +53,7 @@ _carregar_modulo() {
 # Carregamento sequencial dos modulos (ordem importante)
 _carregar_modulo "utils.sh"      # Utilitarios basicos primeiro
 _carregar_modulo "config.sh"     # Configuracoes
-_carregar_modulo "auth.sh"       # Autenticacao
+#_carregar_modulo "auth.sh"       # Autenticacao
 _carregar_modulo "lembrete.sh"   # Sistema de lembretes
 _carregar_modulo "vaievem.sh"      # Operacoes de rede
 _carregar_modulo "sistema.sh"    # Informacoes do sistema
