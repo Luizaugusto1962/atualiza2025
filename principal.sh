@@ -90,11 +90,11 @@ main() {
     # Inicializar sistema
     _inicializar_sistema
     
-    # Autenticacao
-    if ! _login; then
-        printf "Autenticacao falhou. Saindo...\n"
-        exit 1
-    fi
+#    # Autenticacao
+#    if ! _login; then
+#        printf "Autenticacao falhou. Saindo...\n"
+#        exit 1
+#    fi
     
     # Mostrar mensagem de entrada (se existe) e opcao para excluir
     _mostrar_aviso
