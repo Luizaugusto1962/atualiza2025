@@ -409,7 +409,7 @@ fi
 }
 
 _atualizar_online() {
-    local link="https://github.com/Luizaugusto1962/Atualiza2025/archive/master/atualiza.zip"
+    local link="https://github.com/Luizaugusto1962/atualizar2026/archive/master/atualiza.zip"
        # Criar e acessar diretorio temporario
     mkdir -p "$temp_dir" || {
         _mensagec "${RED}" "Erro: Nao foi possivel criar o diretorio temporario $temp_dir."
