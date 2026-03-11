@@ -4,7 +4,7 @@
 # Responsavel por carregar configuracoes, validar sistema e definir variaveis globais
 #
 # SISTEMA SAV - Script de Atualizacao Modular
-# Versao: 05/03/2026-00
+# Versao: 11/03/2026-00
 
 #---------- VARIaVEIS GLOBAIS ----------#
 
@@ -285,6 +285,14 @@ _configurar_variaveis_sistema() {
 # Carregar arquivo de configuracao da empresa
 _carregar_config_empresa() {
     local config_file="${cfg_dir}/.atualizac"
+
+# Copia temporaria do arquivo de configuracao para o diretorio atual para facilitar o acesso
+    if [[ -f "${cfg_dir}/.atualizac" ]]; then
+        cp "${cfg_dir}/.atualizac" .config 2>/dev/null || {
+            printf "Erro ao copiar arquivo de configuracao para o diretorio atual.\n"
+            exit 1
+        }
+    fi
 
     # Verificar existência e permissoes
     
